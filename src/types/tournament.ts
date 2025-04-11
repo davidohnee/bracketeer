@@ -51,7 +51,7 @@ export interface Tournament {
     id: string;
     name: string;
     teams: Team[];
-    matches: Match[];
-    startDate: Date;
+    groupPhase: TournamentRound[];
+    knockoutPhase: TournamentRound[];
     config: TournamentConfig;
 }

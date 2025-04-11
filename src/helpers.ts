@@ -43,6 +43,8 @@ export const generateTable = (matches: Match[]): TeamScore[] => {
         teams[team2Id].points.for += match.score2;
         teams[team2Id].points.against += match.score1;
 
+        if (match.status == "scheduled") return;
+
         if (match.score1 > match.score2) {
             teams[team1Id].wins++;
             teams[team2Id].losses++;
@@ -79,24 +81,57 @@ export const getCourtName = (courtNumber: number): string =>
 
 const ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
+const rotate = <T>(n: number, xs: T[]) => [
+    ...xs.slice(xs.length - (n % xs.length)),
+    ...xs.slice(0, xs.length - (n % xs.length)),
+];
+
+const BYE = Symbol();
+
+const roundRobin = <T>(teams: T[], rest = teams.slice(0, -1)) =>
+    rest
+        .map((_, i) => rotate(i + 1, fold([...rotate(i, rest), teams.at(-1)])))
+        .map((b) => b.filter(([a, b]) => a !== BYE && b !== BYE))
+        .map((b, i) => (i % 2 == 0 ? b : b.map(([a, b]) => [b, a])));
+
+const fold = <T>(xs: T[]) =>
+    xs
+        .slice(0, Math.ceil(xs.length / 2))
+        .map((x, i) => [x, xs[xs.length - i - 1]]);
+
 export const generateGroupPhase = (
     teams: Team[],
     config: TournamentConfig
 ): TournamentRound[] => {
     const rounds: TournamentRound[] = [];
-    const totalRounds = config.rounds;
+    const shuffledTeams = teams.sort(() => Math.random() - 0.5);
 
     let courtIndex = 1;
     let roundStartTime = new Date(config.startTime);
     const roundDuration = config.matchDuration + config.breakDuration;
-    for (let i = 0; i < totalRounds; i++) {
-        const matches = generateRound(teams, rounds);
 
-        for (let j = 0; j < matches.length; j++) {
-            matches[j].court = getCourtName(courtIndex);
-            matches[j].date = new Date(roundStartTime);
+    const matches = roundRobin(shuffledTeams);
+
+    for (let i = 0; i < config.rounds; i++) {
+        const matchI = i % matches.length;
+        const matchPairs = matches[matchI];
+
+        const match: Match[] = [];
+        for (let j = 0; j < matchPairs.length; j++) {
+            const team1 = matchPairs[j][0];
+            const team2 = matchPairs[j][1];
+            const matchObj: Match = {
+                id: generateId(),
+                court: getCourtName(courtIndex),
+                team1: team1 as Team,
+                team2: team2 as Team,
+                score1: 0,
+                score2: 0,
+                date: new Date(roundStartTime),
+                status: "scheduled",
+            };
+            match.push(matchObj);
             courtIndex++;
-
             if (courtIndex > config.courts) {
                 courtIndex = 1;
                 roundStartTime.setMinutes(
@@ -104,11 +139,10 @@ export const generateGroupPhase = (
                 );
             }
         }
-
         rounds.push({
             id: generateId(),
             name: `Round ${i + 1}`,
-            matches,
+            matches: match,
         });
     }
 
@@ -123,36 +157,47 @@ export const generateRound = (
         previousRounds = [];
     }
 
+    let choices = Array.from(
+        { length: teams.length / 2 },
+        (_, index) => index + teams.length / 2
+    );
+
     const matches: Match[] = [];
     for (let i = 0; i < teams.length / 2; i++) {
         const team1 = teams[i];
 
         // random team 2, but not the same as team 1 and not same matchup in previous rounds
-        let team2: Team;
-        let j = i;
-        do {
-            j =
-                Math.floor((Math.random() * teams.length) / 2) +
-                teams.length / 2;
+        let team2: Team | undefined = undefined;
+        let j = Math.floor(Math.random() * choices.length);
+
+        let x = 0;
+
+        while ((choices.length > 0, x < 100)) {
+            x++;
             team2 = teams[j];
-        } while (
-            matches.some((match) => match.team2.id === team2.id) ||
-            previousRounds.some((round) =>
-                round.matches.some(
-                    (match) =>
-                        (match.team1.id === team1.id &&
-                            match.team2.id === team2.id) ||
-                        (match.team1.id === team2.id &&
-                            match.team2.id === team1.id)
+            // previous round contains the match
+            if (
+                !previousRounds.some((round) =>
+                    round.matches.some(
+                        (match) =>
+                            (match.team1.id === team1.id &&
+                                match.team2.id === team2!.id) ||
+                            (match.team1.id === team2!.id &&
+                                match.team2.id === team1.id)
+                    )
                 )
-            )
-        );
+            ) {
+                choices.splice(j, 1);
+                break;
+            }
+            j = (j + 1) % choices.length;
+        }
 
         const match: Match = {
             id: generateId(),
             court: "",
             team1: team1,
-            team2: team2,
+            team2: team2!,
             score1: 0,
             score2: 0,
             date: new Date(),
@@ -164,14 +209,26 @@ export const generateRound = (
     return matches;
 };
 
+export const getLastMatchOf = (rounds: TournamentRound[]): Match => {
+    return rounds
+        .sort(
+            (a, b) =>
+                a.matches[a.matches.length - 1].date.getTime() -
+                b.matches[b.matches.length - 1].date.getTime()
+        )[0]
+        .matches.slice(-1)[0];
+};
+
 export const generateKnockoutBracket = (
-    config: TournamentConfig
+    config: TournamentConfig,
+    lastGroupPhaseMatchDate: Date,
+    table: TeamScore[] = []
 ): TournamentRound[] => {
     const rounds: TournamentRound[] = [];
     const knockoutTeamCount = config.knockoutTeams;
-    let progressingTeams = Array.from(
-        { length: knockoutTeamCount },
-        (_, i) => `Place ${i + 1}`
+
+    let progressingTeams = Array.from({ length: knockoutTeamCount }, (_, i) =>
+        table.length ? table[i] : `Place ${i + 1}`
     );
 
     let teamsInRound = progressingTeams.length;
@@ -184,9 +241,17 @@ export const generateKnockoutBracket = (
         2: "Final",
     };
 
+    let startTime = new Date(lastGroupPhaseMatchDate);
+
     while (teamsInRound > 1) {
         const matches: Match[] = [];
         let court = 1;
+
+        startTime.setMinutes(
+            startTime.getMinutes() +
+                config.matchDuration +
+                config.knockoutBreakDuration
+        );
 
         for (let i = 0; i < teamsInRound / 2; i++) {
             const team1 = progressingTeams[i];
@@ -195,11 +260,15 @@ export const generateKnockoutBracket = (
             const match: Match = {
                 id: generateId(),
                 court: getCourtName(court++),
-                team1: { name: team1 },
-                team2: { name: team2 },
+                team1: {
+                    name: (team1 as TeamScore).team?.name || (team1 as string),
+                },
+                team2: {
+                    name: (team2 as TeamScore).team?.name || (team2 as string),
+                },
                 score1: 0,
                 score2: 0,
-                date: new Date(),
+                date: new Date(startTime),
                 status: "scheduled",
             };
             matches.push(match);
@@ -220,6 +289,12 @@ export const generateKnockoutBracket = (
         roundNumber++;
     }
 
+    startTime.setMinutes(
+        startTime.getMinutes() +
+            config.matchDuration +
+            config.knockoutBreakDuration
+    );
+
     // Add the final match
     const finalMatch: Match = {
         id: generateId(),
@@ -228,7 +303,7 @@ export const generateKnockoutBracket = (
         team2: { name: "Loser B" },
         score1: 0,
         score2: 0,
-        date: new Date(),
+        date: startTime,
         status: "scheduled",
     };
     rounds.push({
@@ -278,9 +353,8 @@ export const generateRandomGroupPhaseResults = (
     // random number of rounds played
     const randomRounds = Math.floor(Math.random() * rounds.length) + 1;
     const matches: Match[] = [];
-    for (let i = 0; i < randomRounds; i++) {
+    for (let i = 0; i < rounds.length; i++) {
         const round = rounds[i];
-        console.log(round.matches);
         for (const match of round.matches) {
             const score1 = Math.floor(Math.random() * 10);
             const score2 = Math.floor(Math.random() * 10);

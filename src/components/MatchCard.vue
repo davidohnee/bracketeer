@@ -53,7 +53,6 @@ defineProps<{ match: Match }>();
     .details {
         display: flex;
         flex-direction: column;
-        gap: 1em;
     }
 
     .score,

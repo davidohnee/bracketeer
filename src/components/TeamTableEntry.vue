@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import { type TeamScore } from '../types/tournament';
+import { type TeamScore, type TournamentConfig } from '../types/tournament';
 import { calculateDifference, calculateTeamPoints } from '../helpers';
 
-defineProps<{ score: TeamScore, rank: number }>()
+defineProps<{ score: TeamScore, rank: number, config: TournamentConfig }>()
 </script>
 
 <template>
-  <div class="team">
+  <div class="team" :class="{ 'progress': rank <= config.knockoutTeams }">
     <div class="rank">{{ rank }}</div>
     <div class="name">{{ score.team.name }}</div>
     <div class="mp">{{ score.wins + score.draws + score.losses }}</div>

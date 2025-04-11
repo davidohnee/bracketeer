@@ -1,5 +1,5 @@
 :root {
-    font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+    font-family: Sen, Avenir, Helvetica, Arial, sans-serif;
     line-height: 1.5;
     font-weight: 400;
 
@@ -7,18 +7,24 @@
     color: var(--color-foreground);
     background-color: var(--color-background);
 
-    --color-primary: #646cff;
-    --color-primary-hover: #535bf2;
-    --color-background: #242424;
-    --color-background-hover: rgb(242, 242, 242);
+    --color-green: rgb(31, 202, 131);
+    --color-primary: var(--color-green);
+    --color-primary-hover: color-mix(in srgb, var(--color-green) 80%, #000);
+    --color-background: #1d1d1d;
+    --color-background-secondary: #000;
+    --color-background-hover: rgb(37, 37, 37);
     --color-foreground: #ffffff;
     --color-foreground-secondary: rgb(192, 192, 192);
-    --color-border: #f0f0f0;
+    --color-border: #282828;
 
     font-synthesis: none;
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+}
+
+h2 {
+    font-size: 1.5rem;
 }
 
 a {
@@ -59,7 +65,7 @@ button {
     transition: border-color 0.25s;
 }
 button:hover {
-    border-color: var(--color-primary-hover);
+    background: var(--color-primary-hover);
 }
 button:focus,
 button:focus-visible {
@@ -81,9 +87,11 @@ button:focus-visible {
 @media (prefers-color-scheme: light) {
     :root {
         --color-background: #ffffff;
+        --color-background-secondary: #fafafa;
         --color-background-hover: rgb(242, 242, 242);
         --color-foreground: #213547;
         --color-foreground-secondary: rgb(113, 113, 113);
-        --color-primary-hover: #747bff;
+        --color-primary-hover: #fe1900;
+        --color-border: #f0f0f0;
     }
 }

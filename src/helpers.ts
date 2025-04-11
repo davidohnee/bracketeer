@@ -210,13 +210,14 @@ export const generateRound = (
 };
 
 export const getLastMatchOf = (rounds: TournamentRound[]): Match => {
-    return rounds
-        .sort(
-            (a, b) =>
-                a.matches[a.matches.length - 1].date.getTime() -
-                b.matches[b.matches.length - 1].date.getTime()
-        )[0]
-        .matches.slice(-1)[0];
+    const matchComparator = (a: Match, b: Match) =>
+        a.date.getTime() - b.date.getTime();
+
+    const sorted = rounds
+        .flatMap((round) => round.matches)
+        .sort(matchComparator);
+    const last = sorted[sorted.length - 1];
+    return last;
 };
 
 export const generateKnockoutBracket = (
@@ -289,6 +290,8 @@ export const generateKnockoutBracket = (
         roundNumber++;
     }
 
+    let finalRound = rounds.pop()!;
+
     startTime.setMinutes(
         startTime.getMinutes() +
             config.matchDuration +
@@ -303,7 +306,7 @@ export const generateKnockoutBracket = (
         team2: { name: "Loser B" },
         score1: 0,
         score2: 0,
-        date: startTime,
+        date: finalRound.matches[0].date,
         status: "scheduled",
     };
     rounds.push({
@@ -311,6 +314,8 @@ export const generateKnockoutBracket = (
         name: "3rd Place Playoff",
         matches: [finalMatch],
     });
+    rounds.push(finalRound);
+    rounds[rounds.length - 1].matches[0].date = startTime;
     return rounds;
 };
 

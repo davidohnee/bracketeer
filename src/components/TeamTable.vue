@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { type TeamScore } from '../types/tournament';
+import { type TeamScore, type TournamentConfig } from '../types/tournament';
 import TeamTableEntry from './TeamTableEntry.vue';
 
-defineProps<{ table: TeamScore[] }>()
+defineProps<{ table: TeamScore[], config: TournamentConfig }>()
 </script>
 
 <template>
@@ -18,22 +18,27 @@ defineProps<{ table: TeamScore[] }>()
             <div class="gd">GD</div>
             <div class="pts">PTS</div>
         </div>
-        <TeamTableEntry class="entry" v-for="(score, index) in table" :key="index" :score="score" :rank="index + 1" />
+        <TeamTableEntry class="entry" v-for="(score, index) in table" :key="index" :score="score" :rank="index + 1"
+            :config="config" />
     </div>
 </template>
 
 <style>
 .team-table {
-    border: 1px solid var(--color-border);
-    border-radius: 1em;
-    overflow: clip;
+    width: 100%;
+
+    .entry.header:hover {
+        background-color: unset;
+        cursor: unset;
+    }
 
     .entry {
         display: grid;
         grid-template-columns: 2ch 1fr repeat(4, 3ch) 9ch 4ch 4ch;
         gap: 0.5em;
         cursor: pointer;
-        padding: 0.5em 1em;
+        padding: 0.25em 1em;
+        border-radius: 0.35em;
 
         &:hover {
             background-color: var(--color-background-hover);
@@ -45,7 +50,20 @@ defineProps<{ table: TeamScore[] }>()
 
         & .name {
             text-align: left;
-            font-weight: bold;
+        }
+
+        &.progress {
+            position: relative;
+
+            ::before {
+                content: '';
+                position: absolute;
+                top: 2px;
+                left: 0;
+                width: 2px;
+                height: calc(100% - 4px);
+                background-color: rgb(31, 202, 131);
+            }
         }
     }
 }

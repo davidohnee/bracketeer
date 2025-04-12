@@ -3,22 +3,13 @@
 </template>
 
 <style>
-#app {
-  background: var(--color-background-secondary);
-
-  & section {
-    background: var(--color-background);
-  }
-}
-
 .table {
   width: 100%;
 }
 
 .matches {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(30ch, 1fr));
   gap: 1em;
   padding: 1em;
 }

@@ -25,4 +25,8 @@ const knockoutBracket = computed<TournamentRound[]>(() => {
 .round {
     width: 100%;
 }
+
+h3 {
+    text-align: center;
+}
 </style>

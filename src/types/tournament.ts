@@ -4,7 +4,7 @@ export interface Player {
 }
 
 export interface Team {
-    id?: string;
+    id: string;
     name: string;
     players?: Player[];
 }
@@ -20,11 +20,22 @@ export interface TeamScore {
     };
 }
 
+export type StaticTeamRef = {
+    id: string;
+};
+
+export type DynamicTeamRef = {
+    placement: number;
+    type: "winner" | "loser" | "league";
+};
+
+export type TeamRef = StaticTeamRef | DynamicTeamRef;
+
 export interface Match {
     id: string;
     court: string;
-    team1: Team;
-    team2: Team;
+    team1: TeamRef;
+    team2: TeamRef;
     score1: number;
     score2: number;
     date: Date;

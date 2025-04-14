@@ -1,5 +1,6 @@
 import type {
     Match,
+    StaticTeamRef,
     Team,
     TeamScore,
     TournamentConfig,
@@ -10,16 +11,16 @@ export const generateId = () => {
     return Math.random().toString(36).substring(2, 15);
 };
 
-export const generateTable = (matches: Match[]): TeamScore[] => {
-    const teams: { [key: string]: TeamScore } = {};
+export const generateTable = (matches: Match[], teams: Team[]): TeamScore[] => {
+    const table: { [key: string]: TeamScore } = {};
 
     matches.forEach((match) => {
-        const team1Id = match.team1.id!;
-        const team2Id = match.team2.id!;
+        const team1Id = (match.team1 as StaticTeamRef).id!;
+        const team2Id = (match.team2 as StaticTeamRef).id!;
 
-        if (!teams[team1Id]) {
-            teams[team1Id] = {
-                team: match.team1,
+        if (!table[team1Id]) {
+            table[team1Id] = {
+                team: teams.find((x) => x.id == team1Id)!,
                 wins: 0,
                 losses: 0,
                 draws: 0,
@@ -27,9 +28,9 @@ export const generateTable = (matches: Match[]): TeamScore[] => {
             };
         }
 
-        if (!teams[team2Id]) {
-            teams[team2Id] = {
-                team: match.team2,
+        if (!table[team2Id]) {
+            table[team2Id] = {
+                team: teams.find((x) => x.id == team2Id)!,
                 wins: 0,
                 losses: 0,
                 draws: 0,
@@ -37,27 +38,27 @@ export const generateTable = (matches: Match[]): TeamScore[] => {
             };
         }
 
-        teams[team1Id].points.for += match.score1;
-        teams[team1Id].points.against += match.score2;
+        table[team1Id].points.for += match.score1;
+        table[team1Id].points.against += match.score2;
 
-        teams[team2Id].points.for += match.score2;
-        teams[team2Id].points.against += match.score1;
+        table[team2Id].points.for += match.score2;
+        table[team2Id].points.against += match.score1;
 
         if (match.status == "scheduled") return;
 
         if (match.score1 > match.score2) {
-            teams[team1Id].wins++;
-            teams[team2Id].losses++;
+            table[team1Id].wins++;
+            table[team2Id].losses++;
         } else if (match.score1 < match.score2) {
-            teams[team2Id].wins++;
-            teams[team1Id].losses++;
+            table[team2Id].wins++;
+            table[team1Id].losses++;
         } else {
-            teams[team1Id].draws++;
-            teams[team2Id].draws++;
+            table[team1Id].draws++;
+            table[team2Id].draws++;
         }
     });
 
-    const teamScores = Object.values(teams);
+    const teamScores = Object.values(table);
     teamScores.sort((a, b) => {
         if (calculateTeamPoints(b) !== calculateTeamPoints(a)) {
             return calculateTeamPoints(b) - calculateTeamPoints(a);
@@ -79,7 +80,7 @@ export const generateTable = (matches: Match[]): TeamScore[] => {
 export const getCourtName = (courtNumber: number): string =>
     `Court ${courtNumber}`;
 
-const ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+export const ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
 const rotate = <T>(n: number, xs: T[]) => [
     ...xs.slice(xs.length - (n % xs.length)),
@@ -180,10 +181,11 @@ export const generateRound = (
                 !previousRounds.some((round) =>
                     round.matches.some(
                         (match) =>
-                            (match.team1.id === team1.id &&
-                                match.team2.id === team2!.id) ||
-                            (match.team1.id === team2!.id &&
-                                match.team2.id === team1.id)
+                            ((match.team1 as StaticTeamRef).id === team1.id &&
+                                (match.team2 as StaticTeamRef).id ===
+                                    team2!.id) ||
+                            ((match.team1 as StaticTeamRef).id === team2!.id &&
+                                (match.team2 as StaticTeamRef).id === team1.id)
                     )
                 )
             ) {
@@ -261,11 +263,13 @@ export const generateKnockoutBracket = (
             const match: Match = {
                 id: generateId(),
                 court: getCourtName(court++),
-                team1: {
-                    name: (team1 as TeamScore).team?.name || (team1 as string),
+                team1: (team1 as TeamScore).team ?? {
+                    placement: i,
+                    type: roundNumber == 1 ? "league" : "winner",
                 },
-                team2: {
-                    name: (team2 as TeamScore).team?.name || (team2 as string),
+                team2: (team2 as TeamScore).team ?? {
+                    placement: progressingTeams.length - 1 - i,
+                    type: roundNumber == 1 ? "league" : "winner",
                 },
                 score1: 0,
                 score2: 0,
@@ -302,8 +306,8 @@ export const generateKnockoutBracket = (
     const finalMatch: Match = {
         id: generateId(),
         court: getCourtName(1),
-        team1: { name: "Loser A" },
-        team2: { name: "Loser B" },
+        team1: { type: "loser", placement: 1 },
+        team2: { type: "loser", placement: 2 },
         score1: 0,
         score2: 0,
         date: finalRound.matches[0].date,

@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { type Match } from '../types/tournament';
+import { ALPHABET } from '../helpers';
+import { type DynamicTeamRef, type Match, type StaticTeamRef, type Team, type TeamRef } from '../types/tournament';
 
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 
 const matcheditor = ref<HTMLDialogElement | null>(null);
 const openMatchEditor = () => {
@@ -16,7 +17,24 @@ const closeMatchEditor = () => {
     }
 };
 
-defineProps<{ match: Match }>();
+const teamIndex = (team: TeamRef) => props.teams.findIndex(x => x.id === (team as StaticTeamRef).id)
+const team1i = computed(() => teamIndex(props.match.team1));
+const team2i = computed(() => teamIndex(props.match.team2));
+
+const teamDisplay = (team: TeamRef) => {
+    const i = teamIndex(team);
+    if (i >= 0) return props.teams[i].name;
+    const asRef = team as DynamicTeamRef
+    if (asRef.type == "league") {
+        return `Place ${asRef.placement + 1}`
+    }
+    const label = { "winner": "Winner", "loser": "Loser" }
+    return `${label[asRef.type]} ${ALPHABET[asRef.placement]}`
+}
+const team1display = computed(() => teamDisplay(props.match.team1));
+const team2display = computed(() => teamDisplay(props.match.team2));
+
+const props = defineProps<{ match: Match, teams: Team[] }>();
 </script>
 
 <template>
@@ -25,10 +43,10 @@ defineProps<{ match: Match }>();
             <h2>Edit</h2>
             <ion-icon @click="closeMatchEditor" class="close" name="close"></ion-icon>
             <div class=form>
-                <div class=row>
+                <div class=row v-if="team1i >= 0">
                     <div class="field">
                         <label for="team1">Team 1</label>
-                        <input type="text" id="team1" v-model="match.team1.name" />
+                        <input type="text" id="team1" v-model="teams[team1i].name" />
                     </div>
                     <div class="field">
                         <label for="team1-score">Score</label>
@@ -36,10 +54,10 @@ defineProps<{ match: Match }>();
                     </div>
                 </div>
 
-                <div class=row>
+                <div class=row v-if="team2i >= 0">
                     <div class="field">
                         <label for="team2">Team 2</label>
-                        <input type="text" id="team2" v-model="match.team2.name" />
+                        <input type="text" id="team2" v-model="teams[team2i].name" />
                     </div>
                     <div class="field">
                         <label for="team2-score">Score</label>
@@ -60,7 +78,7 @@ defineProps<{ match: Match }>();
     </dialog>
     <div class="match" @click="openMatchEditor">
 
-        <div class="team">{{ match.team1.name }}</div>
+        <div class="team">{{ team1display }}</div>
 
         <div class=details>
             <div class="score" v-if="match.status !== 'scheduled'">
@@ -75,7 +93,7 @@ defineProps<{ match: Match }>();
             </div>
         </div>
 
-        <div class="team">{{ match.team2.name }}</div>
+        <div class="team">{{ team2display }}</div>
     </div>
 </template>
 

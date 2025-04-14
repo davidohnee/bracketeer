@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { generateTable } from '@/helpers';
-import { type TournamentRound } from '@/types/tournament';
+import { type Tournament } from '@/types/tournament';
 import TeamTable from '@/components/TeamTable.vue';
 
 const props = defineProps<{
-    tournament: TournamentRound;
+    tournament: Tournament;
 }>();
 
 const groupMatches = computed(() => {
@@ -13,7 +13,7 @@ const groupMatches = computed(() => {
 });
 
 const teamScores = computed(() => {
-    return generateTable(groupMatches.value)
+    return generateTable(groupMatches.value, props.tournament.teams);
 });
 </script>
 

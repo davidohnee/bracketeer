@@ -10,7 +10,7 @@ export interface Team {
 }
 
 export interface TeamScore {
-    team: Team;
+    team: StaticTeamRef;
     wins: number;
     losses: number;
     draws: number;
@@ -27,17 +27,19 @@ export type StaticTeamRef = {
 export type DynamicTeamRef = {
     placement: number;
     type: "winner" | "loser" | "league";
+    fromRound?: number;
 };
 
-export type TeamRef = StaticTeamRef | DynamicTeamRef;
+export type MatchTeam = {
+    ref?: StaticTeamRef;
+    score: number;
+    link?: DynamicTeamRef;
+};
 
 export interface Match {
     id: string;
     court: string;
-    team1: TeamRef;
-    team2: TeamRef;
-    score1: number;
-    score2: number;
+    teams: [MatchTeam, MatchTeam];
     date: Date;
     status: "scheduled" | "in-progress" | "completed";
 }

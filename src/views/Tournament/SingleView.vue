@@ -27,6 +27,9 @@ const tournament = computed(() => tournaments.all.find(t => t.id === tournamentI
                 <router-link :to="{ name: 'tournament.matches', params: { tournamentId: tournament.id } }">
                     Matches
                 </router-link>
+                <router-link :to="{ name: 'tournament.config', params: { tournamentId: tournament.id } }">
+                    Settings
+                </router-link>
             </div>
             <RouterView :tournament="tournament" />
         </section>

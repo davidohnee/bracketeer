@@ -8,12 +8,8 @@ const props = defineProps<{
     tournament: Tournament;
 }>();
 
-const groupMatches = computed(() => {
-    return props.tournament.groupPhase.flatMap(round => round.matches) ?? [];
-});
-
 const teamScores = computed(() => {
-    return generateTable(groupMatches.value, props.tournament.teams);
+    return generateTable(props.tournament);
 });
 </script>
 

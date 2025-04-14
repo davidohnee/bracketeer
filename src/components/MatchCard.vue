@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { ALPHABET } from '../helpers';
-import { type DynamicTeamRef, type Match, type StaticTeamRef, type Team, type TeamRef } from '../types/tournament';
+import { ALPHABET, updateKnockoutMatches } from '../helpers';
+import { type DynamicTeamRef, type Match, type MatchTeam, type StaticTeamRef, type Team } from '../types/tournament';
 
 import { computed, ref } from 'vue';
 
@@ -17,24 +17,38 @@ const closeMatchEditor = () => {
     }
 };
 
-const teamIndex = (team: TeamRef) => props.teams.findIndex(x => x.id === (team as StaticTeamRef).id)
-const team1i = computed(() => teamIndex(props.match.team1));
-const team2i = computed(() => teamIndex(props.match.team2));
+const teamIndex = (team: StaticTeamRef | undefined) => props.teams.findIndex(x => x.id === team?.id)
 
-const teamDisplay = (team: TeamRef) => {
-    const i = teamIndex(team);
+const teamDisplay = (team: MatchTeam) => {
+    const i = teamIndex(team.ref);
     if (i >= 0) return props.teams[i].name;
-    const asRef = team as DynamicTeamRef
+    const asRef = team.link!
     if (asRef.type == "league") {
         return `Place ${asRef.placement + 1}`
     }
     const label = { "winner": "Winner", "loser": "Loser" }
     return `${label[asRef.type]} ${ALPHABET[asRef.placement]}`
 }
-const team1display = computed(() => teamDisplay(props.match.team1));
-const team2display = computed(() => teamDisplay(props.match.team2));
+const team1display = computed(() => teamDisplay(props.match.teams[0]));
+const team2display = computed(() => teamDisplay(props.match.teams[1]));
 
 const props = defineProps<{ match: Match, teams: Team[] }>();
+
+const emit = defineEmits(['scoreChanged']);
+
+const winner = computed(() => {
+    if (props.match.status !== "completed") return "";
+    const team1 = props.match.teams[0].score;
+    const team2 = props.match.teams[1].score;
+    if (team1 > team2) return props.teams[teamIndex(props.match.teams[0].ref)].name;
+    if (team2 > team1) return props.teams[teamIndex(props.match.teams[1].ref)].name;
+    return "Draw";
+})
+
+const scoreChanged = (e: Event) => {
+    props.match.status = "completed";
+    emit("scoreChanged")
+}
 </script>
 
 <template>
@@ -43,25 +57,24 @@ const props = defineProps<{ match: Match, teams: Team[] }>();
             <h2>Edit</h2>
             <ion-icon @click="closeMatchEditor" class="close" name="close"></ion-icon>
             <div class=form>
-                <div class=row v-if="team1i >= 0">
-                    <div class="field">
-                        <label for="team1">Team 1</label>
-                        <input type="text" id="team1" v-model="teams[team1i].name" />
+                <template v-for="(team, index) in match.teams">
+                    <div class=row v-if="teamIndex(team.ref) >= 0">
+                        <div class="field">
+                            <label for="team1">Team {{ index + 1 }}</label>
+                            <input disabled type="text" id="team1" v-model="teams[teamIndex(team.ref)].name" />
+                        </div>
+                        <div class="field">
+                            <label for="team1-score">Score</label>
+                            <input @change="scoreChanged" type="number" id="team1-score"
+                                v-model="match.teams[index].score" />
+                        </div>
                     </div>
-                    <div class="field">
-                        <label for="team1-score">Score</label>
-                        <input type="number" id="team1-score" v-model="match.score1" />
-                    </div>
-                </div>
+                </template>
 
-                <div class=row v-if="team2i >= 0">
+                <div v-if="match.status == 'completed'">
                     <div class="field">
-                        <label for="team2">Team 2</label>
-                        <input type="text" id="team2" v-model="teams[team2i].name" />
-                    </div>
-                    <div class="field">
-                        <label for="team2-score">Score</label>
-                        <input type="number" id="team2-score" v-model="match.score2" />
+                        <label for="team1">Winner</label>
+                        <input disabled type="text" id="team1" v-model="winner" />
                     </div>
                 </div>
 
@@ -82,9 +95,9 @@ const props = defineProps<{ match: Match, teams: Team[] }>();
 
         <div class=details>
             <div class="score" v-if="match.status !== 'scheduled'">
-                <div class="for">{{ match.score1 }}</div>
+                <div class="for">{{ match.teams[0].score }}</div>
                 <span>-</span>
-                <div class="against">{{ match.score2 }}</div>
+                <div class="against">{{ match.teams[1].score }}</div>
             </div>
             <div v-else class="time">{{ match.date?.toLocaleTimeString?.([], { hour: '2-digit', minute: '2-digit' }) }}
             </div>

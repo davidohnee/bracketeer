@@ -5,6 +5,7 @@ import {
     generateGroupPhase,
     generateKnockoutBracket,
     getLastMatchOf,
+    updateKnockoutMatches,
 } from "../helpers";
 
 // You can name the return value of `defineStore()` anything you want,
@@ -17,6 +18,9 @@ export const useTournamentsStore = defineStore("tournaments", () => {
     watch(
         tournaments,
         (newTournaments) => {
+            /*for (const tournament of newTournaments) {
+                updateKnockoutMatches(tournament);
+            }*/
             // Save to local storage whenever tournaments change
             localStorage.setItem("tournaments", JSON.stringify(newTournaments));
         },
@@ -86,11 +90,18 @@ export const useTournamentsStore = defineStore("tournaments", () => {
         add(tournament);
     }
 
+    function deleteTournament(tournamentId: string) {
+        tournaments.value = tournaments.value.filter(
+            (t) => t.id !== tournamentId
+        );
+    }
+
     return {
         all: tournaments,
         create,
         add,
         remove,
         update,
+        deleteTournament,
     };
 });

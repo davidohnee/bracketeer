@@ -2,21 +2,52 @@
 import { computed } from "vue";
 import MatchCard from "@/components/MatchCard.vue";
 import { updateKnockoutMatches } from "../../../helpers";
-import type { Tournament, TournamentRound } from "@/types/tournament";
+import type { MatchStatus, Tournament, TournamentRound } from "@/types/tournament";
+import { useTournamentsStore } from "@/stores/tournaments";
 
 const props = defineProps<{
     tournament: Tournament;
 }>();
 
+const tournamentStore = useTournamentsStore();
+
+const tournament = tournamentStore.getTournamentById(props.tournament.id)!;
+
 const knockoutBracket = computed<TournamentRound[]>(() => {
     return props.tournament.knockoutPhase;
 });
+
+const updateMatchScore = (
+    roundIndex: number,
+    matchIndex: number,
+    teamIndex: number,
+    newScore: number,
+) => {
+    if (!tournament) return;
+
+    const match = tournament.groupPhase[roundIndex].matches[matchIndex];
+    if (teamIndex === 0) {
+        match.teams[0].score = newScore;
+    } else {
+        match.teams[1].score = newScore;
+    }
+    tournament.groupPhase[roundIndex].matches[matchIndex] = match;
+    updateKnockoutMatches(props.tournament);
+};
+
+const updateMatchStatus = (roundIndex: number, matchIndex: number, newStatus: MatchStatus) => {
+    if (!tournament) return;
+
+    const match = tournament.groupPhase[roundIndex].matches[matchIndex];
+    match.status = newStatus;
+    tournament.groupPhase[roundIndex].matches[matchIndex] = match;
+};
 </script>
 
 <template>
     <div
         class="round"
-        v-for="round in tournament.groupPhase"
+        v-for="(round, roundI) in tournament.groupPhase"
         :key="round.id"
     >
         <h3 class="round-title">{{ round.name }}</h3>
@@ -24,7 +55,10 @@ const knockoutBracket = computed<TournamentRound[]>(() => {
             <MatchCard
                 v-for="(match, index) in round.matches"
                 :key="index"
-                @scoreChanged="updateKnockoutMatches(tournament)"
+                @scoreChanged="
+                    (teamIndex, newScore) => updateMatchScore(roundI, index, teamIndex, newScore)
+                "
+                @matchStatusChanged="(newStatus) => updateMatchStatus(roundI, index, newStatus)"
                 :match="match"
                 :teams="tournament.teams"
             />
@@ -33,7 +67,7 @@ const knockoutBracket = computed<TournamentRound[]>(() => {
 
     <div
         class="round"
-        v-for="round in knockoutBracket"
+        v-for="(round, roundI) in knockoutBracket"
         :key="round.id"
     >
         <h3 class="round-title">{{ round.name }}</h3>
@@ -41,7 +75,10 @@ const knockoutBracket = computed<TournamentRound[]>(() => {
             <MatchCard
                 v-for="(match, index) in round.matches"
                 :key="index"
-                @scoreChanged="updateKnockoutMatches(tournament)"
+                @scoreChanged="
+                    (teamIndex, newScore) => updateMatchScore(roundI, index, teamIndex, newScore)
+                "
+                @matchStatusChanged="(newStatus) => updateMatchStatus(roundI, index, newStatus)"
                 :match="match"
                 :teams="tournament.teams"
             />

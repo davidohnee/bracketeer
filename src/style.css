@@ -1,3 +1,6 @@
+@import url("./assets/forms.css");
+@import url("./assets/buttons.css");
+
 :root {
     font-family: Sen, Avenir, Helvetica, Arial, sans-serif;
     line-height: 1.5;
@@ -8,6 +11,9 @@
     background-color: var(--color-background);
 
     --color-green: rgb(31, 202, 131);
+    --color-red: rgb(231, 56, 56);
+    --color-yellow: rgb(219, 186, 17);
+    --color-blue: rgb(48, 141, 241);
     --color-primary: var(--color-green);
     --color-primary-hover: color-mix(in srgb, var(--color-green) 80%, #000);
     --color-background: #1d1d1d;
@@ -69,25 +75,6 @@ body {
 h1 {
     font-size: 3.2em;
     line-height: 1.1;
-}
-
-button {
-    border-radius: 8px;
-    border: 1px solid transparent;
-    padding: 0.6em 1.2em;
-    font-size: 1em;
-    font-weight: 500;
-    font-family: inherit;
-    background-color: var(--color-primary);
-    cursor: pointer;
-    transition: border-color 0.25s;
-}
-button:hover {
-    background: var(--color-primary-hover);
-}
-button:focus,
-button:focus-visible {
-    outline: 4px auto -webkit-focus-ring-color;
 }
 
 .card {

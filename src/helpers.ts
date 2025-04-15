@@ -12,6 +12,28 @@ export const generateId = () => {
     return Math.random().toString(36).substring(2, 15);
 };
 
+export const tournamentFromJson = (tournament: Tournament) => ({
+    ...tournament,
+    groupPhase: tournament.groupPhase.map((round) => ({
+        ...round,
+        matches: round.matches.map((match) => ({
+            ...match,
+            date: new Date(match.date),
+        })),
+    })),
+    knockoutPhase: tournament.knockoutPhase.map((round) => ({
+        ...round,
+        matches: round.matches.map((match) => ({
+            ...match,
+            date: new Date(match.date),
+        })),
+    })),
+    config: {
+        ...tournament.config,
+        startTime: new Date(tournament.config.startTime),
+    },
+});
+
 export const generateTable = (tournament: Tournament): TeamScore[] => {
     const table: { [key: string]: TeamScore } = {};
     const matches = tournament.groupPhase.flatMap((round) => round.matches);

@@ -1,0 +1,66 @@
+button {
+    --c: var(--color-primary);
+
+    border-radius: 8px;
+    border: 1px solid transparent;
+    padding: 0.6em 1.2em;
+    font-size: 1em;
+    font-weight: 500;
+    font-family: inherit;
+    background: var(--c);
+    cursor: pointer;
+    transition: border-color 0.25s;
+    color: white;
+
+    &.ghost {
+        background: transparent;
+        color: var(--color-foreground);
+
+        &:hover {
+            color: var(--c);
+            background: color-mix(in srgb, transparent 95%, black);
+        }
+    }
+
+    &.danger {
+        --c: var(--color-red);
+    }
+
+    &.success {
+        --c: var(--color-green);
+    }
+
+    &.warning {
+        --c: var(--color-yellow);
+    }
+
+    &.info {
+        --c: var(--color-blue);
+    }
+
+    &:hover {
+        background: color-mix(in srgb, var(--c) 90%, black);
+    }
+
+    &.secondary {
+        border: 1px solid var(--c);
+        background: transparent;
+        color: var(--c);
+
+        &:hover {
+            background: color-mix(in srgb, transparent 95%, black);
+        }
+    }
+
+    &:disabled {
+        background: var(--color-background-hover);
+        color: var(--color-foreground-secondary);
+        border: 1px solid var(--color-border);
+        cursor: not-allowed;
+    }
+}
+
+button:focus,
+button:focus-visible {
+    outline: 4px auto -webkit-focus-ring-color;
+}

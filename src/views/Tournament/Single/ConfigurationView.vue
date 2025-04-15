@@ -14,6 +14,7 @@ const router = useRouter();
 
 const randomGroupPhase = () => {
     randomiseGroupPhaseResults(props.tournament);
+    update();
 };
 
 const update = () => {
@@ -27,7 +28,32 @@ const deleteTournament = () => {
 </script>
 
 <template>
-    <button @click="randomGroupPhase">Randomise Group Phase</button>
-    <button @click="update">Update Knockout Matches</button>
-    <button @click="deleteTournament">Delete Tournament</button>
+    <div class="form">
+        <div class="row">
+            <button
+                class="secondary"
+                @click="randomGroupPhase"
+            >
+                Randomise Group Phase
+            </button>
+            <button
+                class="secondary"
+                @click="update"
+            >
+                Update Knockout Matches
+            </button>
+            <button
+                class="danger"
+                @click="deleteTournament"
+            >
+                Delete Tournament
+            </button>
+        </div>
+    </div>
 </template>
+
+<style scoped>
+.form {
+    padding: 1rem;
+}
+</style>

@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { ALPHABET } from "../helpers";
-import { type Match, type MatchTeam, type StaticTeamRef, type Team } from "../types/tournament";
-
+import type { MatchStatus, Match, MatchTeam, StaticTeamRef, Team } from "@/types/tournament";
 import { computed, ref } from "vue";
+import { debounce } from "lodash-es";
 
 const matcheditor = ref<HTMLDialogElement | null>(null);
 const openMatchEditor = () => {
@@ -35,10 +35,14 @@ const team2display = computed(() => teamDisplay(props.match.teams[1]));
 
 const props = defineProps<{ match: Match; teams: Team[] }>();
 
-const emit = defineEmits(["scoreChanged"]);
+const emit = defineEmits<{
+    (e: "scoreChanged", teamIndex: number, newScore: number): void;
+    (e: "teamNameChanged", teamId: string, newName: string): void;
+    (e: "matchStatusChanged", newStatus: MatchStatus): void;
+}>();
 
 const winner = computed(() => {
-    if (props.match.status !== "completed") return "";
+    if (status.value !== "completed") return "";
     const team1 = props.match.teams[0].score;
     const team2 = props.match.teams[1].score;
     if (team1 > team2) return props.teams[teamIndex(props.match.teams[0].ref)].name;
@@ -46,10 +50,40 @@ const winner = computed(() => {
     return "Draw";
 });
 
-const scoreChanged = () => {
-    props.match.status = "completed";
-    emit("scoreChanged");
+const emitStatusChanged = debounce(() => {
+    emit("matchStatusChanged", status.value);
+}, 1000);
+
+const _onScoreChanged = (teamIndex: number, newScore: number) => {
+    emit("scoreChanged", teamIndex, newScore);
 };
+
+const scores = ref(props.match.teams.map((team) => team.score));
+const status = ref<MatchStatus>(props.match.status);
+
+const onScoreChanged = [
+    debounce((newScore: number) => {
+        _onScoreChanged(0, newScore);
+    }, 1000),
+    debounce((newScore: number) => {
+        _onScoreChanged(1, newScore);
+    }, 1000),
+];
+
+// mm:ss of Date() - match.start
+const currentTime = computed(() => {
+    if (props.match.status !== "in-progress") return "00:00";
+    const now = new Date();
+    const start = props.match.date;
+    if (!start) return "00:00";
+
+    if (start.getTime() > now.getTime()) return "00:00";
+
+    const diff = now.getTime() - start.getTime();
+    const minutes = Math.floor(diff / 60000);
+    const seconds = Math.floor((diff % 60000) / 1000);
+    return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+});
 </script>
 
 <template>
@@ -62,33 +96,34 @@ const scoreChanged = () => {
                 name="close"
             ></ion-icon>
             <div class="form">
-                <template v-for="(team, index) in match.teams">
-                    <div
-                        class="row"
-                        v-if="teamIndex(team.ref) >= 0"
-                    >
+                <div
+                    v-for="(team, index) in match.teams"
+                    class="row"
+                    :key="index"
+                >
+                    <template v-if="teamIndex(team.ref) >= 0">
                         <div class="field">
-                            <label for="team1">Team {{ index + 1 }}</label>
+                            <label :for="`team-${index}`">Team {{ index + 1 }}</label>
                             <input
                                 disabled
                                 type="text"
-                                id="team1"
-                                v-model="teams[teamIndex(team.ref)].name"
+                                :id="`team-${index}`"
+                                :value="teams[teamIndex(team.ref)].name"
                             />
                         </div>
                         <div class="field">
-                            <label for="team1-score">Score</label>
+                            <label :for="`team-score-${index}`">Score</label>
                             <input
-                                @change="scoreChanged"
                                 type="number"
-                                id="team1-score"
-                                v-model="match.teams[index].score"
+                                :id="`team-score-${index}`"
+                                v-model="scores[index]"
+                                @change="onScoreChanged[index](scores[index])"
                             />
                         </div>
-                    </div>
-                </template>
+                    </template>
+                </div>
 
-                <div v-if="match.status == 'completed'">
+                <div v-if="status == 'completed'">
                     <div class="field">
                         <label for="team1">Winner</label>
                         <input
@@ -103,8 +138,9 @@ const scoreChanged = () => {
                 <div class="field">
                     <label for="team2-score">Status</label>
                     <select
-                        v-model="match.status"
+                        v-model="status"
                         id="status"
+                        @change="emitStatusChanged"
                     >
                         <option value="scheduled">Scheduled</option>
                         <option value="in-progress">In Progress</option>
@@ -123,17 +159,23 @@ const scoreChanged = () => {
         <div class="details">
             <div
                 class="score"
-                v-if="match.status !== 'scheduled'"
+                v-if="match.status === 'completed'"
             >
                 <div class="for">{{ match.teams[0].score }}</div>
                 <span>-</span>
                 <div class="against">{{ match.teams[1].score }}</div>
             </div>
             <div
-                v-else
+                v-else-if="match.status === 'scheduled'"
                 class="time"
             >
                 {{ match.date?.toLocaleTimeString?.([], { hour: "2-digit", minute: "2-digit" }) }}
+            </div>
+            <div
+                v-else
+                class="time progress"
+            >
+                {{ currentTime }}
             </div>
             <div class="venue">
                 <div class="court">{{ match.court }}</div>
@@ -183,6 +225,10 @@ const scoreChanged = () => {
     .time {
         font-size: 19px;
         font-weight: 500;
+
+        &.progress {
+            color: var(--color-primary);
+        }
     }
 
     .team {
@@ -217,29 +263,6 @@ dialog[open] {
         top: 0.5em;
         right: 0.5em;
         cursor: pointer;
-    }
-}
-
-.form {
-    display: grid;
-    gap: 1em;
-    border-radius: 1em;
-
-    .row {
-        display: flex;
-        gap: 1em;
-        justify-content: space-between;
-        flex-direction: row;
-    }
-
-    .field {
-        display: flex;
-        flex-direction: column;
-
-        & label {
-            font-size: 0.75rem;
-            color: var(--color-foreground-secondary);
-        }
     }
 }
 </style>

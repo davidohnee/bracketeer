@@ -36,12 +36,14 @@ export type MatchTeam = {
     link?: DynamicTeamRef;
 };
 
+export type MatchStatus = "scheduled" | "in-progress" | "completed";
+
 export interface Match {
     id: string;
     court: string;
     teams: [MatchTeam, MatchTeam];
     date: Date;
-    status: "scheduled" | "in-progress" | "completed";
+    status: MatchStatus;
 }
 
 export interface TournamentRound {

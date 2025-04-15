@@ -1,11 +1,14 @@
 <script setup lang="ts">
+import { useRouter } from "vue-router";
 import { useTournamentsStore } from "../../stores/tournaments";
 
 const tournaments = useTournamentsStore();
+const router = useRouter();
 </script>
 <template>
     <div>
         <h1>Tournaments</h1>
+        <button @click="router.push('/create')">Create Tournament</button>
         <div class="tournament-list">
             <div
                 v-for="(tournament, index) in tournaments.all"

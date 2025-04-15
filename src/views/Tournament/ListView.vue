@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useTournamentsStore } from '../../stores/tournaments';
+import { useTournamentsStore } from "../../stores/tournaments";
 
 const tournaments = useTournamentsStore();
 </script>
@@ -7,7 +7,11 @@ const tournaments = useTournamentsStore();
     <div>
         <h1>Tournaments</h1>
         <div class="tournament-list">
-            <div v-for="(tournament, index) in tournaments.all" :key="index" class="tournament-item">
+            <div
+                v-for="(tournament, index) in tournaments.all"
+                :key="index"
+                class="tournament-item"
+            >
                 <router-link :to="{ name: 'tournament', params: { tournamentId: tournament.id } }">
                     {{ tournament.name }}
                 </router-link>

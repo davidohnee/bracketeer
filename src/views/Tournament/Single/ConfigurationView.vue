@@ -1,29 +1,29 @@
 <script setup lang="ts">
-import { randomiseGroupPhaseResults } from '@/helpers';
-import type { Tournament } from '@/types/tournament';
-import { updateKnockoutMatches } from '../../../helpers';
-import { useTournamentsStore } from '../../../stores/tournaments';
-import { useRouter } from 'vue-router';
+import { randomiseGroupPhaseResults } from "@/helpers";
+import type { Tournament } from "@/types/tournament";
+import { updateKnockoutMatches } from "../../../helpers";
+import { useTournamentsStore } from "../../../stores/tournaments";
+import { useRouter } from "vue-router";
 
 const props = defineProps<{
     tournament: Tournament;
 }>();
 
-const tournaments = useTournamentsStore()
+const tournaments = useTournamentsStore();
 const router = useRouter();
 
 const randomGroupPhase = () => {
     randomiseGroupPhaseResults(props.tournament);
-}
+};
 
 const update = () => {
     updateKnockoutMatches(props.tournament);
-}
+};
 
 const deleteTournament = () => {
     tournaments.deleteTournament(props.tournament.id);
-    router.push({ name: 'tournaments' });
-}
+    router.push({ name: "tournaments" });
+};
 </script>
 
 <template>

@@ -1,11 +1,7 @@
 import { defineStore } from "pinia";
 import type { Tournament, TournamentConfig } from "../types/tournament";
 import { ref, watch } from "vue";
-import {
-    generateGroupPhase,
-    generateKnockoutBracket,
-    getLastMatchOf,
-} from "../helpers";
+import { generateGroupPhase, generateKnockoutBracket, getLastMatchOf } from "../helpers";
 
 // You can name the return value of `defineStore()` anything you want,
 // but it's best to use the name of the store and surround it with `use`
@@ -23,30 +19,28 @@ export const useTournamentsStore = defineStore("tournaments", () => {
             // Save to local storage whenever tournaments change
             localStorage.setItem("tournaments", JSON.stringify(newTournaments));
         },
-        { deep: true }
+        { deep: true },
     );
     // Load tournaments from local storage on initial load
     const storedTournaments = localStorage.getItem("tournaments");
     if (storedTournaments) {
-        tournaments.value = JSON.parse(storedTournaments).map(
-            (tournament: Tournament) => ({
-                ...tournament,
-                groupPhase: tournament.groupPhase.map((round) => ({
-                    ...round,
-                    matches: round.matches.map((match) => ({
-                        ...match,
-                        date: new Date(match.date),
-                    })),
+        tournaments.value = JSON.parse(storedTournaments).map((tournament: Tournament) => ({
+            ...tournament,
+            groupPhase: tournament.groupPhase.map((round) => ({
+                ...round,
+                matches: round.matches.map((match) => ({
+                    ...match,
+                    date: new Date(match.date),
                 })),
-                knockoutPhase: tournament.knockoutPhase.map((round) => ({
-                    ...round,
-                    matches: round.matches.map((match) => ({
-                        ...match,
-                        date: new Date(match.date),
-                    })),
+            })),
+            knockoutPhase: tournament.knockoutPhase.map((round) => ({
+                ...round,
+                matches: round.matches.map((match) => ({
+                    ...match,
+                    date: new Date(match.date),
                 })),
-            })
-        );
+            })),
+        }));
     }
 
     function add(tournament: Tournament) {
@@ -54,15 +48,11 @@ export const useTournamentsStore = defineStore("tournaments", () => {
     }
 
     function remove(tournamentId: string) {
-        tournaments.value = tournaments.value.filter(
-            (t) => t.id !== tournamentId
-        );
+        tournaments.value = tournaments.value.filter((t) => t.id !== tournamentId);
     }
 
     function update(updatedTournament: Tournament) {
-        const index = tournaments.value.findIndex(
-            (t) => t.id === updatedTournament.id
-        );
+        const index = tournaments.value.findIndex((t) => t.id === updatedTournament.id);
         if (index !== -1) {
             tournaments.value[index] = updatedTournament;
         }
@@ -80,19 +70,14 @@ export const useTournamentsStore = defineStore("tournaments", () => {
             name: `Tournament ${tournaments.value.length + 1}`,
             teams: teams,
             groupPhase: groupPhase,
-            knockoutPhase: generateKnockoutBracket(
-                config,
-                getLastMatchOf(groupPhase).date
-            ),
+            knockoutPhase: generateKnockoutBracket(config, getLastMatchOf(groupPhase).date),
             config,
         };
         add(tournament);
     }
 
     function deleteTournament(tournamentId: string) {
-        tournaments.value = tournaments.value.filter(
-            (t) => t.id !== tournamentId
-        );
+        tournaments.value = tournaments.value.filter((t) => t.id !== tournamentId);
     }
 
     return {

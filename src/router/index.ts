@@ -22,28 +22,22 @@ const router = createRouter({
                 {
                     path: "/tournaments/:tournamentId/config",
                     name: "tournament.config",
-                    component: () =>
-                        import(
-                            "../views/Tournament/Single/ConfigurationView.vue"
-                        ),
+                    component: () => import("../views/Tournament/Single/ConfigurationView.vue"),
                 },
                 {
                     path: "/tournaments/:tournamentId/matches",
                     name: "tournament.matches",
-                    component: () =>
-                        import("../views/Tournament/Single/MatchesView.vue"),
+                    component: () => import("../views/Tournament/Single/MatchesView.vue"),
                 },
                 {
                     path: "/tournaments/:tournamentId/knockout",
                     name: "tournament.knockout",
-                    component: () =>
-                        import("../views/Tournament/Single/KnockoutView.vue"),
+                    component: () => import("../views/Tournament/Single/KnockoutView.vue"),
                 },
                 {
                     path: "/tournaments/:tournamentId/table",
                     name: "tournament.table",
-                    component: () =>
-                        import("../views/Tournament/Single/TableView.vue"),
+                    component: () => import("../views/Tournament/Single/TableView.vue"),
                 },
             ],
         },

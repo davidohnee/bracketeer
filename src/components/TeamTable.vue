@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { type TeamScore, type Tournament } from '../types/tournament';
-import TeamTableEntry from './TeamTableEntry.vue';
+import { type TeamScore, type Tournament } from "../types/tournament";
+import TeamTableEntry from "./TeamTableEntry.vue";
 
-defineProps<{ table: TeamScore[], tournament: Tournament }>()
+defineProps<{ table: TeamScore[]; tournament: Tournament }>();
 </script>
 
 <template>
@@ -18,8 +18,15 @@ defineProps<{ table: TeamScore[], tournament: Tournament }>()
             <div class="gd">GD</div>
             <div class="pts">PTS</div>
         </div>
-        <TeamTableEntry class="entry" v-for="(score, index) in table" :key="index" :score="score" :rank="index + 1"
-            :config="tournament.config" :teams="tournament.teams" />
+        <TeamTableEntry
+            class="entry"
+            v-for="(score, index) in table"
+            :key="index"
+            :score="score"
+            :rank="index + 1"
+            :config="tournament.config"
+            :teams="tournament.teams"
+        />
     </div>
 </template>
 
@@ -56,7 +63,7 @@ defineProps<{ table: TeamScore[], tournament: Tournament }>()
             position: relative;
 
             ::before {
-                content: '';
+                content: "";
                 position: absolute;
                 top: 2px;
                 left: 0;

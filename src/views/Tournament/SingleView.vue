@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { computed } from 'vue';
-import { useTournamentsStore } from '../../stores/tournaments';
-import { useRoute } from 'vue-router';
+import { computed } from "vue";
+import { useTournamentsStore } from "../../stores/tournaments";
+import { useRoute } from "vue-router";
 
 const tournaments = useTournamentsStore();
 const route = useRoute();
@@ -10,24 +10,35 @@ const tournamentId = computed(() => {
     return route.params.tournamentId as string;
 });
 
-const tournament = computed(() => tournaments.all.find(t => t.id === tournamentId.value));
+const tournament = computed(() => tournaments.all.find((t) => t.id === tournamentId.value));
 </script>
 
 <template>
-    <div v-if="tournament" class="tournament">
+    <div
+        v-if="tournament"
+        class="tournament"
+    >
         <section>
             <h2>{{ tournament.name }}</h2>
             <div class="tabs">
-                <router-link :to="{ name: 'tournament.table', params: { tournamentId: tournament.id } }">
+                <router-link
+                    :to="{ name: 'tournament.table', params: { tournamentId: tournament.id } }"
+                >
                     Table
                 </router-link>
-                <router-link :to="{ name: 'tournament.knockout', params: { tournamentId: tournament.id } }">
+                <router-link
+                    :to="{ name: 'tournament.knockout', params: { tournamentId: tournament.id } }"
+                >
                     Knockout
                 </router-link>
-                <router-link :to="{ name: 'tournament.matches', params: { tournamentId: tournament.id } }">
+                <router-link
+                    :to="{ name: 'tournament.matches', params: { tournamentId: tournament.id } }"
+                >
                     Matches
                 </router-link>
-                <router-link :to="{ name: 'tournament.config', params: { tournamentId: tournament.id } }">
+                <router-link
+                    :to="{ name: 'tournament.config', params: { tournamentId: tournament.id } }"
+                >
                     Settings
                 </router-link>
             </div>
@@ -69,7 +80,7 @@ section {
             }
 
             &.router-link-active::after {
-                content: '';
+                content: "";
                 position: absolute;
                 bottom: 0;
                 left: 1em;

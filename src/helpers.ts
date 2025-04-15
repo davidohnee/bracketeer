@@ -66,8 +66,7 @@ export const generateTable = (tournament: Tournament): TeamScore[] => {
     return teamScores;
 };
 
-export const getCourtName = (courtNumber: number): string =>
-    `Court ${courtNumber}`;
+export const getCourtName = (courtNumber: number): string => `Court ${courtNumber}`;
 
 export const ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
@@ -85,19 +84,14 @@ const roundRobin = <T>(teams: T[], rest = teams.slice(0, -1)) =>
         .map((b, i) => (i % 2 == 0 ? b : b.map(([a, b]) => [b, a])));
 
 const fold = <T>(xs: T[]) =>
-    xs
-        .slice(0, Math.ceil(xs.length / 2))
-        .map((x, i) => [x, xs[xs.length - i - 1]]);
+    xs.slice(0, Math.ceil(xs.length / 2)).map((x, i) => [x, xs[xs.length - i - 1]]);
 
-export const generateGroupPhase = (
-    teams: Team[],
-    config: TournamentConfig
-): TournamentRound[] => {
+export const generateGroupPhase = (teams: Team[], config: TournamentConfig): TournamentRound[] => {
     const rounds: TournamentRound[] = [];
     const shuffledTeams = teams.sort(() => Math.random() - 0.5);
 
     let courtIndex = 1;
-    let roundStartTime = new Date(config.startTime);
+    const roundStartTime = new Date(config.startTime);
     const roundDuration = config.matchDuration + config.breakDuration;
 
     const matches = roundRobin(shuffledTeams);
@@ -130,9 +124,7 @@ export const generateGroupPhase = (
             courtIndex++;
             if (courtIndex > config.courts) {
                 courtIndex = 1;
-                roundStartTime.setMinutes(
-                    roundStartTime.getMinutes() + roundDuration
-                );
+                roundStartTime.setMinutes(roundStartTime.getMinutes() + roundDuration);
             }
         }
         rounds.push({
@@ -147,15 +139,15 @@ export const generateGroupPhase = (
 
 export const generateRound = (
     teams: Team[],
-    previousRounds: TournamentRound[] | null = null
+    previousRounds: TournamentRound[] | null = null,
 ): Match[] => {
     if (!previousRounds) {
         previousRounds = [];
     }
 
-    let choices = Array.from(
+    const choices = Array.from(
         { length: teams.length / 2 },
-        (_, index) => index + teams.length / 2
+        (_, index) => index + teams.length / 2,
     );
 
     const matches: Match[] = [];
@@ -177,8 +169,8 @@ export const generateRound = (
                     round.matches.some(
                         (match) =>
                             match.teams.find((t) => t.ref!.id === team1.id) &&
-                            match.teams.find((t) => t.ref!.id === team2!.id)
-                    )
+                            match.teams.find((t) => t.ref!.id === team2!.id),
+                    ),
                 )
             ) {
                 choices.splice(j, 1);
@@ -210,12 +202,9 @@ export const generateRound = (
 };
 
 export const getLastMatchOf = (rounds: TournamentRound[]): Match => {
-    const matchComparator = (a: Match, b: Match) =>
-        a.date.getTime() - b.date.getTime();
+    const matchComparator = (a: Match, b: Match) => a.date.getTime() - b.date.getTime();
 
-    const sorted = rounds
-        .flatMap((round) => round.matches)
-        .sort(matchComparator);
+    const sorted = rounds.flatMap((round) => round.matches).sort(matchComparator);
     const last = sorted[sorted.length - 1];
     return last;
 };
@@ -223,13 +212,13 @@ export const getLastMatchOf = (rounds: TournamentRound[]): Match => {
 export const generateKnockoutBracket = (
     config: TournamentConfig,
     lastGroupPhaseMatchDate: Date,
-    table: TeamScore[] = []
+    table: TeamScore[] = [],
 ): TournamentRound[] => {
     const rounds: TournamentRound[] = [];
     const knockoutTeamCount = config.knockoutTeams;
 
     let progressingTeams = Array.from({ length: knockoutTeamCount }, (_, i) =>
-        table.length ? table[i] : `Place ${i + 1}`
+        table.length ? table[i] : `Place ${i + 1}`,
     );
 
     let teamsInRound = progressingTeams.length;
@@ -242,16 +231,14 @@ export const generateKnockoutBracket = (
         2: "Final",
     };
 
-    let startTime = new Date(lastGroupPhaseMatchDate);
+    const startTime = new Date(lastGroupPhaseMatchDate);
 
     while (teamsInRound > 1) {
         const matches: Match[] = [];
         let court = 1;
 
         startTime.setMinutes(
-            startTime.getMinutes() +
-                config.matchDuration +
-                config.knockoutBreakDuration
+            startTime.getMinutes() + config.matchDuration + config.knockoutBreakDuration,
         );
 
         for (let i = 0; i < teamsInRound / 2; i++) {
@@ -284,26 +271,21 @@ export const generateKnockoutBracket = (
 
         rounds.push({
             id: generateId(),
-            name: (ROUND_NAME as any)[teamsInRound] || `Round ${roundNumber}`,
+            name: (ROUND_NAME as Record<number, string>)[teamsInRound] || `Round ${roundNumber}`,
             matches,
         });
 
         teamsInRound /= 2;
         // progressingTeams = winner 1 vs winner -1, winner 2 vs winner -2
-        progressingTeams = Array.from(
-            { length: teamsInRound },
-            (_, i) => `Winner ${ALPHABET[i]}`
-        );
+        progressingTeams = Array.from({ length: teamsInRound }, (_, i) => `Winner ${ALPHABET[i]}`);
 
         roundNumber++;
     }
 
-    let finalRound = rounds.pop()!;
+    const finalRound = rounds.pop()!;
 
     startTime.setMinutes(
-        startTime.getMinutes() +
-            config.matchDuration +
-            config.knockoutBreakDuration
+        startTime.getMinutes() + config.matchDuration + config.knockoutBreakDuration,
     );
 
     // Add the final match
@@ -398,7 +380,7 @@ export const updateKnockoutMatches = (tournament: Tournament) => {
     const groupPhase = tournament.groupPhase;
     if (!groupPhase) return;
     const groupPhaseCompleted = groupPhase.every((round) =>
-        round.matches.every((match) => match.status === "completed")
+        round.matches.every((match) => match.status === "completed"),
     );
     if (!groupPhaseCompleted) return;
 
@@ -419,8 +401,7 @@ export const updateKnockoutMatches = (tournament: Tournament) => {
         const firstState = round.matches[0].status;
         if (round.matches.some((match) => match.status !== firstState)) return;
 
-        const roundRefIndex =
-            round.matches[0].teams[0].link?.fromRound ?? i - 1;
+        const roundRefIndex = round.matches[0].teams[0].link?.fromRound ?? i - 1;
         const prevRoundWinners = i === 0 ? [] : roundWinners[roundRefIndex];
         const prevRoundLosers = i === 0 ? [] : roundLosers[roundRefIndex];
 

@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { useRouter } from 'vue-router';
-import { useTournamentsStore } from '../stores/tournaments';
+import { useRouter } from "vue-router";
+import { useTournamentsStore } from "../stores/tournaments";
 
 const router = useRouter();
 
@@ -13,14 +13,14 @@ const create = () => {
         rounds: 6,
         knockoutTeams: 8,
         startTime: new Date("2025-04-26T18:30:00"),
-        matchDuration: 12
+        matchDuration: 12,
     });
 
     router.push({
-        name: 'tournament',
+        name: "tournament",
         params: {
-            tournamentId: tournaments.all[tournaments.all.length - 1].id
-        }
+            tournamentId: tournaments.all[tournaments.all.length - 1].id,
+        },
     });
 };
 </script>

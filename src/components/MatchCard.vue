@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { ALPHABET } from '../helpers';
-import { type Match, type MatchTeam, type StaticTeamRef, type Team } from '../types/tournament';
+import { ALPHABET } from "../helpers";
+import { type Match, type MatchTeam, type StaticTeamRef, type Team } from "../types/tournament";
 
-import { computed, ref } from 'vue';
+import { computed, ref } from "vue";
 
 const matcheditor = ref<HTMLDialogElement | null>(null);
 const openMatchEditor = () => {
@@ -17,24 +17,25 @@ const closeMatchEditor = () => {
     }
 };
 
-const teamIndex = (team: StaticTeamRef | undefined) => props.teams.findIndex(x => x.id === team?.id)
+const teamIndex = (team: StaticTeamRef | undefined) =>
+    props.teams.findIndex((x) => x.id === team?.id);
 
 const teamDisplay = (team: MatchTeam) => {
     const i = teamIndex(team.ref);
     if (i >= 0) return props.teams[i].name;
-    const asRef = team.link!
+    const asRef = team.link!;
     if (asRef.type == "league") {
-        return `Place ${asRef.placement + 1}`
+        return `Place ${asRef.placement + 1}`;
     }
-    const label = { "winner": "Winner", "loser": "Loser" }
-    return `${label[asRef.type]} ${ALPHABET[asRef.placement]}`
-}
+    const label = { winner: "Winner", loser: "Loser" };
+    return `${label[asRef.type]} ${ALPHABET[asRef.placement]}`;
+};
 const team1display = computed(() => teamDisplay(props.match.teams[0]));
 const team2display = computed(() => teamDisplay(props.match.teams[1]));
 
-const props = defineProps<{ match: Match, teams: Team[] }>();
+const props = defineProps<{ match: Match; teams: Team[] }>();
 
-const emit = defineEmits(['scoreChanged']);
+const emit = defineEmits(["scoreChanged"]);
 
 const winner = computed(() => {
     if (props.match.status !== "completed") return "";
@@ -43,30 +44,46 @@ const winner = computed(() => {
     if (team1 > team2) return props.teams[teamIndex(props.match.teams[0].ref)].name;
     if (team2 > team1) return props.teams[teamIndex(props.match.teams[1].ref)].name;
     return "Draw";
-})
+});
 
 const scoreChanged = () => {
     props.match.status = "completed";
-    emit("scoreChanged")
-}
+    emit("scoreChanged");
+};
 </script>
 
 <template>
     <dialog ref="matcheditor">
         <div class="content">
             <h2>Edit</h2>
-            <ion-icon @click="closeMatchEditor" class="close" name="close"></ion-icon>
-            <div class=form>
+            <ion-icon
+                @click="closeMatchEditor"
+                class="close"
+                name="close"
+            ></ion-icon>
+            <div class="form">
                 <template v-for="(team, index) in match.teams">
-                    <div class=row v-if="teamIndex(team.ref) >= 0">
+                    <div
+                        class="row"
+                        v-if="teamIndex(team.ref) >= 0"
+                    >
                         <div class="field">
                             <label for="team1">Team {{ index + 1 }}</label>
-                            <input disabled type="text" id="team1" v-model="teams[teamIndex(team.ref)].name" />
+                            <input
+                                disabled
+                                type="text"
+                                id="team1"
+                                v-model="teams[teamIndex(team.ref)].name"
+                            />
                         </div>
                         <div class="field">
                             <label for="team1-score">Score</label>
-                            <input @change="scoreChanged" type="number" id="team1-score"
-                                v-model="match.teams[index].score" />
+                            <input
+                                @change="scoreChanged"
+                                type="number"
+                                id="team1-score"
+                                v-model="match.teams[index].score"
+                            />
                         </div>
                     </div>
                 </template>
@@ -74,13 +91,21 @@ const scoreChanged = () => {
                 <div v-if="match.status == 'completed'">
                     <div class="field">
                         <label for="team1">Winner</label>
-                        <input disabled type="text" id="team1" v-model="winner" />
+                        <input
+                            disabled
+                            type="text"
+                            id="team1"
+                            v-model="winner"
+                        />
                     </div>
                 </div>
 
                 <div class="field">
                     <label for="team2-score">Status</label>
-                    <select v-model="match.status" id="status">
+                    <select
+                        v-model="match.status"
+                        id="status"
+                    >
                         <option value="scheduled">Scheduled</option>
                         <option value="in-progress">In Progress</option>
                         <option value="completed">Finished</option>
@@ -89,17 +114,26 @@ const scoreChanged = () => {
             </div>
         </div>
     </dialog>
-    <div class="match" @click="openMatchEditor">
-
+    <div
+        class="match"
+        @click="openMatchEditor"
+    >
         <div class="team">{{ team1display }}</div>
 
-        <div class=details>
-            <div class="score" v-if="match.status !== 'scheduled'">
+        <div class="details">
+            <div
+                class="score"
+                v-if="match.status !== 'scheduled'"
+            >
                 <div class="for">{{ match.teams[0].score }}</div>
                 <span>-</span>
                 <div class="against">{{ match.teams[1].score }}</div>
             </div>
-            <div v-else class="time">{{ match.date?.toLocaleTimeString?.([], { hour: '2-digit', minute: '2-digit' }) }}
+            <div
+                v-else
+                class="time"
+            >
+                {{ match.date?.toLocaleTimeString?.([], { hour: "2-digit", minute: "2-digit" }) }}
             </div>
             <div class="venue">
                 <div class="court">{{ match.court }}</div>
@@ -170,7 +204,7 @@ dialog[open] {
         background-color: rgba(0, 0, 0, 0.5);
     }
 
-    >.content {
+    > .content {
         position: relative;
 
         :first-child {

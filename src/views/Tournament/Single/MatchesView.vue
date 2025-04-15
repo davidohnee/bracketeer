@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { computed } from 'vue';
-import MatchCard from '@/components/MatchCard.vue';
-import { updateKnockoutMatches } from '../../../helpers';
-import type { Tournament, TournamentRound } from '@/types/tournament';
+import { computed } from "vue";
+import MatchCard from "@/components/MatchCard.vue";
+import { updateKnockoutMatches } from "../../../helpers";
+import type { Tournament, TournamentRound } from "@/types/tournament";
 
 const props = defineProps<{
     tournament: Tournament;
@@ -14,19 +14,37 @@ const knockoutBracket = computed<TournamentRound[]>(() => {
 </script>
 
 <template>
-    <div class="round" v-for="round in tournament.groupPhase" :key="round.id">
+    <div
+        class="round"
+        v-for="round in tournament.groupPhase"
+        :key="round.id"
+    >
         <h3 class="round-title">{{ round.name }}</h3>
         <div class="matches">
-            <MatchCard v-for="(match, index) in round.matches" :key="index"
-                @scoreChanged="updateKnockoutMatches(tournament)" :match="match" :teams="tournament.teams" />
+            <MatchCard
+                v-for="(match, index) in round.matches"
+                :key="index"
+                @scoreChanged="updateKnockoutMatches(tournament)"
+                :match="match"
+                :teams="tournament.teams"
+            />
         </div>
     </div>
 
-    <div class="round" v-for="round in knockoutBracket" :key="round.id">
+    <div
+        class="round"
+        v-for="round in knockoutBracket"
+        :key="round.id"
+    >
         <h3 class="round-title">{{ round.name }}</h3>
         <div class="matches">
-            <MatchCard v-for="(match, index) in round.matches" :key="index"
-                @scoreChanged="updateKnockoutMatches(tournament)" :match="match" :teams="tournament.teams" />
+            <MatchCard
+                v-for="(match, index) in round.matches"
+                :key="index"
+                @scoreChanged="updateKnockoutMatches(tournament)"
+                :match="match"
+                :teams="tournament.teams"
+            />
         </div>
     </div>
 </template>

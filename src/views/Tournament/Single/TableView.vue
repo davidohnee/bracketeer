@@ -14,5 +14,5 @@ const teamScores = computed(() => {
 </script>
 
 <template>
-    <TeamTable :table="teamScores" :config="tournament.config" />
+    <TeamTable :table="teamScores" :tournament="tournament" />
 </template>

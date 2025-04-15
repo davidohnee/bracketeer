@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { ALPHABET, updateKnockoutMatches } from '../helpers';
-import { type DynamicTeamRef, type Match, type MatchTeam, type StaticTeamRef, type Team } from '../types/tournament';
+import { ALPHABET } from '../helpers';
+import { type Match, type MatchTeam, type StaticTeamRef, type Team } from '../types/tournament';
 
 import { computed, ref } from 'vue';
 
@@ -45,7 +45,7 @@ const winner = computed(() => {
     return "Draw";
 })
 
-const scoreChanged = (e: Event) => {
+const scoreChanged = () => {
     props.match.status = "completed";
     emit("scoreChanged")
 }

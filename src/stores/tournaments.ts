@@ -5,7 +5,6 @@ import {
     generateGroupPhase,
     generateKnockoutBracket,
     getLastMatchOf,
-    updateKnockoutMatches,
 } from "../helpers";
 
 // You can name the return value of `defineStore()` anything you want,

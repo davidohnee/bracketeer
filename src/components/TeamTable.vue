@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { type TeamScore, type TournamentConfig } from '../types/tournament';
+import { type TeamScore, type Tournament } from '../types/tournament';
 import TeamTableEntry from './TeamTableEntry.vue';
 
-defineProps<{ table: TeamScore[], config: TournamentConfig }>()
+defineProps<{ table: TeamScore[], tournament: Tournament }>()
 </script>
 
 <template>
@@ -19,7 +19,7 @@ defineProps<{ table: TeamScore[], config: TournamentConfig }>()
             <div class="pts">PTS</div>
         </div>
         <TeamTableEntry class="entry" v-for="(score, index) in table" :key="index" :score="score" :rank="index + 1"
-            :config="config" />
+            :config="tournament.config" :teams="tournament.teams" />
     </div>
 </template>
 

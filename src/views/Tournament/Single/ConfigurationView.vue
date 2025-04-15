@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { randomiseGroupPhaseResults } from '@/helpers';
-import type { Match, Tournament } from '@/types/tournament';
-import type { TournamentRound } from '../../../types/tournament';
+import type { Tournament } from '@/types/tournament';
 import { updateKnockoutMatches } from '../../../helpers';
 import { useTournamentsStore } from '../../../stores/tournaments';
 import { useRouter } from 'vue-router';

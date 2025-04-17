@@ -167,7 +167,6 @@ export const generateGroupPhase = (teams: Team[], config: TournamentConfig): Tou
     const shuffledTeams = teams.sort(() => Math.random() - 0.5);
 
     let courtIndex = 1;
-    const roundStartTime = new Date(config.startTime);
     const roundDuration = config.matchDuration + config.breakDuration;
 
     const matches = roundRobin(shuffledTeams);

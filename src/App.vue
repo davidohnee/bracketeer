@@ -1,10 +1,15 @@
 <template>
     <header>
         <div class="full">
-            <h2 class="title">
-                <ion-icon name="trophy-outline"></ion-icon>
-                bracketeer
-            </h2>
+            <RouterLink
+                to="/"
+                class="nav-link"
+            >
+                <h2 class="title">
+                    <ion-icon name="trophy-outline"></ion-icon>
+                    bracketeer
+                </h2>
+            </RouterLink>
             <nav>
                 <RouterLink
                     to="/"
@@ -52,6 +57,7 @@ header {
         display: flex;
         align-items: center;
         gap: 0.5em;
+        margin: 0.5em 0;
     }
 
     & nav {

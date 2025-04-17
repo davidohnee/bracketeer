@@ -108,6 +108,60 @@ const roundRobin = <T>(teams: T[], rest = teams.slice(0, -1)) =>
 const fold = <T>(xs: T[]) =>
     xs.slice(0, Math.ceil(xs.length / 2)).map((x, i) => [x, xs[xs.length - i - 1]]);
 
+/**
+ * find the earliest time slot for two teams to play a match on a specific court
+ *
+ * @param scheduledMatches - array of matches already scheduled
+ * @param earliestTime - earliest time to start the match
+ * @param timeDelta - time delta between matches
+ * @param teams - array of teams to play the match
+ * @param court - court to play the match on
+ * @returns - earliest time slot for the match
+ */
+const earliestFreeSlot = (
+    scheduledMatches: Match[],
+    earliestTime: Date,
+    timeDelta: number,
+    teams: StaticTeamRef[],
+    court: string,
+): Date => {
+    const matchTime = new Date(earliestTime);
+
+    const increaseTime = (time: Date, delta: number) => {
+        time.setMinutes(time.getMinutes() + delta);
+        return time;
+    };
+
+    const isNotPossible = (time: Date) => {
+        if (scheduledMatches.length === 0) {
+            return false;
+        }
+
+        const isCourtOccupied = scheduledMatches.some(
+            (match) => match.court === court && time.getTime() == match.date.getTime(),
+        );
+
+        const isTeamOccupied = scheduledMatches.some((match) =>
+            match.teams.some(
+                (team) =>
+                    (team.ref?.id === teams[0].id || team.ref?.id === teams[1].id) &&
+                    time.getTime() == match.date.getTime(),
+            ),
+        );
+
+        return isCourtOccupied || isTeamOccupied;
+    };
+
+    for (let i = 0; i < 100; i++) {
+        if (!isNotPossible(matchTime)) {
+            break;
+        }
+        increaseTime(matchTime, timeDelta);
+    }
+
+    return matchTime;
+};
+
 export const generateGroupPhase = (teams: Team[], config: TournamentConfig): TournamentRound[] => {
     const rounds: TournamentRound[] = [];
     const shuffledTeams = teams.sort(() => Math.random() - 0.5);
@@ -139,14 +193,19 @@ export const generateGroupPhase = (teams: Team[], config: TournamentConfig): Tou
                         score: 0,
                     },
                 ],
-                date: new Date(roundStartTime),
+                date: earliestFreeSlot(
+                    [...rounds.flatMap((round) => round.matches), ...match],
+                    config.startTime,
+                    roundDuration,
+                    [team1!, team2!],
+                    getCourtName(courtIndex),
+                ),
                 status: "scheduled",
             };
             match.push(matchObj);
             courtIndex++;
             if (courtIndex > config.courts) {
                 courtIndex = 1;
-                roundStartTime.setMinutes(roundStartTime.getMinutes() + roundDuration);
             }
         }
         rounds.push({

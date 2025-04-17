@@ -20,13 +20,13 @@ const initTournament = {
     groupPhase: [],
     knockoutPhase: [],
     config: {
-        breakDuration: 2,
+        breakDuration: 5,
         knockoutBreakDuration: 5,
         courts: 15,
         rounds: 6,
         knockoutTeams: 8,
         startTime: new Date("2025-04-26T18:30:00"),
-        matchDuration: 12,
+        matchDuration: 10,
     },
 };
 

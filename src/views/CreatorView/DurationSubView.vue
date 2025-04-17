@@ -28,6 +28,8 @@ watch(
 );
 
 const generate = () => {
+    if (tournament.value.teams.length === 0) return;
+
     tournament.value.groupPhase = generateGroupPhase(
         tournament.value.teams,
         tournament.value.config,

@@ -1,8 +1,14 @@
 <script setup lang="ts">
-import { type TeamScore, type Tournament } from "../types/tournament";
+import { computed } from "vue";
+import { type Tournament } from "../types/tournament";
 import TeamTableEntry from "./TeamTableEntry.vue";
+import { generateTable } from "@/helpers";
 
-defineProps<{ table: TeamScore[]; tournament: Tournament }>();
+const props = defineProps<{ tournament: Tournament }>();
+
+const table = computed(() => {
+    return generateTable(props.tournament);
+});
 </script>
 
 <template>

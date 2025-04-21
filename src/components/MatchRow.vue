@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ALPHABET } from "../helpers";
 import type { MatchStatus, Match, MatchTeam, StaticTeamRef, Team } from "@/types/tournament";
-import { computed, ref } from "vue";
+import { computed, onMounted, onUnmounted, ref, watch } from "vue";
 import { debounce } from "lodash-es";
 
 const matcheditor = ref<HTMLDialogElement | null>(null);
@@ -33,7 +33,7 @@ const teamDisplay = (team: MatchTeam) => {
 const team1display = computed(() => teamDisplay(props.match.teams[0]));
 const team2display = computed(() => teamDisplay(props.match.teams[1]));
 
-const props = defineProps<{ match: Match; teams: Team[] }>();
+const props = defineProps<{ match: Match; teams: Team[]; matchDuration: number }>();
 
 const emit = defineEmits<{
     (e: "scoreChanged", teamIndex: number, newScore: number): void;
@@ -71,8 +71,11 @@ const onScoreChanged = [
 ];
 
 // mm:ss of Date() - match.start
-const currentTime = computed(() => {
-    if (props.match.status !== "in-progress") return "00:00";
+const currentTime = ref("00:00");
+
+let currentTimeTimer = 0;
+
+const updateCurrentTime = () => {
     const now = new Date();
     const start = props.match.date;
     if (!start) return "00:00";
@@ -82,8 +85,39 @@ const currentTime = computed(() => {
     const diff = now.getTime() - start.getTime();
     const minutes = Math.floor(diff / 60000);
     const seconds = Math.floor((diff % 60000) / 1000);
+
+    if (minutes > props.matchDuration) {
+        return "FT";
+    }
+
     return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+};
+onUnmounted(() => {
+    if (currentTimeTimer) {
+        clearInterval(currentTimeTimer);
+    }
 });
+onMounted(() => {
+    if (props.match.status === "in-progress") {
+        currentTime.value = updateCurrentTime();
+        currentTimeTimer = setInterval(() => {
+            currentTime.value = updateCurrentTime();
+        }, 1000);
+    }
+});
+
+watch(
+    () => props.match.status,
+    (newStatus) => {
+        clearInterval(currentTimeTimer);
+        if (newStatus === "in-progress") {
+            currentTime.value = updateCurrentTime();
+            currentTimeTimer = setInterval(() => {
+                currentTime.value = updateCurrentTime();
+            }, 1000);
+        }
+    },
+);
 </script>
 
 <template>
@@ -196,7 +230,7 @@ const currentTime = computed(() => {
     </div>
 </template>
 
-<style>
+<style scoped>
 .match.row {
     overflow: clip;
     padding: 1em;

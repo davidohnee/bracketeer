@@ -37,6 +37,11 @@ const tournament = computed(() => tournaments.all.find((t) => t.id === tournamen
                     Matches
                 </router-link>
                 <router-link
+                    :to="{ name: 'tournament.live', params: { tournamentId: tournament.id } }"
+                >
+                    Live
+                </router-link>
+                <router-link
                     :to="{ name: 'tournament.config', params: { tournamentId: tournament.id } }"
                 >
                     Settings

@@ -44,6 +44,11 @@ const router = createRouter({
                     name: "tournament.table",
                     component: () => import("../views/Tournament/Single/TableView.vue"),
                 },
+                {
+                    path: "/tournaments/:tournamentId/live",
+                    name: "tournament.live",
+                    component: () => import("../views/Tournament/Single/LiveView.vue"),
+                },
             ],
         },
     ],

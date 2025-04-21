@@ -128,8 +128,7 @@ const updateMatchStatus = (roundName: string, matchId: string, newStatus: MatchS
     }
 };
 
-const DISPLAY_OPTIONS = ["card", "row"] as const;
-const selectedDisplayOption = ref<(typeof DISPLAY_OPTIONS)[number]>("row");
+const selectedDisplayOption = ref<("card" | "row")[number]>("row");
 
 const GROUP_OPTIONS = ["round", "time", "team", "court"] as const;
 const selectedGroupOption = ref<(typeof GROUP_OPTIONS)[number]>(GROUP_OPTIONS[0]);
@@ -138,7 +137,7 @@ const grouped = computed(() => {
     // Group matches by the selected option
     const groupedMatches: Record<string, MatchAndRound[]> = {};
     for (const match of allMatches.value) {
-        let keys: string[] = [];
+        const keys: string[] = [];
         if (selectedGroupOption.value === "round") {
             keys.push(match.roundName);
         } else if (selectedGroupOption.value === "time") {

@@ -151,57 +151,70 @@ const currentTime = computed(() => {
         </div>
     </dialog>
     <div
-        class="match card"
+        class="match row"
         @click="openMatchEditor"
     >
+        <div class="time-progress">
+            <span
+                v-if="match.status === 'in-progress'"
+                class="time progress"
+            >
+                {{ currentTime }}
+            </span>
+            <span
+                v-else-if="match.status === 'completed'"
+                class="time full"
+            >
+                FT
+            </span>
+        </div>
+
         <div class="team">{{ team1display }}</div>
 
         <div class="details">
             <div
+                v-if="match.status === 'scheduled'"
+                class="match-time"
+            >
+                {{ match.date?.toLocaleTimeString?.([], { hour: "2-digit", minute: "2-digit" }) }}
+            </div>
+            <div
                 class="score"
-                v-if="match.status === 'completed'"
+                v-else
             >
                 <div class="for">{{ match.teams[0].score }}</div>
                 <span>-</span>
                 <div class="against">{{ match.teams[1].score }}</div>
             </div>
-            <div
-                v-else-if="match.status === 'scheduled'"
-                class="time"
-            >
-                {{ match.date?.toLocaleTimeString?.([], { hour: "2-digit", minute: "2-digit" }) }}
-            </div>
-            <div
-                v-else
-                class="time progress"
-            >
-                {{ currentTime }}
-            </div>
-            <div class="venue">
-                <div class="court">{{ match.court }}</div>
-            </div>
         </div>
 
         <div class="team">{{ team2display }}</div>
+
+        <div class="venue">
+            <div class="court">{{ match.court }}</div>
+        </div>
     </div>
 </template>
 
 <style>
-.match.card {
-    border: 1px solid var(--color-border);
-    border-radius: 1em;
+.match.row {
     overflow: clip;
-    padding: 2em 1em;
+    padding: 1em;
     flex: 1;
     font-size: 13px;
     display: grid;
-    grid-template-columns: 1fr max-content 1fr;
+    grid-template-columns: 10ch 1fr 15ch 1fr 10ch;
     align-items: center;
+    gap: 1em;
     cursor: pointer;
     transition: border-color 0.2s ease-in-out;
 
+    &:not(:last-child) {
+        border-bottom: 1px solid var(--color-border);
+    }
+
     &:hover {
-        border-color: var(--color-primary);
+        background-color: var(--color-background-hover);
     }
 
     .venue {
@@ -218,6 +231,8 @@ const currentTime = computed(() => {
     .details {
         display: flex;
         flex-direction: column;
+        text-align: center;
+        align-items: center;
     }
 
     .court,
@@ -227,22 +242,37 @@ const currentTime = computed(() => {
     }
 
     .score,
+    .match-time {
+        font-size: 19px;
+        font-weight: 500;
+    }
+
+    .match-time {
+        color: var(--color-foreground-secondary);
+    }
+
     .time {
         font-size: 19px;
         font-weight: 500;
+        border-radius: 100vmax;
+        padding: 0.5em 1em;
+        font-size: 0.9rem;
+        background-color: var(--color-border);
+        color: var(--color-foreground-secondary);
 
         &.progress {
-            color: var(--color-primary);
+            background-color: var(--color-primary);
+            color: var(--color-primary-contrast);
         }
     }
 
     .team {
-        &:first-child {
-            text-align: left;
+        &:nth-child(2) {
+            text-align: right;
         }
 
-        &:last-child {
-            text-align: right;
+        &:nth-child(4) {
+            text-align: left;
         }
     }
 }

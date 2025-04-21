@@ -16,6 +16,7 @@
     --color-blue: rgb(48, 141, 241);
     --color-primary: var(--color-green);
     --color-primary-hover: color-mix(in srgb, var(--color-green) 80%, #000);
+    --color-primary-contrast: #fff;
     --color-background: #1d1d1d;
     --color-background-secondary: #000;
     --color-background-hover: rgb(37, 37, 37);

@@ -73,10 +73,17 @@ header {
     }
 }
 
-.matches {
+.matches:has(.match.card) {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(30ch, 1fr));
     gap: 1em;
+    padding: 1em;
+}
+
+.matches:has(.match.row) {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0em;
     padding: 1em;
 }
 </style>

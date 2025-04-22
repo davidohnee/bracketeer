@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ALPHABET } from "../helpers";
+import { ALPHABET, getCourtName } from "../helpers";
 import type { MatchStatus, Match, MatchTeam, StaticTeamRef, Team } from "@/types/tournament";
 import { computed, onMounted, onUnmounted, ref, watch } from "vue";
 import { debounce } from "lodash-es";
@@ -225,7 +225,7 @@ watch(
         <div class="team">{{ team2display }}</div>
 
         <div class="venue">
-            <div class="court">{{ match.court }}</div>
+            <div class="court">{{ getCourtName(match.court) }}</div>
         </div>
     </div>
 </template>

@@ -30,6 +30,11 @@ const router = createRouter({
                     component: () => import("../views/Tournament/Single/ConfigurationView.vue"),
                 },
                 {
+                    path: "/tournaments/:tournamentId/config/teams",
+                    name: "tournament.config.teams",
+                    component: () => import("../views/Tournament/Single/TeamEditorView.vue"),
+                },
+                {
                     path: "/tournaments/:tournamentId/matches",
                     name: "tournament.matches",
                     component: () => import("../views/Tournament/Single/MatchesView.vue"),

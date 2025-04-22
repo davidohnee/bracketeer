@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ALPHABET } from "../helpers";
 import type { MatchStatus, Match, MatchTeam, StaticTeamRef, Team } from "@/types/tournament";
-import { computed, onMounted, onUnmounted, ref, watch } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { debounce } from "lodash-es";
 
 const teamIndex = (team: StaticTeamRef | undefined) =>
@@ -50,53 +50,10 @@ const onScoreChanged = [
     }, 1000),
 ];
 
-// mm:ss of Date() - match.start
-const currentTime = ref("00:00");
-
-let currentTimeTimer = 0;
-
-const updateCurrentTime = () => {
-    const now = new Date();
-    const start = props.match.date;
-    if (!start) return "00:00";
-
-    if (start.getTime() > now.getTime()) return "00:00";
-
-    const diff = now.getTime() - start.getTime();
-    const minutes = Math.floor(diff / 60000);
-    const seconds = Math.floor((diff % 60000) / 1000);
-
-    if (minutes > props.matchDuration) {
-        return "FT";
-    }
-
-    return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
-};
-onUnmounted(() => {
-    if (currentTimeTimer) {
-        clearInterval(currentTimeTimer);
-    }
-});
 onMounted(() => {
-    if (props.match.status === "in-progress") {
-        currentTimeTimer = setInterval(() => {
-            currentTime.value = updateCurrentTime();
-        }, 1000);
-    }
+    onScoreChanged[0](scores.value[0]);
+    onScoreChanged[1](scores.value[1]);
 });
-
-watch(
-    () => props.match.status,
-    (newStatus) => {
-        clearInterval(currentTimeTimer);
-        if (newStatus === "in-progress") {
-            currentTime.value = updateCurrentTime();
-            currentTimeTimer = setInterval(() => {
-                currentTime.value = updateCurrentTime();
-            }, 1000);
-        }
-    },
-);
 </script>
 
 <template>
@@ -115,7 +72,7 @@ watch(
                         {{ teams[teamIndex(team.ref)].name }}
                     </p>
                     <div class="field">
-                        <label :for="`team-score-${index}`">Cups left</label>
+                        <label :for="`team-score-${index}`">Cups still standing</label>
                         <input
                             type="number"
                             :id="`team-score-${index}`"

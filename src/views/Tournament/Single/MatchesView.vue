@@ -2,15 +2,55 @@
 import { computed, ref } from "vue";
 import MatchCard from "@/components/MatchCard.vue";
 import MatchRow from "@/components/MatchRow.vue";
-import { updateKnockoutMatches } from "../../../helpers";
+import { getCourtName, updateKnockoutMatches } from "../../../helpers";
 import type { Match, MatchStatus, Tournament, TournamentRound } from "@/types/tournament";
 import { useTournamentsStore } from "@/stores/tournaments";
+import { useRoute, useRouter } from "vue-router";
 
 const props = defineProps<{
     tournament: Tournament;
 }>();
 
 const tournamentStore = useTournamentsStore();
+const route = useRoute();
+const router = useRouter();
+
+const teamFilter = computed({
+    get() {
+        return route.query.team as string;
+    },
+    set(team) {
+        router.replace({
+            query: {
+                team,
+                court: route.query.court,
+                group: route.query.group,
+            },
+        });
+    },
+});
+const courtFilter = computed({
+    get() {
+        return parseInt(route.query.court as string);
+    },
+    set(court) {
+        router.replace({ query: { court, team: route.query.team, group: route.query.group } });
+    },
+});
+const selectedGroupOption = computed<(typeof GROUP_OPTIONS)[number]>({
+    get() {
+        return (route.query.group ?? GROUP_OPTIONS[0]) as (typeof GROUP_OPTIONS)[number];
+    },
+    set(group) {
+        router.replace({
+            query: {
+                group,
+                team: route.query.team,
+                court: route.query.court,
+            },
+        });
+    },
+});
 
 const tournament = tournamentStore.getTournamentById(props.tournament.id)!;
 
@@ -131,12 +171,22 @@ const updateMatchStatus = (roundName: string, matchId: string, newStatus: MatchS
 const selectedDisplayOption = ref<("card" | "row")[number]>("row");
 
 const GROUP_OPTIONS = ["round", "time", "team", "court"] as const;
-const selectedGroupOption = ref<(typeof GROUP_OPTIONS)[number]>(GROUP_OPTIONS[0]);
 
 const grouped = computed(() => {
     // Group matches by the selected option
     const groupedMatches: Record<string, MatchAndRound[]> = {};
     for (const match of allMatches.value) {
+        // filter
+        if (
+            teamFilter.value &&
+            !match.match.teams.some((team) => team.ref?.id === teamFilter.value)
+        ) {
+            continue;
+        }
+        if (courtFilter.value && match.match.court !== courtFilter.value) {
+            continue;
+        }
+
         const keys: string[] = [];
         if (selectedGroupOption.value === "round") {
             keys.push(match.roundName);
@@ -146,7 +196,7 @@ const grouped = computed(() => {
             keys.push(getTeamName(match.match.teams[0].ref?.id) || "N/A");
             keys.push(getTeamName(match.match.teams[1].ref?.id) || "N/A");
         } else if (selectedGroupOption.value === "court") {
-            keys.push(match.match.court || "N/A");
+            keys.push(getCourtName(match.match.court));
         }
 
         for (const key of keys) {
@@ -156,6 +206,20 @@ const grouped = computed(() => {
             groupedMatches[key].push(match);
         }
     }
+
+    // sort groups if 'team' or 'court' is selected
+    if (["team", "court"].includes(selectedGroupOption.value)) {
+        return Object.fromEntries(
+            Object.entries(groupedMatches).sort((a, b) => {
+                const aKey = a[0];
+                const bKey = b[0];
+                return aKey.localeCompare(bKey, undefined, {
+                    numeric: true,
+                });
+            }),
+        );
+    }
+
     return groupedMatches;
 });
 </script>

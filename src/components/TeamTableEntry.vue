@@ -1,25 +1,29 @@
 <script setup lang="ts">
-import { type Team, type TeamScore, type TournamentConfig } from "../types/tournament";
+import { type TeamScore, type Tournament } from "../types/tournament";
 import { calculateDifference, calculateTeamPoints } from "../helpers";
 import { computed } from "vue";
 
 const props = defineProps<{
     score: TeamScore;
     rank: number;
-    config: TournamentConfig;
-    teams: Team[];
+    tournament: Tournament;
 }>();
 
 const teamName = computed(() => {
-    const team = props.teams.find((t) => t.id === props.score.team.id);
+    const team = props.tournament.teams.find((t) => t.id === props.score.team.id);
     return team ? team.name : "";
 });
 </script>
 
 <template>
-    <div
+    <router-link
+        :to="{
+            name: 'tournament.matches',
+            params: { tournamentId: tournament.id },
+            query: { team: score.team.id },
+        }"
         class="team"
-        :class="{ progress: rank <= config.knockoutTeams }"
+        :class="{ progress: rank <= tournament.config.knockoutTeams }"
     >
         <div class="rank">{{ rank }}</div>
         <div class="name">{{ teamName }}</div>
@@ -30,5 +34,11 @@ const teamName = computed(() => {
         <div class="for-against">{{ score.points.for }} - {{ score.points.against }}</div>
         <div class="gd">{{ calculateDifference(score) }}</div>
         <div class="pts">{{ calculateTeamPoints(score) }}</div>
-    </div>
+    </router-link>
 </template>
+
+<style scoped>
+a {
+    color: unset;
+}
+</style>

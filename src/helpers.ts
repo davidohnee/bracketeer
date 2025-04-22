@@ -83,12 +83,15 @@ export const generateTable = (tournament: Tournament): TeamScore[] => {
         if (a.draws !== b.draws) {
             return b.draws - a.draws;
         }
-        return a.team.id.localeCompare(b.team.id);
+        return a.team.id.localeCompare(b.team.id, undefined, {
+            numeric: true,
+        });
     });
     return teamScores;
 };
 
-export const getCourtName = (courtNumber: number): string => `Court ${courtNumber}`;
+export const getCourtName = (courtNumber: number | null): string =>
+    courtNumber ? `Court ${courtNumber}` : "N/A";
 
 export const ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
@@ -123,9 +126,11 @@ const earliestFreeSlot = (
     earliestTime: Date,
     timeDelta: number,
     teams: StaticTeamRef[],
-    court: string,
-): Date => {
+    courtCount: number,
+): { time: Date; court: number } => {
     const matchTime = new Date(earliestTime);
+    let court = 1;
+    const courts = Array.from({ length: courtCount }, (_, i) => i + 1);
 
     const increaseTime = (time: Date, delta: number) => {
         time.setMinutes(time.getMinutes() + delta);
@@ -137,9 +142,16 @@ const earliestFreeSlot = (
             return false;
         }
 
-        const isCourtOccupied = scheduledMatches.some(
-            (match) => match.court === court && time.getTime() == match.date.getTime(),
-        );
+        // get lowest free court
+        court = courts.find(
+            (court) =>
+                !scheduledMatches.some(
+                    (match) => match.court === court && time.getTime() == match.date.getTime(),
+                ),
+        )!;
+        if (!court) {
+            return true;
+        }
 
         const isTeamOccupied = scheduledMatches.some((match) =>
             match.teams.some(
@@ -148,8 +160,7 @@ const earliestFreeSlot = (
                     time.getTime() == match.date.getTime(),
             ),
         );
-
-        return isCourtOccupied || isTeamOccupied;
+        return isTeamOccupied;
     };
 
     for (let i = 0; i < 100; i++) {
@@ -159,14 +170,13 @@ const earliestFreeSlot = (
         increaseTime(matchTime, timeDelta);
     }
 
-    return matchTime;
+    return { time: matchTime, court };
 };
 
 export const generateGroupPhase = (teams: Team[], config: TournamentConfig): TournamentRound[] => {
     const rounds: TournamentRound[] = [];
     const shuffledTeams = teams.sort(() => Math.random() - 0.5);
 
-    let courtIndex = 1;
     const roundDuration = config.matchDuration + config.breakDuration;
 
     const matches = roundRobin(shuffledTeams);
@@ -179,9 +189,19 @@ export const generateGroupPhase = (teams: Team[], config: TournamentConfig): Tou
         for (let j = 0; j < matchPairs.length; j++) {
             const team1 = matchPairs[j][0];
             const team2 = matchPairs[j][1];
+
+            const slot = earliestFreeSlot(
+                [...rounds.flatMap((round) => round.matches), ...match],
+                config.startTime,
+                roundDuration,
+                [team1!, team2!],
+                config.courts,
+            );
+            const { time, court } = slot;
+
             const matchObj: Match = {
                 id: generateId(),
-                court: getCourtName(courtIndex),
+                court,
                 teams: [
                     {
                         ref: team1 as StaticTeamRef,
@@ -192,20 +212,10 @@ export const generateGroupPhase = (teams: Team[], config: TournamentConfig): Tou
                         score: 0,
                     },
                 ],
-                date: earliestFreeSlot(
-                    [...rounds.flatMap((round) => round.matches), ...match],
-                    config.startTime,
-                    roundDuration,
-                    [team1!, team2!],
-                    getCourtName(courtIndex),
-                ),
+                date: time,
                 status: "scheduled",
             };
             match.push(matchObj);
-            courtIndex++;
-            if (courtIndex > config.courts) {
-                courtIndex = 1;
-            }
         }
         rounds.push({
             id: generateId(),
@@ -261,7 +271,7 @@ export const generateRound = (
 
         const match: Match = {
             id: generateId(),
-            court: "",
+            court: null,
             teams: [
                 {
                     ref: team1,
@@ -324,7 +334,7 @@ export const generateKnockoutBracket = (
         for (let i = 0; i < teamsInRound / 2; i++) {
             const match: Match = {
                 id: generateId(),
-                court: getCourtName(court++),
+                court: court++,
                 teams: [
                     {
                         link: {
@@ -371,7 +381,7 @@ export const generateKnockoutBracket = (
     // Add the final match
     const finalMatch: Match = {
         id: generateId(),
-        court: getCourtName(1),
+        court: 1,
         teams: [
             {
                 link: {

@@ -402,6 +402,9 @@ const groupPhaseCompleted = computed(() => {
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    max-height: 60vh;
+    position: sticky;
+    top: 0;
 
     & .actions {
         display: flex;
@@ -417,7 +420,6 @@ const groupPhaseCompleted = computed(() => {
 }
 
 .table {
-    padding-left: 1em;
     border-left: 1px solid var(--color-border);
 }
 

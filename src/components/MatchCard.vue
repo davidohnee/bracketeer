@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ALPHABET } from "../helpers";
+import { ALPHABET, getCourtName } from "../helpers";
 import type { MatchStatus, Match, MatchTeam, StaticTeamRef, Team } from "@/types/tournament";
 import { computed, ref } from "vue";
 import { debounce } from "lodash-es";
@@ -178,7 +178,7 @@ const currentTime = computed(() => {
                 {{ currentTime }}
             </div>
             <div class="venue">
-                <div class="court">{{ match.court }}</div>
+                <div class="court">{{ getCourtName(match.court) }}</div>
             </div>
         </div>
 

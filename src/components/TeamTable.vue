@@ -30,8 +30,7 @@ const table = computed(() => {
             :key="index"
             :score="score"
             :rank="index + 1"
-            :config="tournament.config"
-            :teams="tournament.teams"
+            :tournament="tournament"
         />
     </div>
 </template>

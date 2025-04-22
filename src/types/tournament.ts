@@ -40,7 +40,7 @@ export type MatchStatus = "scheduled" | "in-progress" | "completed";
 
 export interface Match {
     id: string;
-    court: string;
+    court: number | null;
     teams: [MatchTeam, MatchTeam];
     date: Date;
     status: MatchStatus;

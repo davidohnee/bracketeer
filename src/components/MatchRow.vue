@@ -310,28 +310,4 @@ watch(
         }
     }
 }
-
-dialog[open] {
-    border-radius: 1em;
-    border: 1px solid var(--color-border);
-
-    &::backdrop {
-        background-color: rgba(0, 0, 0, 0.5);
-    }
-
-    > .content {
-        position: relative;
-
-        :first-child {
-            margin-top: 0;
-        }
-    }
-
-    .close {
-        position: absolute;
-        top: 0.5em;
-        right: 0.5em;
-        cursor: pointer;
-    }
-}
 </style>

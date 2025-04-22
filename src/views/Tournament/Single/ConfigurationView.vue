@@ -4,6 +4,8 @@ import type { Tournament } from "@/types/tournament";
 import { updateKnockoutMatches } from "../../../helpers";
 import { useTournamentsStore } from "../../../stores/tournaments";
 import { useRouter } from "vue-router";
+import { ref } from "vue";
+import ShareModal from "./ShareModal.vue";
 
 const props = defineProps<{
     tournament: Tournament;
@@ -11,6 +13,8 @@ const props = defineProps<{
 
 const tournaments = useTournamentsStore();
 const router = useRouter();
+
+const shareModal = ref<typeof ShareModal>();
 
 const randomGroupPhase = () => {
     randomiseGroupPhaseResults(props.tournament);
@@ -56,6 +60,7 @@ const duplicateTournament = () => {
 </script>
 
 <template>
+    <ShareModal ref="shareModal" />
     <div class="form">
         <section>
             <h3>Settings</h3>
@@ -80,6 +85,9 @@ const duplicateTournament = () => {
                     >
                         <button class="secondary">Edit Teams</button>
                     </router-link>
+                </div>
+                <div class="field">
+                    <button @click="shareModal?.open(props.tournament)">Share</button>
                 </div>
             </div>
         </section>

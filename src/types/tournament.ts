@@ -62,6 +62,10 @@ export interface TournamentConfig {
     startTime: Date;
 }
 
+export interface IRemote {
+    identifier: string;
+}
+
 export interface Tournament {
     id: string;
     name: string;
@@ -69,4 +73,5 @@ export interface Tournament {
     groupPhase: TournamentRound[];
     knockoutPhase: TournamentRound[];
     config: TournamentConfig;
+    remote?: IRemote[];
 }

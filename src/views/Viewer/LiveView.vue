@@ -157,7 +157,10 @@ const groupPhaseCompleted = computed(() => {
             class="table"
             v-if="!groupPhaseCompleted"
         >
-            <TeamTable :tournament="tournament" />
+            <TeamTable
+                :tournament="tournament"
+                teamMatchesRouteName="view.table"
+            />
         </div>
     </div>
 </template>

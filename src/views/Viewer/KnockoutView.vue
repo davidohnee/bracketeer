@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import MatchCard from "@/components/MatchCard.vue";
-import { updateKnockoutMatches } from "@/helpers";
-import type { MatchStatus, Tournament, TournamentRound } from "@/types/tournament";
+import type { Tournament, TournamentRound } from "@/types/tournament";
 
 const props = defineProps<{
     tournament: Tournament;

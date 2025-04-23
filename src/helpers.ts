@@ -7,7 +7,6 @@ import type {
     TournamentConfig,
     TournamentRound,
 } from "./types/tournament";
-import ConfigurationView from "./views/Tournament/Single/ConfigurationView.vue";
 
 export const generateId = () => {
     return Math.random().toString(36).substring(2, 15);
@@ -104,7 +103,7 @@ const rotate = <T>(n: number, xs: T[]) => [
 const BYE = Symbol();
 
 const roundRobin = <T>(teams: T[]): T[][][] => {
-    const ts = teams as (T | Symbol)[];
+    const ts = teams as (T | symbol)[];
     const all = ts.concat(ts.length % 2 == 0 ? [] : [BYE]);
     const rest = all.slice(0, -1);
     return rest
@@ -117,7 +116,9 @@ const fold = <T>(xs: T[]) =>
     xs.slice(0, Math.ceil(xs.length / 2)).map((x, i) => [x, xs[xs.length - i - 1]]);
 
 const chunks = <T>(a: T[], size: number) =>
-    Array.from(new Array(Math.ceil(a.length / size)), (_, i) => a.slice(i * size, i * size + size));
+    Array.from(Array.from({ length: Math.ceil(a.length / size) }), (_, i) =>
+        a.slice(i * size, i * size + size),
+    );
 
 const createBalanceRound = (
     rounds: TournamentRound[],

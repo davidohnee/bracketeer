@@ -7,6 +7,7 @@ import type {
     TournamentConfig,
     TournamentRound,
 } from "./types/tournament";
+import ConfigurationView from "./views/Tournament/Single/ConfigurationView.vue";
 
 export const generateId = () => {
     return Math.random().toString(36).substring(2, 15);
@@ -104,16 +105,77 @@ const BYE = Symbol();
 
 const roundRobin = <T>(teams: T[]): T[][][] => {
     const ts = teams as (T | Symbol)[];
-    const all = ts.concat(ts.length % 2 == 0 ? [] : [BYE])
-    const rest = all.slice(0, -1)
+    const all = ts.concat(ts.length % 2 == 0 ? [] : [BYE]);
+    const rest = all.slice(0, -1);
     return rest
         .map((_, i) => rotate(i + 1, fold([...rotate(i, rest), all.at(-1)])))
         .map((b) => b.filter(([a, b]) => a !== BYE && b !== BYE))
         .map((b, i) => (i % 2 == 0 ? b : b.map(([a, b]) => [b, a]))) as T[][][];
-}
+};
 
 const fold = <T>(xs: T[]) =>
     xs.slice(0, Math.ceil(xs.length / 2)).map((x, i) => [x, xs[xs.length - i - 1]]);
+
+const chunks = <T>(a: T[], size: number) =>
+    Array.from(new Array(Math.ceil(a.length / size)), (_, i) => a.slice(i * size, i * size + size));
+
+const createBalanceRound = (
+    rounds: TournamentRound[],
+    teams: Team[],
+    config: TournamentConfig,
+): TournamentRound | null => {
+    const allMatches = rounds.flatMap((round) => round.matches);
+
+    const teamsMissing = rounds.flatMap((round) =>
+        teams.filter(
+            (t) =>
+                !round.matches.some((match) => match.teams.some((team) => team.ref?.id === t.id)),
+        ),
+    );
+
+    if (teamsMissing.length === 0) {
+        return null;
+    }
+
+    const round: TournamentRound = {
+        id: generateId(),
+        name: `Balance Round`,
+        matches: [],
+    };
+
+    for (const matchup of chunks(teamsMissing, 2)) {
+        const team1 = matchup[0];
+        const team2 = matchup[1];
+
+        const { time, court } = earliestFreeSlot(
+            allMatches,
+            config.startTime,
+            config.matchDuration + config.breakDuration,
+            [team1, team2],
+            config.courts,
+        );
+
+        const match: Match = {
+            id: generateId(),
+            court,
+            teams: [
+                {
+                    ref: team1,
+                    score: 0,
+                },
+                {
+                    ref: team2,
+                    score: 0,
+                },
+            ],
+            date: time,
+            status: "scheduled",
+        };
+        round.matches.push(match);
+    }
+
+    return round;
+};
 
 /**
  * find the earliest time slot for two teams to play a match on a specific court
@@ -226,6 +288,11 @@ export const generateGroupPhase = (teams: Team[], config: TournamentConfig): Tou
             name: `Round ${i + 1}`,
             matches: match,
         });
+    }
+
+    const balanceRound = createBalanceRound(rounds, teams, config);
+    if (balanceRound) {
+        rounds.push(balanceRound);
     }
 
     return rounds;

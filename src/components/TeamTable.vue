@@ -4,7 +4,7 @@ import { type Tournament } from "../types/tournament";
 import TeamTableEntry from "./TeamTableEntry.vue";
 import { generateTable } from "@/helpers";
 
-const props = defineProps<{ tournament: Tournament }>();
+const props = defineProps<{ tournament: Tournament; teamMatchesRouteName: string }>();
 
 const table = computed(() => {
     return generateTable(props.tournament);
@@ -31,6 +31,7 @@ const table = computed(() => {
             :score="score"
             :rank="index + 1"
             :tournament="tournament"
+            :teamMatchesRouteName="teamMatchesRouteName"
         />
     </div>
 </template>

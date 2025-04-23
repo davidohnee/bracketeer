@@ -7,6 +7,7 @@ const props = defineProps<{
     score: TeamScore;
     rank: number;
     tournament: Tournament;
+    teamMatchesRouteName: string;
 }>();
 
 const teamName = computed(() => {
@@ -18,7 +19,7 @@ const teamName = computed(() => {
 <template>
     <router-link
         :to="{
-            name: 'tournament.matches',
+            name: teamMatchesRouteName,
             params: { tournamentId: tournament.id },
             query: { team: score.team.id },
         }"

@@ -20,12 +20,15 @@ interface IImportError extends IImportResult {
 
 export type Import = IImportSuccess | IImportError;
 
+export const getShareLink = (identifier: string) => {
+    const base = window.location.origin + window.location.pathname;
+    return `${base}#/s/${identifier}`;
+};
+
 export const toShare = (mode: "gist", author: string, tag: string) => {
     const gistUrl = `${mode}:${author}:${tag}`;
     const base64 = btoa(gistUrl);
-
-    const base = window.location.origin + window.location.pathname;
-    const link = `${base}#/s/${base64}`;
+    const link = getShareLink(base64);
 
     return {
         link,

@@ -7,6 +7,7 @@ import { useRouter } from "vue-router";
 import { computed, ref } from "vue";
 import ShareModal from "./ShareModal.vue";
 import gistClient from "@/gistClient";
+import TrackModal from "./TrackModal.vue";
 
 const props = defineProps<{
     tournament: Tournament;
@@ -16,6 +17,7 @@ const tournaments = useTournamentsStore();
 const router = useRouter();
 
 const shareModal = ref<typeof ShareModal>();
+const trackModal = ref<typeof TrackModal>();
 
 const randomGroupPhase = () => {
     randomiseGroupPhaseResults(props.tournament);
@@ -70,6 +72,7 @@ const canUpdate = computed(() => {
 
 <template>
     <ShareModal ref="shareModal" />
+    <TrackModal ref="trackModal" />
     <div class="form">
         <section>
             <h3>Settings</h3>
@@ -103,6 +106,12 @@ const canUpdate = computed(() => {
                     v-if="canUpdate"
                 >
                     <button @click="shareModal?.open(props.tournament)">Publish Update</button>
+                </div>
+                <div
+                    class="field"
+                    v-if="canUpdate"
+                >
+                    <button @click="trackModal?.open(props.tournament)">Track Tournament</button>
                 </div>
             </div>
         </section>

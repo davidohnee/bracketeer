@@ -26,4 +26,10 @@ const router = useRouter();
     flex-direction: row;
     gap: 1em;
 }
+
+@media (max-width: 768px) {
+    .home {
+        padding: 1em;
+    }
+}
 </style>

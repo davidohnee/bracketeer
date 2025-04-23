@@ -397,6 +397,22 @@ const groupPhaseCompleted = computed(() => {
     }
 }
 
+@media (max-width: 768px) {
+    .live {
+        grid-template-columns: 1fr !important;
+        gap: 3em;
+
+        .no-round {
+            position: unset;
+        }
+
+        .table {
+            border-top: 1px solid var(--color-border);
+            border-left: unset;
+        }
+    }
+}
+
 .no-round {
     height: 100%;
     width: 100%;

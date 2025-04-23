@@ -318,4 +318,26 @@ watch(
         }
     }
 }
+
+@media (max-width: 600px) {
+    .time-progress span,
+    .venue .court {
+        font-size: 0.7rem !important;
+    }
+
+    .venue .court {
+        text-align: right !important;
+    }
+
+    .score {
+        font-size: 0.9rem !important;
+        gap: 0.25em !important;
+    }
+
+    .match.row {
+        grid-template-columns: 7ch 1fr 10ch 1fr 7ch;
+        gap: 0.25em;
+        font-size: 0.9rem !important;
+    }
+}
 </style>

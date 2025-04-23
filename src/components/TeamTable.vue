@@ -78,5 +78,15 @@ const table = computed(() => {
             }
         }
     }
+
+    @media screen and (max-width: 600px) {
+        .entry {
+            grid-template-columns: 2ch 1fr repeat(4, 3ch) 4ch 4ch;
+        }
+
+        .for-against {
+            display: none;
+        }
+    }
 }
 </style>

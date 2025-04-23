@@ -7,3 +7,11 @@ import TournamentList from "@/components/TournamentList.vue";
         <TournamentList />
     </div>
 </template>
+
+<style scoped>
+@media (max-width: 768px) {
+    h1 {
+        place-self: center;
+    }
+}
+</style>

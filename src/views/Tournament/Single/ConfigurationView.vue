@@ -4,8 +4,9 @@ import type { Tournament } from "@/types/tournament";
 import { updateKnockoutMatches } from "../../../helpers";
 import { useTournamentsStore } from "../../../stores/tournaments";
 import { useRouter } from "vue-router";
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import ShareModal from "./ShareModal.vue";
+import gistClient from "@/gistClient";
 
 const props = defineProps<{
     tournament: Tournament;
@@ -57,6 +58,14 @@ const duplicateTournament = () => {
     tournaments.add(newTournament);
     router.push({ name: "tournament", params: { id: newTournament.id } });
 };
+
+const canUpdate = computed(() => {
+    if (!props.tournament.remote?.length) return false;
+
+    const identifier = props.tournament.remote[0].identifier;
+
+    return gistClient.isMine(identifier);
+});
 </script>
 
 <template>
@@ -88,6 +97,12 @@ const duplicateTournament = () => {
                 </div>
                 <div class="field">
                     <button @click="shareModal?.open(props.tournament)">Share</button>
+                </div>
+                <div
+                    class="field"
+                    v-if="canUpdate"
+                >
+                    <button @click="shareModal?.open(props.tournament)">Publish Update</button>
                 </div>
             </div>
         </section>

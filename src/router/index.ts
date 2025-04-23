@@ -61,6 +61,34 @@ const router = createRouter({
             name: "import",
             component: () => import("@/views/ImportView.vue"),
         },
+        {
+            path: "/v/:id",
+            name: "view",
+            component: () => import("@/views/ViewerView.vue"),
+            redirect: { name: "view.table" },
+            children: [
+                {
+                    path: "/v/:id/matches",
+                    name: "view.matches",
+                    component: () => import("../views/Viewer/MatchesView.vue"),
+                },
+                {
+                    path: "/v/:id/knockout",
+                    name: "view.knockout",
+                    component: () => import("../views/Viewer/KnockoutView.vue"),
+                },
+                {
+                    path: "/v/:id/table",
+                    name: "view.table",
+                    component: () => import("../views/Tournament/Single/TableView.vue"),
+                },
+                {
+                    path: "/v/:id/live",
+                    name: "view.live",
+                    component: () => import("../views/Viewer/LiveView.vue"),
+                },
+            ],
+        },
     ],
 });
 

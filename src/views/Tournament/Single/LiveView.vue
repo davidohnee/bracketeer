@@ -274,6 +274,8 @@ const proceed = () => {
         }
     }
     currentTab.value = defaultCurrentTab.value;
+
+    tournamentStore.share(tournament);
 };
 
 const groupPhaseCompleted = computed(() => {

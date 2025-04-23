@@ -4,8 +4,12 @@ import type { MatchStatus, Match, MatchTeam, StaticTeamRef, Team } from "@/types
 import { computed, ref } from "vue";
 import { debounce } from "lodash-es";
 
+const props = defineProps<{ match: Match; teams: Team[]; readonly?: boolean }>();
+
 const matcheditor = ref<HTMLDialogElement | null>(null);
 const openMatchEditor = () => {
+    if (props.readonly) return;
+
     if (matcheditor.value) {
         matcheditor.value.showModal();
     }
@@ -32,8 +36,6 @@ const teamDisplay = (team: MatchTeam) => {
 };
 const team1display = computed(() => teamDisplay(props.match.teams[0]));
 const team2display = computed(() => teamDisplay(props.match.teams[1]));
-
-const props = defineProps<{ match: Match; teams: Team[] }>();
 
 const emit = defineEmits<{
     (e: "scoreChanged", teamIndex: number, newScore: number): void;
@@ -152,6 +154,7 @@ const currentTime = computed(() => {
     </dialog>
     <div
         class="match card"
+        :class="{ readonly }"
         @click="openMatchEditor"
     >
         <div class="team">{{ team1display }}</div>
@@ -200,7 +203,7 @@ const currentTime = computed(() => {
     cursor: pointer;
     transition: border-color 0.2s ease-in-out;
 
-    &:hover {
+    &:not(.readonly):hover {
         border-color: var(--color-primary);
     }
 

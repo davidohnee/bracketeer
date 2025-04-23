@@ -102,14 +102,14 @@ const rotate = <T>(n: number, xs: T[]) => [
 
 const BYE = Symbol();
 
-const roundRobin = <T>(teams: T[]) => {
+const roundRobin = <T>(teams: T[]): T[][][] => {
     const ts = teams as (T | Symbol)[];
     const all = ts.concat(ts.length % 2 == 0 ? [] : [BYE])
     const rest = all.slice(0, -1)
     return rest
         .map((_, i) => rotate(i + 1, fold([...rotate(i, rest), teams.at(-1)])))
         .map((b) => b.filter(([a, b]) => a !== BYE && b !== BYE))
-        .map((b, i) => (i % 2 == 0 ? b : b.map(([a, b]) => [b, a])));
+        .map((b, i) => (i % 2 == 0 ? b : b.map(([a, b]) => [b, a]))) as T[][][];
 }
 
 const fold = <T>(xs: T[]) =>

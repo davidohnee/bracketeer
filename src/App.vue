@@ -73,6 +73,18 @@ header {
     }
 }
 
+@media (max-width: 400px) {
+    header {
+        & h2 {
+            font-size: 0;
+
+            & ion-icon {
+                font-size: 2rem;
+            }
+        }
+    }
+}
+
 .matches:has(.match.card) {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(30ch, 1fr));

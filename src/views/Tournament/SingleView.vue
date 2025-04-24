@@ -84,8 +84,9 @@ section {
         display: flex;
         gap: 1em;
         padding: 0 1em;
-        width: 100%;
         border-bottom: 1px solid var(--color-border);
+        width: calc(100% - 2em);
+        overflow: auto;
 
         & a {
             color: var(--color-foreground);

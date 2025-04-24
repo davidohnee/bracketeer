@@ -42,4 +42,9 @@ const teamName = computed(() => {
 a {
     color: unset;
 }
+
+.name {
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
 </style>

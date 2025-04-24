@@ -33,12 +33,31 @@ const table = computed(() => {
             :tournament="tournament"
             :teamMatchesRouteName="teamMatchesRouteName"
         />
+        <legend>
+            <div class="text-muted"><strong>#:</strong> Rank</div>
+            <div class="text-muted"><strong>MP:</strong> Matches Played</div>
+            <div class="text-muted"><strong>W:</strong> Wins</div>
+            <div class="text-muted"><strong>D:</strong> Draws</div>
+            <div class="text-muted"><strong>L:</strong> Losses</div>
+            <div class="text-muted"><strong>+/-:</strong> Goals For - Goals Against</div>
+            <div class="text-muted"><strong>GD:</strong> Goal Difference</div>
+            <div class="text-muted"><strong>PTS:</strong> Points</div>
+        </legend>
     </div>
 </template>
 
 <style>
 .team-table {
     width: 100%;
+
+    & legend {
+        margin-top: 1rem;
+        border-top: 1px solid var(--color-border);
+        padding: 1rem;
+        font-size: 0.9rem;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    }
 
     .entry.header:hover {
         background-color: unset;
@@ -86,6 +105,18 @@ const table = computed(() => {
         }
 
         .for-against {
+            display: none;
+        }
+    }
+
+    @media screen and (max-width: 400px) {
+        .entry {
+            grid-template-columns: 2ch 1fr 3ch 4ch 4ch;
+        }
+
+        .w,
+        .d,
+        .l {
             display: none;
         }
     }

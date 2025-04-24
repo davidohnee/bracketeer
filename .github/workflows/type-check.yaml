@@ -2,13 +2,12 @@ name: Type Check
 
 on:
     push:
-
-    # Allows you to run this workflow manually from the Actions tab
+    pull_request:
     workflow_dispatch:
 
 jobs:
-    # Single deploy job since we're just deploying
-    deploy:
+    type-check:
+        name: Type Check
         runs-on: ubuntu-latest
         steps:
             - name: Checkout

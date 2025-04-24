@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { Tournament } from "@/types/tournament";
-import { nextTick, ref, watch } from "vue";
+import { ref, watch } from "vue";
 
 const props = defineProps<{
     modelValue: Tournament;

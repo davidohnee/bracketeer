@@ -45,8 +45,10 @@ const resetTournament = () => {
     }
     for (const round of tournament?.knockoutPhase ?? []) {
         for (const match of round.matches) {
-            match.teams[0].score = 0;
-            match.teams[1].score = 0;
+            for (const team of match.teams) {
+                team.score = 0;
+                delete team.ref;
+            }
             match.status = "scheduled";
         }
     }

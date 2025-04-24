@@ -73,7 +73,7 @@ const setGist = async (files: Files, options: IOptions, id?: string) => {
     const res = await fetch(endpoint, {
         method: id ? "PATCH" : "POST",
         headers,
-        body: body(files, options), // eslint-disable-line
+        body: body(files, options),
     });
 
     if (!res.ok) {

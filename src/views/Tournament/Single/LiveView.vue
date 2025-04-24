@@ -426,6 +426,7 @@ const groupPhaseCompleted = computed(() => {
     max-height: 60vh;
     position: sticky;
     top: 0;
+    padding-bottom: 2em;
 
     & .actions {
         display: flex;

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { Tournament } from "@/types/tournament";
-import { ref, watch } from "vue";
+import { nextTick, ref, watch } from "vue";
 
 const props = defineProps<{
     modelValue: Tournament;
@@ -37,19 +37,19 @@ const addTeamByName = (name: string) => {
     });
 };
 
-watch(
-    teamsPaste,
-    (newValue) => {
-        if (!newValue) return;
+const processPastedTeams = () => {
+    if (!teamsPaste.value) return;
 
-        const lines = newValue.split("\n");
-        for (const line of lines) {
-            addTeamByName(line);
-        }
-        teamsPaste.value = "";
-    },
-    { immediate: true },
-);
+    const lines = teamsPaste.value.split("\n");
+    for (const line of lines) {
+        addTeamByName(line);
+    }
+    teamsPaste.value = "";
+};
+
+const processPaste = () => {
+    setTimeout(processPastedTeams, 0);
+};
 
 const generateTeams = () => {
     for (const team of Array.from({ length: teamsToGenerate.value }, (_, i) => `Team ${i + 1}`)) {
@@ -92,6 +92,9 @@ const generateTeams = () => {
                     rows="10"
                     placeholder="Paste your teams here"
                     v-model="teamsPaste"
+                    @change="processPastedTeams"
+                    @keydown.prevent.enter="processPastedTeams"
+                    @paste="processPaste"
                 ></textarea>
             </div>
         </div>

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { Team, Tournament } from "@/types/tournament";
 import { useTournamentsStore } from "@/stores/tournaments";
-import { computed, ref, watch } from "vue";
+import { computed, ref } from "vue";
 
 const props = defineProps<{
     tournament: Tournament;
@@ -12,15 +12,18 @@ const tournament = tournamentStore.getTournamentById(props.tournament.id)!;
 
 const teamsPaste = ref<string>("");
 
-watch(teamsPaste, (newValue) => {
-    const lines = newValue.split("\n");
+const processPastedTeams = () => {
+    const lines = teamsPaste.value.split("\n");
     const teams = lines.map((line) => line.trim()).filter((line) => line.length > 0);
     for (let i = 0; i < teams.length; i++) {
         if (i >= tournament.teams.length) break;
         tournament.teams[i].name = teams[i];
     }
     teamsPaste.value = "";
-});
+};
+const processPaste = () => {
+    setTimeout(processPastedTeams, 0);
+};
 
 const comparableTeamName = (team: Team) => team.name.trim().toLowerCase();
 
@@ -51,6 +54,9 @@ const duplicates = computed(() => {
                     rows="10"
                     placeholder="Paste your teams here"
                     v-model="teamsPaste"
+                    @change="processPastedTeams"
+                    @keydown.prevent.enter="processPastedTeams"
+                    @paste="processPaste"
                 ></textarea>
             </div>
         </div>

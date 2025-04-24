@@ -1,7 +1,9 @@
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, ref } from "vue";
 import { useTournamentsStore } from "../../stores/tournaments";
 import { useRoute } from "vue-router";
+import TrackModal from "./Single/TrackModal.vue";
+import gistClient from "@/gistClient";
 
 const tournaments = useTournamentsStore();
 const route = useRoute();
@@ -11,15 +13,31 @@ const tournamentId = computed(() => {
 });
 
 const tournament = computed(() => tournaments.all.find((t) => t.id === tournamentId.value));
+const trackModal = ref<typeof TrackModal>();
+
+const canUpdate = computed(() => {
+    if (!tournament.value?.remote?.length) return false;
+    const identifier = tournament.value.remote[0].identifier;
+    return gistClient.isMine(identifier);
+});
 </script>
 
 <template>
+    <TrackModal ref="trackModal" />
     <div
         v-if="tournament"
         class="tournament"
     >
         <section>
-            <h2>{{ tournament.name }}</h2>
+            <div class="title-component">
+                <h2>{{ tournament.name }}</h2>
+                <ion-icon
+                    v-if="canUpdate"
+                    @click="trackModal?.open(tournament)"
+                    class="clickable"
+                    name="link-outline"
+                ></ion-icon>
+            </div>
             <div class="tabs">
                 <router-link
                     :to="{ name: 'tournament.table', params: { tournamentId: tournament.id } }"
@@ -61,10 +79,6 @@ section {
     flex-direction: column;
     align-items: flex-start;
 
-    & h2 {
-        margin-left: 1em;
-    }
-
     .tabs {
         color: var(--color-foreground);
         display: flex;
@@ -95,6 +109,18 @@ section {
                 margin-top: 0.5em;
             }
         }
+    }
+}
+
+.title-component {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1em;
+    width: calc(100% - 2em);
+
+    .clickable {
+        font-size: 1.5em;
     }
 }
 </style>

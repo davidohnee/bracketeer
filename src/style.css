@@ -128,3 +128,11 @@ section {
         --color-border: #f0f0f0;
     }
 }
+
+.clickable {
+    cursor: pointer;
+
+    &:hover {
+        color: var(--color-primary);
+    }
+}

@@ -63,9 +63,7 @@ const duplicateTournament = () => {
 
 const canUpdate = computed(() => {
     if (!props.tournament.remote?.length) return false;
-
     const identifier = props.tournament.remote[0].identifier;
-
     return gistClient.isMine(identifier);
 });
 </script>
@@ -105,7 +103,7 @@ const canUpdate = computed(() => {
                     class="field"
                     v-if="canUpdate"
                 >
-                    <button @click="shareModal?.open(props.tournament)">Publish Update</button>
+                    <button @click="tournaments.share(props.tournament)">Publish Update</button>
                 </div>
                 <div
                     class="field"

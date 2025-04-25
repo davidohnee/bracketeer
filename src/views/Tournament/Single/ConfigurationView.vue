@@ -68,6 +68,14 @@ const canUpdate = computed(() => {
     const identifier = props.tournament.remote[0].identifier;
     return gistClient.isMine(identifier);
 });
+
+const hasStarted = computed(() => {
+    const tournament = tournaments.getTournamentById(props.tournament.id);
+    if (!tournament) return false;
+    return tournament.groupPhase.some((round) =>
+        round.matches.some((match) => match.status !== "scheduled"),
+    );
+});
 </script>
 
 <template>
@@ -144,9 +152,32 @@ const canUpdate = computed(() => {
                 <button
                     class="danger secondary"
                     @click="resetTournament"
+                    :disabled="!hasStarted"
+                    :title="
+                        !hasStarted ? 'You cannot reset the tournament before it has started.' : ''
+                    "
                 >
                     Reset Tournament
                 </button>
+                <router-link
+                    :to="{
+                        name: 'tournament.config.plan',
+                        params: { id: props.tournament.id },
+                    }"
+                    :disabled="hasStarted"
+                    :title="
+                        hasStarted
+                            ? 'You cannot edit the match plan after the tournament has started. Reset the tournament first.'
+                            : ''
+                    "
+                >
+                    <button
+                        :disabled="hasStarted"
+                        class="danger secondary"
+                    >
+                        Edit Match Plan
+                    </button>
+                </router-link>
                 <button
                     class="danger"
                     @click="deleteTournament"

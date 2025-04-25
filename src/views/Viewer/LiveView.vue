@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, nextTick, onMounted, onUnmounted, ref } from "vue";
-import MatchRow from "@/components/MatchRow.vue";
+import MatchRow from "@/components/ResponsiveMatchRow.vue";
 import type { Match, Tournament, TournamentRound } from "@/types/tournament";
 import TeamTable from "@/components/TeamTable.vue";
 

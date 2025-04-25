@@ -147,6 +147,14 @@ const canUpdate = computed(() => {
                 >
                     Reset Tournament
                 </button>
+                <router-link
+                    :to="{
+                        name: 'tournament.config.plan',
+                        params: { id: props.tournament.id },
+                    }"
+                >
+                    <button class="danger secondary">Edit Match Plan</button>
+                </router-link>
                 <button
                     class="danger"
                     @click="deleteTournament"

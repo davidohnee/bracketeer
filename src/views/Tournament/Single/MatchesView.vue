@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
 import MatchCard from "@/components/MatchCard.vue";
-import MatchRow from "@/components/MatchRow.vue";
+import MatchRow from "@/components/ResponsiveMatchRow.vue";
 import { getCourtName, updateKnockoutMatches } from "../../../helpers";
 import type { Match, MatchStatus, Tournament, TournamentRound } from "@/types/tournament";
 import { useTournamentsStore } from "@/stores/tournaments";
@@ -252,6 +252,7 @@ const grouped = computed(() => {
                         :key="index"
                         :match="match.match"
                         :teams="tournament.teams"
+                        :matchDuration="tournament.config.matchDuration"
                         @matchStatusChanged="
                             (newStatus) =>
                                 updateMatchStatus(match.roundName, match.match.id, newStatus)
@@ -285,6 +286,7 @@ const grouped = computed(() => {
     align-items: center;
     gap: 0.5em;
     padding: 1em;
+    overflow-x: auto;
 
     .group-option {
         border: 1px solid var(--color-border);
@@ -293,6 +295,7 @@ const grouped = computed(() => {
         padding: 0.25em 1em;
         font-weight: bold;
         cursor: pointer;
+        white-space: nowrap;
 
         &.selected {
             background-color: var(--color-foreground);

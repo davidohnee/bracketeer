@@ -124,4 +124,10 @@ section {
         font-size: 1.5em;
     }
 }
+
+@media (max-width: 600px) {
+    section .tabs {
+        gap: 0;
+    }
+}
 </style>

@@ -207,4 +207,10 @@ section {
         }
     }
 }
+
+@media (max-width: 600px) {
+    section .tabs {
+        gap: 0;
+    }
+}
 </style>

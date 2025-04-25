@@ -4,7 +4,12 @@ import type { MatchStatus, Match, MatchTeam, StaticTeamRef, Team } from "@/types
 import { computed, ref } from "vue";
 import { debounce } from "lodash-es";
 
-const props = defineProps<{ match: Match; teams: Team[]; readonly?: boolean }>();
+const props = defineProps<{
+    match: Match;
+    teams: Team[];
+    matchDuration: number;
+    readonly?: boolean;
+}>();
 
 const matcheditor = ref<HTMLDialogElement | null>(null);
 const openMatchEditor = () => {

@@ -26,6 +26,7 @@ const knockoutBracket = computed<TournamentRound[]>(() => {
                 readonly
                 :match="match"
                 :teams="tournament.teams"
+                :matchDuration="tournament.config.matchDuration"
             />
         </div>
     </div>

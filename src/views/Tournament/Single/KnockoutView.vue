@@ -61,6 +61,7 @@ const updateMatchStatus = (roundIndex: number, matchIndex: number, newStatus: Ma
                 @matchStatusChanged="(newStatus) => updateMatchStatus(roundI, index, newStatus)"
                 :match="match"
                 :teams="tournament.teams"
+                :matchDuration="tournament.config.matchDuration"
             />
         </div>
     </div>

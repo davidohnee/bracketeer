@@ -107,6 +107,27 @@ const hasStarted = computed(() => {
                     </router-link>
                 </div>
                 <div class="field">
+                    <router-link
+                        :to="{
+                            name: 'tournament.config.plan',
+                            params: { id: props.tournament.id },
+                        }"
+                        :disabled="hasStarted"
+                        :title="
+                            hasStarted
+                                ? 'You cannot edit the match plan after the tournament has started. Reset the tournament first.'
+                                : ''
+                        "
+                    >
+                        <button
+                            :disabled="hasStarted"
+                            class="secondary"
+                        >
+                            Edit Match Plan
+                        </button>
+                    </router-link>
+                </div>
+                <div class="field">
                     <button @click="shareModal?.open(props.tournament)">Share</button>
                 </div>
                 <div
@@ -114,12 +135,6 @@ const hasStarted = computed(() => {
                     v-if="canUpdate"
                 >
                     <button @click="tournaments.share(props.tournament)">Publish Update</button>
-                </div>
-                <div
-                    class="field"
-                    v-if="canUpdate"
-                >
-                    <button @click="trackModal?.open(props.tournament)">Track Tournament</button>
                 </div>
             </div>
         </section>
@@ -159,25 +174,6 @@ const hasStarted = computed(() => {
                 >
                     Reset Tournament
                 </button>
-                <router-link
-                    :to="{
-                        name: 'tournament.config.plan',
-                        params: { id: props.tournament.id },
-                    }"
-                    :disabled="hasStarted"
-                    :title="
-                        hasStarted
-                            ? 'You cannot edit the match plan after the tournament has started. Reset the tournament first.'
-                            : ''
-                    "
-                >
-                    <button
-                        :disabled="hasStarted"
-                        class="danger secondary"
-                    >
-                        Edit Match Plan
-                    </button>
-                </router-link>
                 <button
                     class="danger"
                     @click="deleteTournament"
@@ -198,9 +194,21 @@ const hasStarted = computed(() => {
 .row {
     justify-content: flex-start;
     align-items: flex-end;
+    flex-wrap: wrap;
 
     & select {
         margin: 0;
+    }
+}
+
+@media (max-width: 600px) {
+    .row {
+        flex-direction: column;
+        align-items: stretch;
+
+        & button {
+            width: 100%;
+        }
     }
 }
 

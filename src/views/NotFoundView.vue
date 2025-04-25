@@ -13,7 +13,7 @@ const router = useRouter();
         </p>
         <div class="row">
             <router-link :to="{ name: 'home' }">
-                <button @click="router.push('/create')">Return home</button>
+                <button>Return home</button>
             </router-link>
         </div>
     </div>

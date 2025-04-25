@@ -8,6 +8,7 @@ import {
     tournamentFromJson,
 } from "../helpers";
 import { pull, push } from "@/share";
+import { showErrorToast } from "@/toast";
 
 // You can name the return value of `defineStore()` anything you want,
 // but it's best to use the name of the store and surround it with `use`
@@ -78,6 +79,9 @@ export const useTournamentsStore = defineStore("tournaments", () => {
         const result = await push(tournament, asPublic);
         if (result.tournament) {
             getTournamentById(tournament.id)!.remote = result.tournament.remote;
+        } else if (result.error) {
+            console.error("Error sharing tournament:", result.error);
+            showErrorToast("Error", "There was an error sharing the tournament. Please try again.");
         }
         return result.link;
     };

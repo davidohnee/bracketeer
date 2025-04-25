@@ -208,4 +208,16 @@ dialog[open] > div {
         }
     }
 }
+
+@media (max-width: 600px) {
+    dialog[open],
+    dialog[open] > div {
+        max-width: 80vw !important;
+    }
+
+    .options .option:not(:has(input[type="checkbox"])) {
+        grid-template-columns: 1fr;
+        gap: 0.5em;
+    }
+}
 </style>

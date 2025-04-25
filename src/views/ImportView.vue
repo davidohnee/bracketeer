@@ -55,98 +55,96 @@ const tryAgain = () => {
 };
 </script>
 <template>
-    <WithSidebar>
-        <div class="wrap">
-            <div
-                v-if="error == null"
-                class="flex-col"
+    <div class="wrap">
+        <div
+            v-if="error == null"
+            class="flex-col"
+        >
+            <span>
+                <strong>{{ who }}</strong> wants to share:
+            </span>
+            <span
+                v-if="what.length == 0"
+                class="text-muted italic text-sm"
+                >Nothing</span
             >
-                <span>
-                    <strong>{{ who }}</strong> wants to share:
-                </span>
-                <span
-                    v-if="what.length == 0"
-                    class="text-muted italic text-sm"
-                    >Nothing</span
-                >
-                <div
-                    v-else
-                    class="mt-4 w-max flex flex-col gap-4"
-                >
-                    <div class="items">
-                        <div
-                            v-for="item in what"
-                            :key="item.id"
-                            class="card flex gap-2 items-center"
-                        >
-                            <div class="flex flex-col">
-                                <h2>{{ item.name }}</h2>
-                                <span class="text-muted">
-                                    {{ item.config.startTime.toLocaleString() }}
-                                </span>
-                                <span class="mt-4 text-muted text-sm uppercase italic">
-                                    {{ item.teams.length }} teams
-                                </span>
-                            </div>
+            <div
+                v-else
+                class="mt-4 w-max flex flex-col gap-4"
+            >
+                <div class="items">
+                    <div
+                        v-for="item in what"
+                        :key="item.id"
+                        class="card flex gap-2 items-center"
+                    >
+                        <div class="flex flex-col">
+                            <h2>{{ item.name }}</h2>
+                            <span class="text-muted">
+                                {{ item.config.startTime.toLocaleString() }}
+                            </span>
+                            <span class="mt-4 text-muted text-sm uppercase italic">
+                                {{ item.teams.length }} teams
+                            </span>
                         </div>
                     </div>
-                    <div class="buttons flex gap-2">
-                        <button @click="confirm">Accept</button>
-                        <router-link :to="{ name: 'home' }">
-                            <button
-                                class="danger"
-                                @click="confirm"
-                            >
-                                Reject
-                            </button>
-                        </router-link>
-                    </div>
                 </div>
-            </div>
-            <div
-                v-else-if="error == 'not-found'"
-                class="error flex-col"
-            >
-                <h1>Guess you'll have to create it yourself...</h1>
-                <p>
-                    No tournament was found at the link you provided. The tournament may have been
-                    deleted or the link may be incorrect.
-                </p>
-                <div class="flex gap-2">
-                    <router-link :to="{ name: 'create' }">
-                        <button>Create new tournament</button>
-                    </router-link>
+                <div class="buttons flex gap-2">
+                    <button @click="confirm">Accept</button>
                     <router-link :to="{ name: 'home' }">
-                        <button>Home</button>
+                        <button
+                            class="danger"
+                            @click="confirm"
+                        >
+                            Reject
+                        </button>
                     </router-link>
                 </div>
             </div>
-            <div
-                v-else-if="error == 'not-allowed'"
-                class="error flex-col"
-            >
-                <h1>Not Allowed</h1>
-                <p>You don't have permission to view this tournament.</p>
-                <div class="card">
-                    <p>Wait, this is my Gist!</p>
-                    <input
-                        type="text"
-                        :value="githubPat"
-                        placeholder="Enter your GitHub PAT here"
-                    />
-                    <button
-                        @click="tryAgain"
-                        :disabled="!githubPat.length"
-                    >
-                        Accept
-                    </button>
-                </div>
+        </div>
+        <div
+            v-else-if="error == 'not-found'"
+            class="error flex-col"
+        >
+            <h1>Guess you'll have to create it yourself...</h1>
+            <p>
+                No tournament was found at the link you provided. The tournament may have been
+                deleted or the link may be incorrect.
+            </p>
+            <div class="flex gap-2">
+                <router-link :to="{ name: 'create' }">
+                    <button>Create new tournament</button>
+                </router-link>
                 <router-link :to="{ name: 'home' }">
-                    <button class="danger">Close</button>
+                    <button>Home</button>
                 </router-link>
             </div>
         </div>
-    </WithSidebar>
+        <div
+            v-else-if="error == 'not-allowed'"
+            class="error flex-col"
+        >
+            <h1>Not Allowed</h1>
+            <p>You don't have permission to view this tournament.</p>
+            <div class="card">
+                <p>Wait, this is my Gist!</p>
+                <input
+                    type="text"
+                    :value="githubPat"
+                    placeholder="Enter your GitHub PAT here"
+                />
+                <button
+                    @click="tryAgain"
+                    :disabled="!githubPat.length"
+                >
+                    Accept
+                </button>
+            </div>
+            <router-link :to="{ name: 'home' }">
+                <button class="danger">Close</button>
+            </router-link>
+        </div>
+    </div>
 </template>
 <style scoped>
 .wrap {

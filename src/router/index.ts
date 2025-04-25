@@ -14,6 +14,11 @@ const router = createRouter({
             component: () => import("../views/Tournament/ListView.vue"),
         },
         {
+            path: "/settings",
+            name: "settings",
+            component: () => import("../views/SettingsView.vue"),
+        },
+        {
             path: "/create",
             name: "create",
             component: () => import("../views/CreatorView/CreatorView.vue"),
@@ -93,6 +98,11 @@ const router = createRouter({
                     component: () => import("../views/Viewer/LiveView.vue"),
                 },
             ],
+        },
+        {
+            path: "/:pathMatch(.*)*",
+            name: "not-found",
+            component: () => import("../views/NotFoundView.vue"),
         },
     ],
 });

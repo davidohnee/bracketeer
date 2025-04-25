@@ -28,6 +28,10 @@ const push = async (tournament: Tournament, isPublic: boolean = false) => {
         jdata = await gistClient.save({ [name]: copy }, options);
     }
 
+    if (!jdata) {
+        return { error: "not-allowed" } as Import;
+    }
+
     const file = jdata.files[name];
     const rawUrl = file.raw_url;
     // "https://gist.githubusercontent.com/{user}/{gist}/raw/{file}/{filename}"

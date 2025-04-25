@@ -23,6 +23,12 @@
                 >
                     Tournaments
                 </RouterLink>
+                <RouterLink
+                    to="/settings"
+                    class="nav-link"
+                >
+                    Settings
+                </RouterLink>
             </nav>
         </div>
     </header>

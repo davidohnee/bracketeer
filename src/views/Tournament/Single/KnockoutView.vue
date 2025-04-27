@@ -25,22 +25,19 @@ const updateMatchScore = (
 ) => {
     if (!tournament) return;
 
-    const match = tournament.groupPhase[roundIndex].matches[matchIndex];
-    if (teamIndex === 0) {
-        match.teams[0].score = newScore;
-    } else {
-        match.teams[1].score = newScore;
-    }
-    tournament.groupPhase[roundIndex].matches[matchIndex] = match;
-    updateKnockoutMatches(props.tournament);
+    const match = tournament.knockoutPhase[roundIndex].matches[matchIndex];
+    match.teams[teamIndex].score = newScore;
+    tournament.knockoutPhase[roundIndex].matches[matchIndex] = match;
+    updateKnockoutMatches(tournament);
 };
 
 const updateMatchStatus = (roundIndex: number, matchIndex: number, newStatus: MatchStatus) => {
     if (!tournament) return;
 
-    const match = tournament.groupPhase[roundIndex].matches[matchIndex];
+    const match = tournament.knockoutPhase[roundIndex].matches[matchIndex];
     match.status = newStatus;
-    tournament.groupPhase[roundIndex].matches[matchIndex] = match;
+    tournament.knockoutPhase[roundIndex].matches[matchIndex] = match;
+    updateKnockoutMatches(tournament);
 };
 </script>
 

@@ -72,7 +72,7 @@ const updateMatchScore = (
                 match.teams[1].score = newScore;
             }
             tournament.groupPhase[groupRoundIndex].matches[matchIndex] = match;
-            updateKnockoutMatches(props.tournament);
+            updateKnockoutMatches(tournament);
             return;
         }
     }
@@ -85,13 +85,9 @@ const updateMatchScore = (
     );
     if (matchIndex === -1) return;
     const match = tournament.knockoutPhase[knockoutRoundIndex].matches[matchIndex];
-    if (teamIndex === 0) {
-        match.teams[0].score = newScore;
-    } else {
-        match.teams[1].score = newScore;
-    }
+    match.teams[teamIndex].score = newScore;
     tournament.knockoutPhase[knockoutRoundIndex].matches[matchIndex] = match;
-    updateKnockoutMatches(props.tournament);
+    updateKnockoutMatches(tournament);
 };
 
 const updateMatchStatus = (roundName: string, matchId: string, newStatus: MatchStatus) => {
@@ -109,6 +105,7 @@ const updateMatchStatus = (roundName: string, matchId: string, newStatus: MatchS
             const match = tournament.groupPhase[groupRoundIndex].matches[matchIndex];
             match.status = newStatus;
             tournament.groupPhase[groupRoundIndex].matches[matchIndex] = match;
+            updateKnockoutMatches(tournament);
             return;
         }
     }
@@ -122,6 +119,8 @@ const updateMatchStatus = (roundName: string, matchId: string, newStatus: MatchS
             const match = tournament.knockoutPhase[knockoutRoundIndex].matches[matchIndex];
             match.status = newStatus;
             tournament.knockoutPhase[knockoutRoundIndex].matches[matchIndex] = match;
+            updateKnockoutMatches(tournament);
+            return;
         }
     }
 };

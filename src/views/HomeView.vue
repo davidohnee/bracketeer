@@ -27,18 +27,7 @@ const website = "https://davidohnee.com";
         </section>
         <section>
             <div class="col">
-                <ion-icon name="trophy-outline"></ion-icon>
-            </div>
-            <div class="col">
                 <h1>Run tournaments like a pro — in seconds.</h1>
-                <p>
-                    Share the tournament via link or QR code & track the tournament on any device!
-                </p>
-            </div>
-        </section>
-        <section>
-            <div class="col">
-                <h1>Score, share, and celebrate</h1>
                 <p>
                     Instantly generate match plans, update scores live, and keep your tournament
                     running smooth with a clean, modern interface built for speed. bracketeer
@@ -47,14 +36,22 @@ const website = "https://davidohnee.com";
                 </p>
             </div>
             <div class="col">
-                <ion-icon name="game-controller-outline"></ion-icon>
+                <ion-icon name="trophy-outline"></ion-icon>
+            </div>
+        </section>
+        <section>
+            <div class="col">
+                <ion-icon name="share-outline"></ion-icon>
+            </div>
+            <div class="col">
+                <h1>Score, share, and celebrate</h1>
+                <p>
+                    Share the tournament via link or QR code & track the tournament on any device!
+                </p>
             </div>
         </section>
 
         <section>
-            <div class="col">
-                <ion-icon name="people-outline"></ion-icon>
-            </div>
             <div class="col">
                 <h1>Built for you and your friends</h1>
                 <p>
@@ -63,17 +60,20 @@ const website = "https://davidohnee.com";
                     tournaments with ease.
                 </p>
             </div>
+            <div class="col">
+                <ion-icon name="people-outline"></ion-icon>
+            </div>
         </section>
         <section>
+            <div class="col">
+                <ion-icon name="shield-checkmark-outline"></ion-icon>
+            </div>
             <div class="col">
                 <h1>No fees.<br />No sign-ups. <br />No nonsense.</h1>
                 <p>
                     bracketeer is 100% free, fully open-source, and respects your privacy — your
                     data stays on your device unless you decide to share it.
                 </p>
-            </div>
-            <div class="col">
-                <ion-icon name="shield-checkmark-outline"></ion-icon>
             </div>
         </section>
     </div>
@@ -125,7 +125,7 @@ section {
             color-mix(in srgb, var(--color-primary) 70%, black)
         );
         color: var(--color-primary-contrast);
-        padding: 2em;
+        padding: 4em;
         border-radius: 1em;
     }
 
@@ -141,7 +141,7 @@ section {
         }
 
         @media (max-width: 768px) {
-            &:nth-child(odd) {
+            &:nth-child(even) {
                 display: flex;
                 flex-direction: column-reverse;
             }

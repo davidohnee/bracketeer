@@ -7,7 +7,7 @@ const resetGithub = () => {
 
 <template>
     <div class="settings">
-        <h1>bracketeer</h1>
+        <h1>Settings</h1>
         <h3>GitHub Gists</h3>
         <div class="row">
             <button

@@ -28,7 +28,7 @@ const updateMatchScore = (
     const match = tournament.knockoutPhase[roundIndex].matches[matchIndex];
     match.teams[teamIndex].score = newScore;
     tournament.knockoutPhase[roundIndex].matches[matchIndex] = match;
-    updateKnockoutMatches(props.tournament);
+    updateKnockoutMatches(tournament);
 };
 
 const updateMatchStatus = (roundIndex: number, matchIndex: number, newStatus: MatchStatus) => {
@@ -37,7 +37,7 @@ const updateMatchStatus = (roundIndex: number, matchIndex: number, newStatus: Ma
     const match = tournament.knockoutPhase[roundIndex].matches[matchIndex];
     match.status = newStatus;
     tournament.knockoutPhase[roundIndex].matches[matchIndex] = match;
-    updateKnockoutMatches(props.tournament);
+    updateKnockoutMatches(tournament);
 };
 </script>
 

@@ -12,8 +12,9 @@ interface IOptions {
     isPublic?: boolean;
 }
 
-const pat = () => localStorage.getItem("github.pat");
-const me = () => JSON.parse(localStorage.getItem("github.me") ?? "null");
+const pat = () => (typeof window !== "undefined" ? localStorage.getItem("github.pat") : null);
+const me = () =>
+    typeof window !== "undefined" ? JSON.parse(localStorage.getItem("github.me") ?? "null") : null;
 
 const getHeaders = async (forcePat: string | null = null) => {
     const token = pat() || forcePat;

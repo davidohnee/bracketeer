@@ -79,8 +79,8 @@ const website = "https://davidohnee.com";
     </div>
     <div class="footer">
         <div class="row">
-            <p>
-                © 2024 bracketeer | made with ❤️ by
+            <p class="text-muted">
+                <strong>bracketeer</strong> © 2025 | made with ❤️ by
                 <a
                     :href="website"
                     target="_blank"

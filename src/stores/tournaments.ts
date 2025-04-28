@@ -29,7 +29,8 @@ export const useTournamentsStore = defineStore("tournaments", () => {
         { deep: true },
     );
     // Load tournaments from local storage on initial load
-    const storedTournaments = localStorage.getItem("tournaments");
+    const storedTournaments =
+        typeof window !== "undefined" ? localStorage.getItem("tournaments") : null;
     if (storedTournaments) {
         tournaments.value = JSON.parse(storedTournaments).map(tournamentFromJson);
     }

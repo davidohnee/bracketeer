@@ -13,8 +13,10 @@ const tournament = ref<Tournament | null>(null);
 const tournaments = useTournamentsStore();
 const router = useRouter();
 
-const initTournament = {
-    id: crypto.randomUUID(),
+let storage = typeof window !== "undefined" ? sessionStorage : null;
+
+const emptyTournament = () => ({
+    id: typeof window !== "undefined" ? crypto.randomUUID() : "",
     name: "",
     teams: [],
     groupPhase: [],
@@ -25,14 +27,16 @@ const initTournament = {
         courts: 15,
         rounds: 6,
         knockoutTeams: 8,
-        startTime: new Date("2025-04-26T18:30:00"),
+        startTime: new Date(),
         matchDuration: 10,
     },
-};
+});
 
 const getTournament = () => {
-    const sessionValue = sessionStorage.getItem("creator.tournament");
-    if (!sessionValue) return initTournament;
+    if (typeof window === "undefined") return emptyTournament();
+
+    const sessionValue = storage?.getItem("creator.tournament");
+    if (!sessionValue) return emptyTournament();
 
     const tournament = JSON.parse(sessionValue);
     return tournamentFromJson(tournament);
@@ -43,64 +47,66 @@ watch(
     tournament,
     (newValue, oldValue) => {
         if (oldValue == null) return;
-        sessionStorage.setItem("creator.tournament", JSON.stringify(newValue));
+        storage?.setItem("creator.tournament", JSON.stringify(newValue));
     },
     { deep: true },
 );
 const STEPS = ["Metadata", "Teams", "Duration"];
-const currentStep = ref(parseInt(sessionStorage.getItem("creator.step") ?? "0"));
+const currentStep = ref(parseInt(storage?.getItem("creator.step") ?? "0"));
 
 watch(currentStep, (newValue) => {
-    sessionStorage.setItem("creator.step", newValue.toString());
+    storage?.setItem("creator.step", newValue.toString());
 });
 
 const create = () => {
     tournaments.add(tournament.value!);
-    sessionStorage.removeItem("creator.tournament");
-    sessionStorage.removeItem("creator.step");
+    storage?.removeItem("creator.tournament");
+    storage?.removeItem("creator.step");
     router.push({ name: "tournament", params: { tournamentId: tournament.value!.id } });
 };
 </script>
 <template>
-    <div
-        class="form"
-        v-if="tournament"
-    >
-        <StepProgress
-            :steps="STEPS"
-            v-model="currentStep"
-            can-go-back
-            can-go-forward
-        />
-        <h1>{{ STEPS[currentStep] }}</h1>
+    <client-only>
+        <div
+            class="form"
+            v-if="tournament"
+        >
+            <StepProgress
+                :steps="STEPS"
+                v-model="currentStep"
+                can-go-back
+                can-go-forward
+            />
+            <h1>{{ STEPS[currentStep] }}</h1>
 
-        <Metadata
-            v-if="currentStep === 0"
-            v-model="tournament"
-        />
-        <Teams
-            v-else-if="currentStep === 1"
-            v-model="tournament"
-        />
-        <Duration
-            v-else-if="currentStep === 2"
-            v-model="tournament"
-        />
-        <div class="row end">
-            <button
-                class="button"
-                @click="currentStep++"
-                v-if="currentStep < STEPS.length - 1"
-            >
-                Continue
-            </button>
-            <button
-                class="button"
-                @click="create"
-                v-else
-            >
-                Create
-            </button>
+            <Metadata
+                v-if="currentStep === 0"
+                v-model="tournament"
+            />
+            <Teams
+                v-else-if="currentStep === 1"
+                v-model="tournament"
+            />
+            <Duration
+                v-else-if="currentStep === 2"
+                v-model="tournament"
+            />
+            <div class="row end">
+                <button
+                    class="button"
+                    @click="currentStep++"
+                    v-if="currentStep < STEPS.length - 1"
+                >
+                    Continue
+                </button>
+                <button
+                    class="button"
+                    @click="create"
+                    v-else
+                >
+                    Create
+                </button>
+            </div>
         </div>
-    </div>
+    </client-only>
 </template>

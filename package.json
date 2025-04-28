@@ -7,7 +7,7 @@
     "dev": "vite",
     "build": "run-p type-check \"build-only {@}\" --",
     "preview": "vite preview",
-    "build-only": "vite build",
+    "build-only": "vite-ssg build",
     "type-check": "vue-tsc --build",
     "lint:oxlint": "oxlint . --fix -D correctness --ignore-path .gitignore",
     "lint:eslint": "eslint . --fix",
@@ -19,12 +19,12 @@
     "lodash-es": "^4.17.21",
     "pinia": "^3.0.2",
     "qrcode.vue": "^3.6.0",
-    "vue": "^3.5.13",
-    "vue-router": "4"
+    "vue": "^3.5.13"
   },
   "devDependencies": {
     "@types/lodash-es": "^4.17.12",
     "@types/node": "^22.14.1",
+    "@unhead/vue": "^2.0.8",
     "@vitejs/plugin-vue": "^5.2.1",
     "@vue/eslint-config-prettier": "^10.2.0",
     "@vue/eslint-config-typescript": "^14.5.0",
@@ -39,6 +39,8 @@
     "typescript": "~5.7.2",
     "vite": "^6.2.0",
     "vite-plugin-vue-devtools": "^7.7.2",
+    "vite-ssg": "^26.1.1",
+    "vue-router": "^4.5.1",
     "vue-tsc": "^2.2.4"
   }
 }

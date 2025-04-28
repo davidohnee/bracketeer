@@ -58,6 +58,17 @@ button {
         border: 1px solid var(--color-border);
         cursor: not-allowed;
     }
+
+    &:has(ion-icon) {
+        display: flex;
+        align-items: center;
+        gap: 0.5em;
+
+        ion-icon {
+            font-size: 1.2em;
+            color: inherit;
+        }
+    }
 }
 
 button:focus,

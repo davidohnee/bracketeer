@@ -20,9 +20,13 @@ const website = "https://davidohnee.com";
                     class="secondary"
                     @click="router.push('/tournaments')"
                 >
+                    <ion-icon name="search-outline"></ion-icon>
                     Browse My Tournaments
                 </button>
-                <button @click="router.push('/create')">Create Tournament</button>
+                <button @click="router.push('/create')">
+                    <ion-icon name="add-outline"></ion-icon>
+                    Create Tournament
+                </button>
             </div>
         </section>
         <section>
@@ -78,9 +82,9 @@ const website = "https://davidohnee.com";
         </section>
     </div>
     <div class="footer">
-        <div class="row">
+        <div class="row text-muted">
             <p>
-                © 2024 bracketeer | made with ❤️ by
+                <strong>bracketeer</strong> © 2025 | made with ❤️ by
                 <a
                     :href="website"
                     target="_blank"

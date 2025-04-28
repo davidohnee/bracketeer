@@ -15,6 +15,7 @@
     --color-red: rgb(231, 56, 56);
     --color-yellow: rgb(219, 186, 17);
     --color-blue: rgb(48, 141, 241);
+    --color-grey: rgb(128, 128, 128);
     --color-primary: var(--color-green);
     --color-primary-hover: color-mix(in srgb, var(--color-green) 80%, #000);
     --color-primary-contrast: #fff;
@@ -135,4 +136,8 @@ section {
     &:hover {
         color: var(--color-primary);
     }
+}
+
+.center {
+    text-align: center;
 }

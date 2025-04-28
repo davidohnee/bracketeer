@@ -84,21 +84,20 @@ const setGist = async (files: Files, options: IOptions, id?: string) => {
     return jdata;
 };
 
-const fetchMe = () => {
+const fetchMe = async (force = false) => {
     if (!pat()) return undefined;
 
     const fromCache = me();
-    if (fromCache) return fromCache;
+    if (fromCache && !force) return fromCache;
 
-    getHeaders().then(async (headers) => {
-        const res = await fetch("https://api.github.com/user", {
-            headers,
-        });
-        const data = await res.json();
-        localStorage.setItem("github.me", JSON.stringify(data));
+    const headers = await getHeaders();
+    const res = await fetch("https://api.github.com/user", {
+        headers,
     });
+    const data = await res.json();
+    localStorage.setItem("github.me", JSON.stringify(data));
 
-    return null;
+    return data;
 };
 fetchMe();
 
@@ -115,9 +114,9 @@ const isMine = (identifier: string) => {
 
 export default {
     pat,
-    setPat(pat: string) {
+    async setPat(pat: string) {
         localStorage.setItem("github.pat", pat);
-        fetchMe();
+        return await fetchMe(true);
     },
     me: fetchMe,
     save,

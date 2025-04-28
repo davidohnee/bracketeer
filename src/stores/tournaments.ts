@@ -8,7 +8,7 @@ import {
     tournamentFromJson,
 } from "../helpers";
 import { pull, push } from "@/share";
-import { showErrorToast } from "@/toast";
+import { Notifications } from "@/components/notifications/createNotification";
 
 // You can name the return value of `defineStore()` anything you want,
 // but it's best to use the name of the store and surround it with `use`
@@ -81,8 +81,23 @@ export const useTournamentsStore = defineStore("tournaments", () => {
             getTournamentById(tournament.id)!.remote = result.tournament.remote;
         } else if (result.error) {
             console.error("Error sharing tournament:", result.error);
-            showErrorToast("Error", "There was an error sharing the tournament. Please try again.");
+            Notifications.addError(
+                "Sharing failed",
+                "There was an error sharing the tournament. Please try again.",
+                5000,
+            );
         }
+
+        Notifications.addSuccess(
+            "Tournament shared",
+            "The tournament has been shared successfully.",
+            5000,
+            () => {
+                window.open(result.link, "_blank");
+            },
+            result.link,
+        );
+
         return result.link;
     };
 

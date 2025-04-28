@@ -88,10 +88,23 @@ const viewOnly = () => {
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
+    gap: 1em;
 }
 
 .actions {
     display: flex;
     gap: 1em;
+}
+
+@media (max-width: 768px) {
+    .import-notice {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .actions {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+    }
 }
 </style>

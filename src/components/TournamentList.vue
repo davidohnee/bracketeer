@@ -51,8 +51,8 @@ const STATUS_TEXT: Record<MatchStatus, string> = {
                 <div class="text-muted delete"></div>
             </div>
             <router-link
-                v-for="(tournament, index) in tournamentList"
-                :key="index"
+                v-for="tournament in tournamentList"
+                :key="tournament.id"
                 class="tournament-item"
                 :to="{ name: 'tournament', params: { tournamentId: tournament.id } }"
             >

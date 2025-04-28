@@ -66,7 +66,6 @@ const duplicateTournament = () => {
 const canUpdate = computed(() => {
     if (!props.tournament.remote?.length) return false;
     const identifier = props.tournament.remote[0].identifier;
-    console.log(identifier, gistClient.isMine(identifier));
     return gistClient.isMine(identifier);
 });
 

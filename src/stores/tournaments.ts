@@ -141,10 +141,7 @@ export const useTournamentsStore = defineStore("tournaments", () => {
     const pullFromRemote = async (options: { tournament?: Tournament; remote?: IRemote }) => {
         const { tournament, remote } = options;
 
-        console.log("Pulling tournament", tournament, remote);
         const pullSource = remote?.identifier ?? tournament?.remote?.[0]?.identifier;
-
-        console.log("Pulling from", pullSource);
 
         if (!pullSource) {
             throw new Error("No remote source");

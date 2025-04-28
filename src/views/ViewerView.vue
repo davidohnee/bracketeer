@@ -4,7 +4,7 @@
   -->
 
 <script lang="ts" setup>
-import { onMounted, onUnmounted, ref } from "vue";
+import { computed, onMounted, onUnmounted, ref } from "vue";
 import { useRoute } from "vue-router";
 import type { Tournament } from "@/types/tournament";
 import { pull } from "@/share";
@@ -32,6 +32,14 @@ const updateTask = async () => {
     who.value = importObject.author ?? "(unknown)";
 };
 
+const baseRoute = computed(() => {
+    if (!route.name) {
+        return null;
+    }
+    const name = route.name as string;
+    return name.split(".")[0];
+});
+
 onMounted(() => {
     updateTask();
     updateTimer = setInterval(
@@ -54,20 +62,24 @@ onUnmounted(() => {
             <h2>{{ tournament.name }}</h2>
             <span class="source text-muted">by {{ who }}</span>
             <div class="tabs">
-                <router-link :to="{ name: 'view.table', params: { tournamentId: tournament.id } }">
+                <router-link
+                    :to="{ name: baseRoute + '.table', params: { tournamentId: tournament.id } }"
+                >
                     Table
                 </router-link>
                 <router-link
-                    :to="{ name: 'view.knockout', params: { tournamentId: tournament.id } }"
+                    :to="{ name: baseRoute + '.knockout', params: { tournamentId: tournament.id } }"
                 >
                     Knockout
                 </router-link>
                 <router-link
-                    :to="{ name: 'view.matches', params: { tournamentId: tournament.id } }"
+                    :to="{ name: baseRoute + '.matches', params: { tournamentId: tournament.id } }"
                 >
                     Matches
                 </router-link>
-                <router-link :to="{ name: 'view.live', params: { tournamentId: tournament.id } }">
+                <router-link
+                    :to="{ name: baseRoute + '.live', params: { tournamentId: tournament.id } }"
+                >
                     Live
                 </router-link>
             </div>

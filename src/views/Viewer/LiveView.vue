@@ -86,8 +86,12 @@ const nextRound = computed(() => {
     return null;
 });
 
-const nextRoundCountdown = ref("");
+const nextRoundCountdown = ref<string | null>("");
 const updateNextRoundCountdown = () => {
+    if (nextRound.value === null) {
+        nextRoundCountdown.value = null;
+        return;
+    }
     const nextRoundDate = new Date(grouped.value[nextRound.value!][0].match.date);
     const now = new Date();
     const diff = nextRoundDate.getTime() - now.getTime();
@@ -133,10 +137,15 @@ const groupPhaseCompleted = computed(() => {
             class="no-round"
             v-if="currentTab === null"
         >
-            <p>
-                Next round starts at <strong>{{ nextRound }}</strong>
-            </p>
-            <p class="countdown">{{ nextRoundCountdown }}</p>
+            <template v-if="nextRoundCountdown">
+                <p>
+                    Next round starts at <strong>{{ nextRound }}</strong>
+                </p>
+                <p class="countdown">{{ nextRoundCountdown }}</p>
+            </template>
+            <template v-else>
+                <h3>No upcoming matches</h3>
+            </template>
         </div>
         <div
             class="round"

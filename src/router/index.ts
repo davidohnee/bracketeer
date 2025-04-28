@@ -83,6 +83,29 @@ const router = createRouter({
             path: "/s/:id",
             name: "import",
             component: () => import("@/views/ImportView.vue"),
+            redirect: { name: "import.table" },
+            children: [
+                {
+                    path: "/s/:id/matches",
+                    name: "import.matches",
+                    component: () => import("../views/Viewer/MatchesView.vue"),
+                },
+                {
+                    path: "/s/:id/knockout",
+                    name: "import.knockout",
+                    component: () => import("../views/Viewer/KnockoutView.vue"),
+                },
+                {
+                    path: "/s/:id/table",
+                    name: "import.table",
+                    component: () => import("../views/Tournament/Single/TableView.vue"),
+                },
+                {
+                    path: "/s/:id/live",
+                    name: "import.live",
+                    component: () => import("../views/Viewer/LiveView.vue"),
+                },
+            ],
         },
         {
             path: "/v/:id",

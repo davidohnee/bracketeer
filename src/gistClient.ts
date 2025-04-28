@@ -101,14 +101,15 @@ const fetchMe = async (force = false) => {
 };
 fetchMe();
 
-const isMine = (identifier: string) => {
-    const myData = fetchMe();
+const isMine = async (identifier: string) => {
+    const myData = me();
 
     if (!myData) return false;
 
     const myName = myData.login as string;
 
     const { author } = fromShare(identifier);
+    console.log("isMine", myName, author);
     return myName === author;
 };
 

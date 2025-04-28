@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import gistClient from "@/gistClient";
+import gistClient, { type GitHubUser } from "@/gistClient";
 import { ref } from "vue";
 
 const ME_KEY = "github.me";
@@ -12,26 +12,7 @@ const resetGithub = () => {
     pat.value = "";
 };
 
-type GitHubMe = {
-    login: string;
-    id: number;
-    node_id: string;
-    avatar_url: string;
-    gravatar_id: string;
-    url: string;
-    html_url: string;
-    followers_url: string;
-    following_url: string;
-    gists_url: string;
-    starred_url: string;
-    subscriptions_url: string;
-    organizations_url: string;
-    repos_url: string;
-    events_url: string;
-    received_events_url: string;
-};
-
-const me = ref<GitHubMe | null>(JSON.parse(localStorage.getItem(ME_KEY) ?? "null"));
+const me = ref<GitHubUser | null>(JSON.parse(localStorage.getItem(ME_KEY) ?? "null"));
 const pat = ref<string>(localStorage.getItem(PAT_KEY) ?? "");
 
 const canUpdate = ref(false);

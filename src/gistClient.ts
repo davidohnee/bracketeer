@@ -12,8 +12,27 @@ interface IOptions {
     isPublic?: boolean;
 }
 
+export interface GitHubUser {
+    login: string;
+    id: number;
+    node_id: string;
+    avatar_url: string;
+    gravatar_id: string;
+    url: string;
+    html_url: string;
+    followers_url: string;
+    following_url: string;
+    gists_url: string;
+    starred_url: string;
+    subscriptions_url: string;
+    organizations_url: string;
+    repos_url: string;
+    events_url: string;
+    received_events_url: string;
+}
+
 const pat = () => localStorage.getItem("github.pat");
-const me = () => JSON.parse(localStorage.getItem("github.me") ?? "null");
+const me = () => JSON.parse(localStorage.getItem("github.me") ?? "null") as GitHubUser | null;
 
 const getHeaders = async (forcePat: string | null = null) => {
     const token = pat() || forcePat;
@@ -85,7 +104,7 @@ const setGist = async (files: Files, options: IOptions, id?: string) => {
 };
 
 const fetchMe = async (force = false) => {
-    if (!pat()) return undefined;
+    if (!pat()) return null;
 
     const fromCache = me();
     if (fromCache && !force) return fromCache;
@@ -94,7 +113,7 @@ const fetchMe = async (force = false) => {
     const res = await fetch("https://api.github.com/user", {
         headers,
     });
-    const data = await res.json();
+    const data = (await res.json()) as GitHubUser;
     localStorage.setItem("github.me", JSON.stringify(data));
 
     return data;

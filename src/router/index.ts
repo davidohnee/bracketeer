@@ -20,12 +20,12 @@ const router = createRouter({
             redirect: { name: "settings.general.about" },
             children: [
                 {
-                    path: "/settings/general/about",
+                    path: "general/about",
                     name: "settings.general.about",
                     component: () => import("../views/Settings/AboutView.vue"),
                 },
                 {
-                    path: "/settings/share/gists",
+                    path: "share/gists",
                     name: "settings.share.gists",
                     component: () => import("../views/Settings/Share/GistsView.vue"),
                 },
@@ -43,37 +43,37 @@ const router = createRouter({
             redirect: { name: "tournament.table" },
             children: [
                 {
-                    path: "/tournaments/:tournamentId/config",
+                    path: ":tournamentId/config",
                     name: "tournament.config",
                     component: () => import("../views/Tournament/Single/ConfigurationView.vue"),
                 },
                 {
-                    path: "/tournaments/:tournamentId/config/teams",
+                    path: ":tournamentId/config/teams",
                     name: "tournament.config.teams",
                     component: () => import("../views/Tournament/Single/TeamEditorView.vue"),
                 },
                 {
-                    path: "/tournaments/:tournamentId/config/plan",
+                    path: ":tournamentId/config/plan",
                     name: "tournament.config.plan",
                     component: () => import("../views/Tournament/Single/SettingsEditorView.vue"),
                 },
                 {
-                    path: "/tournaments/:tournamentId/matches",
+                    path: ":tournamentId/matches",
                     name: "tournament.matches",
                     component: () => import("../views/Tournament/Single/MatchesView.vue"),
                 },
                 {
-                    path: "/tournaments/:tournamentId/knockout",
+                    path: ":tournamentId/knockout",
                     name: "tournament.knockout",
                     component: () => import("../views/Tournament/Single/KnockoutView.vue"),
                 },
                 {
-                    path: "/tournaments/:tournamentId/table",
+                    path: ":tournamentId/table",
                     name: "tournament.table",
                     component: () => import("../views/Tournament/Single/TableView.vue"),
                 },
                 {
-                    path: "/tournaments/:tournamentId/live",
+                    path: ":tournamentId/live",
                     name: "tournament.live",
                     component: () => import("../views/Tournament/Single/LiveView.vue"),
                 },
@@ -86,22 +86,22 @@ const router = createRouter({
             redirect: { name: "import.table" },
             children: [
                 {
-                    path: "/s/:id/matches",
+                    path: ":id/matches",
                     name: "import.matches",
                     component: () => import("../views/Viewer/MatchesView.vue"),
                 },
                 {
-                    path: "/s/:id/knockout",
+                    path: ":id/knockout",
                     name: "import.knockout",
                     component: () => import("../views/Viewer/KnockoutView.vue"),
                 },
                 {
-                    path: "/s/:id/table",
+                    path: ":id/table",
                     name: "import.table",
                     component: () => import("../views/Tournament/Single/TableView.vue"),
                 },
                 {
-                    path: "/s/:id/live",
+                    path: ":id/live",
                     name: "import.live",
                     component: () => import("../views/Viewer/LiveView.vue"),
                 },
@@ -114,22 +114,22 @@ const router = createRouter({
             redirect: { name: "view.table" },
             children: [
                 {
-                    path: "/v/:id/matches",
+                    path: ":id/matches",
                     name: "view.matches",
                     component: () => import("../views/Viewer/MatchesView.vue"),
                 },
                 {
-                    path: "/v/:id/knockout",
+                    path: ":id/knockout",
                     name: "view.knockout",
                     component: () => import("../views/Viewer/KnockoutView.vue"),
                 },
                 {
-                    path: "/v/:id/table",
+                    path: ":id/table",
                     name: "view.table",
                     component: () => import("../views/Tournament/Single/TableView.vue"),
                 },
                 {
-                    path: "/v/:id/live",
+                    path: ":id/live",
                     name: "view.live",
                     component: () => import("../views/Viewer/LiveView.vue"),
                 },

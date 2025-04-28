@@ -1,3 +1,19 @@
+<script setup lang="ts">
+// remove hash from url
+import { onMounted } from "vue";
+import { useRouter } from "vue-router";
+
+const router = useRouter();
+
+onMounted(() => {
+    const hash = window.location.hash;
+    const route = hash.replace("#", "");
+    if (route) {
+        router.push(route);
+    }
+});
+</script>
+
 <template>
     <header>
         <div class="full">

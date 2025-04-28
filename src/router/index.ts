@@ -1,7 +1,7 @@
-import { createRouter, createWebHashHistory } from "vue-router";
+import { createRouter, createWebHistory } from "vue-router";
 
 const router = createRouter({
-    history: createWebHashHistory(import.meta.env.BASE_URL),
+    history: createWebHistory(import.meta.env.BASE_URL),
     routes: [
         {
             path: "/",
@@ -17,6 +17,19 @@ const router = createRouter({
             path: "/settings",
             name: "settings",
             component: () => import("../views/SettingsView.vue"),
+            redirect: { name: "settings.general.about" },
+            children: [
+                {
+                    path: "/settings/general/about",
+                    name: "settings.general.about",
+                    component: () => import("../views/Settings/AboutView.vue"),
+                },
+                {
+                    path: "/settings/share/gists",
+                    name: "settings.share.gists",
+                    component: () => import("../views/Settings/Share/GistsView.vue"),
+                },
+            ],
         },
         {
             path: "/create",

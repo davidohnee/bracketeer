@@ -8,6 +8,7 @@ import { computed, ref } from "vue";
 import ShareModal from "./ShareModal.vue";
 import gistClient from "@/gistClient";
 import TrackModal from "./TrackModal.vue";
+import { Notifications } from "@/components/notifications/createNotification";
 
 const props = defineProps<{
     tournament: Tournament;
@@ -26,32 +27,62 @@ const randomGroupPhase = () => {
 
 const update = () => {
     updateKnockoutMatches(props.tournament);
+    Notifications.addSuccess(
+        "Knockout matches updated",
+        "The knockout matches have been updated based on the current group phase results.",
+        3000,
+    );
 };
 
 const deleteTournament = () => {
-    tournaments.deleteTournament(props.tournament.id);
-    router.push({ name: "tournaments" });
+    Notifications.addYesNo(
+        "Delete Tournament",
+        "Are you sure you want to delete the tournament? This action cannot be undone.",
+        undefined,
+        () => {
+            tournaments.deleteTournament(props.tournament.id);
+            router.push({ name: "home" });
+            Notifications.addSuccess(
+                "Tournament deleted",
+                "The tournament has been deleted successfully.",
+                3000,
+            );
+        },
+    );
 };
 
 const resetTournament = () => {
-    const tournament = tournaments.getTournamentById(props.tournament.id);
+    Notifications.addYesNo(
+        "Reset Tournament",
+        "Are you sure you want to reset the tournament? This will remove all results and start the tournament from scratch.",
+        undefined,
+        () => {
+            const tournament = tournaments.getTournamentById(props.tournament.id);
 
-    for (const round of tournament?.groupPhase ?? []) {
-        for (const match of round.matches) {
-            match.teams[0].score = 0;
-            match.teams[1].score = 0;
-            match.status = "scheduled";
-        }
-    }
-    for (const round of tournament?.knockoutPhase ?? []) {
-        for (const match of round.matches) {
-            for (const team of match.teams) {
-                team.score = 0;
-                delete team.ref;
+            for (const round of tournament?.groupPhase ?? []) {
+                for (const match of round.matches) {
+                    match.teams[0].score = 0;
+                    match.teams[1].score = 0;
+                    match.status = "scheduled";
+                }
             }
-            match.status = "scheduled";
-        }
-    }
+            for (const round of tournament?.knockoutPhase ?? []) {
+                for (const match of round.matches) {
+                    for (const team of match.teams) {
+                        team.score = 0;
+                        delete team.ref;
+                    }
+                    match.status = "scheduled";
+                }
+            }
+
+            Notifications.addSuccess(
+                "Tournament reset",
+                "The tournament has been reset. All results have been removed.",
+                3000,
+            );
+        },
+    );
 };
 
 const duplicateTournament = () => {

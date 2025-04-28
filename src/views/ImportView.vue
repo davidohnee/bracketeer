@@ -57,7 +57,10 @@ const viewOnly = () => {
 </script>
 <template>
     <div class="import">
-        <div class="import-notice">
+        <div
+            class="import-notice"
+            v-if="what.length"
+        >
             Do you want to import this tournament?
             <div class="actions">
                 <button

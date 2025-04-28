@@ -2,6 +2,7 @@
 // remove hash from url
 import { onMounted } from "vue";
 import { useRouter } from "vue-router";
+import NotificationHandler from "./components/notifications/NotificationHandler.vue";
 
 const router = useRouter();
 
@@ -51,6 +52,7 @@ onMounted(() => {
     <div class="content">
         <RouterView />
     </div>
+    <NotificationHandler />
 </template>
 
 <style>

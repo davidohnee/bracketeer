@@ -128,7 +128,6 @@ const isMine = async (identifier: string) => {
     const myName = myData.login as string;
 
     const { author } = fromShare(identifier);
-    console.log("isMine", myName, author);
     return myName === author;
 };
 

@@ -107,14 +107,22 @@ const canPull = computed(() => {
 
 const pull = async () => {
     const tournament = tournaments.getTournamentById(props.tournament.id);
-    tournaments.pull({
-        tournament,
-    });
-    Notifications.addSuccess(
-        "Tournament updated",
-        "The tournament has been updated successfully.",
-        3000,
-    );
+    try {
+        await tournaments.pull({
+            tournament,
+        });
+        Notifications.addSuccess(
+            "Tournament updated",
+            "The tournament has been updated successfully.",
+            3000,
+        );
+    } catch (error) {
+        Notifications.addError(
+            "Error updating tournament",
+            "There was an error updating the tournament. Please try again.",
+            3000,
+        );
+    }
 };
 
 const hasStarted = computed(() => {

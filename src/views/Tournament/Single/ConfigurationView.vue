@@ -117,6 +117,7 @@ const pull = async () => {
             3000,
         );
     } catch (error) {
+        console.error("Error pulling tournament:", error);
         Notifications.addError(
             "Error updating tournament",
             "There was an error updating the tournament. Please try again.",

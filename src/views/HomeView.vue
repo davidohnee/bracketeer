@@ -83,13 +83,16 @@ const website = "https://davidohnee.com";
     </div>
     <div class="footer">
         <div class="row text-muted">
-            <p>
-                <strong>bracketeer</strong> © 2025 | made with ❤️ by
-                <a
-                    :href="website"
-                    target="_blank"
-                    >{{ githubUser }}</a
-                >
+            <p class="left">
+                <span> <strong>bracketeer</strong> © 2025 </span>
+                <span
+                    >made with ❤️ by
+                    <a
+                        :href="website"
+                        target="_blank"
+                        >{{ githubUser }}</a
+                    >
+                </span>
             </p>
             <div class="end row">
                 <a
@@ -131,6 +134,10 @@ section {
         color: var(--color-primary-contrast);
         padding: 4em;
         border-radius: 1em;
+
+        @media (max-width: 768px) {
+            padding: 1em;
+        }
     }
 
     &:has(.col) {
@@ -162,8 +169,30 @@ section {
     margin-bottom: 2em;
 }
 
+.footer .row {
+    align-items: center;
+
+    & a:has(ion-icon) {
+        color: unset;
+    }
+
+    .left {
+        display: flex;
+        align-items: center;
+
+        > span:last-child:before {
+            content: "|";
+            margin: 0 0.5em;
+        }
+    }
+}
+
 @media (max-width: 768px) {
     .home {
+        padding: 1em;
+    }
+
+    .footer {
         padding: 1em;
     }
 
@@ -174,13 +203,14 @@ section {
     section {
         margin: 5em 0;
     }
-}
 
-.footer .row {
-    align-items: center;
+    .footer .row .left {
+        flex-direction: column;
+        align-items: flex-start;
 
-    & a:has(ion-icon) {
-        color: unset;
+        > span:last-child:before {
+            content: unset;
+        }
     }
 }
 </style>

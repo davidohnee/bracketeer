@@ -100,6 +100,32 @@ const canUpdate = computed(() => {
     return gistClient.isMine(identifier);
 });
 
+const canPull = computed(() => {
+    if (!props.tournament.remote?.length) return false;
+    return !!props.tournament.remote[0].identifier;
+});
+
+const pull = async () => {
+    const tournament = tournaments.getTournamentById(props.tournament.id);
+    try {
+        await tournaments.pull({
+            tournament,
+        });
+        Notifications.addSuccess(
+            "Tournament updated",
+            "The tournament has been updated successfully.",
+            3000,
+        );
+    } catch (error) {
+        console.error("Error pulling tournament:", error);
+        Notifications.addError(
+            "Error updating tournament",
+            "There was an error updating the tournament. Please try again.",
+            3000,
+        );
+    }
+};
+
 const hasStarted = computed(() => {
     const tournament = tournaments.getTournamentById(props.tournament.id);
     if (!tournament) return false;
@@ -158,14 +184,40 @@ const hasStarted = computed(() => {
                         </button>
                     </router-link>
                 </div>
-                <div class="field">
-                    <button @click="shareModal?.open(props.tournament)">Share</button>
+            </div>
+        </section>
+        <section>
+            <h3>Sharing & Sync</h3>
+            <div class="row">
+                <div
+                    class="field"
+                    v-if="canPull"
+                >
+                    <button
+                        class="secondary"
+                        @click="pull"
+                    >
+                        <ion-icon name="cloud-download-outline" />
+                        Pull
+                    </button>
                 </div>
                 <div
                     class="field"
-                    v-if="canUpdate"
+                    :disabled="!canUpdate"
                 >
-                    <button @click="tournaments.share(props.tournament)">Publish Update</button>
+                    <button
+                        class="secondary"
+                        @click="tournaments.share(props.tournament)"
+                    >
+                        <ion-icon name="cloud-upload-outline" />
+                        Publish Update
+                    </button>
+                </div>
+                <div class="field">
+                    <button @click="shareModal?.open(props.tournament)">
+                        <ion-icon name="share-outline" />
+                        Share
+                    </button>
                 </div>
             </div>
         </section>

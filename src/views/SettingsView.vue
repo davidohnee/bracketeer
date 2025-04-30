@@ -102,5 +102,15 @@ const sectionTitle = computed(() => {
     .settings {
         padding: 1em;
     }
+
+    .split {
+        grid-template-columns: 1fr;
+        gap: 1em;
+
+        & aside {
+            border-bottom: 1px solid var(--color-border);
+            padding-bottom: 1em;
+        }
+    }
 }
 </style>

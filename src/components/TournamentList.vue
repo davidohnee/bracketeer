@@ -46,8 +46,8 @@ const STATUS_TEXT: Record<MatchStatus, string> = {
         <div class="tournament-list">
             <div class="header tournament-item">
                 <span class="text-muted">Tournament</span>
-                <span class="text-muted center">Status</span>
-                <span class="text-muted center">Start Date</span>
+                <span class="text-muted desktop-only">Status</span>
+                <span class="text-muted desktop-only">Start Date</span>
                 <div class="text-muted delete"></div>
             </div>
             <router-link
@@ -58,12 +58,12 @@ const STATUS_TEXT: Record<MatchStatus, string> = {
             >
                 <span class="name">{{ tournament.name }}</span>
                 <span
-                    class="status"
+                    class="status desktop-only"
                     :class="tournament.status"
                 >
                     {{ STATUS_TEXT[tournament.status] }}
                 </span>
-                <span class="text-muted center date">{{
+                <span class="text-muted date desktop-only">{{
                     tournament.config.startTime.toLocaleString()
                 }}</span>
                 <button
@@ -145,6 +145,20 @@ const STATUS_TEXT: Record<MatchStatus, string> = {
         &.scheduled {
             --c: var(--color-grey);
         }
+    }
+}
+
+@media (max-width: 768px) {
+    .tournament-list-container {
+        margin: 1em;
+    }
+
+    .tournament-item {
+        grid-template-columns: 1fr 54px;
+    }
+
+    .desktop-only {
+        display: none;
     }
 }
 </style>

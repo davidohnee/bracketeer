@@ -150,4 +150,10 @@ const totalTournamentDurationFormatted = computed(() => {
 .row .field {
     flex: 1;
 }
+
+@media (max-width: 768px) {
+    .row {
+        flex-direction: column;
+    }
+}
 </style>

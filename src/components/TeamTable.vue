@@ -2,51 +2,70 @@
 import { computed } from "vue";
 import { type Tournament } from "../types/tournament";
 import TeamTableEntry from "./TeamTableEntry.vue";
-import { generateTable } from "@/helpers";
+import { generateTables } from "@/helpers";
 
 const props = defineProps<{ tournament: Tournament; teamMatchesRouteName: string }>();
 
-const table = computed(() => {
-    return generateTable(props.tournament);
+const tables = computed(() => {
+    return generateTables(props.tournament);
 });
+
+const groupName = (id: string | null) => {
+    return props.tournament.groups?.find((group) => group.id === id)?.name ?? "";
+};
 </script>
 
 <template>
-    <div class="team-table">
-        <div class="header entry text-muted">
-            <div class="rank">#</div>
-            <div class="name"></div>
-            <div class="mp">MP</div>
-            <div class="w">W</div>
-            <div class="d">D</div>
-            <div class="l">L</div>
-            <div class="for-against">+/-</div>
-            <div class="gd">GD</div>
-            <div class="pts">PTS</div>
+    <div class="team-tables">
+        <div
+            class="team-table"
+            v-for="table in tables"
+        >
+            <div
+                class="top-header"
+                v-if="table.group"
+            >
+                <h5>{{ groupName(table.group?.id) }}</h5>
+            </div>
+            <div class="header entry text-muted">
+                <div class="rank">#</div>
+                <div class="name"></div>
+                <div class="mp">MP</div>
+                <div class="w">W</div>
+                <div class="d">D</div>
+                <div class="l">L</div>
+                <div class="for-against">+/-</div>
+                <div class="gd">GD</div>
+                <div class="pts">PTS</div>
+            </div>
+            <TeamTableEntry
+                class="entry"
+                v-for="(score, index) in table.teams"
+                :key="index"
+                :score="score"
+                :rank="index + 1"
+                :tournament="tournament"
+                :teamMatchesRouteName="teamMatchesRouteName"
+            />
+            <legend>
+                <div class="text-muted"><strong>#:</strong> Rank</div>
+                <div class="text-muted"><strong>MP:</strong> Matches Played</div>
+                <div class="text-muted"><strong>W:</strong> Wins</div>
+                <div class="text-muted"><strong>D:</strong> Draws</div>
+                <div class="text-muted"><strong>L:</strong> Losses</div>
+                <div class="text-muted"><strong>+/-:</strong> Goals For - Goals Against</div>
+                <div class="text-muted"><strong>GD:</strong> Goal Difference</div>
+                <div class="text-muted"><strong>PTS:</strong> Points</div>
+            </legend>
         </div>
-        <TeamTableEntry
-            class="entry"
-            v-for="(score, index) in table"
-            :key="index"
-            :score="score"
-            :rank="index + 1"
-            :tournament="tournament"
-            :teamMatchesRouteName="teamMatchesRouteName"
-        />
-        <legend>
-            <div class="text-muted"><strong>#:</strong> Rank</div>
-            <div class="text-muted"><strong>MP:</strong> Matches Played</div>
-            <div class="text-muted"><strong>W:</strong> Wins</div>
-            <div class="text-muted"><strong>D:</strong> Draws</div>
-            <div class="text-muted"><strong>L:</strong> Losses</div>
-            <div class="text-muted"><strong>+/-:</strong> Goals For - Goals Against</div>
-            <div class="text-muted"><strong>GD:</strong> Goal Difference</div>
-            <div class="text-muted"><strong>PTS:</strong> Points</div>
-        </legend>
     </div>
 </template>
 
 <style>
+.team-tables {
+    width: 100%;
+}
+
 .team-table {
     width: 100%;
 

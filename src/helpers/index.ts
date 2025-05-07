@@ -1,42 +1,24 @@
 import type {
     Match,
-    StaticTeamRef,
+    Ref,
+    Table,
     Team,
     TeamScore,
     Tournament,
     TournamentConfig,
     TournamentRound,
-} from "./types/tournament";
+} from "@/types/tournament";
+import { migrateTournament } from "./migration";
 
 export const generateId = () => {
     return Math.random().toString(36).substring(2, 15);
 };
 
-export const tournamentFromJson = (tournament: Tournament) => ({
-    ...tournament,
-    groupPhase: tournament.groupPhase.map((round) => ({
-        ...round,
-        matches: round.matches.map((match) => ({
-            ...match,
-            date: new Date(match.date),
-        })),
-    })),
-    knockoutPhase: tournament.knockoutPhase.map((round) => ({
-        ...round,
-        matches: round.matches.map((match) => ({
-            ...match,
-            date: new Date(match.date),
-        })),
-    })),
-    config: {
-        ...tournament.config,
-        startTime: new Date(tournament.config.startTime),
-    },
-});
+export const tournamentFromJson = migrateTournament;
 
-export const generateTable = (tournament: Tournament): TeamScore[] => {
+export const generateTables = (tournament: Tournament): Table[] => {
     const table: { [key: string]: TeamScore } = {};
-    const matches = tournament.groupPhase.flatMap((round) => round.matches);
+    const matches = tournament.groupPhase;
 
     for (let j = 0; j < matches.length; j++) {
         const match = matches[j];
@@ -87,7 +69,25 @@ export const generateTable = (tournament: Tournament): TeamScore[] => {
             numeric: true,
         });
     });
-    return teamScores;
+
+    const groups = tournament.groups;
+    if (!groups) {
+        return [
+            {
+                teams: teamScores,
+            },
+        ];
+    }
+
+    const tables: Table[] = [];
+    for (const group of groups) {
+        const groupTable: Table = {
+            group: group,
+            teams: teamScores.filter((team) => team.team.id.startsWith(group.id)),
+        };
+        tables.push(groupTable);
+    }
+    return tables;
 };
 
 export const getCourtName = (courtNumber: number | null): string =>
@@ -121,16 +121,19 @@ const chunks = <T>(a: T[], size: number) =>
     );
 
 const createBalanceRound = (
-    rounds: TournamentRound[],
+    allMatches: Match[],
     teams: Team[],
     config: TournamentConfig,
-): TournamentRound | null => {
-    const allMatches = rounds.flatMap((round) => round.matches);
-
+): Match[] | null => {
+    const rounds = [
+        ...new Set(allMatches.map((match) => match.round).filter((round) => round !== undefined)),
+    ];
     const teamsMissing = rounds.flatMap((round) =>
         teams.filter(
             (t) =>
-                !round.matches.some((match) => match.teams.some((team) => team.ref?.id === t.id)),
+                !allMatches
+                    .filter((match) => match.round === round)
+                    .some((match) => match.teams.some((team) => team.ref?.id === t.id)),
         ),
     );
 
@@ -171,11 +174,15 @@ const createBalanceRound = (
             ],
             date: time,
             status: "scheduled",
+            round: {
+                id: round.id,
+                name: round.name,
+            },
         };
         round.matches.push(match);
     }
 
-    return round;
+    return round.matches;
 };
 
 /**
@@ -192,7 +199,7 @@ const earliestFreeSlot = (
     scheduledMatches: Match[],
     earliestTime: Date,
     timeDelta: number,
-    teams: StaticTeamRef[],
+    teams: Ref[],
     courtCount: number,
 ): { time: Date; court: number } => {
     const matchTime = new Date(earliestTime);
@@ -240,25 +247,25 @@ const earliestFreeSlot = (
     return { time: matchTime, court };
 };
 
-export const generateGroupPhase = (teams: Team[], config: TournamentConfig): TournamentRound[] => {
-    const rounds: TournamentRound[] = [];
+export const generateGroupPhase = (teams: Team[], config: TournamentConfig): Match[] => {
+    const scheduledMatches: Match[] = [];
     const shuffledTeams = teams.sort(() => Math.random() - 0.5);
 
     const roundDuration = config.matchDuration + config.breakDuration;
 
-    const matches = roundRobin(shuffledTeams);
+    const draw = roundRobin(shuffledTeams);
 
     for (let i = 0; i < config.rounds; i++) {
-        const matchI = i % matches.length;
-        const matchPairs = matches[matchI];
+        const matchI = i % draw.length;
+        const matchPairs = draw[matchI];
+        let roundId = generateId();
 
-        const match: Match[] = [];
         for (let j = 0; j < matchPairs.length; j++) {
             const team1 = matchPairs[j][0];
             const team2 = matchPairs[j][1];
 
             const slot = earliestFreeSlot(
-                [...rounds.flatMap((round) => round.matches), ...match],
+                scheduledMatches,
                 config.startTime,
                 roundDuration,
                 [team1!, team2!],
@@ -271,32 +278,31 @@ export const generateGroupPhase = (teams: Team[], config: TournamentConfig): Tou
                 court,
                 teams: [
                     {
-                        ref: team1 as StaticTeamRef,
+                        ref: team1 as Ref,
                         score: 0,
                     },
                     {
-                        ref: team2 as StaticTeamRef,
+                        ref: team2 as Ref,
                         score: 0,
                     },
                 ],
                 date: time,
                 status: "scheduled",
+                round: {
+                    id: roundId,
+                    name: `Round ${i + 1}`,
+                },
             };
-            match.push(matchObj);
+            scheduledMatches.push(matchObj);
         }
-        rounds.push({
-            id: generateId(),
-            name: `Round ${i + 1}`,
-            matches: match,
-        });
     }
 
-    const balanceRound = createBalanceRound(rounds, teams, config);
+    const balanceRound = createBalanceRound(scheduledMatches, teams, config);
     if (balanceRound) {
-        rounds.push(balanceRound);
+        scheduledMatches.push(...balanceRound);
     }
 
-    return rounds;
+    return scheduledMatches;
 };
 
 export const generateRound = (
@@ -363,10 +369,18 @@ export const generateRound = (
     return matches;
 };
 
-export const getLastMatchOf = (rounds: TournamentRound[]): Match => {
+export const getLastMatchOf = ({
+    matches,
+    rounds,
+}: {
+    matches?: Match[];
+    rounds?: TournamentRound[];
+}): Match => {
+    const allMatches = matches || rounds?.flatMap((round) => round.matches) || [];
+
     const matchComparator = (a: Match, b: Match) => a.date.getTime() - b.date.getTime();
 
-    const sorted = rounds.flatMap((round) => round.matches).sort(matchComparator);
+    const sorted = allMatches.sort(matchComparator);
     const last = sorted[sorted.length - 1];
     return last;
 };
@@ -522,14 +536,12 @@ export const randomiseGroupPhaseResults = (tournament: Tournament) => {
     const rounds = tournament.groupPhase;
     // const randomRounds = Math.floor(Math.random() * rounds.length) + 1;
     for (let i = 0; i < rounds.length; i++) {
-        const round = rounds[i];
-        for (const match of round.matches) {
-            for (let j = 0; j < match.teams.length; j++) {
-                const team = match.teams[j];
-                team.score = Math.floor(Math.random() * 10);
-            }
-            match.status = "completed";
+        const match = rounds[i];
+        for (let j = 0; j < match.teams.length; j++) {
+            const team = match.teams[j];
+            team.score = Math.floor(Math.random() * 10);
         }
+        match.status = "completed";
     }
 };
 
@@ -541,21 +553,19 @@ export const updateKnockoutMatches = (tournament: Tournament) => {
     // group phase completed?
     const groupPhase = tournament.groupPhase;
     if (!groupPhase) return;
-    const groupPhaseCompleted = groupPhase.every((round) =>
-        round.matches.every((match) => match.status === "completed"),
-    );
+    const groupPhaseCompleted = groupPhase.every((match) => match.status === "completed");
     if (!groupPhaseCompleted) return;
 
-    const table: StaticTeamRef[] = generateTable(tournament).map((x) => ({
+    const table: Ref[] = generateTables(tournament)[0].teams.map((x) => ({
         id: x.team.id,
     }));
 
-    const roundWinners: StaticTeamRef[][] = [];
-    const roundLosers: StaticTeamRef[][] = [];
+    const roundWinners: Ref[][] = [];
+    const roundLosers: Ref[][] = [];
     for (let i = 0; i < knockout.length; i++) {
         const round = knockout[i];
-        const winners: StaticTeamRef[] = [];
-        const losers: StaticTeamRef[] = [];
+        const winners: Ref[] = [];
+        const losers: Ref[] = [];
         roundWinners.push(winners);
         roundLosers.push(losers);
 

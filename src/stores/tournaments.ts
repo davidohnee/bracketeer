@@ -57,11 +57,15 @@ export const useTournamentsStore = defineStore("tournaments", () => {
         const groupPhase = generateGroupPhase(teams, config);
 
         const tournament: Tournament = {
+            version: 2,
             id: crypto.randomUUID(),
             name: `Tournament ${tournaments.value.length + 1}`,
             teams: teams,
             groupPhase: groupPhase,
-            knockoutPhase: generateKnockoutBracket(config, getLastMatchOf(groupPhase).date),
+            knockoutPhase: generateKnockoutBracket(
+                config,
+                getLastMatchOf({ matches: groupPhase }).date,
+            ),
             config,
         };
         add(tournament);

@@ -13,7 +13,8 @@ const tournament = ref<Tournament | null>(null);
 const tournaments = useTournamentsStore();
 const router = useRouter();
 
-const initTournament = {
+const initTournament: Tournament = {
+    version: 2,
     id: crypto.randomUUID(),
     name: "",
     teams: [],

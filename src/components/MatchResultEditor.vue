@@ -1,11 +1,10 @@
 <script setup lang="ts">
 import { ALPHABET } from "../helpers";
-import type { MatchStatus, Match, MatchTeam, StaticTeamRef, Team } from "@/types/tournament";
+import type { MatchStatus, Match, MatchTeam, Ref, Team } from "@/types/tournament";
 import { computed, onMounted, ref } from "vue";
 import { debounce } from "lodash-es";
 
-const teamIndex = (team: StaticTeamRef | undefined) =>
-    props.teams.findIndex((x) => x.id === team?.id);
+const teamIndex = (team: Ref | undefined) => props.teams.findIndex((x) => x.id === team?.id);
 
 const teamDisplay = (team: MatchTeam) => {
     const i = teamIndex(team.ref);

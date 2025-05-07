@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import { randomiseGroupPhaseResults } from "@/helpers";
+import { randomiseGroupPhaseResults, updateKnockoutMatches } from "@/helpers";
 import type { Tournament } from "@/types/tournament";
-import { updateKnockoutMatches } from "../../../helpers";
 import { useTournamentsStore } from "../../../stores/tournaments";
 import { useRouter } from "vue-router";
 import { computed, ref } from "vue";
@@ -59,12 +58,10 @@ const resetTournament = () => {
         () => {
             const tournament = tournaments.getTournamentById(props.tournament.id);
 
-            for (const round of tournament?.groupPhase ?? []) {
-                for (const match of round.matches) {
-                    match.teams[0].score = 0;
-                    match.teams[1].score = 0;
-                    match.status = "scheduled";
-                }
+            for (const match of tournament?.groupPhase ?? []) {
+                match.teams[0].score = 0;
+                match.teams[1].score = 0;
+                match.status = "scheduled";
             }
             for (const round of tournament?.knockoutPhase ?? []) {
                 for (const match of round.matches) {
@@ -129,9 +126,7 @@ const pull = async () => {
 const hasStarted = computed(() => {
     const tournament = tournaments.getTournamentById(props.tournament.id);
     if (!tournament) return false;
-    return tournament.groupPhase.some((round) =>
-        round.matches.some((match) => match.status !== "scheduled"),
-    );
+    return tournament.groupPhase.some((match) => match.status !== "scheduled");
 });
 </script>
 

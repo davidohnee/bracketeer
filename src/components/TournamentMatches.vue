@@ -1,19 +1,31 @@
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { computed, ref, watch } from "vue";
 import MatchCard from "@/components/MatchCard.vue";
 import MatchRow from "@/components/ResponsiveMatchRow.vue";
 import { getCourtName, updateKnockoutMatches } from "@/helpers";
 import type { Match, MatchStatus, Tournament, TournamentRound } from "@/types/tournament";
-import { useTournamentsStore } from "@/stores/tournaments";
 import { useRoute, useRouter } from "vue-router";
 
 const props = defineProps<{
-    tournament: Tournament;
+    modelValue: Tournament;
+    readonly?: boolean;
 }>();
+/*
+const emit = defineEmits<{
+    (e: "update:modelValue", tournament: Tournament): void;
+}>();
+*/
 
-const tournamentStore = useTournamentsStore();
+const tournament = ref(props.modelValue);
 const route = useRoute();
 const router = useRouter();
+
+watch(
+    () => props.modelValue,
+    (newTournament) => {
+        tournament.value = newTournament;
+    },
+);
 
 const teamFilter = computed({
     get() {
@@ -52,14 +64,12 @@ const selectedGroupOption = computed<(typeof GROUP_OPTIONS)[number]>({
     },
 });
 
-const tournament = tournamentStore.getTournamentById(props.tournament.id)!;
-
 const knockoutBracket = computed<TournamentRound[]>(() => {
-    return props.tournament.knockoutPhase;
+    return props.modelValue.knockoutPhase;
 });
 
 const getTeamName = (teamId: string | undefined) => {
-    const team = props.tournament.teams.find((team) => team.id === teamId);
+    const team = props.modelValue.teams.find((team) => team.id === teamId);
     return team ? team.name : null;
 };
 
@@ -69,7 +79,7 @@ type MatchAndRound = {
 };
 
 const allMatches = computed<MatchAndRound[]>(() => {
-    const matches: MatchAndRound[] = props.tournament.groupPhase.map((match) => ({
+    const matches: MatchAndRound[] = props.modelValue.groupPhase.map((match) => ({
         match,
         roundName: match.round?.name || "Group Phase",
     }));
@@ -95,19 +105,17 @@ const updateMatchScore = (
     teamIndex: number,
     newScore: number,
 ) => {
-    if (!tournament) return;
-
     if (!roundName) {
-        const matchIndex = props.tournament.groupPhase.findIndex((match) => match.id === matchId);
+        const matchIndex = props.modelValue.groupPhase.findIndex((match) => match.id === matchId);
         if (matchIndex !== -1) {
-            const match = tournament.groupPhase[matchIndex];
+            const match = tournament.value.groupPhase[matchIndex];
             if (teamIndex === 0) {
                 match.teams[0].score = newScore;
             } else {
                 match.teams[1].score = newScore;
             }
-            tournament.groupPhase[matchIndex] = match;
-            updateKnockoutMatches(props.tournament);
+            tournament.value.groupPhase[matchIndex] = match;
+            updateKnockoutMatches(props.modelValue);
             return;
         }
     }
@@ -119,25 +127,25 @@ const updateMatchScore = (
         (match) => match.id === matchId,
     );
     if (matchIndex === -1) return;
-    const match = tournament.knockoutPhase[knockoutRoundIndex].matches[matchIndex];
+    const match = tournament.value.knockoutPhase[knockoutRoundIndex].matches[matchIndex];
     if (teamIndex === 0) {
         match.teams[0].score = newScore;
     } else {
         match.teams[1].score = newScore;
     }
-    tournament.knockoutPhase[knockoutRoundIndex].matches[matchIndex] = match;
-    updateKnockoutMatches(props.tournament);
+    tournament.value.knockoutPhase[knockoutRoundIndex].matches[matchIndex] = match;
+    updateKnockoutMatches(props.modelValue);
 };
 
 const updateMatchStatus = (roundName: string | null, matchId: string, newStatus: MatchStatus) => {
     if (!tournament) return;
 
     if (!roundName) {
-        const matchIndex = props.tournament.groupPhase.findIndex((match) => match.id === matchId);
+        const matchIndex = props.modelValue.groupPhase.findIndex((match) => match.id === matchId);
         if (matchIndex !== -1) {
-            const match = tournament.groupPhase[matchIndex];
+            const match = tournament.value.groupPhase[matchIndex];
             match.status = newStatus;
-            tournament.groupPhase[matchIndex] = match;
+            tournament.value.groupPhase[matchIndex] = match;
             return;
         }
     }
@@ -148,9 +156,9 @@ const updateMatchStatus = (roundName: string | null, matchId: string, newStatus:
             (match) => match.id === matchId,
         );
         if (matchIndex !== -1) {
-            const match = tournament.knockoutPhase[knockoutRoundIndex].matches[matchIndex];
+            const match = tournament.value.knockoutPhase[knockoutRoundIndex].matches[matchIndex];
             match.status = newStatus;
-            tournament.knockoutPhase[knockoutRoundIndex].matches[matchIndex] = match;
+            tournament.value.knockoutPhase[knockoutRoundIndex].matches[matchIndex] = match;
         }
     }
 };

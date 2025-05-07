@@ -65,12 +65,10 @@ type MatchAndRound = {
 };
 
 const allMatches = computed<MatchAndRound[]>(() => {
-    const matches: MatchAndRound[] = [];
-    for (const round of props.tournament.groupPhase) {
-        for (const match of round.matches) {
-            matches.push({ match, roundName: round.name });
-        }
-    }
+    const matches: MatchAndRound[] = props.tournament.groupPhase.map((match) => ({
+        match,
+        roundName: match.round?.name || "Group Phase",
+    }));
     for (const round of knockoutBracket.value) {
         for (const match of round.matches) {
             matches.push({ match, roundName: round.name });

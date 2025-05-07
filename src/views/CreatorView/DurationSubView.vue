@@ -36,14 +36,16 @@ const generate = () => {
     );
     tournament.value.knockoutPhase = generateKnockoutBracket(
         tournament.value.config,
-        getLastMatchOf(tournament.value.groupPhase).date,
+        getLastMatchOf({ matches: tournament.value.groupPhase }).date,
     );
 };
 
 onMounted(generate);
 
 const tournamentEndsAt = computed(() => {
-    const lastMatch = getLastMatchOf(tournament.value.knockoutPhase);
+    const lastMatch = getLastMatchOf({
+        rounds: tournament.value.knockoutPhase,
+    });
     if (!lastMatch) return null;
     const endTime = new Date(lastMatch.date);
     endTime.setMinutes(endTime.getMinutes() + tournament.value.config.matchDuration);
@@ -51,9 +53,11 @@ const tournamentEndsAt = computed(() => {
 });
 
 const totalMatchCount = computed(() => {
-    return tournament.value.groupPhase.reduce((acc, round) => {
-        return acc + round.matches.length;
-    }, 0);
+    return (
+        tournament.value.knockoutPhase.reduce((acc, round) => {
+            return acc + round.matches.length;
+        }, 0) + tournament.value.groupPhase.length
+    );
 });
 
 const totalTournamentDurationFormatted = computed(() => {

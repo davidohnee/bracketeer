@@ -9,7 +9,7 @@ const router = useRouter();
 
 const getTournamentStatus = (tournament: Tournament): MatchStatus => {
     const allMatches = [
-        ...tournament.groupPhase.flatMap((round) => round.matches),
+        ...tournament.groupPhase,
         ...tournament.knockoutPhase.flatMap((round) => round.matches),
     ];
     if (!allMatches.some((match) => match.status !== "completed")) {

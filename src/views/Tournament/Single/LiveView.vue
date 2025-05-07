@@ -27,12 +27,10 @@ type MatchAndRound = {
 };
 
 const allMatches = computed<MatchAndRound[]>(() => {
-    const matches: MatchAndRound[] = [];
-    for (const round of props.tournament.groupPhase) {
-        for (const match of round.matches) {
-            matches.push({ match, roundName: round.name });
-        }
-    }
+    const matches: MatchAndRound[] = props.tournament.groupPhase.map((match) => ({
+        match,
+        roundName: match.round?.name || "Group Phase",
+    }));
     for (const round of knockoutBracket.value) {
         for (const match of round.matches) {
             matches.push({ match, roundName: round.name });
@@ -50,28 +48,23 @@ const allMatches = computed<MatchAndRound[]>(() => {
 });
 
 const updateMatchScore = (
-    roundName: string,
+    roundName: string | null,
     matchId: string,
     teamIndex: number,
     newScore: number,
 ) => {
     if (!tournament) return;
 
-    const groupRoundIndex = props.tournament.groupPhase.findIndex(
-        (round) => round.name === roundName,
-    );
-    if (groupRoundIndex !== -1) {
-        const matchIndex = props.tournament.groupPhase[groupRoundIndex].matches.findIndex(
-            (match) => match.id === matchId,
-        );
+    if (!roundName) {
+        const matchIndex = props.tournament.groupPhase.findIndex((match) => match.id === matchId);
         if (matchIndex !== -1) {
-            const match = tournament.groupPhase[groupRoundIndex].matches[matchIndex];
+            const match = tournament.groupPhase[matchIndex];
             if (teamIndex === 0) {
                 match.teams[0].score = newScore;
             } else {
                 match.teams[1].score = newScore;
             }
-            tournament.groupPhase[groupRoundIndex].matches[matchIndex] = match;
+            tournament.groupPhase[matchIndex] = match;
             updateKnockoutMatches(tournament);
             return;
         }
@@ -90,21 +83,15 @@ const updateMatchScore = (
     updateKnockoutMatches(tournament);
 };
 
-const updateMatchStatus = (roundName: string, matchId: string, newStatus: MatchStatus) => {
+const updateMatchStatus = (roundName: string | null, matchId: string, newStatus: MatchStatus) => {
     if (!tournament) return;
 
-    const groupRoundIndex = props.tournament.groupPhase.findIndex(
-        (round) => round.name === roundName,
-    );
-
-    if (groupRoundIndex !== -1) {
-        const matchIndex = props.tournament.groupPhase[groupRoundIndex].matches.findIndex(
-            (match) => match.id === matchId,
-        );
+    if (!roundName) {
+        const matchIndex = props.tournament.groupPhase.findIndex((match) => match.id === matchId);
         if (matchIndex !== -1) {
-            const match = tournament.groupPhase[groupRoundIndex].matches[matchIndex];
+            const match = tournament.groupPhase[matchIndex];
             match.status = newStatus;
-            tournament.groupPhase[groupRoundIndex].matches[matchIndex] = match;
+            tournament.groupPhase[matchIndex] = match;
             updateKnockoutMatches(tournament);
             return;
         }
@@ -278,9 +265,7 @@ const proceed = () => {
 };
 
 const groupPhaseCompleted = computed(() => {
-    return props.tournament.groupPhase.every((round) =>
-        round.matches.every((match) => match.status === "completed"),
-    );
+    return props.tournament.groupPhase.every((match) => match.status === "completed");
 });
 </script>
 

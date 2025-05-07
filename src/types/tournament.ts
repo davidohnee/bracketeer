@@ -10,7 +10,7 @@ export interface Team {
 }
 
 export interface TeamScore {
-    team: StaticTeamRef;
+    team: Ref;
     wins: number;
     losses: number;
     draws: number;
@@ -20,7 +20,12 @@ export interface TeamScore {
     };
 }
 
-export type StaticTeamRef = {
+export interface Table {
+    group?: Ref;
+    teams: TeamScore[];
+}
+
+export type Ref = {
     id: string;
 };
 
@@ -31,7 +36,7 @@ export type DynamicTeamRef = {
 };
 
 export type MatchTeam = {
-    ref?: StaticTeamRef;
+    ref?: Ref;
     score: number;
     link?: DynamicTeamRef;
 };
@@ -44,12 +49,19 @@ export interface Match {
     teams: [MatchTeam, MatchTeam];
     date: Date;
     status: MatchStatus;
+    round?: IdentifiableString;
+    group?: IdentifiableString;
 }
 
 export interface TournamentRound {
     id: string;
     name: string;
     matches: Match[];
+}
+
+export interface IdentifiableString {
+    id: string;
+    name: string;
 }
 
 export interface TournamentConfig {
@@ -66,7 +78,7 @@ export interface IRemote {
     identifier: string;
 }
 
-export interface Tournament {
+export interface TournamentV1 {
     id: string;
     name: string;
     teams: Team[];
@@ -74,4 +86,27 @@ export interface Tournament {
     knockoutPhase: TournamentRound[];
     config: TournamentConfig;
     remote?: IRemote[];
+    version: undefined;
 }
+
+export interface Group {
+    id: string;
+    name: string;
+    teams: Ref[];
+}
+
+export interface TournamentV2 {
+    id: string;
+    version: 2;
+    name: string;
+    teams: Team[];
+    groups?: Group[];
+    groupPhase: Match[];
+    knockoutPhase: TournamentRound[];
+    config: TournamentConfig;
+    remote?: IRemote[];
+}
+
+export type LatestTournament = TournamentV2;
+export type AnyTournament = TournamentV1 | TournamentV2;
+export type Tournament = LatestTournament;

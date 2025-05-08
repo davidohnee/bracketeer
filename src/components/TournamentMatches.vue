@@ -138,7 +138,7 @@ const updateMatchScore = (
 };
 
 const updateMatchStatus = (roundName: string | null, matchId: string, newStatus: MatchStatus) => {
-    if (!tournament) return;
+    if (!tournament.value) return;
 
     if (!roundName) {
         const matchIndex = props.modelValue.groupPhase.findIndex((match) => match.id === matchId);

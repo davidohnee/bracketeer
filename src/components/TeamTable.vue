@@ -20,6 +20,7 @@ const groupName = (id: string | null) => {
         <div
             class="team-table"
             v-for="table in tables"
+            :key="table.group?.id"
         >
             <div
                 class="top-header"

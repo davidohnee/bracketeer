@@ -20,7 +20,6 @@ const teamName = computed(() => {
     <router-link
         :to="{
             name: teamMatchesRouteName,
-            params: { tournamentId: tournament.id },
             query: { team: score.team.id },
         }"
         class="team"

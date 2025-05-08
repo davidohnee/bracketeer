@@ -1,50 +1,43 @@
 <script setup lang="ts">
-import type { MatchStatus, Match, Team } from "@/types/tournament";
-import { onMounted, ref } from "vue";
+import type { MatchStatus, Match, Tournament } from "@/types/tournament";
+import { onMounted, ref, shallowRef } from "vue";
 import MatchCard from "./MatchCard.vue";
 import MatchRow from "./MatchRow.vue";
 
-defineProps<{
-    match: Match;
-    teams: Team[];
-    matchDuration: number;
+const props = defineProps<{
+    modelValue: Match;
+    tournament: Tournament;
     readonly?: boolean;
 }>();
 
+const match = ref(props.modelValue);
 const emit = defineEmits<{
-    (e: "scoreChanged", teamIndex: number, newScore: number): void;
-    (e: "teamNameChanged", teamId: string, newName: string): void;
-    (e: "matchStatusChanged", newStatus: MatchStatus): void;
+    (e: "update:modelValue", match: Match): void;
+    (e: "statusChanged", newStatus: MatchStatus): void;
 }>();
 
 const emitStatusChanged = (status: MatchStatus) => {
-    emit("matchStatusChanged", status);
+    emit("statusChanged", status);
 };
 
-const _onScoreChanged = (teamIndex: number, newScore: number) => {
-    emit("scoreChanged", teamIndex, newScore);
-};
-
-const component = ref<typeof MatchRow | typeof MatchCard | null>(null);
+const componentType = shallowRef<typeof MatchRow | typeof MatchCard | null>(null);
 
 onMounted(() => {
     if (window.innerWidth < 540) {
-        component.value = MatchCard;
+        componentType.value = MatchCard;
     } else {
-        component.value = MatchRow;
+        componentType.value = MatchRow;
     }
 });
 </script>
 
 <template>
     <component
-        :is="component"
-        :match="match"
-        :teams="teams"
-        :matchDuration="matchDuration"
+        :is="componentType"
+        v-model="match"
+        @update:modelValue="emit('update:modelValue', $event)"
+        :tournament="tournament"
         :readonly="readonly"
-        @scoreChanged="_onScoreChanged"
-        @teamNameChanged="emit('teamNameChanged', $event.teamId, $event.newName)"
-        @matchStatusChanged="emitStatusChanged"
+        @statusChanged="emitStatusChanged"
     />
 </template>

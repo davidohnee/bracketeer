@@ -2,23 +2,25 @@
 import { computed, ref, watch } from "vue";
 import MatchCard from "@/components/MatchCard.vue";
 import MatchRow from "@/components/ResponsiveMatchRow.vue";
-import { getCourtName, updateKnockoutMatches } from "@/helpers";
-import type { Match, MatchStatus, Tournament, TournamentRound } from "@/types/tournament";
+import { getCourtName } from "@/helpers";
+import type { Match, Tournament, TournamentRound } from "@/types/tournament";
 import { useRoute, useRouter } from "vue-router";
 
 const props = defineProps<{
     modelValue: Tournament;
     readonly?: boolean;
 }>();
-/*
 const emit = defineEmits<{
     (e: "update:modelValue", tournament: Tournament): void;
 }>();
-*/
 
 const tournament = ref(props.modelValue);
 const route = useRoute();
 const router = useRouter();
+
+const onChanged = () => {
+    emit("update:modelValue", tournament.value);
+};
 
 watch(
     () => props.modelValue,
@@ -98,70 +100,6 @@ const allMatches = computed<MatchAndRound[]>(() => {
     });
     return matches;
 });
-
-const updateMatchScore = (
-    roundName: string | null,
-    matchId: string,
-    teamIndex: number,
-    newScore: number,
-) => {
-    if (!roundName) {
-        const matchIndex = props.modelValue.groupPhase.findIndex((match) => match.id === matchId);
-        if (matchIndex !== -1) {
-            const match = tournament.value.groupPhase[matchIndex];
-            if (teamIndex === 0) {
-                match.teams[0].score = newScore;
-            } else {
-                match.teams[1].score = newScore;
-            }
-            tournament.value.groupPhase[matchIndex] = match;
-            updateKnockoutMatches(props.modelValue);
-            return;
-        }
-    }
-
-    const knockoutRoundIndex = knockoutBracket.value.findIndex((round) => round.name === roundName);
-    if (knockoutRoundIndex === -1) return;
-
-    const matchIndex = knockoutBracket.value[knockoutRoundIndex].matches.findIndex(
-        (match) => match.id === matchId,
-    );
-    if (matchIndex === -1) return;
-    const match = tournament.value.knockoutPhase[knockoutRoundIndex].matches[matchIndex];
-    if (teamIndex === 0) {
-        match.teams[0].score = newScore;
-    } else {
-        match.teams[1].score = newScore;
-    }
-    tournament.value.knockoutPhase[knockoutRoundIndex].matches[matchIndex] = match;
-    updateKnockoutMatches(props.modelValue);
-};
-
-const updateMatchStatus = (roundName: string | null, matchId: string, newStatus: MatchStatus) => {
-    if (!tournament.value) return;
-
-    if (!roundName) {
-        const matchIndex = props.modelValue.groupPhase.findIndex((match) => match.id === matchId);
-        if (matchIndex !== -1) {
-            const match = tournament.value.groupPhase[matchIndex];
-            match.status = newStatus;
-            tournament.value.groupPhase[matchIndex] = match;
-            return;
-        }
-    }
-
-    const knockoutRoundIndex = knockoutBracket.value.findIndex((round) => round.name === roundName);
-    if (knockoutRoundIndex !== -1) {
-        const matchIndex = knockoutBracket.value[knockoutRoundIndex].matches.findIndex(
-            (match) => match.id === matchId,
-        );
-        if (matchIndex !== -1) {
-            const match = tournament.value.knockoutPhase[knockoutRoundIndex].matches[matchIndex];
-            match.status = newStatus;
-            tournament.value.knockoutPhase[knockoutRoundIndex].matches[matchIndex] = match;
-        }
-    }
-};
 
 const selectedDisplayOption = ref<("card" | "row")[number]>("row");
 
@@ -245,22 +183,10 @@ const grouped = computed(() => {
                         :is="selectedDisplayOption === 'card' ? MatchCard : MatchRow"
                         v-for="(match, index) in round"
                         :key="index"
-                        :match="match.match"
-                        :teams="tournament.teams"
-                        :matchDuration="tournament.config.matchDuration"
-                        @matchStatusChanged="
-                            (newStatus) =>
-                                updateMatchStatus(match.roundName, match.match.id, newStatus)
-                        "
-                        @scoreChanged="
-                            (teamIndex, newScore) =>
-                                updateMatchScore(
-                                    match.roundName,
-                                    match.match.id,
-                                    teamIndex,
-                                    newScore,
-                                )
-                        "
+                        v-model="match.match"
+                        :tournament="tournament"
+                        @update:modelValue="onChanged"
+                        :readonly="readonly"
                     />
                 </div>
             </div>

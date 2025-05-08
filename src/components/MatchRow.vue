@@ -1,36 +1,46 @@
 <script setup lang="ts">
 import { ALPHABET, getCourtName } from "../helpers";
-import type { MatchStatus, Match, MatchTeam, Ref, Team } from "@/types/tournament";
-import { computed, onMounted, onUnmounted, ref, watch } from "vue";
+import type { MatchStatus, Match, MatchTeam, Ref, Tournament } from "@/types/tournament";
+import { onMounted, onUnmounted, ref, watch } from "vue";
+import MatchEditorModal from "./MatchEditorModal.vue";
 import { debounce } from "lodash-es";
 
 const props = defineProps<{
-    match: Match;
-    teams: Team[];
-    matchDuration: number;
+    modelValue: Match;
+    tournament: Tournament;
     readonly?: boolean;
 }>();
 
-const matcheditor = ref<HTMLDialogElement | null>(null);
+const emit = defineEmits<{
+    (e: "update:modelValue", match: Match): void;
+    (e: "statusChanged", newStatus: MatchStatus): void;
+}>();
+
+const match = ref(props.modelValue);
+
+watch(
+    () => props.modelValue,
+    (newMatch) => {
+        match.value = newMatch;
+    },
+    { deep: true },
+);
+
+const matcheditor = ref<typeof MatchEditorModal>();
 const openMatchEditor = () => {
     if (props.readonly) return;
 
     if (matcheditor.value) {
-        matcheditor.value.showModal();
+        matcheditor.value.open();
     }
 };
 
-const closeMatchEditor = () => {
-    if (matcheditor.value) {
-        matcheditor.value.close();
-    }
-};
-
-const teamIndex = (team: Ref | undefined) => props.teams.findIndex((x) => x.id === team?.id);
+const teamIndex = (team: Ref | undefined) =>
+    props.tournament.teams.findIndex((x) => x.id === team?.id);
 
 const teamDisplay = (team: MatchTeam) => {
     const i = teamIndex(team.ref);
-    if (i >= 0) return props.teams[i].name;
+    if (i >= 0) return props.tournament.teams[i].name;
     const asRef = team.link!;
     if (asRef.type == "league") {
         return `Place ${asRef.placement + 1}`;
@@ -38,43 +48,10 @@ const teamDisplay = (team: MatchTeam) => {
     const label = { winner: "Winner", loser: "Loser" };
     return `${label[asRef.type]} ${ALPHABET[asRef.placement]}`;
 };
-const team1display = computed(() => teamDisplay(props.match.teams[0]));
-const team2display = computed(() => teamDisplay(props.match.teams[1]));
-
-const emit = defineEmits<{
-    (e: "scoreChanged", teamIndex: number, newScore: number): void;
-    (e: "teamNameChanged", teamId: string, newName: string): void;
-    (e: "matchStatusChanged", newStatus: MatchStatus): void;
-}>();
-
-const winner = computed(() => {
-    if (status.value !== "completed") return "";
-    const team1 = props.match.teams[0].score;
-    const team2 = props.match.teams[1].score;
-    if (team1 > team2) return props.teams[teamIndex(props.match.teams[0].ref)].name;
-    if (team2 > team1) return props.teams[teamIndex(props.match.teams[1].ref)].name;
-    return "Draw";
-});
 
 const emitStatusChanged = debounce(() => {
-    emit("matchStatusChanged", status.value);
+    emit("statusChanged", match.value.status);
 }, 1000);
-
-const _onScoreChanged = (teamIndex: number, newScore: number) => {
-    emit("scoreChanged", teamIndex, newScore);
-};
-
-const scores = ref(props.match.teams.map((team) => team.score));
-const status = ref<MatchStatus>(props.match.status);
-
-const onScoreChanged = [
-    debounce((newScore: number) => {
-        _onScoreChanged(0, newScore);
-    }, 1000),
-    debounce((newScore: number) => {
-        _onScoreChanged(1, newScore);
-    }, 1000),
-];
 
 // mm:ss of Date() - match.start
 const currentTime = ref("00:00");
@@ -83,7 +60,7 @@ let currentTimeTimer = 0;
 
 const updateCurrentTime = () => {
     const now = new Date();
-    const start = props.match.date;
+    const start = match.value.date;
     if (!start) return "00:00";
 
     if (start.getTime() > now.getTime()) return "00:00";
@@ -92,7 +69,7 @@ const updateCurrentTime = () => {
     const minutes = Math.floor(diff / 60000);
     const seconds = Math.floor((diff % 60000) / 1000);
 
-    if (minutes > props.matchDuration) {
+    if (minutes > props.tournament.config.matchDuration) {
         return "FT";
     }
 
@@ -104,7 +81,7 @@ onUnmounted(() => {
     }
 });
 onMounted(() => {
-    if (props.match.status === "in-progress") {
+    if (match.value.status === "in-progress") {
         currentTime.value = updateCurrentTime();
         currentTimeTimer = setInterval(() => {
             currentTime.value = updateCurrentTime();
@@ -113,7 +90,7 @@ onMounted(() => {
 });
 
 watch(
-    () => props.match.status,
+    () => match.value.status,
     (newStatus) => {
         clearInterval(currentTimeTimer);
         if (newStatus === "in-progress") {
@@ -127,69 +104,13 @@ watch(
 </script>
 
 <template>
-    <dialog ref="matcheditor">
-        <div class="content">
-            <h2>Edit</h2>
-            <ion-icon
-                @click="closeMatchEditor"
-                class="close"
-                name="close"
-            ></ion-icon>
-            <div class="form">
-                <div
-                    v-for="(team, index) in match.teams"
-                    class="row"
-                    :key="index"
-                >
-                    <template v-if="teamIndex(team.ref) >= 0">
-                        <div class="field">
-                            <label :for="`team-${index}`">Team {{ index + 1 }}</label>
-                            <input
-                                disabled
-                                type="text"
-                                :id="`team-${index}`"
-                                :value="teams[teamIndex(team.ref)].name"
-                            />
-                        </div>
-                        <div class="field">
-                            <label :for="`team-score-${index}`">Score</label>
-                            <input
-                                type="number"
-                                :id="`team-score-${index}`"
-                                v-model="scores[index]"
-                                @change="onScoreChanged[index](scores[index])"
-                            />
-                        </div>
-                    </template>
-                </div>
-
-                <div v-if="status == 'completed'">
-                    <div class="field">
-                        <label for="team1">Winner</label>
-                        <input
-                            disabled
-                            type="text"
-                            id="team1"
-                            v-model="winner"
-                        />
-                    </div>
-                </div>
-
-                <div class="field">
-                    <label for="team2-score">Status</label>
-                    <select
-                        v-model="status"
-                        id="status"
-                        @change="emitStatusChanged"
-                    >
-                        <option value="scheduled">Scheduled</option>
-                        <option value="in-progress">In Progress</option>
-                        <option value="completed">Finished</option>
-                    </select>
-                </div>
-            </div>
-        </div>
-    </dialog>
+    <MatchEditorModal
+        ref="matcheditor"
+        v-model="match"
+        :tournament="props.tournament"
+        @update:modelValue="emit('update:modelValue', $event)"
+        @statusChanged="emitStatusChanged"
+    />
     <div
         class="match row"
         :class="{ readonly }"
@@ -210,7 +131,7 @@ watch(
             </span>
         </div>
 
-        <div class="team">{{ team1display }}</div>
+        <div class="team">{{ teamDisplay(match.teams[0]) }}</div>
 
         <div class="details">
             <div
@@ -229,7 +150,7 @@ watch(
             </div>
         </div>
 
-        <div class="team">{{ team2display }}</div>
+        <div class="team">{{ teamDisplay(match.teams[1]) }}</div>
 
         <div class="venue">
             <div class="court">{{ getCourtName(match.court) }}</div>

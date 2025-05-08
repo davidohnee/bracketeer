@@ -88,7 +88,7 @@ const duplicateTournament = () => {
 
     const newTournament = { ...tournament, id: crypto.randomUUID() };
     tournaments.add(newTournament);
-    router.push({ name: "tournament", params: { id: newTournament.id } });
+    router.push({ name: "tournament", params: { tournamentId: newTournament.id } });
 };
 
 const canUpdate = computed(() => {
@@ -152,7 +152,7 @@ const hasStarted = computed(() => {
                         class="secondary"
                         :to="{
                             name: 'tournament.config.teams',
-                            params: { id: props.tournament.id },
+                            params: { tournamentId: props.tournament.id },
                         }"
                     >
                         <button class="secondary">Edit Teams</button>
@@ -162,7 +162,7 @@ const hasStarted = computed(() => {
                     <router-link
                         :to="{
                             name: 'tournament.config.plan',
-                            params: { id: props.tournament.id },
+                            params: { tournamentId: props.tournament.id },
                         }"
                         :disabled="hasStarted"
                         :title="

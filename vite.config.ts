@@ -4,7 +4,17 @@ import vue from "@vitejs/plugin-vue";
 
 // https://vite.dev/config/
 export default defineConfig({
-    plugins: [vue()],
+    plugins: [
+        vue({
+            template: {
+                compilerOptions: {
+                    isCustomElement: (tag) => {
+                        return tag.startsWith("ion-") || tag.startsWith("ionx-");
+                    },
+                },
+            },
+        }),
+    ],
     base: process.env.BASE ?? "/",
     resolve: {
         alias: {

@@ -258,7 +258,7 @@ export const generateGroupPhase = (teams: Team[], config: TournamentConfig): Mat
     for (let i = 0; i < config.rounds; i++) {
         const matchI = i % draw.length;
         const matchPairs = draw[matchI];
-        let roundId = generateId();
+        const roundId = generateId();
 
         for (let j = 0; j < matchPairs.length; j++) {
             const team1 = matchPairs[j][0];

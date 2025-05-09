@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ALPHABET } from "@/helpers";
+import { ALPHABET } from "@/helpers/common";
 import type { Match, MatchTeam, Tournament, Ref, MatchStatus } from "@/types/tournament";
 import { computed, ref } from "vue";
 

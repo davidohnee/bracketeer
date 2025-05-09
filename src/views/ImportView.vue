@@ -50,7 +50,7 @@ const confirm = async () => {
 
 const viewOnly = () => {
     router.push({
-        name: "view.table",
+        name: "viewer.table",
         params: { tournamentId: what.value[0].id },
     });
 };

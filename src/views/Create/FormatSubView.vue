@@ -1,5 +1,7 @@
 <script setup lang="ts">
-import { generateGroupPhase, generateKnockoutBracket, getLastMatchOf } from "@/helpers";
+import { getLastMatchOf } from "@/helpers";
+import { generateGroupPhase } from "@/helpers/matchplan/groupPhase";
+import { generateKnockoutBracket } from "@/helpers/matchplan/knockoutPhase";
 import type { Tournament } from "@/types/tournament";
 import { computed, ref, watch, onMounted } from "vue";
 
@@ -30,14 +32,8 @@ watch(
 const generate = () => {
     if (tournament.value.teams.length === 0) return;
 
-    tournament.value.groupPhase = generateGroupPhase(
-        tournament.value.teams,
-        tournament.value.config,
-    );
-    tournament.value.knockoutPhase = generateKnockoutBracket(
-        tournament.value.config,
-        getLastMatchOf({ matches: tournament.value.groupPhase }).date,
-    );
+    tournament.value.groupPhase = generateGroupPhase(tournament.value);
+    tournament.value.knockoutPhase = generateKnockoutBracket(tournament.value);
 };
 
 onMounted(generate);

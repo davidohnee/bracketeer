@@ -1,13 +1,15 @@
 <script setup lang="ts">
-import { randomiseGroupPhaseResults, updateKnockoutMatches } from "@/helpers";
+import { randomiseGroupPhaseResults } from "@/helpers";
 import type { Tournament } from "@/types/tournament";
-import { useTournamentsStore } from "../../../stores/tournaments";
+import { useTournamentsStore } from "@/stores/tournaments";
 import { useRouter } from "vue-router";
 import { computed, ref } from "vue";
-import ShareModal from "./ShareModal.vue";
+import ShareModal from "@/components/modals/ShareFullModal.vue";
 import gistClient from "@/gistClient";
-import TrackModal from "./TrackModal.vue";
+import TrackModal from "@/components/modals/ShareViewerModal.vue";
 import { Notifications } from "@/components/notifications/createNotification";
+import { updateKnockoutMatches } from "@/helpers/matchplan/knockoutPhase";
+import { deepCopy } from "@/helpers/common";
 
 const props = defineProps<{
     tournament: Tournament;
@@ -57,20 +59,27 @@ const resetTournament = () => {
         undefined,
         () => {
             const tournament = tournaments.getTournamentById(props.tournament.id);
+            if (tournament) {
+                const groupPhase = deepCopy(tournament.groupPhase ?? []);
+                const knockoutPhase = deepCopy(tournament.knockoutPhase ?? []);
 
-            for (const match of tournament?.groupPhase ?? []) {
-                match.teams[0].score = 0;
-                match.teams[1].score = 0;
-                match.status = "scheduled";
-            }
-            for (const round of tournament?.knockoutPhase ?? []) {
-                for (const match of round.matches) {
-                    for (const team of match.teams) {
-                        team.score = 0;
-                        delete team.ref;
-                    }
+                for (const match of groupPhase) {
+                    match.teams[0].score = 0;
+                    match.teams[1].score = 0;
                     match.status = "scheduled";
                 }
+                for (const round of knockoutPhase) {
+                    for (const match of round.matches) {
+                        for (const team of match.teams) {
+                            team.score = 0;
+                            delete team.ref;
+                        }
+                        match.status = "scheduled";
+                    }
+                }
+
+                tournament.groupPhase = groupPhase;
+                tournament.knockoutPhase = knockoutPhase;
             }
 
             Notifications.addSuccess(

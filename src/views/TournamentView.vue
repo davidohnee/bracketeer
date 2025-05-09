@@ -1,23 +1,20 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
-import { useTournamentsStore } from "../../stores/tournaments";
+import { useTournamentsStore } from "@/stores/tournaments";
 import { useRoute } from "vue-router";
-import TrackModal from "./Single/TrackModal.vue";
+import TrackModal from "@/components/modals/ShareViewerModal.vue";
 import gistClient from "@/gistClient";
 
 const tournaments = useTournamentsStore();
 const route = useRoute();
+const tournamentId = route.params.tournamentId as string;
 
-const tournamentId = computed(() => {
-    return route.params.tournamentId as string;
-});
-
-const tournament = computed(() => tournaments.all.find((t) => t.id === tournamentId.value));
+const tournament = tournaments.getTournamentById(tournamentId);
 const trackModal = ref<typeof TrackModal>();
 
 const canUpdate = computed(() => {
-    if (!tournament.value?.remote?.length) return false;
-    const identifier = tournament.value.remote[0].identifier;
+    if (!tournament?.remote?.length) return false;
+    const identifier = tournament?.remote[0].identifier;
     return gistClient.isMine(identifier);
 });
 </script>

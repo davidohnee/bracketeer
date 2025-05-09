@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { Tournament } from "@/types/tournament";
-import { ref, watch } from "vue";
+import { computed, ref } from "vue";
 
 const props = defineProps<{
     modelValue: Tournament;
@@ -9,22 +9,14 @@ const emit = defineEmits<{
     (e: "update:modelValue", value: Tournament): void;
 }>();
 
-const tournament = ref(props.modelValue);
-
-watch(
-    () => props.modelValue,
-    (newValue) => {
-        tournament.value = newValue;
+const tournament = computed({
+    get() {
+        return props.modelValue;
     },
-    { deep: true },
-);
-watch(
-    tournament,
-    (newValue) => {
-        emit("update:modelValue", newValue);
+    set(value) {
+        emit("update:modelValue", value);
     },
-    { deep: true },
-);
+});
 
 const teamsPaste = ref<string>("");
 const teamsToGenerate = ref(36);

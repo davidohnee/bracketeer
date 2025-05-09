@@ -3,7 +3,7 @@ import { getLastMatchOf } from "@/helpers";
 import { generateGroupPhase } from "@/helpers/matchplan/groupPhase";
 import { generateKnockoutBracket } from "@/helpers/matchplan/knockoutPhase";
 import type { Tournament } from "@/types/tournament";
-import { computed, ref, watch, onMounted } from "vue";
+import { computed, onMounted } from "vue";
 
 const props = defineProps<{
     modelValue: Tournament;
@@ -12,22 +12,14 @@ const emit = defineEmits<{
     (e: "update:modelValue", value: Tournament): void;
 }>();
 
-const tournament = ref(props.modelValue);
-
-watch(
-    () => props.modelValue,
-    (newValue) => {
-        tournament.value = newValue;
+const tournament = computed({
+    get() {
+        return props.modelValue;
     },
-    { deep: true },
-);
-watch(
-    tournament,
-    (newValue) => {
-        emit("update:modelValue", newValue);
+    set(value) {
+        emit("update:modelValue", value);
     },
-    { deep: true },
-);
+});
 
 const generate = () => {
     if (tournament.value.teams.length === 0) return;

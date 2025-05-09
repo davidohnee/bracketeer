@@ -90,6 +90,7 @@ const allMatches = computed<MatchAndRound[]>(() => {
             matches.push({ match, roundName: round.name });
         }
     }
+
     // Sort matches by date
     matches.sort((a, b) => {
         const dateA = a.match.date.getTime();

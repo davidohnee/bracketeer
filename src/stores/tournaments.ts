@@ -19,7 +19,7 @@ export const useTournamentsStore = defineStore("tournaments", () => {
 
     const syncToLocalStorage = debounce(() => {
         localStorage.setItem("tournaments", JSON.stringify(tournaments.value));
-    });
+    }, 300);
 
     watch(tournaments, syncToLocalStorage, { deep: true });
     // Load tournaments from local storage on initial load

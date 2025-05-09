@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ALPHABET } from "../helpers";
+import { ALPHABET } from "@/helpers/common";
 import type { MatchStatus, Match, MatchTeam, Ref, Team } from "@/types/tournament";
 import { computed, onMounted, ref } from "vue";
 import { debounce } from "lodash-es";

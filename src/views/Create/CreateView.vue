@@ -13,6 +13,9 @@ const tournament = ref<Tournament | null>(null);
 const tournaments = useTournamentsStore();
 const router = useRouter();
 
+const todayAt1800 = new Date();
+todayAt1800.setHours(18, 0, 0, 0);
+
 const initTournament: Tournament = {
     version: 2,
     id: crypto.randomUUID(),
@@ -26,7 +29,7 @@ const initTournament: Tournament = {
         courts: 15,
         rounds: 6,
         knockoutTeams: 8,
-        startTime: new Date("2025-04-26T18:30:00"),
+        startTime: todayAt1800,
         matchDuration: 10,
     },
 };

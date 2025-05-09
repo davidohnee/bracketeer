@@ -3,6 +3,7 @@ import { computed, onMounted, ref } from "vue";
 import gistClient from "@/gistClient";
 import type { Tournament } from "@/types/tournament";
 import { useTournamentsStore } from "@/stores/tournaments";
+import { deepCopy } from "@/helpers/common";
 
 const patSet = ref(false);
 const shareUrl = ref("");
@@ -40,7 +41,7 @@ const save = async () => {
     const tournament = sharingItem.value;
     if (!tournament) return;
 
-    const tournamentCopy: Tournament = JSON.parse(JSON.stringify(tournament));
+    const tournamentCopy = deepCopy(tournament);
     delete tournamentCopy.remote;
 
     shareUrl.value = (await tournaments.share(tournamentCopy, publicGist.value)) ?? "";
@@ -55,7 +56,7 @@ const update = () => {
     const tournament = sharingItem.value;
     if (!tournament) return;
 
-    const tournamentCopy: Tournament = JSON.parse(JSON.stringify(tournament));
+    const tournamentCopy = deepCopy(tournament);
 
     tournaments.share(tournamentCopy, publicGist.value);
 

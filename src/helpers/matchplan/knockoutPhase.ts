@@ -1,7 +1,7 @@
 import type { Match, Ref, Tournament, TournamentRound } from "@/types/tournament";
 import { getLastMatchOf } from "..";
 import { generateId } from "../id";
-import { ALPHABET } from "../common";
+import { ALPHABET, deepCopy } from "../common";
 import { generateTables } from "../tables";
 
 export const generateKnockoutBracket = (tournament: Tournament): TournamentRound[] => {
@@ -112,7 +112,7 @@ export const generateKnockoutBracket = (tournament: Tournament): TournamentRound
 };
 
 export const updateKnockoutMatches = (tournament: Tournament) => {
-    const knockout: TournamentRound[] = JSON.parse(JSON.stringify(tournament.knockoutPhase));
+    const knockout: TournamentRound[] = deepCopy(tournament.knockoutPhase);
 
     if (!knockout) return;
 

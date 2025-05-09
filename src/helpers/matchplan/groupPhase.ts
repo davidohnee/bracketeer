@@ -5,14 +5,12 @@ import { earliestFreeSlot } from "./common";
 import { roundRobin } from "../roundRobin";
 
 const createBalanceRound = (allMatches: Match[], tournament: Tournament): Match[] | null => {
-    const rounds = [
-        ...new Set(allMatches.map((match) => match.round).filter((round) => round !== undefined)),
-    ];
+    const rounds = [...new Set(allMatches.map((match) => match.round!.id))];
     const teamsMissing = rounds.flatMap((round) =>
         tournament.teams.filter(
             (t) =>
                 !allMatches
-                    .filter((match) => match.round === round)
+                    .filter((match) => match.round!.id === round)
                     .some((match) => match.teams.some((team) => team.ref?.id === t.id)),
         ),
     );
@@ -32,7 +30,7 @@ const createBalanceRound = (allMatches: Match[], tournament: Tournament): Match[
         const team2 = matchup[1];
 
         const { time, court } = earliestFreeSlot(
-            allMatches,
+            [...allMatches, ...round.matches],
             tournament.config.startTime,
             tournament.config.matchDuration + tournament.config.breakDuration,
             [team1, team2],
@@ -115,12 +113,10 @@ export const generateGroupPhase = (tournament: Tournament): Match[] => {
         }
     }
 
-    /*
     const balanceRound = createBalanceRound(scheduledMatches, tournament);
     if (balanceRound) {
         scheduledMatches.push(...balanceRound);
     }
-    */
 
     return scheduledMatches;
 };

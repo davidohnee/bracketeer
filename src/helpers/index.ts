@@ -1,6 +1,5 @@
 import type { Match, Tournament, TournamentRound } from "@/types/tournament";
 import { migrateTournament } from "./migration";
-import { deepCopy } from "./common";
 
 export const tournamentFromJson = migrateTournament;
 
@@ -24,13 +23,11 @@ export const getLastMatchOf = ({
 };
 
 export const randomiseGroupPhaseResults = (tournament: Tournament) => {
-    const groupPhase = deepCopy(tournament.groupPhase);
-    for (const match of groupPhase) {
+    for (const match of tournament.groupPhase) {
         for (let j = 0; j < match.teams.length; j++) {
             const team = match.teams[j];
-            team.score = 2;
+            team.score = Math.floor(Math.random() * 10);
         }
         match.status = "completed";
     }
-    tournament.groupPhase = groupPhase;
 };

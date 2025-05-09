@@ -115,10 +115,12 @@ export const generateGroupPhase = (tournament: Tournament): Match[] => {
         }
     }
 
+    /*
     const balanceRound = createBalanceRound(scheduledMatches, tournament);
     if (balanceRound) {
         scheduledMatches.push(...balanceRound);
     }
+    */
 
     return scheduledMatches;
 };

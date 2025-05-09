@@ -2,7 +2,7 @@
 import StepProgress from "@/components/StepProgress.vue";
 import Metadata from "./MetadataSubView.vue";
 import Teams from "./TeamsSubView.vue";
-import Duration from "./DurationSubView.vue";
+import Format from "./FormatSubView.vue";
 import type { Tournament } from "@/types/tournament";
 import { ref, watch } from "vue";
 import { tournamentFromJson } from "@/helpers";
@@ -83,7 +83,7 @@ const create = () => {
             v-else-if="currentStep === 1"
             v-model="tournament"
         />
-        <Duration
+        <Format
             v-else-if="currentStep === 2"
             v-model="tournament"
         />

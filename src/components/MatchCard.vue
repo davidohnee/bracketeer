@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { ALPHABET, getCourtName } from "../helpers";
+import { getCourtName } from "@/helpers";
+import { ALPHABET } from "@/helpers/common";
 import type { MatchStatus, Match, MatchTeam, Ref, Tournament } from "@/types/tournament";
 import { onMounted, onUnmounted, ref, watch } from "vue";
-import MatchEditorModal from "./MatchEditorModal.vue";
+import MatchEditorModal from "@/components/modals/MatchEditorModal.vue";
 import { debounce } from "lodash-es";
 
 const props = defineProps<{

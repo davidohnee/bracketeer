@@ -2,7 +2,7 @@
 import { computed } from "vue";
 import { type Tournament } from "../types/tournament";
 import TeamTableEntry from "./TeamTableEntry.vue";
-import { generateTables } from "@/helpers";
+import { generateTables } from "@/helpers/tables";
 
 const props = defineProps<{ tournament: Tournament; teamMatchesRouteName: string }>();
 

@@ -27,7 +27,6 @@ const click = () => {
     if (props.notification.onClick) {
         props.notification.onClick();
     }
-    console.log(props.notification.redirect);
     if (props.notification.redirect) {
         router.push(props.notification.redirect);
     }

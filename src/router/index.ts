@@ -9,11 +9,6 @@ const router = createRouter({
             component: () => import("@/views/HomeView.vue"),
         },
         {
-            path: "/tournaments",
-            name: "tournaments",
-            component: () => import("@/views/Tournament/ListView.vue"),
-        },
-        {
             path: "/settings",
             name: "settings",
             component: () => import("@/views/SettingsView.vue"),
@@ -34,48 +29,53 @@ const router = createRouter({
         {
             path: "/create",
             name: "create",
-            component: () => import("@/views/CreatorView/CreatorView.vue"),
+            component: () => import("@/views/Create/CreateView.vue"),
+        },
+        {
+            path: "/tournaments",
+            name: "tournaments",
+            component: () => import("@/views/TournamentListView.vue"),
         },
         {
             path: "/tournaments/:tournamentId",
             name: "tournament",
-            component: () => import("@/views/Tournament/SingleView.vue"),
+            component: () => import("@/views/TournamentView.vue"),
             redirect: { name: "tournament.table" },
             children: [
                 {
                     path: "config",
                     name: "tournament.config",
-                    component: () => import("@/views/Tournament/Single/ConfigurationView.vue"),
+                    component: () => import("@/views/Tournament/ConfigurationView.vue"),
                 },
                 {
                     path: "config/teams",
                     name: "tournament.config.teams",
-                    component: () => import("@/views/Tournament/Single/TeamEditorView.vue"),
+                    component: () => import("@/views/Tournament/TeamEditorView.vue"),
                 },
                 {
                     path: "config/plan",
                     name: "tournament.config.plan",
-                    component: () => import("@/views/Tournament/Single/SettingsEditorView.vue"),
+                    component: () => import("@/views/Tournament/SettingsEditorView.vue"),
                 },
                 {
                     path: "matches",
                     name: "tournament.matches",
-                    component: () => import("@/views/Tournament/Single/MatchesView.vue"),
+                    component: () => import("@/views/Tournament/MatchesView.vue"),
                 },
                 {
                     path: "knockout",
                     name: "tournament.knockout",
-                    component: () => import("@/views/Tournament/Single/KnockoutView.vue"),
+                    component: () => import("@/views/Tournament/KnockoutView.vue"),
                 },
                 {
                     path: "table",
                     name: "tournament.table",
-                    component: () => import("@/views/Tournament/Single/TableView.vue"),
+                    component: () => import("@/views/Tournament/TableView.vue"),
                 },
                 {
                     path: "live",
                     name: "tournament.live",
-                    component: () => import("@/views/Tournament/Single/LiveView.vue"),
+                    component: () => import("@/views/Tournament/LiveView.vue"),
                 },
             ],
         },
@@ -98,7 +98,7 @@ const router = createRouter({
                 {
                     path: "table",
                     name: "import.table",
-                    component: () => import("@/views/Tournament/Single/TableView.vue"),
+                    component: () => import("@/views/Tournament/TableView.vue"),
                 },
                 {
                     path: "live",
@@ -111,26 +111,26 @@ const router = createRouter({
             path: "/v/:id",
             name: "view",
             component: () => import("@/views/ViewerView.vue"),
-            redirect: { name: "view.table" },
+            redirect: { name: "viewer.table" },
             children: [
                 {
                     path: "matches",
-                    name: "view.matches",
+                    name: "viewer.matches",
                     component: () => import("@/views/Viewer/MatchesView.vue"),
                 },
                 {
                     path: "knockout",
-                    name: "view.knockout",
+                    name: "viewer.knockout",
                     component: () => import("@/views/Viewer/KnockoutView.vue"),
                 },
                 {
                     path: "table",
-                    name: "view.table",
-                    component: () => import("@/views/Tournament/Single/TableView.vue"),
+                    name: "viewer.table",
+                    component: () => import("@/views/Tournament/TableView.vue"),
                 },
                 {
                     path: "live",
-                    name: "view.live",
+                    name: "viewer.live",
                     component: () => import("@/views/Viewer/LiveView.vue"),
                 },
             ],

@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { type TeamScore, type Tournament } from "../types/tournament";
-import { calculateDifference, calculateTeamPoints } from "../helpers";
+import { calculateDifference, calculateTeamPoints } from "@/helpers/scoring";
+import { type TeamScore, type Tournament } from "@/types/tournament";
 import { computed } from "vue";
 
 const props = defineProps<{

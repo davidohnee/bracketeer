@@ -1,14 +1,14 @@
 import { defineStore } from "pinia";
 import type { IRemote, Tournament, TournamentConfig } from "../types/tournament";
 import { ref, watch } from "vue";
-import {
-    generateGroupPhase,
-    generateKnockoutBracket,
-    getLastMatchOf,
-    tournamentFromJson,
-} from "../helpers";
+import { tournamentFromJson } from "@/helpers";
+
 import { pull, push } from "@/share";
 import { Notifications } from "@/components/notifications/createNotification";
+import { generateKnockoutBracket } from "@/helpers/matchplan/knockoutPhase";
+import { generateGroupPhase } from "@/helpers/matchplan/groupPhase";
+import { generateNTeams } from "@/helpers/teamGenerator";
+import { debounce } from "lodash";
 
 // You can name the return value of `defineStore()` anything you want,
 // but it's best to use the name of the store and surround it with `use`
@@ -17,17 +17,11 @@ import { Notifications } from "@/components/notifications/createNotification";
 export const useTournamentsStore = defineStore("tournaments", () => {
     const tournaments = ref<Tournament[]>([]);
 
-    watch(
-        tournaments,
-        (newTournaments) => {
-            /*for (const tournament of newTournaments) {
-                updateKnockoutMatches(tournament);
-            }*/
-            // Save to local storage whenever tournaments change
-            localStorage.setItem("tournaments", JSON.stringify(newTournaments));
-        },
-        { deep: true },
-    );
+    const syncToLocalStorage = debounce(() => {
+        localStorage.setItem("tournaments", JSON.stringify(tournaments.value));
+    });
+
+    watch(tournaments, syncToLocalStorage, { deep: true });
     // Load tournaments from local storage on initial load
     const storedTournaments = localStorage.getItem("tournaments");
     if (storedTournaments) {
@@ -50,24 +44,19 @@ export const useTournamentsStore = defineStore("tournaments", () => {
     }
 
     function create(teamCount: number, config: TournamentConfig) {
-        const teams = Array.from({ length: teamCount }, (_, i) => ({
-            id: crypto.randomUUID(),
-            name: `Team ${i + 1}`,
-        }));
-        const groupPhase = generateGroupPhase(teams, config);
-
+        const teams = generateNTeams(teamCount);
         const tournament: Tournament = {
             version: 2,
             id: crypto.randomUUID(),
             name: `Tournament ${tournaments.value.length + 1}`,
             teams: teams,
-            groupPhase: groupPhase,
-            knockoutPhase: generateKnockoutBracket(
-                config,
-                getLastMatchOf({ matches: groupPhase }).date,
-            ),
+            groupPhase: [],
+            knockoutPhase: [],
             config,
         };
+        tournament.groupPhase = generateGroupPhase(tournament);
+        tournament.knockoutPhase = generateKnockoutBracket(tournament);
+
         add(tournament);
     }
 

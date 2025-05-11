@@ -92,7 +92,7 @@ const setGist = async (files: Files, options: IOptions, id?: string) => {
     const res = await fetch(endpoint, {
         method: id ? "PATCH" : "POST",
         headers,
-        body: body(files, options),  
+        body: body(files, options),
     });
 
     if (!res.ok) {

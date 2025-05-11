@@ -20,6 +20,11 @@ const onStatusChanged = () => {
     emit("statusChanged", match.value.status);
     onChanged();
 };
+const scores = ref(match.value.teams.map((team) => team.score) ?? []);
+const onScoreChanged = (teamIndex: number) => {
+    match.value.teams[teamIndex].score = scores.value[teamIndex];
+    onChanged();
+};
 
 const matcheditor = ref<HTMLDialogElement | null>(null);
 const openMatchEditor = () => {
@@ -49,8 +54,8 @@ const teamDisplay = (team: MatchTeam) => {
 
 const winner = computed(() => {
     if (match.value.status !== "completed") return "";
-    const team1 = match.value.teams[0].score;
-    const team2 = match.value.teams[1].score;
+    const team1 = scores.value[0];
+    const team2 = scores.value[1];
     if (team1 > team2) return teamDisplay(match.value.teams[0]);
     if (team2 > team1) return teamDisplay(match.value.teams[1]);
     return "Draw";
@@ -91,8 +96,8 @@ defineExpose({
                             <input
                                 type="number"
                                 :id="`team-score-${index}`"
-                                v-model="match.teams[index].score"
-                                @change="onChanged"
+                                v-model="scores[index]"
+                                @change="onScoreChanged(index)"
                             />
                         </div>
                     </template>

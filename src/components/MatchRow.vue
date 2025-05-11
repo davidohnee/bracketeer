@@ -169,8 +169,11 @@ watch(
     grid-template-columns: 10ch 1fr 15ch 1fr 10ch;
     align-items: center;
     gap: 1em;
-    cursor: pointer;
     transition: border-color 0.2s ease-in-out;
+
+    &:not(.readonly) {
+        cursor: pointer;
+    }
 
     &:not(:last-child) {
         border-bottom: 1px solid var(--color-border);

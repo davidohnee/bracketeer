@@ -142,7 +142,10 @@ const teamMatchesRouteName = computed(() => {
 </script>
 
 <template>
-    <div class="live">
+    <div
+        class="live"
+        :class="{ readonly }"
+    >
         <div
             class="no-round"
             v-if="currentTab === null"
@@ -259,13 +262,16 @@ const teamMatchesRouteName = computed(() => {
         font-size: 0.9rem;
         padding: 0.25em 1em;
         font-weight: bold;
-        cursor: pointer;
 
         &.selected {
             background-color: var(--color-foreground);
             color: var(--color-background);
         }
     }
+}
+
+.live:not(.readonly) .group-option {
+    cursor: pointer;
 }
 
 h3 {

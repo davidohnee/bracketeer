@@ -160,8 +160,11 @@ watch(
     display: grid;
     grid-template-columns: 1fr max-content 1fr;
     align-items: center;
-    cursor: pointer;
     transition: border-color 0.2s ease-in-out;
+
+    &:not(.readonly) {
+        cursor: pointer;
+    }
 
     &:not(.readonly):hover {
         border-color: var(--color-primary);

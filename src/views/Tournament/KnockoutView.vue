@@ -5,11 +5,17 @@ import TournamentKnockout from "@/components/TournamentKnockout.vue";
 
 const props = defineProps<{
     tournament: Tournament;
+    readonly?: boolean;
 }>();
 const tournamentStore = useTournamentsStore();
-const tournament = tournamentStore.getTournamentById(props.tournament.id)!;
+const tournament = props.readonly
+    ? props.tournament
+    : tournamentStore.getTournamentById(props.tournament.id)!;
 </script>
 
 <template>
-    <TournamentKnockout :tournament="tournament" />
+    <TournamentKnockout
+        :tournament="tournament"
+        :readonly="readonly"
+    />
 </template>

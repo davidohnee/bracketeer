@@ -1,12 +1,8 @@
-<!--
-  - Copyright (c) 2023, reAudioPlayer ONE.
-  - Licenced under the GNU General Public License v3.0
-  -->
-
 <script lang="ts" setup>
-import { computed, onMounted, onUnmounted, ref } from "vue";
+import { onMounted, onUnmounted, ref } from "vue";
 import { useRoute } from "vue-router";
 import type { Tournament } from "@/types/tournament";
+import TournamentLayout from "@/layouts/TournamentLayout.vue";
 import { pull } from "@/share";
 
 type Error = null | "not-found" | "not-allowed";
@@ -32,14 +28,6 @@ const updateTask = async () => {
     who.value = importObject.author ?? "(unknown)";
 };
 
-const baseRoute = computed(() => {
-    if (!route.name) {
-        return null;
-    }
-    const name = route.name as string;
-    return name.split(".")[0];
-});
-
 onMounted(() => {
     updateTask();
     updateTimer = setInterval(
@@ -54,38 +42,14 @@ onUnmounted(() => {
 });
 </script>
 <template>
-    <div
+    <TournamentLayout
         v-if="tournament && error == null"
         class="tournament"
-    >
-        <section>
-            <h2>{{ tournament.name }}</h2>
-            <span class="source text-muted">by {{ who }}</span>
-            <div class="tabs">
-                <router-link
-                    :to="{ name: baseRoute + '.table', params: { tournamentId: tournament.id } }"
-                >
-                    Table
-                </router-link>
-                <router-link
-                    :to="{ name: baseRoute + '.knockout', params: { tournamentId: tournament.id } }"
-                >
-                    Knockout
-                </router-link>
-                <router-link
-                    :to="{ name: baseRoute + '.matches', params: { tournamentId: tournament.id } }"
-                >
-                    Matches
-                </router-link>
-                <router-link
-                    :to="{ name: baseRoute + '.live', params: { tournamentId: tournament.id } }"
-                >
-                    Live
-                </router-link>
-            </div>
-            <RouterView :tournament="tournament" />
-        </section>
-    </div>
+        v-model="tournament"
+        :tabs="['matches', 'table', 'knockout', 'live']"
+        :subtitle="who"
+        readonly
+    />
     <div
         v-else-if="error == 'not-found'"
         class="error flex-col"
@@ -163,66 +127,5 @@ onUnmounted(() => {
 
 .uppercase {
     text-transform: uppercase;
-}
-
-section {
-    border: 1px solid var(--color-border);
-    border-radius: 1em;
-    overflow: clip;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-
-    & h2,
-    & span.source {
-        margin-left: 1rem;
-    }
-
-    & h2 {
-        margin-bottom: 0;
-    }
-
-    & span.source {
-        margin-bottom: 1rem;
-    }
-
-    .tabs {
-        color: var(--color-foreground);
-        display: flex;
-        gap: 1em;
-        padding: 0 1em;
-        border-bottom: 1px solid var(--color-border);
-        width: calc(100% - 2em);
-        overflow: auto;
-
-        & a {
-            color: var(--color-foreground);
-            text-decoration: none;
-            padding: 0.5em 1em;
-            border-radius: 1em;
-            position: relative;
-
-            &:hover {
-                color: var(--color-foreground-secondary);
-            }
-
-            &.router-link-active::after {
-                content: "";
-                position: absolute;
-                bottom: 0;
-                left: 1em;
-                right: 1em;
-                height: 2px;
-                background-color: var(--color-foreground);
-                margin-top: 0.5em;
-            }
-        }
-    }
-}
-
-@media (max-width: 600px) {
-    section .tabs {
-        gap: 0;
-    }
 }
 </style>

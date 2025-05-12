@@ -13,7 +13,7 @@ bracketeer is a versatile and user-friendly tool designed to generate and manage
 
 ### Online
 
-You can use bracketeer online [here](https://dxstiny.github.io/bracketeer). This version is hosted via GitHub Pages.
+You can use bracketeer online [here](https://davidohnee.github.io/bracketeer). This version is hosted via GitHub Pages.
 
 ### Self-Hosted
 
@@ -22,7 +22,7 @@ You can use bracketeer online [here](https://dxstiny.github.io/bracketeer). This
 Clone the repository:
 
 ```bash
-git clone https://github.com/dxstiny/bracketeer.git
+git clone https://github.com/davidohnee/bracketeer.git
 cd bracketeer
 ```
 

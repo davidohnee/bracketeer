@@ -3,8 +3,8 @@ import { useRouter } from "vue-router";
 
 const router = useRouter();
 
-const githubLink = "https://github.com/dxstiny/bracketeer";
-const githubUser = "dxstiny";
+const githubLink = "https://github.com/davidohnee/bracketeer";
+const githubUser = "davidohnee";
 const website = "https://davidohnee.com";
 </script>
 

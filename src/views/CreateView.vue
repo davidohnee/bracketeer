@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import StepProgress from "@/components/StepProgress.vue";
-import Metadata from "./MetadataSubView.vue";
-import Teams from "./TeamsSubView.vue";
-import Format from "./FormatSubView.vue";
+import Metadata from "./Create/MetadataSubView.vue";
+import Teams from "./Create/TeamsSubView.vue";
+import Format from "./Create/FormatSubView.vue";
 import type { Tournament } from "@/types/tournament";
 import { ref, watch } from "vue";
 import { tournamentFromJson } from "@/helpers";
@@ -12,6 +12,9 @@ import { useRouter } from "vue-router";
 const tournament = ref<Tournament | null>(null);
 const tournaments = useTournamentsStore();
 const router = useRouter();
+
+const todayAt1800 = new Date();
+todayAt1800.setHours(18, 0, 0, 0);
 
 const initTournament: Tournament = {
     version: 2,
@@ -26,7 +29,7 @@ const initTournament: Tournament = {
         courts: 15,
         rounds: 6,
         knockoutTeams: 8,
-        startTime: new Date("2025-04-26T18:30:00"),
+        startTime: todayAt1800,
         matchDuration: 10,
     },
 };

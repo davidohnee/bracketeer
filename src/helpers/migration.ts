@@ -39,7 +39,10 @@ const migrateTournamentV1ToV2 = (tournament: TournamentV1): TournamentV2 => {
             return round.matches.map((match) => {
                 return {
                     ...match,
-                    round,
+                    round: {
+                        ...round,
+                        matches: undefined,
+                    },
                 };
             });
         }),

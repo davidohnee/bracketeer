@@ -1,3 +1,5 @@
+import type { Match, Ref } from "@/types/tournament";
+
 /**
  * find the earliest time slot for two teams to play a match on a specific court
  *

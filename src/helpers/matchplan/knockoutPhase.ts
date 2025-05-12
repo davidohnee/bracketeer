@@ -112,7 +112,7 @@ export const generateKnockoutBracket = (tournament: Tournament): TournamentRound
 };
 
 export const updateKnockoutMatches = (tournament: Tournament) => {
-    const knockout: TournamentRound[] = JSON.parse(JSON.stringify(tournament.knockoutPhase));
+    const knockout = tournament.knockoutPhase;
 
     if (!knockout) return;
 
@@ -181,6 +181,4 @@ export const updateKnockoutMatches = (tournament: Tournament) => {
             }
         }
     }
-
-    tournament.knockoutPhase = knockout;
 };

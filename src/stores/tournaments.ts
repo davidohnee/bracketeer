@@ -8,7 +8,7 @@ import { Notifications } from "@/components/notifications/createNotification";
 import { generateKnockoutBracket } from "@/helpers/matchplan/knockoutPhase";
 import { generateGroupPhase } from "@/helpers/matchplan/groupPhase";
 import { generateNTeams } from "@/helpers/teamGenerator";
-import { debounce } from "lodash";
+import { throttle } from "lodash";
 
 // You can name the return value of `defineStore()` anything you want,
 // but it's best to use the name of the store and surround it with `use`
@@ -17,9 +17,9 @@ import { debounce } from "lodash";
 export const useTournamentsStore = defineStore("tournaments", () => {
     const tournaments = ref<Tournament[]>([]);
 
-    const syncToLocalStorage = debounce(() => {
+    const syncToLocalStorage = throttle(() => {
         localStorage.setItem("tournaments", JSON.stringify(tournaments.value));
-    });
+    }, 300);
 
     watch(tournaments, syncToLocalStorage, { deep: true });
     // Load tournaments from local storage on initial load

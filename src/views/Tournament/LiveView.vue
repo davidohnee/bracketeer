@@ -5,11 +5,17 @@ import TournamentLive from "@/components/TournamentLive.vue";
 
 const props = defineProps<{
     tournament: Tournament;
+    readonly?: boolean;
 }>();
 const tournamentStore = useTournamentsStore();
-const tournament = tournamentStore.getTournamentById(props.tournament.id)!;
+const tournament = props.readonly
+    ? props.tournament
+    : tournamentStore.getTournamentById(props.tournament.id)!;
 </script>
 
 <template>
-    <TournamentLive :tournament="tournament" />
+    <TournamentLive
+        :tournament="tournament"
+        :readonly="readonly"
+    />
 </template>

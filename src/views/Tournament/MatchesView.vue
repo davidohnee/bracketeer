@@ -5,12 +5,18 @@ import TournamentMatches from "@/components/TournamentMatches.vue";
 
 const props = defineProps<{
     tournament: Tournament;
+    readonly?: boolean;
 }>();
 
 const tournamentStore = useTournamentsStore();
-const tournament = tournamentStore.getTournamentById(props.tournament.id)!;
+const tournament = props.readonly
+    ? props.tournament
+    : tournamentStore.getTournamentById(props.tournament.id)!;
 </script>
 
 <template>
-    <TournamentMatches v-model="tournament" />
+    <TournamentMatches
+        v-model="tournament"
+        :readonly="readonly"
+    />
 </template>

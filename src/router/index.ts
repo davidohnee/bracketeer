@@ -29,7 +29,7 @@ const router = createRouter({
         {
             path: "/create",
             name: "create",
-            component: () => import("@/views/Create/CreateView.vue"),
+            component: () => import("@/views/CreateView.vue"),
         },
         {
             path: "/tournaments",
@@ -45,7 +45,7 @@ const router = createRouter({
                 {
                     path: "config",
                     name: "tournament.config",
-                    component: () => import("@/views/Tournament/ConfigurationView.vue"),
+                    component: () => import("@/views/Tournament/ConfigureView.vue"),
                 },
                 {
                     path: "config/teams",
@@ -55,7 +55,7 @@ const router = createRouter({
                 {
                     path: "config/plan",
                     name: "tournament.config.plan",
-                    component: () => import("@/views/Tournament/SettingsEditorView.vue"),
+                    component: () => import("@/views/Tournament/ConfigureFormatView.vue"),
                 },
                 {
                     path: "matches",
@@ -88,12 +88,12 @@ const router = createRouter({
                 {
                     path: "matches",
                     name: "import.matches",
-                    component: () => import("@/views/Viewer/MatchesView.vue"),
+                    component: () => import("@/views/Tournament/MatchesView.vue"),
                 },
                 {
                     path: "knockout",
                     name: "import.knockout",
-                    component: () => import("@/views/Viewer/KnockoutView.vue"),
+                    component: () => import("@/views/Tournament/KnockoutView.vue"),
                 },
                 {
                     path: "table",
@@ -103,7 +103,7 @@ const router = createRouter({
                 {
                     path: "live",
                     name: "import.live",
-                    component: () => import("@/views/Viewer/LiveView.vue"),
+                    component: () => import("@/views/Tournament/LiveView.vue"),
                 },
             ],
         },
@@ -116,12 +116,12 @@ const router = createRouter({
                 {
                     path: "matches",
                     name: "viewer.matches",
-                    component: () => import("@/views/Viewer/MatchesView.vue"),
+                    component: () => import("@/views/Tournament/MatchesView.vue"),
                 },
                 {
                     path: "knockout",
                     name: "viewer.knockout",
-                    component: () => import("@/views/Viewer/KnockoutView.vue"),
+                    component: () => import("@/views/Tournament/KnockoutView.vue"),
                 },
                 {
                     path: "table",
@@ -131,7 +131,7 @@ const router = createRouter({
                 {
                     path: "live",
                     name: "viewer.live",
-                    component: () => import("@/views/Viewer/LiveView.vue"),
+                    component: () => import("@/views/Tournament/LiveView.vue"),
                 },
             ],
         },

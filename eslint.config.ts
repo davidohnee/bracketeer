@@ -22,5 +22,10 @@ export default defineConfigWithVueTs(
     pluginVue.configs["flat/essential"],
     vueTsConfigs.recommended,
     ...oxlint.configs["flat/recommended"],
-    skipFormatting
+    skipFormatting,
+    {
+        rules: {
+            "unicorn/no-invalid-fetch-options": "off",
+        },
+    },
 );

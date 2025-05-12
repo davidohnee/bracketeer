@@ -5,4 +5,4 @@ export const chunks = <T>(a: T[], size: number) =>
 
 export const ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
-export const deepCopy = <T>(item: T) => JSON.parse(JSON.stringify(item));
+export const deepCopy = <T>(item: T): T => JSON.parse(JSON.stringify(item));

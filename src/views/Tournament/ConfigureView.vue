@@ -3,31 +3,36 @@ import { randomiseGroupPhaseResults } from "@/helpers";
 import type { Tournament } from "@/types/tournament";
 import { useTournamentsStore } from "@/stores/tournaments";
 import { useRouter } from "vue-router";
-import { computed, ref } from "vue";
+import { computed, ref, toRaw } from "vue";
 import ShareModal from "@/components/modals/ShareFullModal.vue";
 import gistClient from "@/gistClient";
 import TrackModal from "@/components/modals/ShareViewerModal.vue";
 import { Notifications } from "@/components/notifications/createNotification";
 import { updateKnockoutMatches } from "@/helpers/matchplan/knockoutPhase";
-import { deepCopy } from "@/helpers/common";
 
 const props = defineProps<{
     tournament: Tournament;
 }>();
 
 const tournaments = useTournamentsStore();
+const tournament = tournaments.getTournamentById(props.tournament.id)!;
 const router = useRouter();
 
 const shareModal = ref<typeof ShareModal>();
 const trackModal = ref<typeof TrackModal>();
 
 const randomGroupPhase = () => {
-    randomiseGroupPhaseResults(props.tournament);
+    const rawTournament = toRaw(tournament);
+    randomiseGroupPhaseResults(rawTournament);
+    tournament.groupPhase = [...rawTournament.groupPhase];
+    hasStarted.value = true;
     update();
 };
 
 const update = () => {
-    updateKnockoutMatches(props.tournament);
+    const rawTournament = toRaw(tournament);
+    updateKnockoutMatches(rawTournament);
+    tournament.knockoutPhase = [...rawTournament.knockoutPhase];
     Notifications.addSuccess(
         "Knockout matches updated",
         "The knockout matches have been updated based on the current group phase results.",
@@ -58,29 +63,26 @@ const resetTournament = () => {
         "Are you sure you want to reset the tournament? This will remove all results and start the tournament from scratch.",
         undefined,
         () => {
-            const tournament = tournaments.getTournamentById(props.tournament.id);
-            if (tournament) {
-                const groupPhase = deepCopy(tournament.groupPhase ?? []);
-                const knockoutPhase = deepCopy(tournament.knockoutPhase ?? []);
+            const rawTournament = toRaw(tournament);
 
-                for (const match of groupPhase) {
-                    match.teams[0].score = 0;
-                    match.teams[1].score = 0;
+            for (const match of rawTournament.groupPhase) {
+                match.teams[0].score = 0;
+                match.teams[1].score = 0;
+                match.status = "scheduled";
+            }
+            for (const round of rawTournament.knockoutPhase) {
+                for (const match of round.matches) {
+                    for (const team of match.teams) {
+                        team.score = 0;
+                        delete team.ref;
+                    }
                     match.status = "scheduled";
                 }
-                for (const round of knockoutPhase) {
-                    for (const match of round.matches) {
-                        for (const team of match.teams) {
-                            team.score = 0;
-                            delete team.ref;
-                        }
-                        match.status = "scheduled";
-                    }
-                }
-
-                tournament.groupPhase = groupPhase;
-                tournament.knockoutPhase = knockoutPhase;
             }
+
+            tournament.groupPhase = [...rawTournament.groupPhase];
+            tournament.knockoutPhase = [...rawTournament.knockoutPhase];
+            hasStarted.value = false;
 
             Notifications.addSuccess(
                 "Tournament reset",
@@ -92,9 +94,6 @@ const resetTournament = () => {
 };
 
 const duplicateTournament = () => {
-    const tournament = tournaments.getTournamentById(props.tournament.id);
-    if (!tournament) return;
-
     const newTournament = { ...tournament, id: crypto.randomUUID() };
     tournaments.add(newTournament);
     router.push({ name: "tournament", params: { tournamentId: newTournament.id } });
@@ -112,7 +111,6 @@ const canPull = computed(() => {
 });
 
 const pull = async () => {
-    const tournament = tournaments.getTournamentById(props.tournament.id);
     try {
         await tournaments.pull({
             tournament,
@@ -132,11 +130,7 @@ const pull = async () => {
     }
 };
 
-const hasStarted = computed(() => {
-    const tournament = tournaments.getTournamentById(props.tournament.id);
-    if (!tournament) return false;
-    return tournament.groupPhase.some((match) => match.status !== "scheduled");
-});
+const hasStarted = ref(tournament.groupPhase.some((match) => match.status !== "scheduled"));
 </script>
 
 <template>

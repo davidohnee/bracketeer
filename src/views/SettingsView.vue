@@ -12,6 +12,10 @@ const structure = [
                 title: "About",
                 route: "settings.general.about",
             },
+            {
+                title: "Appearance",
+                route: "settings.general.appearance",
+            },
         ],
     },
     {
@@ -26,9 +30,9 @@ const structure = [
 ];
 
 const sectionTitle = computed(() => {
-    const section = structure.find((section) =>
-        section.children.some((child) => child.route === route.name),
-    );
+    const section = structure
+        .flatMap((section) => section.children)
+        .find((child) => child.route === route.name);
     return section ? section.title : "";
 });
 </script>
@@ -82,6 +86,7 @@ const sectionTitle = computed(() => {
 
     & h2 {
         margin: 0;
+        margin-bottom: 0.5em;
     }
 
     & a {

@@ -79,6 +79,7 @@ export const useTournamentsStore = defineStore("tournaments", () => {
                 "There was an error sharing the tournament. Please try again.",
                 5000,
             );
+            return;
         }
 
         Notifications.addSuccess(

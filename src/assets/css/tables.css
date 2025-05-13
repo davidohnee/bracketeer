@@ -1,0 +1,36 @@
+.table {
+    width: 100%;
+
+    .row {
+        display: flex;
+        align-items: center;
+        position: relative;
+        border: 1px solid transparent;
+
+        &:not(:last-child) {
+            border-bottom: 1px solid var(--color-border);
+            margin-bottom: 0.25em;
+        }
+
+        & input {
+            width: 100%;
+            margin: 0;
+            background: none;
+            border: none;
+
+            &:focus {
+                outline-color: var(--color-text-primary);
+            }
+        }
+
+        &.duplicate {
+            background: color-mix(in srgb, var(--color-brand-red) 10%, transparent);
+            border-radius: 0.5rem;
+            border: 1px solid var(--color-brand-red);
+        }
+
+        &.duplicate input:focus {
+            outline-color: var(--color-text-primary);
+        }
+    }
+}

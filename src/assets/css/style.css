@@ -4,6 +4,7 @@
 @import url("./dialogs.css");
 @import url("./forms.css");
 @import url("./inputs.css");
+@import url("./tables.css");
 
 :root {
     font-family: var(--typography-body-font);

@@ -17,7 +17,12 @@ const router = createRouter({
                 {
                     path: "general/about",
                     name: "settings.general.about",
-                    component: () => import("@/views/Settings/AboutView.vue"),
+                    component: () => import("@/views/Settings/General/AboutView.vue"),
+                },
+                {
+                    path: "general/appearance",
+                    name: "settings.general.appearance",
+                    component: () => import("@/views/Settings/General/AppearanceView.vue"),
                 },
                 {
                     path: "share/gists",

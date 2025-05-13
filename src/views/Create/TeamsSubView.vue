@@ -18,8 +18,7 @@ const tournament = computed({
     },
 });
 
-const teamsPaste = ref<string>("");
-const teamsToGenerate = ref(36);
+const teamsToGenerate = ref(tournament.value.teams.length || 36);
 
 const addTeamByName = (name: string) => {
     if (name.trim() === "") return;
@@ -29,125 +28,32 @@ const addTeamByName = (name: string) => {
     });
 };
 
-const processPastedTeams = () => {
-    if (!teamsPaste.value) return;
-
-    const lines = teamsPaste.value.split("\n");
-    for (const line of lines) {
-        addTeamByName(line);
-    }
-    teamsPaste.value = "";
-};
-
-const processPaste = () => {
-    setTimeout(processPastedTeams, 0);
-};
-
 const generateTeams = () => {
+    tournament.value.teams = [];
     for (const team of Array.from({ length: teamsToGenerate.value }, (_, i) => `Team ${i + 1}`)) {
         addTeamByName(team);
     }
 };
 </script>
 <template>
-    <div class="table">
-        <div
-            class="row"
-            v-for="team in tournament.teams"
-            :key="team.id"
-        >
+    <div class="field">
+        <h3>Generate</h3>
+        <div class="field">
+            <label for="teams">Teams</label>
             <input
-                class="team"
-                type="text"
-                v-model="team.name"
-                :key="team.id"
-                placeholder="Team name"
+                type="number"
+                id="teams"
+                min="2"
+                max="1000"
+                v-model="teamsToGenerate"
+                @change="generateTeams"
+                @keydown.prevent.enter="generateTeams"
             />
-            <button
-                class="ghost"
-                @click="tournament.teams.splice(tournament.teams.indexOf(team), 1)"
-            >
-                <ion-icon
-                    name="trash"
-                    class="delete"
-                ></ion-icon>
-            </button>
-        </div>
-    </div>
-    <div class="row input-methods">
-        <div class="field">
-            <h3>Paste</h3>
-            <div class="field">
-                <label for="teams-paste">Teams</label>
-                <textarea
-                    id="teams-paste"
-                    rows="10"
-                    placeholder="Paste your teams here"
-                    v-model="teamsPaste"
-                    @change="processPastedTeams"
-                    @keydown.prevent.enter="processPastedTeams"
-                    @paste="processPaste"
-                ></textarea>
-            </div>
-        </div>
-        <div class="field">
-            <h3>Generate</h3>
-            <div class="field">
-                <label for="teams">Teams</label>
-                <input
-                    type="number"
-                    id="teams"
-                    min="2"
-                    max="1000"
-                    v-model="teamsToGenerate"
-                />
-            </div>
-            <button
-                type="button"
-                class="secondary"
-                @click="generateTeams"
-            >
-                Generate
-            </button>
         </div>
     </div>
 </template>
 
 <style scoped>
-.table {
-    .row {
-        align-items: center;
-        position: relative;
-
-        & input {
-            width: 100%;
-            margin: 0;
-            background: none;
-            border-radius: 0;
-            border: none;
-
-            &:focus {
-                outline: none;
-            }
-        }
-
-        &:has(:focus):before {
-            content: "";
-            position: absolute;
-            top: 2px;
-            left: 0;
-            width: 2px;
-            height: calc(100% - 4px);
-            border-radius: 0;
-            background: var(--color-primary);
-        }
-
-        &:nth-child(even) {
-            background-color: var(--color-surface);
-        }
-    }
-}
-
 .input-methods {
     display: grid;
     grid-template-columns: 1fr 1fr;

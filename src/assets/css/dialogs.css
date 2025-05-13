@@ -7,6 +7,13 @@ dialog[open] {
     }
 
     > .content {
+        outline: none;
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        max-width: 40vw;
+        overflow: hidden;
+        gap: 1em;
         position: relative;
 
         :first-child {
@@ -19,5 +26,17 @@ dialog[open] {
         top: 0.5em;
         right: 0.5em;
         cursor: pointer;
+    }
+}
+
+@media (max-width: 600px) {
+    dialog[open],
+    dialog[open] > div {
+        max-width: 80vw !important;
+    }
+
+    .options .option:not(:has(input[type="checkbox"])) {
+        grid-template-columns: 1fr;
+        gap: 0.5em;
     }
 }

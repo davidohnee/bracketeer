@@ -125,15 +125,15 @@ const duplicates = computed(() => {
             width: 2px;
             height: calc(100% - 4px);
             border-radius: 0;
-            background: var(--color-red);
+            background: var(--color-brand-red);
         }
 
         &.duplicate:has(:focus):before {
-            background: var(--color-foreground);
+            background: var(--color-text-primary);
         }
 
         &:nth-child(odd) {
-            background-color: var(--color-background-secondary);
+            background-color: var(--color-background);
         }
     }
 }

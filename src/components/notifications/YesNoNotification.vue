@@ -81,7 +81,7 @@ const click = () => {
     gap: 2em;
     align-items: center;
     overflow: hidden;
-    background: var(--color-background);
+    background: var(--color-surface);
     cursor: pointer;
 
     .message {
@@ -109,14 +109,14 @@ const click = () => {
         display: flex;
         align-items: center;
         justify-content: center;
-        color: white;
+        color: var(--color-primary-inverse);
 
         &.yes {
-            background-color: var(--color-green);
+            background-color: var(--color-brand-green);
         }
 
         &.no {
-            background-color: var(--color-red);
+            background-color: var(--color-brand-red);
         }
     }
 }

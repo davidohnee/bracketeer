@@ -1,0 +1,18 @@
+input,
+select {
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: inherit;
+    line-height: inherit;
+    color: inherit;
+    background-color: var(--color-surface);
+    border-radius: 8px;
+    border: 1px solid var(--color-border);
+    padding: 0.6em 1.2em;
+    margin-bottom: 1em;
+
+    &:disabled {
+        background-color: var(--color-surface-hover);
+        color: var(--color-text-secondary);
+    }
+}

@@ -1,0 +1,37 @@
+:root {
+    color-scheme: light dark;
+    color: var(--color-text-primary);
+    background-color: var(--color-surface);
+
+    --color-brand-green: rgb(31, 202, 131);
+    --color-brand-red: rgb(231, 56, 56);
+    --color-brand-yellow: rgb(219, 186, 17);
+    --color-brand-blue: rgb(48, 141, 241);
+    --color-brand-grey: rgb(128, 128, 128);
+
+    --color-primary: var(--color-brand-green);
+    --color-primary-inverse: white;
+    --color-primary-hover: color-mix(in srgb, var(--color-primary) 80%, #000);
+
+    --color-surface: #1d1d1d;
+    --color-surface-hover: rgb(37, 37, 37);
+    --color-background: #000;
+
+    --color-border: #282828;
+
+    --color-text-primary: #ffffff;
+    --color-text-secondary: rgb(192, 192, 192);
+}
+
+@media (prefers-color-scheme: light) {
+    :root {
+        --color-surface: #ffffff;
+        --color-surface-hover: rgb(242, 242, 242);
+        --color-background: #fafafa;
+
+        --color-border: #f0f0f0;
+
+        --color-text-primary: #213547;
+        --color-text-secondary: rgb(113, 113, 113);
+    }
+}

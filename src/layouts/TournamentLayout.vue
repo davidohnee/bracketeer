@@ -63,7 +63,7 @@ const canUpdate = computed(() => {
     >
         <section>
             <div class="title-component">
-                <h2>{{ tournament.name }}</h2>
+                <h3>{{ tournament.name }}</h3>
                 <ion-icon
                     v-if="canUpdate"
                     @click="trackModal?.open(tournament)"
@@ -111,7 +111,7 @@ section {
         .title-component {
             padding-bottom: 0;
         }
-        & h2 {
+        & h3 {
             margin-bottom: 0;
         }
     }
@@ -121,7 +121,7 @@ section {
     }
 
     .tabs {
-        color: var(--color-foreground);
+        color: var(--color-text-primary);
         display: flex;
         gap: 1em;
         padding: 0 1em;
@@ -130,14 +130,14 @@ section {
         overflow: auto;
 
         & a {
-            color: var(--color-foreground);
+            color: var(--color-text-primary);
             text-decoration: none;
             padding: 0.5em 1em;
             border-radius: 1em;
             position: relative;
 
             &:hover {
-                color: var(--color-foreground-secondary);
+                color: var(--color-text-secondary);
             }
 
             &.router-link-active::after {
@@ -147,7 +147,7 @@ section {
                 left: 1em;
                 right: 1em;
                 height: 2px;
-                background-color: var(--color-foreground);
+                background-color: var(--color-text-primary);
                 margin-top: 0.5em;
             }
         }

@@ -83,7 +83,7 @@ const viewOnly = () => {
 }
 
 .import-notice {
-    background: var(--color-background);
+    background: var(--color-surface);
     border: 1px solid var(--color-border);
     border-radius: 1em;
     padding: 1em;

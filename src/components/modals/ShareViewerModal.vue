@@ -88,7 +88,7 @@ dialog[open] > div {
         border-radius: 0;
 
         &:not(:last-child) {
-            border-bottom: 2px solid var(--bg-base-lt);
+            border-bottom: 2px solid var(--color-border);
         }
 
         & input[type="checkbox"] {

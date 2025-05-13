@@ -1,0 +1,61 @@
+h1 {
+    font-family: var(--typography-heading-font-xl);
+    font-weight: var(--typography-heading-fontWeight-xl);
+    font-size: var(--typography-heading-fontSize-xl);
+    line-height: var(--typography-heading-lineHeight-xl);
+}
+
+h2 {
+    font-family: var(--typography-heading-font-l);
+    font-weight: var(--typography-heading-fontWeight-l);
+    font-size: var(--typography-heading-fontSize-l);
+    line-height: var(--typography-heading-lineHeight-l);
+}
+
+h3 {
+    font-family: var(--typography-heading-font-m);
+    font-weight: var(--typography-heading-fontWeight-m);
+    font-size: var(--typography-heading-fontSize-m);
+    line-height: var(--typography-heading-lineHeight-m);
+}
+
+strong,
+a {
+    font-weight: var(--typography-fontWeight-bold);
+}
+
+a {
+    color: var(--color-primary);
+    text-decoration: inherit;
+}
+a:hover {
+    color: var(--color-primary-hover);
+}
+
+.card {
+    padding: 2em;
+}
+
+.center {
+    text-align: center;
+}
+
+body {
+    background: var(--color-background);
+}
+
+section {
+    background: var(--color-surface);
+}
+
+.clickable {
+    cursor: pointer;
+
+    &:hover {
+        color: var(--color-primary);
+    }
+}
+
+.text-muted {
+    color: var(--color-text-secondary);
+}

@@ -93,7 +93,7 @@ onMounted(() => {
     align-items: center;
 
     .team {
-        color: var(--color-foreground-secondary);
+        color: var(--color-text-secondary);
 
         &.winner {
             color: var(--color-primary);
@@ -117,7 +117,7 @@ onMounted(() => {
     }
 
     .venue {
-        color: var(--color-foreground-secondary);
+        color: var(--color-text-secondary);
     }
 
     .score {
@@ -151,7 +151,7 @@ onMounted(() => {
     }
 
     .match-time {
-        color: var(--color-foreground-secondary);
+        color: var(--color-text-secondary);
     }
 
     .time {
@@ -161,11 +161,11 @@ onMounted(() => {
         padding: 0.5em 1em;
         font-size: 0.9rem;
         background-color: var(--color-border);
-        color: var(--color-foreground-secondary);
+        color: var(--color-text-secondary);
 
         &.progress {
             background-color: var(--color-primary);
-            color: var(--color-primary-contrast);
+            color: var(--color-primary-inverse);
         }
     }
 

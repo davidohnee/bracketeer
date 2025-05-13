@@ -143,7 +143,7 @@ const generateTeams = () => {
         }
 
         &:nth-child(even) {
-            background-color: var(--color-background);
+            background-color: var(--color-surface);
         }
     }
 }

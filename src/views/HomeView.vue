@@ -131,7 +131,7 @@ section {
             var(--color-primary),
             color-mix(in srgb, var(--color-primary) 70%, black)
         );
-        color: var(--color-primary-contrast);
+        color: var(--color-primary-inverse);
         padding: 4em;
         border-radius: 1em;
 

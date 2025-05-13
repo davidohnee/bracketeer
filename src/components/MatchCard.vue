@@ -171,7 +171,7 @@ watch(
     }
 
     .venue {
-        color: var(--color-foreground-secondary);
+        color: var(--color-text-secondary);
     }
 
     .score {

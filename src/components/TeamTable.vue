@@ -93,7 +93,7 @@ const groupName = (id: string | null) => {
         border-radius: 0.35em;
 
         &:hover {
-            background-color: var(--color-background-hover);
+            background-color: var(--color-surface-hover);
         }
 
         & div {

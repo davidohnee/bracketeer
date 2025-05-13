@@ -220,8 +220,8 @@ const grouped = computed(() => {
         white-space: nowrap;
 
         &.selected {
-            background-color: var(--color-foreground);
-            color: var(--color-background);
+            background-color: var(--color-text-primary);
+            color: var(--color-surface);
         }
     }
 }

@@ -180,11 +180,11 @@ watch(
     }
 
     &:not(.readonly):hover {
-        background-color: var(--color-background-hover);
+        background-color: var(--color-surface-hover);
     }
 
     .venue {
-        color: var(--color-foreground-secondary);
+        color: var(--color-text-secondary);
     }
 
     .score {
@@ -214,7 +214,7 @@ watch(
     }
 
     .match-time {
-        color: var(--color-foreground-secondary);
+        color: var(--color-text-secondary);
     }
 
     .time {
@@ -224,11 +224,11 @@ watch(
         padding: 0.5em 1em;
         font-size: 0.9rem;
         background-color: var(--color-border);
-        color: var(--color-foreground-secondary);
+        color: var(--color-text-secondary);
 
         &.progress {
             background-color: var(--color-primary);
-            color: var(--color-primary-contrast);
+            color: var(--color-primary-inverse);
         }
     }
 

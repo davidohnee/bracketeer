@@ -69,22 +69,22 @@ const click = () => {
     gap: 2em;
     align-items: center;
     justify-content: space-between;
-    color: white;
+    color: var(--color-primary-inverse);
 
     &.success {
-        background-color: var(--color-green);
+        background-color: var(--color-brand-green);
     }
 
     &.error {
-        background-color: var(--color-red);
+        background-color: var(--color-brand-red);
     }
 
     &.info {
-        background-color: var(--color-blue);
+        background-color: var(--color-brand-blue);
     }
 
     &.warning {
-        background-color: var(--color-yellow);
+        background-color: var(--color-brand-yellow);
     }
 
     h4,

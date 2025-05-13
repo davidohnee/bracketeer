@@ -112,7 +112,7 @@ const STATUS_TEXT: Record<MatchStatus, string> = {
     }
 
     &:nth-child(even) {
-        background-color: var(--color-background);
+        background-color: var(--color-surface);
     }
 
     &:not(.header):not(:has(button:hover)):hover {
@@ -135,15 +135,15 @@ const STATUS_TEXT: Record<MatchStatus, string> = {
         background: color-mix(in srgb, var(--c) 20%, transparent);
 
         &.completed {
-            --c: var(--color-green);
+            --c: var(--color-brand-green);
         }
 
         &.in-progress {
-            --c: var(--color-blue);
+            --c: var(--color-brand-blue);
         }
 
         &.scheduled {
-            --c: var(--color-grey);
+            --c: var(--color-brand-grey);
         }
     }
 }

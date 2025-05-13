@@ -10,11 +10,11 @@ button {
     background: var(--c);
     cursor: pointer;
     transition: border-color 0.25s;
-    color: white;
+    color: var(--color-primary-inverse);
 
     &.ghost {
         background: transparent;
-        color: var(--color-foreground);
+        color: var(--color-text-primary);
 
         &:hover {
             color: var(--c);
@@ -23,19 +23,19 @@ button {
     }
 
     &.danger {
-        --c: var(--color-red);
+        --c: var(--color-brand-red);
     }
 
     &.success {
-        --c: var(--color-green);
+        --c: var(--color-brand-green);
     }
 
     &.warning {
-        --c: var(--color-yellow);
+        --c: var(--color-brand-yellow);
     }
 
     &.info {
-        --c: var(--color-blue);
+        --c: var(--color-brand-blue);
     }
 
     &:hover {
@@ -53,8 +53,8 @@ button {
     }
 
     &:disabled {
-        background: var(--color-background-hover);
-        color: var(--color-foreground-secondary);
+        background: var(--color-surface-hover);
+        color: var(--color-text-secondary);
         border: 1px solid var(--color-border);
         cursor: not-allowed;
     }

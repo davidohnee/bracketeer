@@ -91,16 +91,16 @@ const jumpTo = (index: number) => {
         animation: pulse 0.5s;
 
         &:before {
-            color: white;
+            color: var(--color-primary-inverse);
             content: "✓";
         }
     }
 
     &.pending {
-        border-color: var(--color-foreground-secondary);
+        border-color: var(--color-text-secondary);
 
         &:before {
-            color: var(--color-foreground-secondary);
+            color: var(--color-text-secondary);
         }
     }
 }
@@ -108,7 +108,7 @@ const jumpTo = (index: number) => {
 .divider {
     width: 100%;
     height: 1px;
-    background: var(--color-foreground-secondary);
+    background: var(--color-text-secondary);
     display: block;
 
     &:last-child {

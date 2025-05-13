@@ -1,0 +1,50 @@
+@import url("./design/index.css");
+@import url("./base.css");
+@import url("./buttons.css");
+@import url("./dialogs.css");
+@import url("./forms.css");
+@import url("./inputs.css");
+
+:root {
+    font-family: var(--typography-body-font);
+    font-weight: var(--typography-body-fontWeight);
+    line-height: var(--typography-body-lineHeight);
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+    margin: 0;
+    display: flex;
+    min-width: 320px;
+    min-height: 100svh;
+}
+
+#app {
+    width: 100%;
+
+    & header .full {
+        max-width: 1280px;
+    }
+
+    > .content {
+        max-width: 1280px;
+        width: calc(100% - 4rem);
+        margin: 0 auto;
+        padding: 2rem;
+    }
+}
+
+@media (max-width: 768px) {
+    body {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    #app > .content {
+        width: 100%;
+        padding: 0;
+    }
+}

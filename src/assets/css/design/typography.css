@@ -1,0 +1,38 @@
+:root {
+    --typography-fontWeight-thin: 100;
+    --typography-fontWeight-extra-light: 200;
+    --typography-fontWeight-light: 300;
+    --typography-fontWeight-regular: 400;
+    --typography-fontWeight-medium: 500;
+    --typography-fontWeight-semi-bold: 600;
+    --typography-fontWeight-bold: 700;
+    --typography-fontWeight-extra-bold: 800;
+    --typography-fontWeight-black: 900;
+    --typography-font: Sen, Avenir, Helvetica, Arial, sans-serif;
+
+    --typography-heading-font: var(--typography-font);
+    --typography-heading-fontWeight: var(--typography-fontWeight-bold);
+    --typography-heading-fontSize: 3.2rem;
+    --typography-heading-lineHeight: 1.1;
+
+    --typography-heading-font-xl: var(--typography-heading-font);
+    --typography-heading-fontWeight-xl: var(--typography-fontWeight-bold);
+    --typography-heading-fontSize-xl: 3.2rem;
+    --typography-heading-lineHeight-xl: 1.1;
+
+    --typography-heading-font-l: var(--typography-heading-font);
+    --typography-heading-fontWeight-l: var(--typography-fontWeight-bold);
+    --typography-heading-fontSize-l: 2.5rem;
+    --typography-heading-lineHeight-l: 1.1;
+
+    --typography-heading-font-m: var(--typography-heading-font);
+    --typography-heading-fontWeight-m: var(--typography-fontWeight-bold);
+    --typography-heading-fontSize-m: 1.5rem;
+    --typography-heading-lineHeight-m: 1.1;
+
+    --typography-heading-font-lg: var(--typography-heading-font);
+
+    --typography-body-font: var(--typography-font);
+    --typography-body-fontWeight: var(--typography-fontWeight-regular);
+    --typography-body-lineHeight: 1.5;
+}

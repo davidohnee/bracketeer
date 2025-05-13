@@ -92,7 +92,7 @@ const sectionTitle = computed(() => {
         border-radius: 0.5em;
 
         &.router-link-active {
-            background-color: var(--color-background-hover);
+            background-color: var(--color-surface-hover);
             border-color: var(--color-border);
         }
     }

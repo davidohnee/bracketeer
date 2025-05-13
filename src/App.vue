@@ -62,7 +62,7 @@ onMounted(() => {
 
 header {
     padding: 1em;
-    background-color: var(--color-background);
+    background-color: var(--color-surface);
     place-items: center;
     margin-bottom: 5em;
     position: sticky;
@@ -92,7 +92,7 @@ header {
             display: flex;
             align-items: center;
             gap: 0.5em;
-            color: var(--color-foreground);
+            color: var(--color-text-primary);
         }
     }
 }

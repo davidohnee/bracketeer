@@ -59,3 +59,9 @@ section {
 .text-muted {
     color: var(--color-text-secondary);
 }
+
+.text-sm {
+    font-size: var(--typography-body-fontSize-sm);
+    font-weight: var(--typography-body-fontWeight-sm);
+    line-height: var(--typography-body-lineHeight-sm);
+}

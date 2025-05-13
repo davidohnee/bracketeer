@@ -3,15 +3,20 @@
 import { onMounted } from "vue";
 import { useRouter } from "vue-router";
 import NotificationHandler from "./components/notifications/NotificationHandler.vue";
+import { useThemeStore } from "./stores/theme";
 
 const router = useRouter();
+const theme = useThemeStore();
 
 onMounted(() => {
     const hash = window.location.hash;
     const route = hash.replace("#", "");
     if (route) {
         router.push(route);
+        return;
     }
+
+    theme.init();
 });
 </script>
 
@@ -22,10 +27,10 @@ onMounted(() => {
                 to="/"
                 class="nav-link"
             >
-                <h2 class="title">
+                <h3 class="title">
                     <ion-icon name="trophy-outline"></ion-icon>
                     bracketeer
-                </h2>
+                </h3>
             </RouterLink>
             <nav>
                 <RouterLink
@@ -56,10 +61,6 @@ onMounted(() => {
 </template>
 
 <style>
-.table {
-    width: 100%;
-}
-
 header {
     padding: 1em;
     background-color: var(--color-surface);
@@ -77,7 +78,7 @@ header {
         align-items: center;
     }
 
-    & h2 {
+    & h3 {
         display: flex;
         align-items: center;
         gap: 0.5em;
@@ -99,7 +100,7 @@ header {
 
 @media (max-width: 400px) {
     header {
-        & h2 {
+        & h3 {
             font-size: 0;
 
             & ion-icon {

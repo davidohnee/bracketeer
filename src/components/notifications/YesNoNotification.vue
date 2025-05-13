@@ -54,7 +54,7 @@ const click = () => {
             </h4>
             <span
                 v-if="notification.details"
-                class="details"
+                class="details text-sm"
             >
                 {{ notification.details }}
             </span>
@@ -92,7 +92,7 @@ const click = () => {
         }
 
         .details {
-            font-size: 0.8em;
+            display: block;
         }
     }
 }

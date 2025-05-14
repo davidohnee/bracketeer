@@ -1,11 +1,6 @@
 :root {
-    color-scheme: light dark;
     color: var(--color-text-primary);
     background-color: var(--color-surface);
-}
-
-[data-theme="dark"] {
-    color-scheme: dark;
 }
 
 :root,
@@ -16,6 +11,7 @@
     --color-brand-yellow: rgb(219, 186, 17);
     --color-brand-blue: rgb(48, 141, 241);
     --color-brand-grey: rgb(128, 128, 128);
+    --color-brand-gray: var(--color-brand-grey);
 
     --color-primary: var(--color-brand-green);
     --color-primary-inverse: white;
@@ -32,9 +28,11 @@
 }
 
 :root[data-theme="dark"] {
+    color-scheme: dark;
+
     --color-surface: #1d1d1d;
     --color-surface-hover: rgb(37, 37, 37);
-    --color-background: #000;
+    --color-background: #050505;
 
     --color-border: #282828;
 
@@ -44,6 +42,8 @@
 
 @media (prefers-color-scheme: dark) {
     :root {
+        color-scheme: dark;
+
         --color-surface: #1d1d1d;
         --color-surface-hover: rgb(37, 37, 37);
         --color-background: #000;

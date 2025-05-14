@@ -39,7 +39,7 @@ const sectionTitle = computed(() => {
 
 <template>
     <div class="settings">
-        <h1>Settings</h1>
+        <h1>{{ sectionTitle }}</h1>
 
         <div class="split">
             <aside class="sidebar">
@@ -60,7 +60,6 @@ const sectionTitle = computed(() => {
                 </div>
             </aside>
             <div class="settings-content">
-                <h2>{{ sectionTitle }}</h2>
                 <router-view />
             </div>
         </div>

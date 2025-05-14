@@ -33,6 +33,12 @@ const STATUS_TEXT: Record<MatchStatus, string> = {
     scheduled: "Scheduled",
     completed: "Completed",
 };
+
+const STATUS_COLOR: Record<MatchStatus, string> = {
+    scheduled: "grey",
+    "in-progress": "blue",
+    completed: "green",
+};
 </script>
 <template>
     <div class="tournament-list-container">
@@ -53,13 +59,13 @@ const STATUS_TEXT: Record<MatchStatus, string> = {
             <router-link
                 v-for="tournament in tournamentList"
                 :key="tournament.id"
-                class="tournament-item"
+                class="tournament-item ghost"
                 :to="{ name: 'tournament', params: { tournamentId: tournament.id } }"
             >
                 <span class="name">{{ tournament.name }}</span>
                 <span
                     class="status desktop-only"
-                    :class="tournament.status"
+                    :class="STATUS_COLOR[tournament.status]"
                 >
                     {{ STATUS_TEXT[tournament.status] }}
                 </span>
@@ -96,6 +102,7 @@ const STATUS_TEXT: Record<MatchStatus, string> = {
     overflow: clip;
     border: 1px solid var(--color-border);
     border-radius: 1em;
+    background: var(--color-surface);
 }
 
 .tournament-item {
@@ -103,7 +110,7 @@ const STATUS_TEXT: Record<MatchStatus, string> = {
     position: relative;
     padding: 0.5em 1em;
     display: grid;
-    grid-template-columns: 1fr 10ch 18ch 54px;
+    grid-template-columns: 1fr 12ch 18ch 54px;
     gap: 1em;
     color: inherit;
 
@@ -111,40 +118,21 @@ const STATUS_TEXT: Record<MatchStatus, string> = {
         font-size: 0.9em;
     }
 
-    &:nth-child(even) {
-        background-color: var(--color-surface);
+    .name {
+        font-weight: var(--typography-fontWeight-semi-bold);
+    }
+
+    &:not(.header):not(:first-child) {
+        border-top: 1px solid var(--color-border);
     }
 
     &:not(.header):not(:has(button:hover)):hover {
-        background: color-mix(in srgb, var(--color-primary) 20%, transparent);
+        background: var(--color-surface-hover);
         cursor: pointer;
     }
 
     a {
         flex: 1;
-    }
-
-    .status {
-        padding: 0.25em;
-        border-radius: 0.5em;
-        text-align: center;
-        width: 100%;
-
-        --c: var(--color-primary);
-        color: var(--c);
-        background: color-mix(in srgb, var(--c) 20%, transparent);
-
-        &.completed {
-            --c: var(--color-brand-green);
-        }
-
-        &.in-progress {
-            --c: var(--color-brand-blue);
-        }
-
-        &.scheduled {
-            --c: var(--color-brand-grey);
-        }
     }
 }
 

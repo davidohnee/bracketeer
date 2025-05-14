@@ -22,7 +22,7 @@ const teamName = computed(() => {
             name: teamMatchesRouteName,
             query: { team: score.team.id },
         }"
-        class="team"
+        class="team ghost"
         :class="{ progress: rank <= tournament.config.knockoutTeams }"
     >
         <div class="rank">{{ rank }}</div>

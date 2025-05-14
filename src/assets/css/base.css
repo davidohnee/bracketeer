@@ -19,14 +19,18 @@ h3 {
     line-height: var(--typography-heading-lineHeight-m);
 }
 
-strong,
-a {
+strong {
     font-weight: var(--typography-fontWeight-bold);
 }
 
 a {
-    color: var(--color-primary);
+    font-weight: var(--typography-fontWeight-medium);
     text-decoration: inherit;
+    color: var(--color-primary);
+
+    &:not(.ghost) {
+        font-weight: var(--typography-fontWeight-semi-bold);
+    }
 }
 a:hover {
     color: var(--color-primary-hover);
@@ -56,7 +60,8 @@ section {
     }
 }
 
-.text-muted {
+.text-muted,
+.text-mute {
     color: var(--color-text-secondary);
 }
 
@@ -64,4 +69,36 @@ section {
     font-size: var(--typography-body-fontSize-sm);
     font-weight: var(--typography-body-fontWeight-sm);
     line-height: var(--typography-body-lineHeight-sm);
+}
+
+.status {
+    padding: 0.25em;
+    border-radius: 0.5em;
+    text-align: center;
+    width: calc(100% - 0.5em);
+
+    --c: black;
+    color: var(--c);
+    background: color-mix(in srgb, var(--c) 20%, transparent);
+
+    &.green {
+        --c: var(--color-brand-green);
+    }
+
+    &.blue {
+        --c: var(--color-brand-blue);
+    }
+
+    &.red {
+        --c: var(--color-brand-red);
+    }
+
+    &.yellow {
+        --c: var(--color-brand-yellow);
+    }
+
+    &.grey,
+    &.gray {
+        --c: var(--color-brand-grey);
+    }
 }

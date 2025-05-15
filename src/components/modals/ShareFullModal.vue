@@ -52,25 +52,6 @@ const download = () => {
     dialog.value?.close();
 };
 
-const update = () => {
-    const tournament = sharingItem.value;
-    if (!tournament) return;
-
-    const tournamentCopy = deepCopy(tournament);
-
-    tournaments.share(tournamentCopy, publicGist.value);
-
-    dialog.value?.close();
-};
-
-const canUpdate = computed(() => {
-    if (!sharingItem.value?.remote?.length) return false;
-
-    const identifier = sharingItem.value.remote[0].identifier;
-
-    return gistClient.isMine(identifier);
-});
-
 const share = () => {
     action.value = "gist";
     save();

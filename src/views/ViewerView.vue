@@ -4,6 +4,7 @@ import { useRoute } from "vue-router";
 import type { Tournament } from "@/types/tournament";
 import TournamentLayout from "@/layouts/TournamentLayout.vue";
 import { pull } from "@/share";
+import { agoString } from "@/helpers/common";
 
 type Error = null | "not-found" | "not-allowed";
 
@@ -13,11 +14,29 @@ const who = ref("");
 const tournament = ref<Tournament | null>(null);
 const error = ref<Error>(null);
 
+const sessionStorageItem = sessionStorage.getItem(route.params.id as string);
+const updated = ref<Date | null>(sessionStorageItem ? new Date(sessionStorageItem) : null);
+
+const subtitle = ref<string>("");
+
 let updateTimer = 0;
+let updateSubtitleTimer = 0;
 
 const updateTask = async () => {
     const base64 = route.params.id as string;
     const importObject = await pull(base64);
+
+    if (updated.value) {
+        const now = new Date();
+        const diff = now.getTime() - updated.value.getTime();
+        if (diff >= 1000 * 60 * 5) {
+            updated.value = new Date();
+            sessionStorage.setItem(base64, updated.value.toString());
+        }
+    } else {
+        updated.value = new Date();
+        sessionStorage.setItem(base64, updated.value.toString());
+    }
 
     if (importObject.error) {
         error.value = importObject.error;
@@ -26,6 +45,13 @@ const updateTask = async () => {
 
     tournament.value = importObject.tournament;
     who.value = importObject.author ?? "(unknown)";
+    updateSubtitle();
+};
+
+const updateSubtitle = () => {
+    if (tournament.value) {
+        subtitle.value = "Last updated: " + agoString(updated.value!);
+    }
 };
 
 onMounted(() => {
@@ -36,6 +62,8 @@ onMounted(() => {
         },
         1000 * 60 * 5,
     ); // Update every 5 minutes
+
+    updateSubtitleTimer = setInterval(updateSubtitle, 1000 * 60); // Update every minute
 });
 onUnmounted(() => {
     clearInterval(updateTimer);
@@ -47,7 +75,7 @@ onUnmounted(() => {
         class="tournament"
         v-model="tournament"
         :tabs="['matches', 'table', 'knockout', 'live']"
-        :subtitle="who"
+        :subtitle="subtitle"
         readonly
     />
     <div

@@ -71,6 +71,11 @@ const canUpdate = computed(() => {
     return gistClient.isMine(identifier);
 });
 
+const share = () => {
+    action.value = "gist";
+    save();
+};
+
 defineExpose({ open });
 </script>
 <template>
@@ -82,37 +87,24 @@ defineExpose({ open });
                 name="close"
             ></ion-icon>
             <template v-if="!action && sharingItem">
-                <h3>Share "{{ sharingItem.name }}"</h3>
+                <h2>Share "{{ sharingItem.name }}"</h2>
                 <div class="options">
-                    <div
-                        class="option"
-                        v-if="canUpdate"
-                    >
-                        <div class="info">
-                            <h3>Update remote</h3>
-                            <p>
-                                This course is already shared. Update the remote to share the latest
-                                changes.
-                            </p>
-                        </div>
-                        <button @click="update">Update</button>
-                    </div>
                     <div class="option">
                         <div class="info">
                             <h3>New share</h3>
                             <p>
-                                Share this course for the first time. This will create a new gist on
-                                GitHub.
+                                Share this tournament for the first time. This will create a new
+                                gist on GitHub.
                             </p>
                         </div>
-                        <button @click="action = 'gist'">Share</button>
+                        <button @click="share">Share</button>
                     </div>
                     <div class="option">
                         <div class="info">
                             <h3>Download</h3>
                             <p>
-                                Download the course as a JSON file. This can be used to import the
-                                course on another device.
+                                Download the tournament as a JSON file. This can be used to import
+                                the course on another device.
                             </p>
                         </div>
                         <button @click="download">Download</button>
@@ -139,29 +131,13 @@ defineExpose({ open });
             </template>
             <template v-else-if="action == 'gist' && sharingItem">
                 <h2>Share "{{ sharingItem.name }}"</h2>
-                <div v-if="shareUrl">
+                <template v-if="shareUrl">
                     <p>Your share link:</p>
                     <input
                         type="text"
                         readonly
                         :value="shareUrl"
                     />
-                </div>
-                <template v-else>
-                    <p>
-                        To share this course, click the button below. This will create a gist on
-                        GitHub with the course data.
-                    </p>
-                    <div class="checkbox">
-                        <input
-                            id="public-gist"
-                            type="checkbox"
-                            label="Public Gist"
-                            v-model="publicGist"
-                        />
-                        <label for="public-gist">Public Gist</label>
-                    </div>
-                    <button @click="save">Share</button>
                 </template>
             </template>
         </div>

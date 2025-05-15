@@ -9,6 +9,7 @@ import gistClient from "@/gistClient";
 import TrackModal from "@/components/modals/ShareViewerModal.vue";
 import { Notifications } from "@/components/notifications/createNotification";
 import { updateKnockoutMatches } from "@/helpers/matchplan/knockoutPhase";
+import { agoString } from "@/helpers/common";
 
 const props = defineProps<{
     tournament: Tournament;
@@ -130,6 +131,19 @@ const pull = async () => {
     }
 };
 
+const lastPushed = computed(() => {
+    if (!props.tournament.remote?.length) return null;
+    let pushed = props.tournament.remote[0].pushDate;
+    if (!pushed) return null;
+    return typeof pushed === "string" ? new Date(pushed) : pushed;
+});
+
+const lastPushedAgo = computed(() => {
+    const lastPushedDate = lastPushed.value;
+    if (!lastPushedDate) return null;
+    return agoString(lastPushedDate);
+});
+
 const hasStarted = ref(tournament.groupPhase.some((match) => match.status !== "scheduled"));
 </script>
 
@@ -186,6 +200,19 @@ const hasStarted = ref(tournament.groupPhase.some((match) => match.status !== "s
         </section>
         <section>
             <h3>Sharing & Sync</h3>
+            <div
+                v-if="lastPushed"
+                class="row"
+            >
+                <div class="field">
+                    <p>
+                        Last pushed:
+                        <strong>
+                            {{ lastPushedAgo }}
+                        </strong>
+                    </p>
+                </div>
+            </div>
             <div class="row">
                 <div
                     class="field"

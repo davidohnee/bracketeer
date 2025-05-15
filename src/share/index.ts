@@ -12,6 +12,7 @@ interface IImportSuccess extends IImportResult {
     author: string;
     tournament: Tournament;
     link: string;
+    date: Date;
 }
 
 interface IImportError extends IImportResult {
@@ -21,8 +22,8 @@ interface IImportError extends IImportResult {
 export type Import = IImportSuccess | IImportError;
 
 export const getShareLink = (identifier: string) => {
-    const base = window.location.origin + window.location.pathname;
-    return `${base}#/s/${identifier}`;
+    const base = window.location.origin;
+    return `${base}/s/${identifier}`;
 };
 
 export const toShare = (mode: "gist", author: string, tag: string) => {

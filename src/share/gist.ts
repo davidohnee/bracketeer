@@ -43,10 +43,14 @@ const push = async (tournament: Tournament, isPublic: boolean = false) => {
     const { identifier, link } = toShare("gist", user, `${gistId}:${sha}`);
 
     if (!tournament.remote?.length) {
-        tournament.remote = [];
-        tournament.remote.push({
-            identifier,
-        });
+        tournament.remote = [
+            {
+                identifier,
+                pushDate: new Date(),
+            },
+        ];
+    } else {
+        tournament.remote[0].pushDate = new Date();
     }
 
     return { author: jdata.owner.login, tournament, link } as Import;
@@ -59,6 +63,7 @@ const pull = async (identifier: string) => {
         const url = `https://gist.githubusercontent.com/${author}/${gist}/raw/`;
 
         const res = await fetch(url);
+        const exp = new Date(res.headers.get("expires")!);
 
         if (res.status == 404) {
             return { error: "not-found" } as Import;

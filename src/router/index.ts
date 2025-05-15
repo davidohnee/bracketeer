@@ -141,6 +141,11 @@ const router = createRouter({
             ],
         },
         {
+            path: "/design-system",
+            name: "design-system",
+            component: () => import("@/views/DesignSystemView.vue"),
+        },
+        {
             path: "/:pathMatch(.*)*",
             name: "not-found",
             component: () => import("@/views/NotFoundView.vue"),

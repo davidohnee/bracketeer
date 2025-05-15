@@ -67,6 +67,7 @@ onMounted(() => {
 });
 onUnmounted(() => {
     clearInterval(updateTimer);
+    clearInterval(updateSubtitleTimer);
 });
 </script>
 <template>

@@ -63,7 +63,6 @@ const pull = async (identifier: string) => {
         const url = `https://gist.githubusercontent.com/${author}/${gist}/raw/`;
 
         const res = await fetch(url);
-        const exp = new Date(res.headers.get("expires")!);
 
         if (res.status == 404) {
             return { error: "not-found" } as Import;

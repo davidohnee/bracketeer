@@ -133,7 +133,7 @@ const pull = async () => {
 
 const lastPushed = computed(() => {
     if (!props.tournament.remote?.length) return null;
-    let pushed = props.tournament.remote[0].pushDate;
+    const pushed = props.tournament.remote[0].pushDate;
     if (!pushed) return null;
     return typeof pushed === "string" ? new Date(pushed) : pushed;
 });

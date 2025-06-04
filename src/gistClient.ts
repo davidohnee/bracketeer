@@ -102,7 +102,7 @@ const setGist = async (files: Files, options: IOptions, id?: string) => {
 
         const jdata = await res.json();
         return jdata;
-    } catch (e) {
+    } catch {
         return null;
     }
 };

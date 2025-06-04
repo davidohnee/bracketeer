@@ -93,6 +93,7 @@
             <div
                 class="color"
                 v-for="color in ['green', 'red', 'blue', 'yellow', 'grey']"
+                :key="color"
             >
                 <p>{{ color }}</p>
                 <div

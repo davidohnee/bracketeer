@@ -38,6 +38,9 @@ a:hover {
 
 .card {
     padding: 2em;
+    background: var(--color-surface);
+    border-radius: 1em;
+    border: 1px solid var(--color-border);
 }
 
 .center {

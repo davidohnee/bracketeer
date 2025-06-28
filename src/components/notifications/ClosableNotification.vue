@@ -39,7 +39,7 @@ const click = () => {
             [notification.type]: true,
             'cursor-pointer': notification.redirect || notification.onClick,
         }"
-        class="notification card"
+        class="notification"
         @click.stop.prevent="click"
     >
         <div class="message">

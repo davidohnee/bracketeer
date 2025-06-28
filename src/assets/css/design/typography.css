@@ -12,23 +12,23 @@
 
     --typography-heading-font: var(--typography-font);
     --typography-heading-fontWeight: var(--typography-fontWeight-bold);
-    --typography-heading-fontSize: 3.2rem;
+    --typography-heading-fontSize: 2.5rem;
     --typography-heading-lineHeight: 1.1;
 
     --typography-heading-font-xl: var(--typography-heading-font);
     --typography-heading-fontWeight-xl: var(--typography-fontWeight-bold);
-    --typography-heading-fontSize-xl: 3.2rem;
+    --typography-heading-fontSize-xl: 2.5rem;
     --typography-heading-lineHeight-xl: 1.1;
 
     --typography-heading-font-l: var(--typography-heading-font);
     --typography-heading-fontWeight-l: var(--typography-fontWeight-bold);
-    --typography-heading-fontSize-l: 2.5rem;
+    --typography-heading-fontSize-l: 2rem;
     --typography-heading-lineHeight-l: 1.1;
 
     --typography-heading-font-m: var(--typography-heading-font);
     --typography-heading-fontWeight-m: var(--typography-fontWeight-bold);
-    --typography-heading-fontSize-m: 1.5rem;
-    --typography-heading-lineHeight-m: 1.1;
+    --typography-heading-fontSize-m: 1.3rem;
+    --typography-heading-lineHeight-m: 1;
 
     --typography-heading-font-lg: var(--typography-heading-font);
 

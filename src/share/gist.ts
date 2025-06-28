@@ -43,10 +43,14 @@ const push = async (tournament: Tournament, isPublic: boolean = false) => {
     const { identifier, link } = toShare("gist", user, `${gistId}:${sha}`);
 
     if (!tournament.remote?.length) {
-        tournament.remote = [];
-        tournament.remote.push({
-            identifier,
-        });
+        tournament.remote = [
+            {
+                identifier,
+                pushDate: new Date(),
+            },
+        ];
+    } else {
+        tournament.remote[0].pushDate = new Date();
     }
 
     return { author: jdata.owner.login, tournament, link } as Import;

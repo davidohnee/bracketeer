@@ -82,25 +82,29 @@ const update = async (
 };
 
 const setGist = async (files: Files, options: IOptions, id?: string) => {
-    const headers = await getHeaders();
+    try {
+        const headers = await getHeaders();
 
-    let endpoint = "https://api.github.com/gists";
-    if (id) {
-        endpoint += "/" + id;
-    }
+        let endpoint = "https://api.github.com/gists";
+        if (id) {
+            endpoint += "/" + id;
+        }
 
-    const res = await fetch(endpoint, {
-        method: id ? "PATCH" : "POST",
-        headers,
-        body: body(files, options),
-    });
+        const res = await fetch(endpoint, {
+            method: id ? "PATCH" : "POST",
+            headers,
+            body: body(files, options),
+        });
 
-    if (!res.ok) {
+        if (!res.ok) {
+            return null;
+        }
+
+        const jdata = await res.json();
+        return jdata;
+    } catch {
         return null;
     }
-
-    const jdata = await res.json();
-    return jdata;
 };
 
 const fetchMe = async (force = false) => {

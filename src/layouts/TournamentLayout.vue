@@ -48,7 +48,7 @@ const baseRoute = computed(() => {
     return name.split(".")[0];
 });
 
-const canUpdate = computed(() => {
+const isMine = computed(() => {
     if (!tournament.value?.remote?.length) return false;
     const identifier = tournament.value?.remote[0].identifier;
     return gistClient.isMine(identifier);
@@ -65,16 +65,16 @@ const canUpdate = computed(() => {
             <div class="title-component">
                 <h3>{{ tournament.name }}</h3>
                 <ion-icon
-                    v-if="canUpdate"
+                    v-if="isMine"
                     @click="trackModal?.open(tournament)"
                     class="clickable"
-                    name="link-outline"
+                    name="share-outline"
                 />
             </div>
             <span
                 v-if="subtitle"
                 class="source text-muted"
-                >by {{ subtitle }}</span
+                >{{ subtitle }}</span
             >
             <div class="tabs">
                 <router-link

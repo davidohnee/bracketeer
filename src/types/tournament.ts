@@ -76,6 +76,7 @@ export interface TournamentConfig {
 
 export interface IRemote {
     identifier: string;
+    pushDate?: Date;
 }
 
 export interface TournamentV1 {

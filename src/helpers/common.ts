@@ -19,7 +19,6 @@ export const agoString = (date: Date) => {
     if (minutes < 60) return `${minutes} minutes ago`;
     if (hours == 1) return "1 hour ago";
     if (hours < 24) return `${hours} hours ago`;
-    if (hours == 1) return "1 hour ago";
     if (hours < 24 * 7) return `${Math.floor(hours / 24)} days ago`;
 
     return date.toLocaleDateString(undefined, {

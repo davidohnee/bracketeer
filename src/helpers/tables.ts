@@ -68,7 +68,7 @@ export const generateTables = (tournament: Tournament): Table[] => {
     for (const group of groups) {
         const groupTable: Table = {
             group: group,
-            teams: teamScores.filter((team) => team.team.id.startsWith(group.id)),
+            teams: teamScores.filter((team) => group.teams.find((x) => x.id == team.team.id)),
         };
         tables.push(groupTable);
     }

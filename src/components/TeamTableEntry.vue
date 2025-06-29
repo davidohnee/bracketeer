@@ -14,6 +14,22 @@ const teamName = computed(() => {
     const team = props.tournament.teams.find((t) => t.id === props.score.team.id);
     return team ? team.name : "";
 });
+
+const progress = computed(() => {
+    const proceedingTeams =
+        props.tournament.config.knockoutTeams / (props.tournament.groups?.length ?? 1);
+
+    const def = Math.floor(proceedingTeams);
+    const maybe = Math.ceil(proceedingTeams);
+
+    if (props.rank <= def) {
+        return "progress";
+    } else if (props.rank === maybe) {
+        return "maybe";
+    }
+
+    return null;
+});
 </script>
 
 <template>
@@ -23,7 +39,7 @@ const teamName = computed(() => {
             query: { team: score.team.id },
         }"
         class="team ghost"
-        :class="{ progress: rank <= tournament.config.knockoutTeams }"
+        :class="progress"
     >
         <div class="rank">{{ rank }}</div>
         <div class="name">{{ teamName }}</div>

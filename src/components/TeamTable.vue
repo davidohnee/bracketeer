@@ -19,7 +19,7 @@ const groupName = (id: string | null) => {
     <div class="team-tables">
         <div
             class="team-table"
-            v-for="table in tables"
+            v-for="(table, i) in tables"
             :key="table.group?.id"
         >
             <div
@@ -48,7 +48,7 @@ const groupName = (id: string | null) => {
                 :tournament="tournament"
                 :teamMatchesRouteName="teamMatchesRouteName"
             />
-            <legend>
+            <legend v-if="i === tables.length - 1">
                 <div class="text-muted"><strong>#:</strong> Rank</div>
                 <div class="text-muted"><strong>MP:</strong> Matches Played</div>
                 <div class="text-muted"><strong>W:</strong> Wins</div>
@@ -140,5 +140,16 @@ const groupName = (id: string | null) => {
             display: none;
         }
     }
+
+    & h5 {
+        margin: 0;
+        padding-left: 1em;
+        padding-top: 1em;
+    }
+}
+
+.team-table:not(:first-child) {
+    margin-top: 1em;
+    border-top: 1px solid var(--color-border);
 }
 </style>

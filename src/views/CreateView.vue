@@ -23,6 +23,7 @@ const initTournament: Tournament = {
     teams: [],
     groupPhase: [],
     knockoutPhase: [],
+    groups: [],
     config: {
         breakDuration: 5,
         knockoutBreakDuration: 5,

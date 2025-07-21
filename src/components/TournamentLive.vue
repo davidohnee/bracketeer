@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, nextTick, onMounted, onUnmounted, ref } from "vue";
 import MatchRow from "@/components/ResponsiveMatchRow.vue";
-import type { GroupTournamentPhase, Match, Tournament, TournamentRound } from "@/types/tournament";
+import type { GroupTournamentPhase, Match, Tournament } from "@/types/tournament";
 import TeamTable from "@/components/TeamTable.vue";
 import { useRoute } from "vue-router";
 

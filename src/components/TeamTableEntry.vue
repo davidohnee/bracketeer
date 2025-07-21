@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import { calculateDifference, calculateTeamPoints } from "@/helpers/scoring";
-import { type TeamScore, type Tournament } from "@/types/tournament";
+import { type GroupTournamentPhase, type TeamScore, type Tournament } from "@/types/tournament";
 import { computed } from "vue";
 
 const props = defineProps<{
     score: TeamScore;
     rank: number;
+    phaseId: string;
     tournament: Tournament;
     teamMatchesRouteName: string;
 }>();
@@ -16,8 +17,19 @@ const teamName = computed(() => {
 });
 
 const progress = computed(() => {
-    const proceedingTeams =
-        props.tournament.config.knockoutTeams / (props.tournament.groups?.length ?? 1);
+    let proceedingTeams = 0;
+    const phaseI = props.tournament.phases.findIndex((p) => p.id === props.phaseId);
+
+    if (phaseI < props.tournament.phases.length - 1) {
+        let nextPhase = props.tournament.phases[phaseI + 1];
+
+        if (nextPhase.teamCount) {
+            const currentPhase = props.tournament.phases[phaseI] as GroupTournamentPhase;
+            proceedingTeams = nextPhase.teamCount / (currentPhase.groups?.length ?? 1);
+        } else {
+            proceedingTeams = props.rank;
+        }
+    }
 
     const def = Math.floor(proceedingTeams);
     const maybe = Math.ceil(proceedingTeams);

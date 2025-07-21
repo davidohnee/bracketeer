@@ -1,13 +1,26 @@
-import type { Match, Ref, Tournament, TournamentRound } from "@/types/tournament";
+import type {
+    Group,
+    GroupTournamentPhase,
+    Match,
+    Ref,
+    Tournament,
+    TournamentPhase,
+    TournamentRound,
+} from "@/types/tournament";
 import { generateId } from "../id";
-import { chunks } from "../common";
+import { chunks, shuffle } from "../common";
 import { earliestFreeSlot } from "./common";
 import { roundRobin } from "../roundRobin";
+import { rankedTeams } from "../phase";
 
-const createBalanceRound = (allMatches: Match[], tournament: Tournament): Match[] | null => {
+const createBalanceRound = (
+    allMatches: Match[],
+    teams: Ref[],
+    tournament: Tournament,
+): Match[] | null => {
     const rounds = [...new Set(allMatches.map((match) => match.round!.id))];
     const teamsMissing = rounds.flatMap((round) =>
-        tournament.teams.filter(
+        teams.filter(
             (t) =>
                 !allMatches
                     .filter((match) => match.round!.id === round)
@@ -63,15 +76,37 @@ const createBalanceRound = (allMatches: Match[], tournament: Tournament): Match[
     return round.matches;
 };
 
-export const generateGroupPhase = (tournament: Tournament): Match[] => {
-    const scheduledMatches: Match[] = [];
-    const shuffledTeams = tournament.teams.sort(() => Math.random() - 0.5);
+export const generateGroupPhases = (tournament: Tournament): TournamentPhase[] => {
+    const phases: TournamentPhase[] = [];
+
+    for (const phase of tournament.phases) {
+        if (phase.type === "knockout") {
+            phases.push(phase);
+        } else if (phase.type === "group") {
+            phases.push({
+                ...phase,
+                matches: generateGroupPhase(phase, tournament),
+            });
+        }
+    }
+
+    return phases;
+};
+
+export const generateGroupPhaseForGroup = (
+    scheduledMatches: Match[],
+    group: Group,
+    rounds: number,
+    tournament: Tournament,
+): Match[] => {
+    const shuffledTeams = shuffle(group.teams);
+    const newMatches: Match[] = [];
 
     const roundDuration = tournament.config.matchDuration + tournament.config.breakDuration;
 
     const draw = roundRobin(shuffledTeams);
 
-    for (let i = 0; i < tournament.config.rounds; i++) {
+    for (let i = 0; i < rounds; i++) {
         const matchI = i % draw.length;
         const matchPairs = draw[matchI];
         const roundId = generateId();
@@ -81,7 +116,7 @@ export const generateGroupPhase = (tournament: Tournament): Match[] => {
             const team2 = matchPairs[j][1];
 
             const slot = earliestFreeSlot(
-                scheduledMatches,
+                [...scheduledMatches, ...newMatches],
                 tournament.config.startTime,
                 roundDuration,
                 [team1!, team2!],
@@ -109,13 +144,45 @@ export const generateGroupPhase = (tournament: Tournament): Match[] => {
                     name: `Round ${i + 1}`,
                 },
             };
-            scheduledMatches.push(matchObj);
+            newMatches.push(matchObj);
         }
     }
 
-    const balanceRound = createBalanceRound(scheduledMatches, tournament);
+    const balanceRound = createBalanceRound(newMatches, group.teams, tournament);
     if (balanceRound) {
-        scheduledMatches.push(...balanceRound);
+        newMatches.push(...balanceRound);
+    }
+
+    return newMatches;
+};
+
+export const generateGroupPhase = (
+    phase: GroupTournamentPhase,
+    tournament: Tournament,
+): Match[] => {
+    const scheduledMatches: Match[] = [];
+
+    const phaseI = tournament.phases.findIndex((p) => p.id === phase.id);
+    let table: Ref[] = tournament.teams;
+
+    if (phaseI > 0) {
+        table = rankedTeams(tournament.phases[phaseI - 1]);
+    }
+
+    const shuffledTeams = shuffle(table);
+
+    const groups: Group[] = phase.groups ?? [
+        {
+            id: generateId(),
+            name: "All Teams",
+            teams: shuffledTeams,
+        },
+    ];
+
+    for (const group of groups) {
+        scheduledMatches.push(
+            ...generateGroupPhaseForGroup(scheduledMatches, group, phase.rounds, tournament),
+        );
     }
 
     return scheduledMatches;

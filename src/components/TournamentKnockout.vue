@@ -16,7 +16,7 @@ const onChanged = () => {
 };
 
 const knockoutBracket = computed<TournamentRound[]>(() => {
-    return tournament.value.knockoutPhase;
+    return tournament.value.phases.find((phase) => phase.type === "knockout")?.rounds || [];
 });
 </script>
 

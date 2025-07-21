@@ -1,9 +1,9 @@
-import type { Table, TeamScore, Tournament } from "@/types/tournament";
+import type { GroupTournamentPhase, Table, TeamScore } from "@/types/tournament";
 import { calculateTeamPoints } from "./scoring";
 
-export const generateTables = (tournament: Tournament): Table[] => {
+export const generateTables = (forPhase: GroupTournamentPhase): Table[] => {
     const table: { [key: string]: TeamScore } = {};
-    const matches = tournament.groupPhase;
+    const matches = forPhase.matches;
 
     for (let j = 0; j < matches.length; j++) {
         const match = matches[j];
@@ -55,7 +55,7 @@ export const generateTables = (tournament: Tournament): Table[] => {
         });
     });
 
-    const groups = tournament.groups;
+    const groups = forPhase.groups;
     if (!groups) {
         return [
             {

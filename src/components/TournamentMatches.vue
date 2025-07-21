@@ -66,10 +66,6 @@ const selectedGroupOption = computed<(typeof GROUP_OPTIONS)[number]>({
     },
 });
 
-const knockoutBracket = computed<TournamentRound[]>(() => {
-    return props.modelValue.knockoutPhase;
-});
-
 const getTeamName = (teamId: string | undefined) => {
     const team = props.modelValue.teams.find((team) => team.id === teamId);
     return team ? team.name : null;
@@ -81,13 +77,19 @@ type MatchAndRound = {
 };
 
 const allMatches = computed<MatchAndRound[]>(() => {
-    const matches: MatchAndRound[] = props.modelValue.groupPhase.map((match) => ({
-        match,
-        roundName: match.round?.name || "Group Phase",
-    }));
-    for (const round of knockoutBracket.value) {
-        for (const match of round.matches) {
-            matches.push({ match, roundName: round.name });
+    const matches: MatchAndRound[] = [];
+
+    for (const phase of props.modelValue.phases) {
+        if (phase.type === "group") {
+            for (const match of phase.matches) {
+                matches.push({ match, roundName: match.round?.name ?? phase.name });
+            }
+        } else if (phase.type === "knockout") {
+            for (const round of phase.rounds) {
+                for (const match of round.matches) {
+                    matches.push({ match, roundName: round.name });
+                }
+            }
         }
     }
 

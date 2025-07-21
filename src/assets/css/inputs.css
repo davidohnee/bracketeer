@@ -15,6 +15,14 @@ select {
         background-color: var(--color-surface-hover);
         color: var(--color-text-secondary);
     }
+
+    &[aria-invalid="true"] {
+        border-color: var(--color-brand-red);
+
+        &:has(+ .error-description) {
+            margin-bottom: 0.25em;
+        }
+    }
 }
 
 div.checkbox {
@@ -30,4 +38,14 @@ div.checkbox {
         cursor: pointer;
         accent-color: var(--color-primary);
     }
+}
+
+.error-description {
+    color: var(--color-brand-red);
+    font-size: 0.9em;
+    margin-bottom: 1em;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.25em;
 }

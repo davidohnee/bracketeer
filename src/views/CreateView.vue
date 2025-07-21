@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import StepProgress from "@/components/StepProgress.vue";
 import Metadata from "./Create/MetadataSubView.vue";
-import Teams from "./Create/TeamsSubView.vue";
-import Format from "./Create/FormatSubView.vue";
+import Constants from "./Create/v2/ConstantsSubView.vue";
+import Format from "./Create/v2/FormatSubView.vue";
 import type { Tournament } from "@/types/tournament";
 import { ref, watch } from "vue";
 import { tournamentFromJson } from "@/helpers";
@@ -17,19 +17,31 @@ const todayAt1800 = new Date();
 todayAt1800.setHours(18, 0, 0, 0);
 
 const initTournament: Tournament = {
-    version: 2,
+    version: 3,
     id: crypto.randomUUID(),
     name: "",
     teams: [],
-    groupPhase: [],
-    knockoutPhase: [],
-    groups: [],
+    phases: [
+        {
+            id: crypto.randomUUID(),
+            type: "group",
+            name: "Group Phase",
+            matches: [],
+            groups: [],
+            rounds: 3,
+        },
+        {
+            id: crypto.randomUUID(),
+            type: "knockout",
+            name: "Knockout Phase",
+            rounds: [],
+            teamCount: 8,
+        },
+    ],
     config: {
         breakDuration: 5,
         knockoutBreakDuration: 5,
-        courts: 15,
-        rounds: 6,
-        knockoutTeams: 8,
+        courts: 4,
         startTime: todayAt1800,
         matchDuration: 10,
     },
@@ -52,7 +64,7 @@ watch(
     },
     { deep: true },
 );
-const STEPS = ["Metadata", "Teams", "Duration"];
+const STEPS = ["Metadata", "Constants", "Format"];
 const currentStep = ref(parseInt(sessionStorage.getItem("creator.step") ?? "0"));
 
 watch(currentStep, (newValue) => {
@@ -83,7 +95,7 @@ const create = () => {
             v-if="currentStep === 0"
             v-model="tournament"
         />
-        <Teams
+        <Constants
             v-else-if="currentStep === 1"
             v-model="tournament"
         />

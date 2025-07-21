@@ -3,23 +3,10 @@ import { useRouter } from "vue-router";
 import { useTournamentsStore } from "@/stores/tournaments";
 import type { MatchStatus, Tournament } from "@/types/tournament";
 import { computed } from "vue";
+import { getTournamentStatus } from "@/helpers/common";
 
 const tournaments = useTournamentsStore();
 const router = useRouter();
-
-const getTournamentStatus = (tournament: Tournament): MatchStatus => {
-    const allMatches = [
-        ...tournament.groupPhase,
-        ...tournament.knockoutPhase.flatMap((round) => round.matches),
-    ];
-    if (!allMatches.some((match) => match.status !== "completed")) {
-        return "completed";
-    }
-    if (allMatches.some((match) => ["in-progress", "completed"].includes(match.status))) {
-        return "in-progress";
-    }
-    return "scheduled";
-};
 
 const tournamentList = computed(() => {
     return tournaments.all.map((tournament) => ({

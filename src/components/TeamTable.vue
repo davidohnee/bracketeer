@@ -1,17 +1,21 @@
 <script setup lang="ts">
 import { computed } from "vue";
-import { type Tournament } from "../types/tournament";
+import { type GroupTournamentPhase, type Tournament } from "../types/tournament";
 import TeamTableEntry from "./TeamTableEntry.vue";
 import { generateTables } from "@/helpers/tables";
 
-const props = defineProps<{ tournament: Tournament; teamMatchesRouteName: string }>();
+const props = defineProps<{
+    tournament: Tournament;
+    teamMatchesRouteName: string;
+    phase: GroupTournamentPhase;
+}>();
 
 const tables = computed(() => {
-    return generateTables(props.tournament);
+    return generateTables(props.phase);
 });
 
 const groupName = (id: string | null) => {
-    return props.tournament.groups?.find((group) => group.id === id)?.name ?? "";
+    return props.phase.groups?.find((group) => group.id === id)?.name ?? "";
 };
 </script>
 
@@ -47,6 +51,7 @@ const groupName = (id: string | null) => {
                 :rank="index + 1"
                 :tournament="tournament"
                 :teamMatchesRouteName="teamMatchesRouteName"
+                :phaseId="phase.id"
             />
             <legend v-if="i === tables.length - 1">
                 <div class="text-muted"><strong>#:</strong> Rank</div>

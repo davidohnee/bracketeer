@@ -18,7 +18,7 @@ export const migrateTournament = (tournament: AnyTournament): LatestTournament =
     return migrateFromJson(tournament);
 };
 
-const migratePhaseFromJson = (phase: TournamentPhase): any => {
+const migratePhaseFromJson = (phase: TournamentPhase): TournamentPhase => {
     if (phase.type === "group") {
         return {
             ...phase,
@@ -39,6 +39,7 @@ const migratePhaseFromJson = (phase: TournamentPhase): any => {
             })),
         };
     }
+    return phase;
 };
 
 const migrateFromJson = (tournament: LatestTournament): LatestTournament => ({
@@ -88,6 +89,7 @@ const migrateTournamentV2ToV3 = (tournament: TournamentV2): TournamentV3 => {
                 name: "Group Phase",
                 matches: tournament.groupPhase,
                 groups: tournament.groups,
+                rounds: tournament.config.rounds,
             },
             {
                 id: generateId(),

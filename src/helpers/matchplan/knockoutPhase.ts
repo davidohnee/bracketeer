@@ -9,7 +9,6 @@ import type {
 import { getLastMatchOf } from "..";
 import { generateId } from "../id";
 import { ALPHABET, ROUND_NAME } from "../common";
-import { generateTables } from "../tables";
 import { rankedTeams } from "../phase";
 
 const generateKnockoutBracket = (

@@ -21,7 +21,7 @@ const progress = computed(() => {
     const phaseI = props.tournament.phases.findIndex((p) => p.id === props.phaseId);
 
     if (phaseI < props.tournament.phases.length - 1) {
-        let nextPhase = props.tournament.phases[phaseI + 1];
+        const nextPhase = props.tournament.phases[phaseI + 1];
 
         if (nextPhase.teamCount) {
             const currentPhase = props.tournament.phases[phaseI] as GroupTournamentPhase;

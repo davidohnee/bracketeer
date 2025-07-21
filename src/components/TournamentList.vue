@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useRouter } from "vue-router";
 import { useTournamentsStore } from "@/stores/tournaments";
-import type { MatchStatus, Tournament } from "@/types/tournament";
+import type { MatchStatus } from "@/types/tournament";
 import { computed } from "vue";
 import { getTournamentStatus } from "@/helpers/common";
 

@@ -1,11 +1,4 @@
-import type {
-    GroupTournamentPhase,
-    Match,
-    Ref,
-    Team,
-    Tournament,
-    TournamentPhase,
-} from "@/types/tournament";
+import type { Match, Ref, TournamentPhase } from "@/types/tournament";
 import { generateTables } from "./tables";
 
 export const allMatches = (phase?: TournamentPhase) => {

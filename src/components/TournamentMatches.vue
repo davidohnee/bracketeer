@@ -3,7 +3,7 @@ import { computed, ref, watch } from "vue";
 import MatchCard from "@/components/MatchCard.vue";
 import MatchRow from "@/components/ResponsiveMatchRow.vue";
 import { getCourtName } from "@/helpers";
-import type { Match, Tournament, TournamentRound } from "@/types/tournament";
+import type { Match, Tournament } from "@/types/tournament";
 import { useRoute, useRouter } from "vue-router";
 
 const props = defineProps<{

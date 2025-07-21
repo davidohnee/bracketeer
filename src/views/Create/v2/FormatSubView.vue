@@ -85,7 +85,7 @@ const generateTeams = () => {
 
 const generateGroups = () => {
     const groupCount = groupsToGenerate.value;
-    let groups: Group[] = Array.from({ length: groupCount }, (_, i) => ({
+    const groups: Group[] = Array.from({ length: groupCount }, (_, i) => ({
         id: crypto.randomUUID(),
         name: `Group ${String.fromCharCode(65 + i)}`,
         teams: [],

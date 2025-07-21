@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, nextTick, onMounted, onUnmounted, ref } from "vue";
 import MatchRow from "@/components/ResponsiveMatchRow.vue";
-import type { Match, Tournament, TournamentRound } from "@/types/tournament";
+import type { GroupTournamentPhase, Match, Tournament, TournamentRound } from "@/types/tournament";
 import TeamTable from "@/components/TeamTable.vue";
 import { useRoute } from "vue-router";
 
@@ -17,25 +17,28 @@ const onChanged = () => {
     emit("update:modelValue", tournament.value);
 };
 
-const knockoutBracket = computed<TournamentRound[]>(() => {
-    return tournament.value.knockoutPhase;
-});
-
 type MatchAndRound = {
     match: Match;
     roundName: string;
 };
 
 const allMatches = computed<MatchAndRound[]>(() => {
-    const matches: MatchAndRound[] = tournament.value.groupPhase.map((match) => ({
-        match,
-        roundName: match.round?.name || "Group Phase",
-    }));
-    for (const round of knockoutBracket.value) {
-        for (const match of round.matches) {
-            matches.push({ match, roundName: round.name });
+    const matches: MatchAndRound[] = [];
+
+    for (const phase of props.tournament.phases) {
+        if (phase.type === "group") {
+            for (const match of phase.matches) {
+                matches.push({ match, roundName: match.round?.name ?? phase.name });
+            }
+        } else if (phase.type === "knockout") {
+            for (const round of phase.rounds) {
+                for (const match of round.matches) {
+                    matches.push({ match, roundName: round.name });
+                }
+            }
         }
     }
+
     // Sort matches by date
     matches.sort((a, b) => {
         const dateA = a.match.date.getTime();
@@ -132,7 +135,9 @@ onUnmounted(() => {
 const currentTab = ref<string | null>(defaultCurrentTab.value);
 
 const groupPhaseCompleted = computed(() => {
-    return tournament.value.groupPhase.every((match) => match.status === "completed");
+    return (tournament.value.phases[0] as GroupTournamentPhase).matches.every(
+        (match) => match.status === "completed",
+    );
 });
 
 const route = useRoute();
@@ -183,6 +188,11 @@ const teamMatchesRouteName = computed(() => {
             <TeamTable
                 :tournament="tournament"
                 :teamMatchesRouteName="teamMatchesRouteName"
+                :phase="
+                    tournament.phases.find(
+                        (phase) => phase.type === 'group',
+                    ) as GroupTournamentPhase
+                "
             />
         </div>
     </div>

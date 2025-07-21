@@ -1,17 +1,12 @@
 import { defineStore } from "pinia";
-import type {
-    GroupTournamentPhase,
-    IRemote,
-    Tournament,
-    TournamentConfig,
-} from "../types/tournament";
+import type { IRemote, Tournament, TournamentConfig } from "../types/tournament";
 import { ref, watch } from "vue";
 import { tournamentFromJson } from "@/helpers";
 
 import { pull, push } from "@/share";
 import { Notifications } from "@/components/notifications/createNotification";
 import { generateKnockoutBrackets } from "@/helpers/matchplan/knockoutPhase";
-import { generateGroupPhase } from "@/helpers/matchplan/groupPhase";
+import { generateGroupPhases } from "@/helpers/matchplan/groupPhase";
 import { generateNTeams } from "@/helpers/teamGenerator";
 import { throttle } from "lodash";
 
@@ -61,6 +56,7 @@ export const useTournamentsStore = defineStore("tournaments", () => {
                     type: "group",
                     name: "Group Stage",
                     matches: [],
+                    rounds: 3,
                 },
                 {
                     id: crypto.randomUUID(),
@@ -71,7 +67,7 @@ export const useTournamentsStore = defineStore("tournaments", () => {
             ],
             config,
         };
-        (tournament.phases[0] as GroupTournamentPhase).matches = generateGroupPhase(tournament);
+        tournament.phases = generateGroupPhases(tournament);
         tournament.phases = generateKnockoutBrackets(tournament);
 
         add(tournament);

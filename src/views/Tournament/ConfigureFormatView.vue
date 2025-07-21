@@ -20,8 +20,7 @@ const editableTournament = ref<Tournament>(
 const router = useRouter();
 
 const save = () => {
-    tournament.knockoutPhase = editableTournament.value.knockoutPhase;
-    tournament.groupPhase = editableTournament.value.groupPhase;
+    tournament.phases = editableTournament.value.phases;
     tournament.config = editableTournament.value.config;
 
     router.push({

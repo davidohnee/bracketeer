@@ -11,7 +11,7 @@ import { generateId } from "../id";
 import { ALPHABET, ROUND_NAME } from "../common";
 import { rankedTeams } from "../phase";
 
-const generateKnockoutBracket = (
+export const generateKnockoutBracket = (
     phase: KnockoutTournamentPhase,
     tournament: Tournament,
 ): TournamentRound[] => {
@@ -23,7 +23,7 @@ const generateKnockoutBracket = (
     if (phaseI > 0) {
         lastGroupPhaseMatchDate = getLastMatchOf({
             phase: tournament.phases[phaseI - 1],
-        }).date;
+        })?.date;
     }
 
     const roundDuration = tournament.config.matchDuration + tournament.config.knockoutBreakDuration;

@@ -9,8 +9,8 @@ export const ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
 export const ROUND_NAME: Record<number, string> = {
     16: "Round of 16",
-    8: "Quarter Finals",
-    4: "Semi Finals",
+    8: "Quarter-finals",
+    4: "Semi-finals",
     2: "Final",
 };
 

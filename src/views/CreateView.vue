@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import StepProgress from "@/components/StepProgress.vue";
 import Metadata from "./Create/MetadataSubView.vue";
-import Constants from "./Create/v2/ConstantsSubView.vue";
-import Format from "./Create/v2/FormatSubView.vue";
+import Constants from "./Create/ConstantsSubView.vue";
+import Format from "./Create/FormatSubView.vue";
 import type { Tournament } from "@/types/tournament";
 import { ref, watch } from "vue";
 import { tournamentFromJson } from "@/helpers";

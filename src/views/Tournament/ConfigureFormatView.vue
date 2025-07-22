@@ -2,7 +2,7 @@
 import type { Tournament } from "@/types/tournament";
 import { useTournamentsStore } from "@/stores/tournaments";
 import { ref } from "vue";
-import FormatSubView from "@/views/Create/v2/FormatSubView.vue";
+import FormatSubView from "@/views/Create/FormatSubView.vue";
 import { tournamentFromJson } from "@/helpers";
 import { useRouter } from "vue-router";
 

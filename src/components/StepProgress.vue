@@ -22,20 +22,24 @@ const jumpTo = (index: number) => {
 <template>
     <div class="progress">
         <template
-            v-for="(_, index) in steps"
+            v-for="(name, index) in steps"
             :key="index"
         >
-            <div
-                class="circle"
-                :class="{
-                    done: index < modelValue,
-                    active: index === modelValue,
-                    pending: index > modelValue,
-                    clickable:
-                        (canGoForward && index > modelValue) || (canGoBack && index < modelValue),
-                }"
-                @click="jumpTo(index)"
-            ></div>
+            <div class="step">
+                <div
+                    class="circle"
+                    :class="{
+                        done: index < modelValue,
+                        active: index === modelValue,
+                        pending: index > modelValue,
+                        clickable:
+                            (canGoForward && index > modelValue) ||
+                            (canGoBack && index < modelValue),
+                    }"
+                    @click="jumpTo(index)"
+                ></div>
+                <span>{{ name }}</span>
+            </div>
             <div class="divider"></div>
         </template>
     </div>
@@ -116,11 +120,28 @@ const jumpTo = (index: number) => {
     }
 }
 
+.step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5em;
+    font-size: var(--typography-body-fontSize-sm);
+    position: relative;
+
+    & span {
+        position: absolute;
+        top: 125%;
+        left: 50%;
+        translate: -50% 0;
+    }
+}
+
 .progress {
     display: flex;
     flex-direction: row;
     align-items: center;
     counter-reset: section;
     gap: 1em;
+    margin-bottom: 0.5em;
 }
 </style>

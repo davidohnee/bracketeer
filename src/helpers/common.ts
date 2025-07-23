@@ -54,3 +54,7 @@ export const getTournamentStatus = (tournament: Tournament): MatchStatus => {
     }
     return "scheduled";
 };
+
+export const capitalise = (str: string): string => {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+};

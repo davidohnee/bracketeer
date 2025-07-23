@@ -44,6 +44,7 @@ const initTournament: Tournament = {
         courts: 4,
         startTime: todayAt1800,
         matchDuration: 10,
+        sport: "other",
     },
 };
 
@@ -64,7 +65,8 @@ watch(
     },
     { deep: true },
 );
-const STEPS = ["Metadata", "Constants", "Format"];
+const STEPS = ["Basics", "Logistics", "Format"];
+const TITLES = ["Set Up Your Tournament", "Define Match Logistics", "Design the Competition"];
 const currentStep = ref(parseInt(sessionStorage.getItem("creator.step") ?? "0"));
 
 watch(currentStep, (newValue) => {
@@ -89,7 +91,7 @@ const create = () => {
             can-go-back
             can-go-forward
         />
-        <h1>{{ STEPS[currentStep] }}</h1>
+        <h1>{{ TITLES[currentStep] }}</h1>
 
         <Metadata
             v-if="currentStep === 0"

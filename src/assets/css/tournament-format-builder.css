@@ -13,6 +13,7 @@
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         overflow: clip;
         border-radius: 1em;
+        max-width: 50ch;
 
         .header {
             background: color-mix(in srgb, var(--c) 10%, transparent);
@@ -29,6 +30,10 @@
             display: flex;
             flex-direction: column;
             gap: 1em;
+
+            .field {
+                justify-content: space-between;
+            }
         }
 
         .footer {

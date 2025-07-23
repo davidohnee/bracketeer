@@ -18,6 +18,16 @@ const value = computed({
         emit("update:modelValue", value);
     },
 });
+
+const valueValid = computed(() => {
+    if (props.modelValue === undefined) return true;
+
+    if (props.modelValue % 2 == 0) return true;
+
+    if (props.modelValue == 1) return true;
+
+    return false;
+});
 </script>
 
 <template>
@@ -31,13 +41,20 @@ const value = computed({
                 :class="{ 'hidden-value': props.hideValue }"
                 :disabled="readonly"
                 title="# of teams to proceed"
+                :aria-invalid="!valueValid"
             />
+            <span
+                v-if="!props.hideValue && !valueValid"
+                class="error-description"
+            >
+                Must be an even number or 1
+            </span>
         </div>
     </div>
 </template>
 <style scoped>
 .connector {
-    width: 10ch;
+    width: 20ch;
     height: 1px;
     z-index: 1;
     flex-shrink: 0;
@@ -54,6 +71,13 @@ const value = computed({
         & input {
             width: 5ch;
         }
+    }
+
+    .error-description {
+        position: fixed;
+        top: 120%;
+        left: 0;
+        min-width: 12ch;
     }
 }
 </style>

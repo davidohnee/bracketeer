@@ -80,10 +80,20 @@ watch([() => props.phase.teamCount, () => props.modelValue.teams.length], () => 
     generateGroups();
 });
 
-const roundCount = ref(props.phase.rounds); // Default team count, can be adjusted as needed
+const roundCount = ref(props.phase.rounds);
+
+const teamsInStage = computed(() => props.phase.teamCount ?? tournament.value.teams.length);
+
+const groupNumberValid = computed(() => {
+    return (
+        groupsToGenerate.value > 0 &&
+        groupsToGenerate.value <= teamsInStage.value / 2 &&
+        teamsInStage.value % groupsToGenerate.value === 0
+    );
+});
 </script>
 <template>
-    <div class="node start">
+    <div class="node group">
         <div class="header">Group Stage</div>
         <div class="body">
             <div class="field small">
@@ -104,14 +114,26 @@ const roundCount = ref(props.phase.rounds); // Default team count, can be adjust
                     v-model="groupsToGenerate"
                     @change="generateGroups"
                     @keydown.prevent.enter="generateGroups"
+                    :aria-invalid="!groupNumberValid"
+                    :min="1"
+                    :max="teamsInStage / 2"
                 />
+                <span
+                    v-if="!groupNumberValid"
+                    class="error-description text-sm"
+                >
+                    <ion-icon name="close-circle-outline" />
+                    Invalid group number. Must be between 1 and
+                    {{ teamsInStage / 2 }} and evenly divide the total number of teams.
+                </span>
             </div>
         </div>
         <div class="footer text-sm">{{ allMatches(phase).length }} matches</div>
     </div>
 </template>
 <style scoped>
-.node.start {
+.node.group {
     --c: var(--color-brand-blue);
+    width: 35ch;
 }
 </style>

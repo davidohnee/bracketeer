@@ -81,6 +81,7 @@ const migrateTournamentV2ToV3 = (tournament: TournamentV2): TournamentV3 => {
             breakDuration: tournament.config.breakDuration,
             knockoutBreakDuration: tournament.config.knockoutBreakDuration,
             startTime: tournament.config.startTime,
+            sport: "other",
         },
         phases: [
             {

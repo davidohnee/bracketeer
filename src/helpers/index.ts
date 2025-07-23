@@ -1,11 +1,12 @@
 import type { Match, Tournament, TournamentPhase, TournamentRound } from "@/types/tournament";
 import { migrateTournament } from "./migration";
 import { allMatches } from "./phase";
+import { getCourtType } from "./defaults";
 
 export const tournamentFromJson = migrateTournament;
 
-export const getCourtName = (courtNumber: number | null): string =>
-    courtNumber ? `Court ${courtNumber}` : "N/A";
+export const getCourtName = (sport: string, courtNumber: number | null): string =>
+    courtNumber ? `${getCourtType(sport, false, true)} ${courtNumber}` : "N/A";
 
 export const getLastMatchOf = ({
     matches,

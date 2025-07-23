@@ -54,6 +54,7 @@ onMounted(() => {
                     v-model="teamsToGenerate"
                     @change="generateTeams"
                     @keydown.prevent.enter="generateTeams"
+                    :min="2"
                 />
             </div>
         </div>

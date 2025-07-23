@@ -46,6 +46,45 @@ div.checkbox {
     margin-bottom: 1em;
     display: flex;
     flex-direction: row;
+    align-items: baseline;
+    gap: 0.5em;
+
+    & ion-icon {
+        flex-shrink: 0;
+        translate: 0 0.12em;
+    }
+}
+
+div.chip-group {
+    display: flex;
+    flex-direction: row;
     align-items: center;
-    gap: 0.25em;
+    gap: 0.5em;
+    overflow-x: auto;
+
+    .chip-option {
+        border: 1px solid var(--color-border);
+        border-radius: 100vmax;
+        font-size: 0.9rem;
+        padding: 0.25em 1em;
+        font-weight: bold;
+        cursor: pointer;
+        white-space: nowrap;
+
+        &.selected {
+            background-color: var(--color-text-primary);
+            color: var(--color-surface);
+        }
+
+        &:has(ion-icon) {
+            display: flex;
+            align-items: center;
+            gap: 0.5em;
+            padding-left: 0.5em;
+
+            ion-icon {
+                font-size: 1rem;
+            }
+        }
+    }
 }

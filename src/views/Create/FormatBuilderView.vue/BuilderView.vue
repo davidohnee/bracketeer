@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, onMounted } from "vue";
 import type { Tournament } from "@/types/tournament";
 import NodeConnector from "./NodeConnector.vue";
 import EndNode from "./EndNode.vue";
@@ -7,6 +7,8 @@ import StartNode from "./StartNode.vue";
 import KnockoutNode from "./KnockoutNode.vue";
 import GroupNode from "./GroupNode.vue";
 import InvalidNode from "./InvalidNode.vue";
+import { generateKnockoutBrackets } from "@/helpers/matchplan/knockoutPhase";
+import { generateGroupPhases } from "@/helpers/matchplan/groupPhase";
 
 const props = defineProps<{
     modelValue: Tournament;
@@ -22,6 +24,11 @@ const tournament = computed({
     set(value) {
         emit("update:modelValue", value);
     },
+});
+
+onMounted(() => {
+    tournament.value.phases = generateKnockoutBrackets(tournament.value);
+    tournament.value.phases = generateGroupPhases(tournament.value);
 });
 </script>
 <template>

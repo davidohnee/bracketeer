@@ -70,6 +70,7 @@ export interface TournamentConfigV2 {
     breakDuration: number;
     knockoutBreakDuration: number;
     startTime: Date;
+    sport: string;
 }
 
 export interface TournamentConfigV1 extends TournamentConfigV2 {

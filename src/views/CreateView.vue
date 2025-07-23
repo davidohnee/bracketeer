@@ -91,7 +91,7 @@ const create = () => {
             can-go-back
             can-go-forward
         />
-        <h1>{{ TITLES[currentStep] }}</h1>
+        <h2>{{ TITLES[currentStep] }}</h2>
 
         <Basics
             v-if="currentStep === 0"
@@ -123,3 +123,9 @@ const create = () => {
         </div>
     </div>
 </template>
+
+<style scoped>
+h2 {
+    margin-top: 2rem;
+}
+</style>

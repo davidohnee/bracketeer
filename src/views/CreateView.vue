@@ -91,21 +91,8 @@ const create = () => {
             can-go-back
             can-go-forward
         />
-        <h2>{{ TITLES[currentStep] }}</h2>
-
-        <Basics
-            v-if="currentStep === 0"
-            v-model="tournament"
-        />
-        <Logistics
-            v-else-if="currentStep === 1"
-            v-model="tournament"
-        />
-        <Format
-            v-else-if="currentStep === 2"
-            v-model="tournament"
-        />
-        <div class="row end">
+        <div class="row between baseline">
+            <h2>{{ TITLES[currentStep] }}</h2>
             <button
                 class="button"
                 @click="currentStep++"
@@ -121,11 +108,28 @@ const create = () => {
                 Create
             </button>
         </div>
+
+        <Basics
+            v-if="currentStep === 0"
+            v-model="tournament"
+        />
+        <Logistics
+            v-else-if="currentStep === 1"
+            v-model="tournament"
+        />
+        <Format
+            v-else-if="currentStep === 2"
+            v-model="tournament"
+        />
     </div>
 </template>
 
 <style scoped>
 h2 {
     margin-top: 2rem;
+}
+
+.row.baseline {
+    align-items: baseline;
 }
 </style>

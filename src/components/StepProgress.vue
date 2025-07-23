@@ -130,7 +130,7 @@ const jumpTo = (index: number) => {
 
     & span {
         position: absolute;
-        top: 125%;
+        bottom: 125%;
         left: 50%;
         translate: -50% 0;
     }

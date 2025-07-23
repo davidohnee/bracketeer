@@ -65,7 +65,7 @@ header {
     padding: 1em;
     background-color: var(--color-surface);
     place-items: center;
-    margin-bottom: 5em;
+    margin-bottom: 4em;
     position: sticky;
     top: 0;
     z-index: 10;

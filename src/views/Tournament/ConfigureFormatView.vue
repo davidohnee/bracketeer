@@ -2,7 +2,7 @@
 import type { Tournament } from "@/types/tournament";
 import { useTournamentsStore } from "@/stores/tournaments";
 import { ref } from "vue";
-import FormatSubView from "@/views/Create/FormatSubView.vue";
+import FormatView from "@/views/Create/FormatView.vue";
 import { tournamentFromJson } from "@/helpers";
 import { useRouter } from "vue-router";
 
@@ -32,7 +32,7 @@ const save = () => {
 
 <template>
     <div class="form plan-editor">
-        <FormatSubView v-model="editableTournament" />
+        <FormatView v-model="editableTournament" />
         <div class="row end">
             <router-link
                 class="button"

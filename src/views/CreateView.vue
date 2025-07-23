@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import StepProgress from "@/components/StepProgress.vue";
-import Metadata from "./Create/MetadataSubView.vue";
-import Constants from "./Create/ConstantsSubView.vue";
-import Format from "./Create/FormatSubView.vue";
+import Basics from "./Create/BasicsView.vue";
+import Logistics from "./Create/LogisticsView.vue";
+import Format from "./Create/FormatView.vue";
 import type { Tournament } from "@/types/tournament";
 import { ref, watch } from "vue";
 import { tournamentFromJson } from "@/helpers";
@@ -93,11 +93,11 @@ const create = () => {
         />
         <h1>{{ TITLES[currentStep] }}</h1>
 
-        <Metadata
+        <Basics
             v-if="currentStep === 0"
             v-model="tournament"
         />
-        <Constants
+        <Logistics
             v-else-if="currentStep === 1"
             v-model="tournament"
         />

@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { DEFAULTS, getCourtType } from "@/helpers/defaults";
+import { getCourtType } from "@/helpers/defaults";
 import type { Tournament } from "@/types/tournament";
-import { computed, watch } from "vue";
+import { computed } from "vue";
 
 const props = defineProps<{
     modelValue: Tournament;
@@ -28,35 +28,8 @@ const breakDuration = computed({
         tournament.value.config.breakDuration = value;
     },
 });
-
-watch(
-    () => tournament.value.config.sport,
-    (newSport) => {
-        breakDuration.value = DEFAULTS[newSport].breakDuration;
-        tournament.value.config.matchDuration = DEFAULTS[newSport].matchDuration;
-    },
-);
 </script>
 <template>
-    <div class="field">
-        <span class="text-sm text-muted">Sport</span>
-        <div class="chip-group">
-            <div
-                v-for="(v, k) in DEFAULTS"
-                :key="k"
-                class="chip-option"
-                :class="{ selected: tournament.config.sport === k }"
-                @click="tournament.config.sport = k"
-                :title="v.description"
-            >
-                <ion-icon
-                    :name="v.icon"
-                    class="icon"
-                ></ion-icon>
-                <span>{{ v.name }}</span>
-            </div>
-        </div>
-    </div>
     <div class="row">
         <div class="field">
             <label for="match-duration">Match Duration [min]</label>

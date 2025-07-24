@@ -13,6 +13,11 @@ import { earliestFreeSlot } from "./common";
 import { roundRobin } from "../roundRobin";
 import { rankedTeams } from "../phase";
 
+const UNSCHEDULED = {
+    COURT: -1,
+    DATE: new Date(0)
+}
+
 const createBalanceRound = (
     allMatches: Match[],
     teams: Ref[],
@@ -109,7 +114,7 @@ const generateForGroup = (group: Group, rounds: number, tournament: Tournament):
 
             const matchObj: Match = {
                 id: generateId(),
-                court: -1,
+                court: UNSCHEDULED.COURT,
                 teams: [
                     {
                         ref: team1 as Ref,
@@ -120,7 +125,7 @@ const generateForGroup = (group: Group, rounds: number, tournament: Tournament):
                         score: 0,
                     },
                 ],
-                date: new Date(0),
+                date: UNSCHEDULED.DATE,
                 status: "scheduled",
                 round: {
                     id: roundId,

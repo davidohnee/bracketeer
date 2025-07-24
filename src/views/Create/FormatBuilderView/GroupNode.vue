@@ -51,12 +51,10 @@ const generateGroups = () => {
         teams: [],
     }));
     const shuffledTeams = shuffle(tournament.value.teams);
-    const teamsPerGroup = Math.ceil(tournament.value.teams.length / groupCount);
-    for (let i = 0; i < tournament.value.teams.length; i++) {
-        const groupIndex = Math.floor(i / teamsPerGroup);
-        if (groupIndex < groups.length) {
-            groups[groupIndex].teams.push(shuffledTeams[i]);
-        }
+    let groupIndex = 0;
+    for (let i = 0; i < shuffledTeams.length; i++) {
+        groups[groupIndex].teams.push(shuffledTeams[i]);
+        groupIndex = (groupIndex + 1) % groups.length;
     }
     phase.groups = groups;
     regeneratePhase();

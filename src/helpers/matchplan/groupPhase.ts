@@ -107,17 +107,6 @@ const generateForGroup = (group: Group, rounds: number, tournament: Tournament):
             const team1 = matchPairs[j][0];
             const team2 = matchPairs[j][1];
 
-            /*
-            const slot = earliestFreeSlot(
-                [...scheduledMatches, ...newMatches],
-                tournament.config.startTime,
-                roundDuration,
-                [team1!, team2!],
-                tournament.config.courts,
-            );
-            const { time, court } = slot;
-            */
-
             const matchObj: Match = {
                 id: generateId(),
                 court: -1,

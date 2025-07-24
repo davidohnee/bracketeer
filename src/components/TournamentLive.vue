@@ -259,7 +259,7 @@ const skip = () => {
                     @click="proceed"
                 >
                     <ion-icon name="arrow-forward" />
-                    Proceeed
+                    Proceed
                 </button>
             </div>
         </div>
@@ -323,7 +323,7 @@ const skip = () => {
                     @click="proceed"
                 >
                     <ion-icon name="arrow-forward" />
-                    Proceeed
+                    Proceed
                 </button>
             </div>
         </div>

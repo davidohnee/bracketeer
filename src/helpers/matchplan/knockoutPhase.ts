@@ -158,7 +158,9 @@ const updateKnockoutPhase = (phase: KnockoutTournamentPhase, tournament: Tournam
     if (phaseI > 0) {
         table = rankedTeams(tournament.phases[phaseI - 1]);
 
-        if (allMatches(tournament.phases[phaseI - 1]).some(x => x.status !== "completed")) {
+        if (
+            allMatches(tournament.phases[phaseI - 1]).some((match) => match.status !== "completed")
+        ) {
             return;
         }
     }

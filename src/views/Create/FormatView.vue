@@ -3,7 +3,7 @@ import { getLastMatchOf } from "@/helpers";
 import { allMatches } from "@/helpers/phase";
 import type { Tournament } from "@/types/tournament";
 import { computed } from "vue";
-import BuilderView from "./FormatBuilderView.vue/BuilderView.vue";
+import BuilderView from "./FormatBuilderView/BuilderView.vue";
 
 const props = defineProps<{
     modelValue: Tournament;

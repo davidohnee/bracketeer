@@ -82,6 +82,8 @@ export const useTournamentsStore = defineStore("tournaments", () => {
     };
 
     const share = async (tournament: Tournament, asPublic: boolean = false) => {
+        if (!tournament.remote) return;
+
         const result = await push(tournament, asPublic);
         if (result.tournament) {
             getTournamentById(tournament.id)!.remote = result.tournament.remote;
@@ -138,7 +140,7 @@ export const useTournamentsStore = defineStore("tournaments", () => {
                             reader.onload = () => {
                                 const result = reader.result as string;
                                 try {
-                                    const tournament = JSON.parse(result);
+                                    const tournament = tournamentFromJson(JSON.parse(result));
                                     resolve(tournament);
                                 } catch (error) {
                                     reject(error);

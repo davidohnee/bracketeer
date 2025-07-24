@@ -29,13 +29,22 @@ const STATUS_COLOR: Record<MatchStatus, string> = {
 </script>
 <template>
     <div class="tournament-list-container">
-        <button
-            @click="router.push('/create')"
-            class="create"
-        >
-            <ion-icon name="add-outline"></ion-icon>
-            Create Tournament
-        </button>
+        <div class="buttons">
+            <button
+                @click="tournaments.addFromUpload()"
+                class="upload secondary"
+            >
+                <ion-icon name="cloud-upload-outline"></ion-icon>
+                Upload
+            </button>
+            <button
+                @click="router.push('/create')"
+                class="create"
+            >
+                <ion-icon name="add-outline"></ion-icon>
+                Create
+            </button>
+        </div>
         <div class="tournament-list">
             <div class="header tournament-item">
                 <span class="text-muted">Tournament</span>
@@ -81,8 +90,11 @@ const STATUS_COLOR: Record<MatchStatus, string> = {
     margin: 1em 0;
 }
 
-.create {
+.buttons {
     margin-left: auto;
+    display: flex;
+    flex-direction: row;
+    gap: 1em;
 }
 
 .tournament-list {

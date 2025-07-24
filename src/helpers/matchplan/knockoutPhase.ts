@@ -9,7 +9,7 @@ import type {
 import { getLastMatchOf } from "..";
 import { generateId } from "../id";
 import { ALPHABET, ROUND_NAME } from "../common";
-import { rankedTeams } from "../phase";
+import { allMatches, rankedTeams } from "../phase";
 
 export const generateKnockoutBracket = (
     phase: KnockoutTournamentPhase,
@@ -157,6 +157,10 @@ const updateKnockoutPhase = (phase: KnockoutTournamentPhase, tournament: Tournam
 
     if (phaseI > 0) {
         table = rankedTeams(tournament.phases[phaseI - 1]);
+
+        if (allMatches(tournament.phases[phaseI - 1]).some(x => x.status !== "completed")) {
+            return;
+        }
     }
 
     const roundWinners: Ref[][] = [];

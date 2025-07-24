@@ -93,17 +93,9 @@ export const generateGroupPhases = (tournament: Tournament): TournamentPhase[] =
     return phases;
 };
 
-export const generateGroupPhaseForGroup = (
-    scheduledMatches: Match[],
-    group: Group,
-    rounds: number,
-    tournament: Tournament,
-): Match[] => {
+const generateForGroup = (group: Group, rounds: number, tournament: Tournament): Match[] => {
     const shuffledTeams = shuffle(group.teams);
     const newMatches: Match[] = [];
-
-    const roundDuration = tournament.config.matchDuration + tournament.config.breakDuration;
-
     const draw = roundRobin(shuffledTeams);
 
     for (let i = 0; i < rounds; i++) {
@@ -115,6 +107,7 @@ export const generateGroupPhaseForGroup = (
             const team1 = matchPairs[j][0];
             const team2 = matchPairs[j][1];
 
+            /*
             const slot = earliestFreeSlot(
                 [...scheduledMatches, ...newMatches],
                 tournament.config.startTime,
@@ -123,10 +116,11 @@ export const generateGroupPhaseForGroup = (
                 tournament.config.courts,
             );
             const { time, court } = slot;
+            */
 
             const matchObj: Match = {
                 id: generateId(),
-                court,
+                court: -1,
                 teams: [
                     {
                         ref: team1 as Ref,
@@ -137,11 +131,12 @@ export const generateGroupPhaseForGroup = (
                         score: 0,
                     },
                 ],
-                date: time,
+                date: new Date(0),
                 status: "scheduled",
                 round: {
                     id: roundId,
                     name: `Round ${i + 1}`,
+                    index: i,
                 },
             };
             newMatches.push(matchObj);
@@ -160,8 +155,6 @@ export const generateGroupPhase = (
     phase: GroupTournamentPhase,
     tournament: Tournament,
 ): Match[] => {
-    const scheduledMatches: Match[] = [];
-
     const phaseI = tournament.phases.findIndex((p) => p.id === phase.id);
     let table: Ref[] = tournament.teams;
 
@@ -179,10 +172,33 @@ export const generateGroupPhase = (
         },
     ];
 
+    const unscheduledMatches: Match[] = [];
     for (const group of groups) {
-        scheduledMatches.push(
-            ...generateGroupPhaseForGroup(scheduledMatches, group, phase.rounds, tournament),
-        );
+        unscheduledMatches.push(...generateForGroup(group, phase.rounds, tournament));
+    }
+
+    // schedule
+    const roundDuration = tournament.config.matchDuration + tournament.config.breakDuration;
+    const scheduledMatches: Match[] = [];
+
+    for (let i = 0; i < phase.rounds; i++) {
+        const matches = unscheduledMatches.filter((match) => match.round!.index === i);
+
+        for (const match of matches) {
+            const slot = earliestFreeSlot(
+                scheduledMatches,
+                tournament.config.startTime,
+                roundDuration,
+                match.teams.map((team) => team.ref!),
+                tournament.config.courts,
+            );
+
+            if (slot) {
+                match.date = slot.time;
+                match.court = slot.court;
+                scheduledMatches.push(match);
+            }
+        }
     }
 
     return scheduledMatches;

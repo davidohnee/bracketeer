@@ -43,13 +43,17 @@ export type MatchTeam = {
 
 export type MatchStatus = "scheduled" | "in-progress" | "completed";
 
+export interface MatchRound extends IdentifiableString {
+    index?: number;
+}
+
 export interface Match {
     id: string;
     court: number | null;
     teams: [MatchTeam, MatchTeam];
     date: Date;
     status: MatchStatus;
-    round?: IdentifiableString;
+    round?: MatchRound;
     group?: IdentifiableString;
 }
 

@@ -3,7 +3,7 @@ import { computed, ref, watch } from "vue";
 import MatchCard from "@/components/MatchCard.vue";
 import MatchRow from "@/components/ResponsiveMatchRow.vue";
 import { getCourtName } from "@/helpers";
-import type { Match, Tournament, TournamentRound } from "@/types/tournament";
+import type { Match, Tournament } from "@/types/tournament";
 import { useRoute, useRouter } from "vue-router";
 
 const props = defineProps<{
@@ -66,10 +66,6 @@ const selectedGroupOption = computed<(typeof GROUP_OPTIONS)[number]>({
     },
 });
 
-const knockoutBracket = computed<TournamentRound[]>(() => {
-    return props.modelValue.knockoutPhase;
-});
-
 const getTeamName = (teamId: string | undefined) => {
     const team = props.modelValue.teams.find((team) => team.id === teamId);
     return team ? team.name : null;
@@ -81,13 +77,19 @@ type MatchAndRound = {
 };
 
 const allMatches = computed<MatchAndRound[]>(() => {
-    const matches: MatchAndRound[] = props.modelValue.groupPhase.map((match) => ({
-        match,
-        roundName: match.round?.name || "Group Phase",
-    }));
-    for (const round of knockoutBracket.value) {
-        for (const match of round.matches) {
-            matches.push({ match, roundName: round.name });
+    const matches: MatchAndRound[] = [];
+
+    for (const phase of props.modelValue.phases) {
+        if (phase.type === "group") {
+            for (const match of phase.matches) {
+                matches.push({ match, roundName: match.round?.name ?? phase.name });
+            }
+        } else if (phase.type === "knockout") {
+            for (const round of phase.rounds) {
+                for (const match of round.matches) {
+                    matches.push({ match, roundName: round.name });
+                }
+            }
         }
     }
 
@@ -130,7 +132,7 @@ const grouped = computed(() => {
             keys.push(getTeamName(match.match.teams[0].ref?.id) || "N/A");
             keys.push(getTeamName(match.match.teams[1].ref?.id) || "N/A");
         } else if (selectedGroupOption.value === "court") {
-            keys.push(getCourtName(match.match.court));
+            keys.push(getCourtName(tournament.value.config.sport, match.match.court));
         }
 
         for (const key of keys) {
@@ -160,12 +162,12 @@ const grouped = computed(() => {
 
 <template>
     <div class="all-matches">
-        <div class="group-options">
+        <div class="chip-group">
             <div
                 v-for="option in GROUP_OPTIONS"
                 :key="option"
                 :value="option"
-                class="group-option"
+                class="chip-option"
                 :class="{ selected: selectedGroupOption === option }"
                 @click="selectedGroupOption = option"
             >
@@ -202,31 +204,11 @@ const grouped = computed(() => {
     flex-direction: column;
 }
 
-.group-options {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 0.5em;
-    padding: 1em;
-    overflow-x: auto;
-
-    .group-option {
-        border: 1px solid var(--color-border);
-        border-radius: 100vmax;
-        font-size: 0.9rem;
-        padding: 0.25em 1em;
-        font-weight: bold;
-        cursor: pointer;
-        white-space: nowrap;
-
-        &.selected {
-            background-color: var(--color-text-primary);
-            color: var(--color-surface);
-        }
-    }
-}
-
 h3 {
     text-align: center;
+}
+
+.chip-group {
+    padding: 1em;
 }
 </style>

@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import StepProgress from "@/components/StepProgress.vue";
-import Metadata from "./Create/MetadataSubView.vue";
-import Teams from "./Create/TeamsSubView.vue";
-import Format from "./Create/FormatSubView.vue";
+import Basics from "./Create/BasicsView.vue";
+import Logistics from "./Create/LogisticsView.vue";
+import Format from "./Create/FormatView.vue";
 import type { Tournament } from "@/types/tournament";
 import { ref, watch } from "vue";
 import { tournamentFromJson } from "@/helpers";
@@ -17,20 +17,34 @@ const todayAt1800 = new Date();
 todayAt1800.setHours(18, 0, 0, 0);
 
 const initTournament: Tournament = {
-    version: 2,
+    version: 3,
     id: crypto.randomUUID(),
     name: "",
     teams: [],
-    groupPhase: [],
-    knockoutPhase: [],
+    phases: [
+        {
+            id: crypto.randomUUID(),
+            type: "group",
+            name: "Group Phase",
+            matches: [],
+            groups: [],
+            rounds: 3,
+        },
+        {
+            id: crypto.randomUUID(),
+            type: "knockout",
+            name: "Knockout Phase",
+            rounds: [],
+            teamCount: 8,
+        },
+    ],
     config: {
         breakDuration: 5,
         knockoutBreakDuration: 5,
-        courts: 15,
-        rounds: 6,
-        knockoutTeams: 8,
+        courts: 4,
         startTime: todayAt1800,
         matchDuration: 10,
+        sport: "other",
     },
 };
 
@@ -51,7 +65,8 @@ watch(
     },
     { deep: true },
 );
-const STEPS = ["Metadata", "Teams", "Duration"];
+const STEPS = ["Basics", "Logistics", "Format"];
+const TITLES = ["Set Up Your Tournament", "Define Match Logistics", "Design the Competition"];
 const currentStep = ref(parseInt(sessionStorage.getItem("creator.step") ?? "0"));
 
 watch(currentStep, (newValue) => {
@@ -76,21 +91,8 @@ const create = () => {
             can-go-back
             can-go-forward
         />
-        <h1>{{ STEPS[currentStep] }}</h1>
-
-        <Metadata
-            v-if="currentStep === 0"
-            v-model="tournament"
-        />
-        <Teams
-            v-else-if="currentStep === 1"
-            v-model="tournament"
-        />
-        <Format
-            v-else-if="currentStep === 2"
-            v-model="tournament"
-        />
-        <div class="row end">
+        <div class="row between baseline">
+            <h2>{{ TITLES[currentStep] }}</h2>
             <button
                 class="button"
                 @click="currentStep++"
@@ -106,5 +108,28 @@ const create = () => {
                 Create
             </button>
         </div>
+
+        <Basics
+            v-if="currentStep === 0"
+            v-model="tournament"
+        />
+        <Logistics
+            v-else-if="currentStep === 1"
+            v-model="tournament"
+        />
+        <Format
+            v-else-if="currentStep === 2"
+            v-model="tournament"
+        />
     </div>
 </template>
+
+<style scoped>
+h2 {
+    margin-top: 2rem;
+}
+
+.row.baseline {
+    align-items: baseline;
+}
+</style>

@@ -24,8 +24,23 @@
         flex-direction: column;
 
         & label {
-            font-size: 0.75rem;
+            font-size: var(--typography-body-fontSize-sm);
             color: var(--color-text-secondary);
+        }
+
+        &.small {
+            flex-direction: row;
+            flex-wrap: wrap;
+            gap: 1em;
+            align-items: center;
+
+            & input {
+                min-width: 0;
+                width: 10ch;
+                margin: 0;
+                padding: 0.25em 0.5em;
+                font-size: var(--typography-body-fontSize-sm);
+            }
         }
     }
 

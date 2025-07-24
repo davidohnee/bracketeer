@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { type Tournament } from "@/types/tournament";
+import { type GroupTournamentPhase, type Tournament } from "@/types/tournament";
 import TeamTable from "@/components/TeamTable.vue";
 import { useRoute } from "vue-router";
 import { computed } from "vue";
@@ -19,5 +19,6 @@ const teamMatchesRouteName = computed(
     <TeamTable
         :tournament="tournament"
         :teamMatchesRouteName="teamMatchesRouteName"
+        :phase="tournament.phases.find((phase) => phase.type === 'group') as GroupTournamentPhase"
     />
 </template>

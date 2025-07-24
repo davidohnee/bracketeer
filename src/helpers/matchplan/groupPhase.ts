@@ -1,13 +1,31 @@
-import type { Match, Ref, Tournament, TournamentRound } from "@/types/tournament";
+import type {
+    Group,
+    GroupTournamentPhase,
+    Match,
+    Ref,
+    Tournament,
+    TournamentPhase,
+    TournamentRound,
+} from "@/types/tournament";
 import { generateId } from "../id";
-import { chunks } from "../common";
+import { chunks, shuffle } from "../common";
 import { earliestFreeSlot } from "./common";
 import { roundRobin } from "../roundRobin";
+import { rankedTeams } from "../phase";
 
-const createBalanceRound = (allMatches: Match[], tournament: Tournament): Match[] | null => {
+const UNSCHEDULED = {
+    COURT: -1,
+    DATE: new Date(0)
+}
+
+const createBalanceRound = (
+    allMatches: Match[],
+    teams: Ref[],
+    tournament: Tournament,
+): Match[] | null => {
     const rounds = [...new Set(allMatches.map((match) => match.round!.id))];
     const teamsMissing = rounds.flatMap((round) =>
-        tournament.teams.filter(
+        teams.filter(
             (t) =>
                 !allMatches
                     .filter((match) => match.round!.id === round)
@@ -63,15 +81,29 @@ const createBalanceRound = (allMatches: Match[], tournament: Tournament): Match[
     return round.matches;
 };
 
-export const generateGroupPhase = (tournament: Tournament): Match[] => {
-    const scheduledMatches: Match[] = [];
-    const shuffledTeams = tournament.teams.sort(() => Math.random() - 0.5);
+export const generateGroupPhases = (tournament: Tournament): TournamentPhase[] => {
+    const phases: TournamentPhase[] = [];
 
-    const roundDuration = tournament.config.matchDuration + tournament.config.breakDuration;
+    for (const phase of tournament.phases) {
+        if (phase.type === "knockout") {
+            phases.push(phase);
+        } else if (phase.type === "group") {
+            phases.push({
+                ...phase,
+                matches: generateGroupPhase(phase, tournament),
+            });
+        }
+    }
 
+    return phases;
+};
+
+const generateForGroup = (group: Group, rounds: number, tournament: Tournament): Match[] => {
+    const shuffledTeams = shuffle(group.teams);
+    const newMatches: Match[] = [];
     const draw = roundRobin(shuffledTeams);
 
-    for (let i = 0; i < tournament.config.rounds; i++) {
+    for (let i = 0; i < rounds; i++) {
         const matchI = i % draw.length;
         const matchPairs = draw[matchI];
         const roundId = generateId();
@@ -80,18 +112,9 @@ export const generateGroupPhase = (tournament: Tournament): Match[] => {
             const team1 = matchPairs[j][0];
             const team2 = matchPairs[j][1];
 
-            const slot = earliestFreeSlot(
-                scheduledMatches,
-                tournament.config.startTime,
-                roundDuration,
-                [team1!, team2!],
-                tournament.config.courts,
-            );
-            const { time, court } = slot;
-
             const matchObj: Match = {
                 id: generateId(),
-                court,
+                court: UNSCHEDULED.COURT,
                 teams: [
                     {
                         ref: team1 as Ref,
@@ -102,20 +125,74 @@ export const generateGroupPhase = (tournament: Tournament): Match[] => {
                         score: 0,
                     },
                 ],
-                date: time,
+                date: UNSCHEDULED.DATE,
                 status: "scheduled",
                 round: {
                     id: roundId,
                     name: `Round ${i + 1}`,
+                    index: i,
                 },
             };
-            scheduledMatches.push(matchObj);
+            newMatches.push(matchObj);
         }
     }
 
-    const balanceRound = createBalanceRound(scheduledMatches, tournament);
+    const balanceRound = createBalanceRound(newMatches, group.teams, tournament);
     if (balanceRound) {
-        scheduledMatches.push(...balanceRound);
+        newMatches.push(...balanceRound);
+    }
+
+    return newMatches;
+};
+
+export const generateGroupPhase = (
+    phase: GroupTournamentPhase,
+    tournament: Tournament,
+): Match[] => {
+    const phaseI = tournament.phases.findIndex((p) => p.id === phase.id);
+    let table: Ref[] = tournament.teams;
+
+    if (phaseI > 0) {
+        table = rankedTeams(tournament.phases[phaseI - 1]);
+    }
+
+    const shuffledTeams = shuffle(table);
+
+    const groups: Group[] = phase.groups ?? [
+        {
+            id: generateId(),
+            name: "All Teams",
+            teams: shuffledTeams,
+        },
+    ];
+
+    const unscheduledMatches: Match[] = [];
+    for (const group of groups) {
+        unscheduledMatches.push(...generateForGroup(group, phase.rounds, tournament));
+    }
+
+    // schedule
+    const roundDuration = tournament.config.matchDuration + tournament.config.breakDuration;
+    const scheduledMatches: Match[] = [];
+
+    for (let i = 0; i < phase.rounds; i++) {
+        const matches = unscheduledMatches.filter((match) => match.round!.index === i);
+
+        for (const match of matches) {
+            const slot = earliestFreeSlot(
+                scheduledMatches,
+                tournament.config.startTime,
+                roundDuration,
+                match.teams.map((team) => team.ref!),
+                tournament.config.courts,
+            );
+
+            if (slot) {
+                match.date = slot.time;
+                match.court = slot.court;
+                scheduledMatches.push(match);
+            }
+        }
     }
 
     return scheduledMatches;

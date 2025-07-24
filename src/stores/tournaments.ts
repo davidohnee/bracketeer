@@ -5,8 +5,8 @@ import { tournamentFromJson } from "@/helpers";
 
 import { pull, push } from "@/share";
 import { Notifications } from "@/components/notifications/createNotification";
-import { generateKnockoutBracket } from "@/helpers/matchplan/knockoutPhase";
-import { generateGroupPhase } from "@/helpers/matchplan/groupPhase";
+import { generateKnockoutBrackets } from "@/helpers/matchplan/knockoutPhase";
+import { generateGroupPhases } from "@/helpers/matchplan/groupPhase";
 import { generateNTeams } from "@/helpers/teamGenerator";
 import { throttle } from "lodash";
 
@@ -46,16 +46,29 @@ export const useTournamentsStore = defineStore("tournaments", () => {
     function create(teamCount: number, config: TournamentConfig) {
         const teams = generateNTeams(teamCount);
         const tournament: Tournament = {
-            version: 2,
+            version: 3,
             id: crypto.randomUUID(),
             name: `Tournament ${tournaments.value.length + 1}`,
             teams: teams,
-            groupPhase: [],
-            knockoutPhase: [],
+            phases: [
+                {
+                    id: crypto.randomUUID(),
+                    type: "group",
+                    name: "Group Stage",
+                    matches: [],
+                    rounds: 3,
+                },
+                {
+                    id: crypto.randomUUID(),
+                    type: "knockout",
+                    name: "Knockout Stage",
+                    rounds: [],
+                },
+            ],
             config,
         };
-        tournament.groupPhase = generateGroupPhase(tournament);
-        tournament.knockoutPhase = generateKnockoutBracket(tournament);
+        tournament.phases = generateGroupPhases(tournament);
+        tournament.phases = generateKnockoutBrackets(tournament);
 
         add(tournament);
     }
@@ -69,6 +82,8 @@ export const useTournamentsStore = defineStore("tournaments", () => {
     };
 
     const share = async (tournament: Tournament, asPublic: boolean = false) => {
+        if (!tournament.remote) return;
+
         const result = await push(tournament, asPublic);
         if (result.tournament) {
             getTournamentById(tournament.id)!.remote = result.tournament.remote;
@@ -125,7 +140,7 @@ export const useTournamentsStore = defineStore("tournaments", () => {
                             reader.onload = () => {
                                 const result = reader.result as string;
                                 try {
-                                    const tournament = JSON.parse(result);
+                                    const tournament = tournamentFromJson(JSON.parse(result));
                                     resolve(tournament);
                                 } catch (error) {
                                     reject(error);
@@ -164,8 +179,7 @@ export const useTournamentsStore = defineStore("tournaments", () => {
         if (tournament) {
             tournament.name = newTournament.tournament.name;
             tournament.config = newTournament.tournament.config;
-            tournament.groupPhase = newTournament.tournament.groupPhase;
-            tournament.knockoutPhase = newTournament.tournament.knockoutPhase;
+            tournament.phases = newTournament.tournament.phases;
             return tournament;
         }
     };

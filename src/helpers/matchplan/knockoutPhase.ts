@@ -1,28 +1,37 @@
-import type { Match, Ref, Tournament, TournamentRound } from "@/types/tournament";
+import type {
+    KnockoutTournamentPhase,
+    Match,
+    Ref,
+    Tournament,
+    TournamentPhase,
+    TournamentRound,
+} from "@/types/tournament";
 import { getLastMatchOf } from "..";
 import { generateId } from "../id";
-import { ALPHABET } from "../common";
-import { generateTables } from "../tables";
+import { ALPHABET, ROUND_NAME } from "../common";
+import { allMatches, rankedTeams } from "../phase";
 
-export const generateKnockoutBracket = (tournament: Tournament): TournamentRound[] => {
+export const generateKnockoutBracket = (
+    phase: KnockoutTournamentPhase,
+    tournament: Tournament,
+): TournamentRound[] => {
     const rounds: TournamentRound[] = [];
-    const knockoutTeamCount = tournament.config.knockoutTeams;
-    const lastGroupPhaseMatchDate = getLastMatchOf({
-        matches: tournament.groupPhase,
-    }).date;
+    const knockoutTeamCount = phase.teamCount ?? tournament.teams.length;
+    const phaseI = tournament.phases.findIndex((p) => p.id === phase.id);
+    let lastGroupPhaseMatchDate = tournament.config.startTime;
+
+    if (phaseI > 0) {
+        lastGroupPhaseMatchDate = getLastMatchOf({
+            phase: tournament.phases[phaseI - 1],
+        })?.date;
+    }
+
     const roundDuration = tournament.config.matchDuration + tournament.config.knockoutBreakDuration;
 
     let progressingTeams = Array.from({ length: knockoutTeamCount }, (_, i) => `Place ${i + 1}`);
 
     let teamsInRound = progressingTeams.length;
     let roundNumber = 1;
-
-    const ROUND_NAME = {
-        16: "Round of 16",
-        8: "Quarter Finals",
-        4: "Semi Finals",
-        2: "Final",
-    };
 
     const startTime = new Date(lastGroupPhaseMatchDate);
 
@@ -62,7 +71,7 @@ export const generateKnockoutBracket = (tournament: Tournament): TournamentRound
 
         rounds.push({
             id: generateId(),
-            name: (ROUND_NAME as Record<number, string>)[teamsInRound] || `Round ${roundNumber}`,
+            name: ROUND_NAME[teamsInRound] || `Round ${roundNumber}`,
             matches,
         });
 
@@ -111,20 +120,50 @@ export const generateKnockoutBracket = (tournament: Tournament): TournamentRound
     return rounds;
 };
 
+export const generateKnockoutBrackets = (tournament: Tournament): TournamentPhase[] => {
+    const phases: TournamentPhase[] = [];
+
+    for (const phase of tournament.phases) {
+        if (phase.type === "knockout") {
+            const knockoutPhase: KnockoutTournamentPhase = {
+                ...phase,
+                rounds: generateKnockoutBracket(phase, tournament),
+                teamCount: phase.teamCount ?? tournament.teams.length,
+            };
+            phases.push(knockoutPhase);
+        } else if (phase.type === "group") {
+            phases.push(phase);
+        }
+    }
+
+    return phases;
+};
+
 export const updateKnockoutMatches = (tournament: Tournament) => {
-    const knockout = tournament.knockoutPhase;
+    for (const phase of tournament.phases) {
+        if (phase.type === "knockout") {
+            updateKnockoutPhase(phase, tournament);
+        }
+    }
+};
+
+const updateKnockoutPhase = (phase: KnockoutTournamentPhase, tournament: Tournament) => {
+    const knockout = phase.rounds;
 
     if (!knockout) return;
 
-    // group phase completed?
-    const groupPhase = tournament.groupPhase;
-    if (!groupPhase) return;
-    const groupPhaseCompleted = groupPhase.every((match) => match.status === "completed");
-    if (!groupPhaseCompleted) return;
+    const phaseI = tournament.phases.findIndex((p) => p.id === phase.id);
+    let table: Ref[] = tournament.teams;
 
-    const table: Ref[] = generateTables(tournament)[0].teams.map((x) => ({
-        id: x.team.id,
-    }));
+    if (phaseI > 0) {
+        table = rankedTeams(tournament.phases[phaseI - 1]);
+
+        if (
+            allMatches(tournament.phases[phaseI - 1]).some((match) => match.status !== "completed")
+        ) {
+            return;
+        }
+    }
 
     const roundWinners: Ref[][] = [];
     const roundLosers: Ref[][] = [];

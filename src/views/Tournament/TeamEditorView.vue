@@ -10,6 +10,7 @@ const props = defineProps<{
 const tournamentStore = useTournamentsStore();
 const tournament = tournamentStore.getTournamentById(props.tournament.id)!;
 
+const teams = ref<Team[]>(JSON.parse(JSON.stringify(props.tournament.teams)));
 const teamsPaste = ref<string>("");
 
 const processPastedTeams = () => {
@@ -23,6 +24,10 @@ const processPastedTeams = () => {
 };
 const processPaste = () => {
     setTimeout(processPastedTeams, 0);
+};
+
+const updateTeams = () => {
+    tournament.teams = teams.value;
 };
 
 const comparableTeamName = (team: Team) => team.name.trim().toLowerCase();
@@ -64,7 +69,7 @@ const duplicates = computed(() => {
         <div class="table">
             <div
                 class="row"
-                v-for="team in tournament.teams"
+                v-for="team in teams"
                 :key="team.id"
                 :class="{ duplicate: duplicates.includes(comparableTeamName(team)) }"
             >
@@ -74,6 +79,7 @@ const duplicates = computed(() => {
                     v-model="team.name"
                     :key="team.id"
                     placeholder="Team name"
+                    @change="updateTeams"
                 />
             </div>
         </div>

@@ -1,17 +1,21 @@
 <script setup lang="ts">
 import { computed } from "vue";
-import { type Tournament } from "../types/tournament";
+import { type GroupTournamentPhase, type Tournament } from "../types/tournament";
 import TeamTableEntry from "./TeamTableEntry.vue";
 import { generateTables } from "@/helpers/tables";
 
-const props = defineProps<{ tournament: Tournament; teamMatchesRouteName: string }>();
+const props = defineProps<{
+    tournament: Tournament;
+    teamMatchesRouteName: string;
+    phase: GroupTournamentPhase;
+}>();
 
 const tables = computed(() => {
-    return generateTables(props.tournament);
+    return generateTables(props.phase);
 });
 
 const groupName = (id: string | null) => {
-    return props.tournament.groups?.find((group) => group.id === id)?.name ?? "";
+    return props.phase.groups?.find((group) => group.id === id)?.name ?? "";
 };
 </script>
 
@@ -19,7 +23,7 @@ const groupName = (id: string | null) => {
     <div class="team-tables">
         <div
             class="team-table"
-            v-for="table in tables"
+            v-for="(table, i) in tables"
             :key="table.group?.id"
         >
             <div
@@ -47,8 +51,9 @@ const groupName = (id: string | null) => {
                 :rank="index + 1"
                 :tournament="tournament"
                 :teamMatchesRouteName="teamMatchesRouteName"
+                :phaseId="phase.id"
             />
-            <legend>
+            <legend v-if="i === tables.length - 1">
                 <div class="text-muted"><strong>#:</strong> Rank</div>
                 <div class="text-muted"><strong>MP:</strong> Matches Played</div>
                 <div class="text-muted"><strong>W:</strong> Wins</div>
@@ -140,5 +145,16 @@ const groupName = (id: string | null) => {
             display: none;
         }
     }
+
+    & h5 {
+        margin: 0;
+        padding-left: 1em;
+        padding-top: 1em;
+    }
+}
+
+.team-table:not(:first-child) {
+    margin-top: 1em;
+    border-top: 1px solid var(--color-border);
 }
 </style>

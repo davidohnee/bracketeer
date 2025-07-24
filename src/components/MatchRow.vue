@@ -154,7 +154,7 @@ watch(
         <div class="team">{{ teamDisplay(match.teams[1]) }}</div>
 
         <div class="venue">
-            <div class="court">{{ getCourtName(match.court) }}</div>
+            <div class="court">{{ getCourtName(tournament.config.sport, match.court) }}</div>
         </div>
     </div>
 </template>

@@ -1,6 +1,11 @@
 <script setup lang="ts">
 import { randomiseGroupPhaseResults } from "@/helpers";
-import type { Tournament } from "@/types/tournament";
+import type {
+    GroupTournamentPhase,
+    KnockoutTournamentPhase,
+    Tournament,
+    TournamentPhase,
+} from "@/types/tournament";
 import { useTournamentsStore } from "@/stores/tournaments";
 import { useRouter } from "vue-router";
 import { computed, ref, toRaw } from "vue";
@@ -9,7 +14,7 @@ import gistClient from "@/gistClient";
 import TrackModal from "@/components/modals/ShareViewerModal.vue";
 import { Notifications } from "@/components/notifications/createNotification";
 import { updateKnockoutMatches } from "@/helpers/matchplan/knockoutPhase";
-import { agoString } from "@/helpers/common";
+import { agoString, getTournamentStatus } from "@/helpers/common";
 
 const props = defineProps<{
     tournament: Tournament;
@@ -25,7 +30,7 @@ const trackModal = ref<typeof TrackModal>();
 const randomGroupPhase = () => {
     const rawTournament = toRaw(tournament);
     randomiseGroupPhaseResults(rawTournament);
-    tournament.groupPhase = [...rawTournament.groupPhase];
+    tournament.phases = [...rawTournament.phases];
     hasStarted.value = true;
     update();
 };
@@ -33,7 +38,7 @@ const randomGroupPhase = () => {
 const update = () => {
     const rawTournament = toRaw(tournament);
     updateKnockoutMatches(rawTournament);
-    tournament.knockoutPhase = [...rawTournament.knockoutPhase];
+    tournament.phases = [...rawTournament.phases];
     Notifications.addSuccess(
         "Knockout matches updated",
         "The knockout matches have been updated based on the current group phase results.",
@@ -58,6 +63,32 @@ const deleteTournament = () => {
     );
 };
 
+const resetGroupPhase = (phase: GroupTournamentPhase) => {
+    for (const match of phase.matches) {
+        match.teams[0].score = 0;
+        match.teams[1].score = 0;
+        match.status = "scheduled";
+    }
+};
+const resetKnockoutPhase = (phase: KnockoutTournamentPhase) => {
+    for (const round of phase.rounds) {
+        for (const match of round.matches) {
+            for (const team of match.teams) {
+                team.score = 0;
+                delete team.ref;
+            }
+            match.status = "scheduled";
+        }
+    }
+};
+const resetPhase = (phase: TournamentPhase) => {
+    if (phase.type === "group") {
+        resetGroupPhase(phase as GroupTournamentPhase);
+    } else if (phase.type === "knockout") {
+        resetKnockoutPhase(phase as KnockoutTournamentPhase);
+    }
+};
+
 const resetTournament = () => {
     Notifications.addYesNo(
         "Reset Tournament",
@@ -66,23 +97,11 @@ const resetTournament = () => {
         () => {
             const rawTournament = toRaw(tournament);
 
-            for (const match of rawTournament.groupPhase) {
-                match.teams[0].score = 0;
-                match.teams[1].score = 0;
-                match.status = "scheduled";
-            }
-            for (const round of rawTournament.knockoutPhase) {
-                for (const match of round.matches) {
-                    for (const team of match.teams) {
-                        team.score = 0;
-                        delete team.ref;
-                    }
-                    match.status = "scheduled";
-                }
+            for (const phase of rawTournament.phases) {
+                resetPhase(phase);
             }
 
-            tournament.groupPhase = [...rawTournament.groupPhase];
-            tournament.knockoutPhase = [...rawTournament.knockoutPhase];
+            tournament.phases = [...rawTournament.phases];
             hasStarted.value = false;
 
             Notifications.addSuccess(
@@ -144,7 +163,7 @@ const lastPushedAgo = computed(() => {
     return agoString(lastPushedDate);
 });
 
-const hasStarted = ref(tournament.groupPhase.some((match) => match.status !== "scheduled"));
+const hasStarted = ref(getTournamentStatus(tournament) !== "scheduled");
 </script>
 
 <template>

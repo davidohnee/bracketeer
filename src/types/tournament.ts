@@ -43,13 +43,17 @@ export type MatchTeam = {
 
 export type MatchStatus = "scheduled" | "in-progress" | "completed";
 
+export interface MatchRound extends IdentifiableString {
+    index?: number;
+}
+
 export interface Match {
     id: string;
     court: number | null;
     teams: [MatchTeam, MatchTeam];
     date: Date;
     status: MatchStatus;
-    round?: IdentifiableString;
+    round?: MatchRound;
     group?: IdentifiableString;
 }
 
@@ -64,14 +68,18 @@ export interface IdentifiableString {
     name: string;
 }
 
-export interface TournamentConfig {
-    rounds: number;
-    knockoutTeams: number;
+export interface TournamentConfigV2 {
     courts: number;
     matchDuration: number;
     breakDuration: number;
     knockoutBreakDuration: number;
     startTime: Date;
+    sport: string;
+}
+
+export interface TournamentConfigV1 extends TournamentConfigV2 {
+    rounds: number;
+    knockoutTeams: number;
 }
 
 export interface IRemote {
@@ -85,7 +93,7 @@ export interface TournamentV1 {
     teams: Team[];
     groupPhase: TournamentRound[];
     knockoutPhase: TournamentRound[];
-    config: TournamentConfig;
+    config: TournamentConfigV1;
     remote?: IRemote[];
     version: undefined;
 }
@@ -104,10 +112,45 @@ export interface TournamentV2 {
     groups?: Group[];
     groupPhase: Match[];
     knockoutPhase: TournamentRound[];
-    config: TournamentConfig;
+    config: TournamentConfigV1;
     remote?: IRemote[];
 }
 
-export type LatestTournament = TournamentV2;
-export type AnyTournament = TournamentV1 | TournamentV2;
+export interface ITournamentPhase {
+    id: string;
+    name: string;
+    type: "group" | "knockout";
+    teamCount?: number;
+}
+
+export interface GroupTournamentPhase extends ITournamentPhase {
+    type: "group";
+    groups?: Group[];
+    matches: Match[];
+    rounds: number;
+}
+
+export interface KnockoutTournamentPhase extends ITournamentPhase {
+    type: "knockout";
+    rounds: TournamentRound[];
+}
+
+export type TournamentPhase = GroupTournamentPhase | KnockoutTournamentPhase;
+
+export interface TournamentV3 {
+    id: string;
+    version: 3;
+    name: string;
+    teams: Team[];
+
+    phases: TournamentPhase[];
+
+    config: TournamentConfigV2;
+    remote?: IRemote[];
+}
+
+export type TournamentConfig = TournamentConfigV2;
+
+export type LatestTournament = TournamentV3;
+export type AnyTournament = TournamentV1 | TournamentV2 | TournamentV3;
 export type Tournament = LatestTournament;

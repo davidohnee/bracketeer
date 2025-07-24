@@ -22,9 +22,9 @@ const value = computed({
 const valueValid = computed(() => {
     if (props.modelValue === undefined) return true;
 
-    if (props.modelValue % 2 == 0) return true;
+    if (props.modelValue % 2 === 0) return true;
 
-    if (props.modelValue == 1) return true;
+    if (props.modelValue === 1) return true;
 
     return false;
 });

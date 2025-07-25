@@ -60,7 +60,7 @@ const generateGroups = () => {
     regeneratePhase();
 };
 
-const groupsToGenerate = ref(props.phase.groups?.length || 4);
+const groupsToGenerate = ref(props.phase.groups?.length || 1);
 
 const updateRoundCount = () => {
     const phase = tournament.value.phases.find(
@@ -82,12 +82,30 @@ const roundCount = ref(props.phase.rounds);
 
 const teamsInStage = computed(() => props.phase.teamCount ?? tournament.value.teams.length);
 
+const roundCountValid = computed(() => {
+    if (roundCount.value % 2 === 0) {
+        return true;
+    }
+
+    if (teamsInStage.value % groupsToGenerate.value !== 0) {
+        // group sizes vary, so we can't have an odd number of rounds
+        return false;
+    }
+
+    return true;
+});
+
 const groupNumberValid = computed(() => {
     return (
-        groupsToGenerate.value > 0 &&
-        groupsToGenerate.value <= teamsInStage.value / 2 &&
-        teamsInStage.value % groupsToGenerate.value === 0
+        groupsToGenerate.value > 0 && groupsToGenerate.value <= Math.floor(teamsInStage.value / 2)
     );
+});
+
+const hasBalancingRound = computed(() => {
+    const phase = tournament.value.phases.find(
+        (p) => p.id === props.phase.id,
+    ) as GroupTournamentPhase;
+    return phase.matches.some((match) => match.round?.name === "Balance Round");
 });
 </script>
 <template>
@@ -102,7 +120,16 @@ const groupNumberValid = computed(() => {
                     v-model="roundCount"
                     @change="updateRoundCount"
                     @keydown.prevent.enter="updateRoundCount"
+                    :aria-invalid="!roundCountValid"
+                    :min="1"
                 />
+                <span
+                    v-if="!roundCountValid"
+                    class="error-description text-sm"
+                >
+                    <ion-icon name="close-circle-outline" />
+                    Invalid round count. The number of rounds must be even, if the group sizes vary.
+                </span>
             </div>
             <div class="field small">
                 <label for="group-count"># of Groups</label>
@@ -114,7 +141,7 @@ const groupNumberValid = computed(() => {
                     @keydown.prevent.enter="generateGroups"
                     :aria-invalid="!groupNumberValid"
                     :min="1"
-                    :max="teamsInStage / 2"
+                    :max="Math.floor(teamsInStage / 2)"
                 />
                 <span
                     v-if="!groupNumberValid"
@@ -122,16 +149,34 @@ const groupNumberValid = computed(() => {
                 >
                     <ion-icon name="close-circle-outline" />
                     Invalid group number. Must be between 1 and
-                    {{ teamsInStage / 2 }} and evenly divide the total number of teams.
+                    {{ Math.floor(teamsInStage / 2) }}.
                 </span>
             </div>
         </div>
-        <div class="footer text-sm">{{ allMatches(phase).length }} matches</div>
+        <div class="footer text-sm">
+            <span>{{ allMatches(phase).length }} matches</span>
+            <ion-icon
+                v-if="hasBalancingRound"
+                title="Matches were added so that all teams play the same number of matches."
+                name="bulb-outline"
+                class="ml-auto"
+            />
+        </div>
     </div>
 </template>
 <style scoped>
 .node.group {
     --c: var(--color-brand-blue);
     width: 35ch;
+}
+
+.footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    & ion-icon {
+        cursor: pointer;
+    }
 }
 </style>

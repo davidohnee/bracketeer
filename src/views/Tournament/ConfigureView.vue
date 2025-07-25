@@ -174,16 +174,6 @@ const hasStarted = ref(getTournamentStatus(tournament) !== "scheduled");
             <h3>Settings</h3>
             <div class="row">
                 <div class="field">
-                    <label for="result-input">Result input type</label>
-                    <select
-                        disabled
-                        value="beerpong.10"
-                        id="result-input"
-                    >
-                        <option value="beerpong.10">Beerpong (10 pcs.)</option>
-                    </select>
-                </div>
-                <div class="field">
                     <router-link
                         class="secondary"
                         :to="{

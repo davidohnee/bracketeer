@@ -123,19 +123,20 @@ const grouped = computed(() => {
             continue;
         }
 
-        const keys: string[] = [];
+        const keys: (string | null)[] = [];
         if (selectedGroupOption.value === "round") {
             keys.push(match.roundName);
         } else if (selectedGroupOption.value === "time") {
             keys.push(match.match.date.toLocaleString());
         } else if (selectedGroupOption.value === "team") {
-            keys.push(getTeamName(match.match.teams[0].ref?.id) || "N/A");
-            keys.push(getTeamName(match.match.teams[1].ref?.id) || "N/A");
+            keys.push(getTeamName(match.match.teams[0].ref?.id));
+            keys.push(getTeamName(match.match.teams[1].ref?.id));
         } else if (selectedGroupOption.value === "court") {
             keys.push(getCourtName(tournament.value.config.sport, match.match.court));
         }
 
         for (const key of keys) {
+            if (!key) continue;
             if (!groupedMatches[key]) {
                 groupedMatches[key] = [];
             }

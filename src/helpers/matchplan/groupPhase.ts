@@ -15,8 +15,8 @@ import { rankedTeams } from "../phase";
 
 const UNSCHEDULED = {
     COURT: -1,
-    DATE: new Date(0)
-}
+    DATE: new Date(0),
+};
 
 const createBalanceRound = (
     allMatches: Match[],
@@ -32,6 +32,10 @@ const createBalanceRound = (
                     .some((match) => match.teams.some((team) => team.ref?.id === t.id)),
         ),
     );
+
+    if (teamsMissing.length % 2 !== 0) {
+        return null;
+    }
 
     if (teamsMissing.length === 0) {
         return null;
@@ -175,8 +179,13 @@ export const generateGroupPhase = (
     const roundDuration = tournament.config.matchDuration + tournament.config.breakDuration;
     const scheduledMatches: Match[] = [];
 
-    for (let i = 0; i < phase.rounds; i++) {
-        const matches = unscheduledMatches.filter((match) => match.round!.index === i);
+    for (let i = 0; i <= phase.rounds; i++) {
+        let matches = unscheduledMatches.filter((match) => match.round!.index === i);
+        if (i === phase.rounds) {
+            matches = unscheduledMatches.filter(
+                (match) => match.round!.name === "Balance Round" || match.round!.index === i,
+            );
+        }
 
         for (const match of matches) {
             const slot = earliestFreeSlot(

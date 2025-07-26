@@ -10,6 +10,7 @@ const props = defineProps<{
     modelValue: Match;
     tournament: Tournament;
     readonly?: boolean;
+    markLoser?: boolean;
 }>();
 
 const emit = defineEmits<{
@@ -102,6 +103,12 @@ watch(
         }
     },
 );
+
+const teamLost = (team: MatchTeam) => {
+    const winnerScore = Math.max(...match.value.teams.map((x) => x.score));
+    if (team.score < winnerScore) return true;
+    return false;
+};
 </script>
 
 <template>
@@ -117,7 +124,14 @@ watch(
         :class="{ readonly }"
         @click="openMatchEditor"
     >
-        <div class="team">{{ teamDisplay(match.teams[0]) }}</div>
+        <div
+            class="team"
+            :class="{
+                lost: teamLost(match.teams[0]) && markLoser,
+            }"
+        >
+            {{ teamDisplay(match.teams[0]) }}
+        </div>
 
         <div class="details">
             <div
@@ -145,7 +159,14 @@ watch(
             </div>
         </div>
 
-        <div class="team">{{ teamDisplay(match.teams[1]) }}</div>
+        <div
+            class="team"
+            :class="{
+                lost: teamLost(match.teams[1]) && markLoser,
+            }"
+        >
+            {{ teamDisplay(match.teams[1]) }}
+        </div>
     </div>
 </template>
 
@@ -209,6 +230,11 @@ watch(
 
         &:last-child {
             text-align: right;
+        }
+
+        &.lost {
+            color: var(--color-text-secondary);
+            text-decoration: line-through;
         }
     }
 }

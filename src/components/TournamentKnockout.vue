@@ -35,6 +35,7 @@ const knockoutBracket = computed<TournamentRound[]>(() => {
                 :readonly="readonly"
                 :tournament="tournament"
                 @update:modelValue="onChanged"
+                mark-loser
             />
         </div>
     </div>

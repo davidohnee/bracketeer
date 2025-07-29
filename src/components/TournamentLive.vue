@@ -58,7 +58,7 @@ const grouped = computed(() => {
     // Group matches by the selected option
     const groupedMatches: Record<string, MatchAndRound[]> = {};
     for (const match of allMatches.value) {
-        const key = match.match.date.toLocaleString();
+        const key = match.match.date.toISOString();
 
         if (!groupedMatches[key]) {
             groupedMatches[key] = [];
@@ -78,6 +78,22 @@ const defaultCurrentTab = computed(() => {
     for (const key of keys) {
         const matches = grouped.value[key];
         if (matches.some((match) => match.match.status === "in-progress")) {
+            return key;
+        }
+    }
+    return null;
+});
+
+const lastCompletedRound = computed(() => {
+    // grouped -> latest key with matches that are completed
+    const keys = Object.keys(grouped.value).sort((a, b) => {
+        const dateA = new Date(a).getTime();
+        const dateB = new Date(b).getTime();
+        return dateB - dateA;
+    });
+    for (const key of keys) {
+        const matches = grouped.value[key];
+        if (matches.every((match) => match.match.status === "completed")) {
             return key;
         }
     }
@@ -137,7 +153,9 @@ onUnmounted(() => {
 });
 
 const currentTab = ref<string | null>(defaultCurrentTab.value);
-const missingResults = ref<MatchAndRound[]>([]);
+const missingResults = computed<MatchAndRound[]>(() => {
+    return grouped.value[lastCompletedRound.value!] || [];
+});
 
 const groupPhaseCompleted = computed(() => {
     return (tournament.value.phases[0] as GroupTournamentPhase).matches.every(
@@ -197,18 +215,10 @@ const adjustAndSkip = () => {
 };
 
 const proceed = () => {
-    if (missingResults.value.length) {
-        missingResults.value = [];
-        return;
-    }
-
     const matches = toRaw(grouped.value[currentTab.value!]);
     for (const match of matches) {
         if (match.match.status === "in-progress") {
             match.match.status = "completed";
-            if (match.match.teams[0].score === 0 && match.match.teams[1].score === 0) {
-                missingResults.value.push(match);
-            }
         }
     }
     grouped.value[currentTab.value!] = matches;
@@ -217,17 +227,14 @@ const proceed = () => {
     tournamentStore.share(tournament.value);
 };
 
-const skip = () => {
-    const matches = toRaw(grouped.value[nextRound.value!]);
-    for (const match of matches) {
-        if (match.match.status === "scheduled") {
-            match.match.status = "in-progress";
-        }
+const adjustAndSkipText = computed(() => {
+    if (!missingResults.value.length) {
+        return "Start tournament";
     }
-    grouped.value[nextRound.value!] = matches;
-    updateKnockoutMatches(tournament.value);
-    currentTab.value = defaultCurrentTab.value;
-};
+    return nextRoundCountdown.value == "Soon..."
+        ? "Adjust start times & proceed"
+        : "Adjust start times & skip";
+});
 </script>
 
 <template>
@@ -237,65 +244,55 @@ const skip = () => {
     >
         <div
             class="missing-results"
-            v-if="currentTab == null && missingResults.length"
+            v-if="currentTab == null"
         >
-            <h3>Results</h3>
-            <div class="matches">
-                <MatchRow
-                    v-for="result in missingResults"
-                    :key="result.match.id"
-                    v-model="result.match"
-                    :tournament="tournament"
-                    @update:model-value="onChanged"
-                    :readonly="readonly"
-                />
-            </div>
             <div
-                class="action"
-                v-if="!readonly"
+                class="time"
+                v-if="nextRoundCountdown"
             >
-                <button
-                    class="secondary"
-                    @click="proceed"
-                >
-                    <ion-icon name="arrow-forward" />
-                    Proceed
-                </button>
-            </div>
-        </div>
-        <div
-            class="no-round"
-            v-else-if="currentTab === null"
-        >
-            <template v-if="nextRoundCountdown">
                 <p>
-                    Next round starts at <strong>{{ nextRound }}</strong>
+                    Next round: <strong>{{ new Date(nextRound!).toLocaleTimeString() }}</strong>
                 </p>
-                <p class="countdown">{{ nextRoundCountdown }}</p>
-                <div
-                    class="actions"
-                    v-if="!readonly"
-                >
-                    <button
-                        @click="skip"
-                        class="secondary"
-                    >
-                        {{
-                            nextRoundCountdown == "Soon..."
-                                ? "Proceed to next round"
-                                : "Skip to next round"
-                        }}
-                    </button>
-                    <button @click="adjustAndSkip">
-                        {{
-                            nextRoundCountdown == "Soon..."
-                                ? "Adjust start times & proceed"
-                                : "Adjust start times & skip"
-                        }}
-                    </button>
+                <p class="countdown">
+                    <ion-icon name="timer-outline" />
+                    {{ nextRoundCountdown }}
+                </p>
+            </div>
+            <template v-if="missingResults.length">
+                <h3>Results</h3>
+                <div class="matches">
+                    <MatchRow
+                        v-for="result in missingResults"
+                        :key="result.match.id"
+                        v-model="result.match"
+                        :tournament="tournament"
+                        @update:model-value="onChanged"
+                        :readonly="readonly"
+                    />
                 </div>
             </template>
             <template v-else>
+                <!-- start of tournament -->
+                <h3>Upcoming Matches</h3>
+                <div class="matches">
+                    <MatchRow
+                        v-for="match in grouped[nextRound!]"
+                        :key="match.match.id"
+                        v-model="match.match"
+                        :tournament="tournament"
+                        @update:model-value="onChanged"
+                        :readonly="readonly"
+                    />
+                </div>
+            </template>
+            <div
+                class="actions"
+                :class="{ center: !missingResults.length }"
+                v-if="nextRoundCountdown && !readonly"
+            >
+                <button @click="adjustAndSkip">{{ adjustAndSkipText }}</button>
+            </div>
+            <template v-if="!nextRoundCountdown">
                 <h3>No upcoming matches</h3>
             </template>
         </div>
@@ -303,7 +300,7 @@ const skip = () => {
             class="round"
             v-else
         >
-            <h3 class="round-title">{{ currentTab }}</h3>
+            <h3>Ongoing</h3>
             <div class="matches">
                 <MatchRow
                     v-for="(_, index) in grouped[currentTab]"
@@ -315,7 +312,7 @@ const skip = () => {
                 />
             </div>
             <div
-                class="action"
+                class="actions"
                 v-if="!readonly"
             >
                 <button
@@ -349,6 +346,7 @@ const skip = () => {
     width: 100%;
     display: grid;
     grid-template-columns: 1fr;
+    position: relative;
 
     &:has(.table) {
         grid-template-columns: 1fr 1fr;
@@ -371,28 +369,48 @@ const skip = () => {
     }
 }
 
-.no-round {
-    height: 100%;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    max-height: 60vh;
+.round,
+.missing-results {
     position: sticky;
-    top: 0;
+    top: 5em;
+    height: max-content;
+}
 
-    & .actions {
-        display: flex;
-        flex-direction: row;
-        gap: 1em;
-        margin-top: 1em;
-        margin-bottom: 1em;
+.time {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1em;
+    padding: 0.5em 1em;
+    border-bottom: 1px solid var(--color-border);
+
+    p {
+        margin: 0;
     }
 
-    & .countdown {
-        font-size: 2rem;
-        font-weight: bold;
+    .countdown {
+        flex: 0;
+        padding: 0.5em 1em;
+        border: 1px solid var(--color-border);
+        border-radius: 100vmax;
+        display: flex;
+        align-items: center;
+        gap: 0.5em;
+        padding-left: 0.5em;
+    }
+}
+
+.actions {
+    display: flex;
+    flex-direction: row;
+    gap: 1em;
+    padding: 1em;
+    justify-content: flex-end;
+    border-top: 1px solid var(--color-border);
+
+    &.center {
+        justify-content: center;
     }
 }
 

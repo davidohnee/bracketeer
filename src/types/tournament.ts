@@ -57,6 +57,12 @@ export interface Match {
     group?: IdentifiableString;
 }
 
+export interface RichMatch {
+    match: Match;
+    round?: MatchRound;
+    phase: ITournamentPhase;
+}
+
 export interface TournamentRound {
     id: string;
     name: string;

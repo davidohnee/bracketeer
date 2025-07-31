@@ -1,10 +1,9 @@
 <script setup lang="ts">
 import { computed, ref, watch } from "vue";
-import MatchCard from "@/components/MatchCard.vue";
-import MatchRow from "@/components/ResponsiveMatchRow.vue";
 import { getCourtName } from "@/helpers";
-import type { Match, Tournament } from "@/types/tournament";
+import type { RichMatch, Tournament } from "@/types/tournament";
 import { useRoute, useRouter } from "vue-router";
+import GroupedTournamentList from "./GroupedTournamentList.vue";
 
 const props = defineProps<{
     modelValue: Tournament;
@@ -71,23 +70,18 @@ const getTeamName = (teamId: string | undefined) => {
     return team ? team.name : null;
 };
 
-type MatchAndRound = {
-    match: Match;
-    roundName: string;
-};
+const allMatches = computed<RichMatch[]>(() => {
+    const matches: RichMatch[] = [];
 
-const allMatches = computed<MatchAndRound[]>(() => {
-    const matches: MatchAndRound[] = [];
-
-    for (const phase of props.modelValue.phases) {
+    for (const phase of tournament.value.phases) {
         if (phase.type === "group") {
             for (const match of phase.matches) {
-                matches.push({ match, roundName: match.round?.name ?? phase.name });
+                matches.push({ match, round: match.round, phase });
             }
         } else if (phase.type === "knockout") {
             for (const round of phase.rounds) {
                 for (const match of round.matches) {
-                    matches.push({ match, roundName: round.name });
+                    matches.push({ match, round, phase });
                 }
             }
         }
@@ -99,18 +93,16 @@ const allMatches = computed<MatchAndRound[]>(() => {
         const dateB = b.match.date.getTime();
         if (dateA < dateB) return -1;
         if (dateA > dateB) return 1;
-        return a.roundName.localeCompare(b.roundName);
+        return a.round!.name.localeCompare(b.round!.name);
     });
     return matches;
 });
-
-const selectedDisplayOption = ref<("card" | "row")[number]>("row");
 
 const GROUP_OPTIONS = ["round", "time", "team", "court"] as const;
 
 const grouped = computed(() => {
     // Group matches by the selected option
-    const groupedMatches: Record<string, MatchAndRound[]> = {};
+    const groupedMatches: Record<string, RichMatch[]> = {};
     for (const match of allMatches.value) {
         // filter
         if (
@@ -125,7 +117,7 @@ const grouped = computed(() => {
 
         const keys: (string | null)[] = [];
         if (selectedGroupOption.value === "round") {
-            keys.push(match.roundName);
+            keys.push(match.round!.name);
         } else if (selectedGroupOption.value === "time") {
             keys.push(match.match.date.toLocaleString());
         } else if (selectedGroupOption.value === "team") {
@@ -178,21 +170,16 @@ const grouped = computed(() => {
         <div class="rounds">
             <div
                 class="round"
-                v-for="(round, key) in grouped"
+                v-for="(_, key) in grouped"
                 :key="key"
             >
                 <h3 class="round-title">{{ key }}</h3>
-                <div class="matches">
-                    <component
-                        :is="selectedDisplayOption === 'card' ? MatchCard : MatchRow"
-                        v-for="(match, index) in round"
-                        :key="index"
-                        v-model="match.match"
-                        :tournament="tournament"
-                        @update:modelValue="onChanged"
-                        :readonly="readonly"
-                    />
-                </div>
+                <GroupedTournamentList
+                    v-model="grouped[key]"
+                    :tournament="tournament"
+                    :readonly="readonly"
+                    @update:model-value="onChanged"
+                />
             </div>
         </div>
     </div>

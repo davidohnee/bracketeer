@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { computed, nextTick, onMounted, onUnmounted, ref, toRaw } from "vue";
-import MatchRow from "@/components/ResponsiveMatchRow.vue";
-import type { GroupTournamentPhase, Match, Tournament } from "@/types/tournament";
+import type { GroupTournamentPhase, Match, RichMatch, Tournament } from "@/types/tournament";
 import TeamTable from "@/components/TeamTable.vue";
 import { useRoute } from "vue-router";
 import { useTournamentsStore } from "@/stores/tournaments";
 import { allMatches as getAllMatches } from "@/helpers/phase";
 import { updateKnockoutMatches } from "@/helpers/matchplan/knockoutPhase";
+import GroupedTournamentList from "./GroupedTournamentList.vue";
 
 const props = defineProps<{
     tournament: Tournament;
@@ -21,23 +21,18 @@ const onChanged = () => {
     emit("update:modelValue", tournament.value);
 };
 
-type MatchAndRound = {
-    match: Match;
-    roundName: string;
-};
-
-const allMatches = computed<MatchAndRound[]>(() => {
-    const matches: MatchAndRound[] = [];
+const allMatches = computed<RichMatch[]>(() => {
+    const matches: RichMatch[] = [];
 
     for (const phase of props.tournament.phases) {
         if (phase.type === "group") {
             for (const match of phase.matches) {
-                matches.push({ match, roundName: match.round?.name ?? phase.name });
+                matches.push({ match, round: match.round, phase });
             }
         } else if (phase.type === "knockout") {
             for (const round of phase.rounds) {
                 for (const match of round.matches) {
-                    matches.push({ match, roundName: round.name });
+                    matches.push({ match, round, phase });
                 }
             }
         }
@@ -49,14 +44,14 @@ const allMatches = computed<MatchAndRound[]>(() => {
         const dateB = b.match.date.getTime();
         if (dateA < dateB) return -1;
         if (dateA > dateB) return 1;
-        return a.roundName.localeCompare(b.roundName);
+        return a.round!.name.localeCompare(b.round!.name);
     });
     return matches;
 });
 
 const grouped = computed(() => {
     // Group matches by the selected option
-    const groupedMatches: Record<string, MatchAndRound[]> = {};
+    const groupedMatches: Record<string, RichMatch[]> = {};
     for (const match of allMatches.value) {
         const key = match.match.date.toISOString();
 
@@ -116,6 +111,13 @@ const nextRound = computed(() => {
     return null;
 });
 
+const nextBreak = computed(() => {
+    const next = new Date(nextRound.value!);
+    next.setMinutes(next.getMinutes() - tournament.value.config.breakDuration);
+    return next;
+});
+
+const nextBreakCountdown = ref<string | null>(null);
 const nextRoundCountdown = ref<string | null>("");
 const updateNextRoundCountdown = () => {
     if (nextRound.value === null) {
@@ -139,6 +141,15 @@ const updateNextRoundCountdown = () => {
     const minutes = Math.floor(diff / 1000 / 60);
     const seconds = Math.floor((diff / 1000) % 60);
     nextRoundCountdown.value = `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+
+    const thisEndDiff = diff - tournament.value.config.breakDuration * 1000 * 60;
+    if (thisEndDiff > 0) {
+        const endMinutes = Math.floor(thisEndDiff / 1000 / 60);
+        const endSeconds = Math.floor((thisEndDiff / 1000) % 60);
+        nextBreakCountdown.value = `${String(endMinutes).padStart(2, "0")}:${String(endSeconds).padStart(2, "0")}`;
+    } else {
+        nextBreakCountdown.value = "Soon...";
+    }
 };
 const updateNextRoundCountdownInterval = setInterval(() => {
     updateNextRoundCountdown();
@@ -153,7 +164,7 @@ onUnmounted(() => {
 });
 
 const currentTab = ref<string | null>(defaultCurrentTab.value);
-const missingResults = computed<MatchAndRound[]>(() => {
+const missingResults = computed<RichMatch[]>(() => {
     return grouped.value[lastCompletedRound.value!] || [];
 });
 
@@ -260,30 +271,22 @@ const adjustAndSkipText = computed(() => {
             </div>
             <template v-if="missingResults.length">
                 <h3>Results</h3>
-                <div class="matches">
-                    <MatchRow
-                        v-for="result in missingResults"
-                        :key="result.match.id"
-                        v-model="result.match"
-                        :tournament="tournament"
-                        @update:model-value="onChanged"
-                        :readonly="readonly"
-                    />
-                </div>
+                <GroupedTournamentList
+                    v-model="missingResults"
+                    :tournament="tournament"
+                    :readonly="readonly"
+                    @update:model-value="onChanged"
+                />
             </template>
             <template v-else>
                 <!-- start of tournament -->
                 <h3>Upcoming Matches</h3>
-                <div class="matches">
-                    <MatchRow
-                        v-for="match in grouped[nextRound!]"
-                        :key="match.match.id"
-                        v-model="match.match"
-                        :tournament="tournament"
-                        @update:model-value="onChanged"
-                        :readonly="readonly"
-                    />
-                </div>
+                <GroupedTournamentList
+                    v-model="grouped[nextRound!]"
+                    :tournament="tournament"
+                    :readonly="readonly"
+                    @update:model-value="onChanged"
+                />
             </template>
             <div
                 class="actions"
@@ -300,17 +303,25 @@ const adjustAndSkipText = computed(() => {
             class="round"
             v-else
         >
-            <h3>Ongoing</h3>
-            <div class="matches">
-                <MatchRow
-                    v-for="(_, index) in grouped[currentTab]"
-                    :key="index"
-                    v-model="grouped[currentTab][index].match"
-                    :tournament="tournament"
-                    @update:model-value="onChanged"
-                    :readonly="readonly"
-                />
+            <div
+                class="time"
+                v-if="nextBreakCountdown"
+            >
+                <p>
+                    Until: <strong>{{ new Date(nextBreak!).toLocaleTimeString() }}</strong>
+                </p>
+                <p class="countdown">
+                    <ion-icon name="timer-outline" />
+                    {{ nextBreakCountdown }}
+                </p>
             </div>
+            <h3>Ongoing</h3>
+            <GroupedTournamentList
+                v-model="grouped[currentTab]"
+                :tournament="tournament"
+                :readonly="readonly"
+                @update:model-value="onChanged"
+            />
             <div
                 class="actions"
                 v-if="!readonly"

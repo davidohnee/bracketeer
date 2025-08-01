@@ -53,8 +53,14 @@ export interface Match {
     teams: [MatchTeam, MatchTeam];
     date: Date;
     status: MatchStatus;
-    round?: MatchRound;
-    group?: IdentifiableString;
+    round?: MatchRound; // used only for group phase matches
+}
+
+export interface RichMatch {
+    match: Match;
+    roundName: string;
+    phaseId: string;
+    phaseName: string;
 }
 
 export interface TournamentRound {

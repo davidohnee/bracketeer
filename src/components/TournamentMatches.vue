@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { computed, ref, watch } from "vue";
-import MatchCard from "@/components/MatchCard.vue";
-import MatchRow from "@/components/ResponsiveMatchRow.vue";
 import { getCourtName } from "@/helpers";
-import type { Match, Tournament } from "@/types/tournament";
+import type { RichMatch, Tournament } from "@/types/tournament";
 import { useRoute, useRouter } from "vue-router";
+import GroupedTournamentList from "./GroupedTournamentList.vue";
+import { tournamentRichMatches } from "@/helpers/matches";
 
 const props = defineProps<{
     modelValue: Tournament;
@@ -71,46 +71,13 @@ const getTeamName = (teamId: string | undefined) => {
     return team ? team.name : null;
 };
 
-type MatchAndRound = {
-    match: Match;
-    roundName: string;
-};
-
-const allMatches = computed<MatchAndRound[]>(() => {
-    const matches: MatchAndRound[] = [];
-
-    for (const phase of props.modelValue.phases) {
-        if (phase.type === "group") {
-            for (const match of phase.matches) {
-                matches.push({ match, roundName: match.round?.name ?? phase.name });
-            }
-        } else if (phase.type === "knockout") {
-            for (const round of phase.rounds) {
-                for (const match of round.matches) {
-                    matches.push({ match, roundName: round.name });
-                }
-            }
-        }
-    }
-
-    // Sort matches by date
-    matches.sort((a, b) => {
-        const dateA = a.match.date.getTime();
-        const dateB = b.match.date.getTime();
-        if (dateA < dateB) return -1;
-        if (dateA > dateB) return 1;
-        return a.roundName.localeCompare(b.roundName);
-    });
-    return matches;
-});
-
-const selectedDisplayOption = ref<("card" | "row")[number]>("row");
+const allMatches = computed(() => tournamentRichMatches(tournament.value));
 
 const GROUP_OPTIONS = ["round", "time", "team", "court"] as const;
 
 const grouped = computed(() => {
     // Group matches by the selected option
-    const groupedMatches: Record<string, MatchAndRound[]> = {};
+    const groupedMatches: Record<string, RichMatch[]> = {};
     for (const match of allMatches.value) {
         // filter
         if (
@@ -159,6 +126,19 @@ const grouped = computed(() => {
 
     return groupedMatches;
 });
+
+interface DisplaySetting {
+    showPhase: boolean;
+    showRound: boolean;
+    showGroup: boolean;
+}
+
+const displaySettings: { [K in (typeof GROUP_OPTIONS)[number]]: DisplaySetting } = {
+    round: { showPhase: false, showRound: false, showGroup: true },
+    time: { showPhase: true, showRound: true, showGroup: true },
+    team: { showPhase: true, showRound: true, showGroup: true },
+    court: { showPhase: true, showRound: true, showGroup: false },
+};
 </script>
 
 <template>
@@ -178,21 +158,19 @@ const grouped = computed(() => {
         <div class="rounds">
             <div
                 class="round"
-                v-for="(round, key) in grouped"
+                v-for="(_, key) in grouped"
                 :key="key"
             >
                 <h3 class="round-title">{{ key }}</h3>
-                <div class="matches">
-                    <component
-                        :is="selectedDisplayOption === 'card' ? MatchCard : MatchRow"
-                        v-for="(match, index) in round"
-                        :key="index"
-                        v-model="match.match"
-                        :tournament="tournament"
-                        @update:modelValue="onChanged"
-                        :readonly="readonly"
-                    />
-                </div>
+                <GroupedTournamentList
+                    v-model="grouped[key]"
+                    :tournament="tournament"
+                    :readonly="readonly"
+                    @update:model-value="onChanged"
+                    :show-group="displaySettings[selectedGroupOption].showGroup"
+                    :show-phase="displaySettings[selectedGroupOption].showPhase"
+                    :show-round="displaySettings[selectedGroupOption].showRound"
+                />
             </div>
         </div>
     </div>

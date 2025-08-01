@@ -58,3 +58,15 @@ export const getTournamentStatus = (tournament: Tournament): MatchStatus => {
 export const capitalise = (str: string): string => {
     return str.charAt(0).toUpperCase() + str.slice(1);
 };
+
+/**
+ * Ceils a date to the next minute
+ * @param date The date to ceil
+ */
+export const ceilToNextMinute = (date: Date) => {
+    if (date.getSeconds() > 0) {
+        date.setMinutes(date.getMinutes() + 1);
+        date.setSeconds(0);
+    }
+    return date;
+};

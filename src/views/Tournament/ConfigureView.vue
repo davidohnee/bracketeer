@@ -13,8 +13,9 @@ import ShareModal from "@/components/modals/ShareFullModal.vue";
 import gistClient from "@/gistClient";
 import TrackModal from "@/components/modals/ShareViewerModal.vue";
 import { Notifications } from "@/components/notifications/createNotification";
-import { updateKnockoutMatches } from "@/helpers/matchplan/knockoutPhase";
+import { generateKnockoutBracket, updateKnockoutMatches } from "@/helpers/matchplan/knockoutPhase";
 import { agoString, getTournamentStatus } from "@/helpers/common";
+import { generateGroupPhase } from "@/helpers/matchplan/groupPhase";
 
 const props = defineProps<{
     tournament: Tournament;
@@ -63,29 +64,17 @@ const deleteTournament = () => {
     );
 };
 
-const resetGroupPhase = (phase: GroupTournamentPhase) => {
-    for (const match of phase.matches) {
-        match.teams[0].score = 0;
-        match.teams[1].score = 0;
-        match.status = "scheduled";
-    }
+const resetGroupPhase = (phase: GroupTournamentPhase, tournament: Tournament) => {
+    phase.matches = generateGroupPhase(phase, tournament);
 };
-const resetKnockoutPhase = (phase: KnockoutTournamentPhase) => {
-    for (const round of phase.rounds) {
-        for (const match of round.matches) {
-            for (const team of match.teams) {
-                team.score = 0;
-                delete team.ref;
-            }
-            match.status = "scheduled";
-        }
-    }
+const resetKnockoutPhase = (phase: KnockoutTournamentPhase, tournament: Tournament) => {
+    phase.rounds = generateKnockoutBracket(phase, tournament);
 };
-const resetPhase = (phase: TournamentPhase) => {
+const resetPhase = (phase: TournamentPhase, tournament: Tournament) => {
     if (phase.type === "group") {
-        resetGroupPhase(phase as GroupTournamentPhase);
+        resetGroupPhase(phase as GroupTournamentPhase, tournament);
     } else if (phase.type === "knockout") {
-        resetKnockoutPhase(phase as KnockoutTournamentPhase);
+        resetKnockoutPhase(phase as KnockoutTournamentPhase, tournament);
     }
 };
 
@@ -98,7 +87,7 @@ const resetTournament = () => {
             const rawTournament = toRaw(tournament);
 
             for (const phase of rawTournament.phases) {
-                resetPhase(phase);
+                resetPhase(phase, rawTournament);
             }
 
             tournament.phases = [...rawTournament.phases];

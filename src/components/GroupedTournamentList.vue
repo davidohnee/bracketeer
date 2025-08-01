@@ -7,6 +7,9 @@ const props = defineProps<{
     modelValue: RichMatch[];
     tournament: Tournament;
     readonly?: boolean;
+    showPhase?: boolean;
+    showRound?: boolean;
+    showGroup?: boolean;
 }>();
 const emit = defineEmits<{
     (e: "update:modelValue", value: RichMatch[]): void;
@@ -25,16 +28,31 @@ const groupings = computed(() => {
     // Group matches by the selected option
     const groupedMatches: Record<string, Match[]> = {};
     for (const match of matches.value) {
-        let key = match.phase.name + ": " + match.round!.name;
+        let key = "";
 
-        console.log("Grouping match", match.match.id, "by key", match.phase);
+        if (props.showPhase) {
+            key += match.phaseName;
+        }
+        if (props.showRound) {
+            if (key) {
+                key += " - ";
+            }
+            key += match.roundName;
+        }
 
-        if (match.phase.type == "group") {
-            const group = (match.phase as GroupTournamentPhase).groups?.find((g) =>
-                match.match.teams.some((x) => g.teams.some((y) => y.id === x.ref?.id)),
-            );
-            if (group) {
-                key += " - " + group.name;
+        if (props.showGroup) {
+            const phase = props.tournament.phases.find((p) => p.id === match.phaseId)!;
+
+            if (phase.type == "group") {
+                const group = (phase as GroupTournamentPhase).groups?.find((g) =>
+                    match.match.teams.some((x) => g.teams.some((y) => y.id === x.ref?.id)),
+                );
+                if (group) {
+                    if (key) {
+                        key += ": ";
+                    }
+                    key += group.name;
+                }
             }
         }
 
@@ -53,7 +71,10 @@ const groupings = computed(() => {
             v-for="(group, key) in groupings"
             :key="key"
         >
-            <div class="header">
+            <div
+                class="header"
+                v-if="key"
+            >
                 <span class="title">{{ key }}</span>
             </div>
             <div class="matches">

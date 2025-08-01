@@ -4,6 +4,7 @@ import { getCourtName } from "@/helpers";
 import type { RichMatch, Tournament } from "@/types/tournament";
 import { useRoute, useRouter } from "vue-router";
 import GroupedTournamentList from "./GroupedTournamentList.vue";
+import { tournamentRichMatches } from "@/helpers/matches";
 
 const props = defineProps<{
     modelValue: Tournament;
@@ -70,33 +71,7 @@ const getTeamName = (teamId: string | undefined) => {
     return team ? team.name : null;
 };
 
-const allMatches = computed<RichMatch[]>(() => {
-    const matches: RichMatch[] = [];
-
-    for (const phase of tournament.value.phases) {
-        if (phase.type === "group") {
-            for (const match of phase.matches) {
-                matches.push({ match, round: match.round, phase });
-            }
-        } else if (phase.type === "knockout") {
-            for (const round of phase.rounds) {
-                for (const match of round.matches) {
-                    matches.push({ match, round, phase });
-                }
-            }
-        }
-    }
-
-    // Sort matches by date
-    matches.sort((a, b) => {
-        const dateA = a.match.date.getTime();
-        const dateB = b.match.date.getTime();
-        if (dateA < dateB) return -1;
-        if (dateA > dateB) return 1;
-        return a.round!.name.localeCompare(b.round!.name);
-    });
-    return matches;
-});
+const allMatches = computed(() => tournamentRichMatches(tournament.value));
 
 const GROUP_OPTIONS = ["round", "time", "team", "court"] as const;
 
@@ -117,7 +92,7 @@ const grouped = computed(() => {
 
         const keys: (string | null)[] = [];
         if (selectedGroupOption.value === "round") {
-            keys.push(match.round!.name);
+            keys.push(match.roundName);
         } else if (selectedGroupOption.value === "time") {
             keys.push(match.match.date.toLocaleString());
         } else if (selectedGroupOption.value === "team") {
@@ -151,6 +126,19 @@ const grouped = computed(() => {
 
     return groupedMatches;
 });
+
+interface DisplaySetting {
+    showPhase: boolean;
+    showRound: boolean;
+    showGroup: boolean;
+}
+
+const displaySettings: { [K in (typeof GROUP_OPTIONS)[number]]: DisplaySetting } = {
+    round: { showPhase: false, showRound: false, showGroup: true },
+    time: { showPhase: true, showRound: true, showGroup: true },
+    team: { showPhase: true, showRound: true, showGroup: true },
+    court: { showPhase: true, showRound: true, showGroup: false },
+};
 </script>
 
 <template>
@@ -179,6 +167,9 @@ const grouped = computed(() => {
                     :tournament="tournament"
                     :readonly="readonly"
                     @update:model-value="onChanged"
+                    :show-group="displaySettings[selectedGroupOption].showGroup"
+                    :show-phase="displaySettings[selectedGroupOption].showPhase"
+                    :show-round="displaySettings[selectedGroupOption].showRound"
                 />
             </div>
         </div>

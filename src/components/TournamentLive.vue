@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, nextTick, onMounted, onUnmounted, ref, toRaw } from "vue";
+import { computed, onMounted, onUnmounted, ref, toRaw } from "vue";
 import type { GroupTournamentPhase, Match, RichMatch, Tournament } from "@/types/tournament";
 import TeamTable from "@/components/TeamTable.vue";
 import { useRoute } from "vue-router";
@@ -7,6 +7,8 @@ import { useTournamentsStore } from "@/stores/tournaments";
 import { allMatches as getAllMatches } from "@/helpers/phase";
 import { updateKnockoutMatches } from "@/helpers/matchplan/knockoutPhase";
 import GroupedTournamentList from "./GroupedTournamentList.vue";
+import { tournamentRichMatches } from "@/helpers/matches";
+import { ceilToNextMinute } from "@/helpers/common";
 
 const props = defineProps<{
     tournament: Tournament;
@@ -21,36 +23,9 @@ const onChanged = () => {
     emit("update:modelValue", tournament.value);
 };
 
-const allMatches = computed<RichMatch[]>(() => {
-    const matches: RichMatch[] = [];
+const allMatches = computed(() => tournamentRichMatches(tournament.value));
 
-    for (const phase of props.tournament.phases) {
-        if (phase.type === "group") {
-            for (const match of phase.matches) {
-                matches.push({ match, round: match.round, phase });
-            }
-        } else if (phase.type === "knockout") {
-            for (const round of phase.rounds) {
-                for (const match of round.matches) {
-                    matches.push({ match, round, phase });
-                }
-            }
-        }
-    }
-
-    // Sort matches by date
-    matches.sort((a, b) => {
-        const dateA = a.match.date.getTime();
-        const dateB = b.match.date.getTime();
-        if (dateA < dateB) return -1;
-        if (dateA > dateB) return 1;
-        return a.round!.name.localeCompare(b.round!.name);
-    });
-    return matches;
-});
-
-const grouped = computed(() => {
-    // Group matches by the selected option
+const groupedByTime = computed(() => {
     const groupedMatches: Record<string, RichMatch[]> = {};
     for (const match of allMatches.value) {
         const key = match.match.date.toISOString();
@@ -63,136 +38,127 @@ const grouped = computed(() => {
     return groupedMatches;
 });
 
-const defaultCurrentTab = computed(() => {
-    // grouped -> latest key with matches that are not completed
-    const keys = Object.keys(grouped.value).sort((a, b) => {
+/** sorted ascending */
+const startTimes = computed(() =>
+    Object.keys(groupedByTime.value).sort((a, b) => {
         const dateA = new Date(a).getTime();
         const dateB = new Date(b).getTime();
         return dateA - dateB;
-    });
-    for (const key of keys) {
-        const matches = grouped.value[key];
-        if (matches.some((match) => match.match.status === "in-progress")) {
-            return key;
-        }
-    }
-    return null;
-});
+    }),
+);
+const startTimesDesc = computed(() => [...startTimes.value].reverse());
 
-const lastCompletedRound = computed(() => {
-    // grouped -> latest key with matches that are completed
-    const keys = Object.keys(grouped.value).sort((a, b) => {
-        const dateA = new Date(a).getTime();
-        const dateB = new Date(b).getTime();
-        return dateB - dateA;
-    });
-    for (const key of keys) {
-        const matches = grouped.value[key];
-        if (matches.every((match) => match.match.status === "completed")) {
-            return key;
+const firstStartTimeWith = (status: Match["status"]) => {
+    return computed(() => {
+        for (const key of startTimes.value) {
+            const matches = groupedByTime.value[key];
+            if (matches.some((match) => match.match.status === status)) {
+                return key;
+            }
         }
-    }
-    return null;
-});
-
-const nextRound = computed(() => {
-    // grouped -> latest key with matches that are not completed
-    const keys = Object.keys(grouped.value).sort((a, b) => {
-        const dateA = new Date(a).getTime();
-        const dateB = new Date(b).getTime();
-        return dateA - dateB;
+        return null;
     });
-    for (const key of keys) {
-        const matches = grouped.value[key];
-        if (matches.some((match) => match.match.status === "scheduled")) {
-            return key;
+};
+const lastStartTimeWith = (status: Match["status"]) => {
+    return computed(() => {
+        for (const key of startTimesDesc.value) {
+            const matches = groupedByTime.value[key];
+            if (matches.some((match) => match.match.status === status)) {
+                return key;
+            }
         }
-    }
-    return null;
-});
+        return null;
+    });
+};
 
-const nextBreak = computed(() => {
-    const next = new Date(nextRound.value!);
-    next.setMinutes(next.getMinutes() - tournament.value.config.breakDuration);
+const currentStartTime = firstStartTimeWith("in-progress");
+const previousStartTime = lastStartTimeWith("completed");
+const nextStartTime = firstStartTimeWith("scheduled");
+
+const nextBreakTime = computed(() => {
+    const next = new Date(currentStartTime.value!);
+    next.setMinutes(next.getMinutes() + tournament.value.config.matchDuration);
     return next;
 });
 
-const nextBreakCountdown = ref<string | null>(null);
-const nextRoundCountdown = ref<string | null>("");
-const updateNextRoundCountdown = () => {
-    if (nextRound.value === null) {
-        nextRoundCountdown.value = null;
-        return;
-    }
-    const nextRoundDate = new Date(grouped.value[nextRound.value!][0].match.date);
-    const now = new Date();
-    const diff = nextRoundDate.getTime() - now.getTime();
-    if (diff == 0) {
-        nextTick(() => {
-            currentTab.value = nextRound.value;
-        });
-        nextRoundCountdown.value = "Soon...";
-        return;
-    }
-    if (diff <= 0) {
-        nextRoundCountdown.value = "Soon...";
-        return;
-    }
-    const minutes = Math.floor(diff / 1000 / 60);
-    const seconds = Math.floor((diff / 1000) % 60);
-    nextRoundCountdown.value = `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+const diffToString = (diff: number) => {
+    if (diff < 0) return "Soon...";
+    const minutes = Math.floor(diff / (60 * 1000));
 
-    const thisEndDiff = diff - tournament.value.config.breakDuration * 1000 * 60;
-    if (thisEndDiff > 0) {
-        const endMinutes = Math.floor(thisEndDiff / 1000 / 60);
-        const endSeconds = Math.floor((thisEndDiff / 1000) % 60);
-        nextBreakCountdown.value = `${String(endMinutes).padStart(2, "0")}:${String(endSeconds).padStart(2, "0")}`;
-    } else {
-        nextBreakCountdown.value = "Soon...";
+    if (minutes > 24 * 60) {
+        return `${Math.floor(minutes / (24 * 60))} days`;
     }
+    if (minutes > 60) {
+        return `${Math.floor(minutes / 60)}h ${minutes % 60}m`;
+    }
+
+    const seconds = Math.floor((diff % (60 * 1000)) / 1000);
+    return `${minutes}:${seconds.toString().padStart(2, "0")}`;
 };
-const updateNextRoundCountdownInterval = setInterval(() => {
-    updateNextRoundCountdown();
-}, 1000);
+
+const nextBreakCountdown = ref<string | null>(null);
+const nextRoundCountdown = ref<string | null>(null);
+const updateCountdowns = () => {
+    const updateNextRoundStart = () => {
+        if (!nextStartTime.value) {
+            nextRoundCountdown.value = null;
+            return;
+        }
+
+        const nextRoundDate = new Date(nextStartTime.value!);
+        const now = new Date();
+        const diff = nextRoundDate.getTime() - now.getTime();
+        nextRoundCountdown.value = diffToString(diff);
+    };
+
+    const updateCurrentRoundEnd = () => {
+        if (!currentStartTime.value) {
+            nextBreakCountdown.value = null;
+            return;
+        }
+
+        const currentRoundDate = new Date(currentStartTime.value!);
+        currentRoundDate.setMinutes(
+            currentRoundDate.getMinutes() + tournament.value.config.matchDuration,
+        );
+        const now = new Date();
+        const diff = currentRoundDate.getTime() - now.getTime();
+        nextBreakCountdown.value = diffToString(diff);
+    };
+
+    updateNextRoundStart();
+    updateCurrentRoundEnd();
+};
+
+let updateCountdownTask = 0;
 
 onMounted(() => {
-    updateNextRoundCountdown();
+    updateCountdowns();
+    updateCountdownTask = setInterval(() => {
+        updateCountdowns();
+    }, 1000);
 });
 
 onUnmounted(() => {
-    clearInterval(updateNextRoundCountdownInterval);
+    clearInterval(updateCountdownTask);
 });
 
-const currentTab = ref<string | null>(defaultCurrentTab.value);
-const missingResults = computed<RichMatch[]>(() => {
-    return grouped.value[lastCompletedRound.value!] || [];
+const latestResults = computed<RichMatch[]>(() => {
+    if (previousStartTime.value) {
+        return groupedByTime.value[previousStartTime.value] || [];
+    }
+    return [];
 });
 
-const groupPhaseCompleted = computed(() => {
-    return (tournament.value.phases[0] as GroupTournamentPhase).matches.every(
-        (match) => match.status === "completed",
-    );
-});
+const showTables = computed(() => true);
 
 const route = useRoute();
 const teamMatchesRouteName = computed(() => {
     return String(route.name).split(".")[0] + ".table";
 });
 
-/**
- * Ceils a date to the next minute
- * @param date The date to ceil
- */
-const ceilToNextMinute = (date: Date) => {
-    if (date.getSeconds() > 0) {
-        date.setMinutes(date.getMinutes() + 1);
-        date.setSeconds(0);
-    }
-    return date;
-};
-
 const adjustAndSkip = () => {
-    const veryNextRound = new Date(grouped.value[nextRound.value!][0].match.date);
+    const veryNextRound = new Date(nextStartTime.value!);
     const adjustedBaseDate = new Date();
 
     // all games that are scheduled, get the difference to "veryNextRound", ceilToNextMinute and apply
@@ -222,24 +188,27 @@ const adjustAndSkip = () => {
         }
     }
     tournament.value.phases = [...rawTournament.phases];
-    currentTab.value = defaultCurrentTab.value;
 };
 
+/**
+ * Finish the current round and proceed to the next one.
+ * This will mark all matches in the current round as completed.
+ */
 const proceed = () => {
-    const matches = toRaw(grouped.value[currentTab.value!]);
+    const key = currentStartTime.value!;
+    const matches = toRaw(groupedByTime.value[key]);
     for (const match of matches) {
         if (match.match.status === "in-progress") {
             match.match.status = "completed";
         }
     }
-    grouped.value[currentTab.value!] = matches;
-    currentTab.value = defaultCurrentTab.value;
+    groupedByTime.value[key] = matches;
     updateKnockoutMatches(tournament.value);
     tournamentStore.share(tournament.value);
 };
 
 const adjustAndSkipText = computed(() => {
-    if (!missingResults.value.length) {
+    if (!latestResults.value.length) {
         return "Start tournament";
     }
     return nextRoundCountdown.value == "Soon..."
@@ -253,91 +222,100 @@ const adjustAndSkipText = computed(() => {
         class="live"
         :class="{ readonly }"
     >
-        <div
-            class="missing-results"
-            v-if="currentTab == null"
-        >
+        <div class="round">
+            <!--time-->
             <div
                 class="time"
-                v-if="nextRoundCountdown"
+                v-if="nextStartTime || currentStartTime"
             >
-                <p>
-                    Next round: <strong>{{ new Date(nextRound!).toLocaleTimeString() }}</strong>
-                </p>
-                <p class="countdown">
-                    <ion-icon name="timer-outline" />
-                    {{ nextRoundCountdown }}
-                </p>
+                <template v-if="currentStartTime">
+                    <p>
+                        Ends at:
+                        <strong>{{ new Date(nextBreakTime!).toLocaleTimeString() }}</strong>
+                    </p>
+                    <p class="countdown">
+                        <ion-icon name="timer-outline" />
+                        {{ nextBreakCountdown ?? "..." }}
+                    </p>
+                </template>
+                <template v-else-if="nextStartTime">
+                    <p>
+                        Next round:
+                        <strong>{{ new Date(nextStartTime!).toLocaleTimeString() }}</strong>
+                    </p>
+                    <p class="countdown">
+                        <ion-icon name="timer-outline" />
+                        {{ nextRoundCountdown ?? "..." }}
+                    </p>
+                </template>
             </div>
-            <template v-if="missingResults.length">
-                <h3>Results</h3>
+
+            <!--ongoing games, finished games or upcoming games-->
+            <template v-if="currentStartTime">
+                <h3>Ongoing</h3>
                 <GroupedTournamentList
-                    v-model="missingResults"
+                    v-model="groupedByTime[currentStartTime]"
                     :tournament="tournament"
                     :readonly="readonly"
                     @update:model-value="onChanged"
+                    show-group
+                    show-phase
+                    show-round
+                />
+            </template>
+            <template v-else-if="latestResults.length">
+                <h3>Results</h3>
+                <GroupedTournamentList
+                    v-model="latestResults"
+                    :tournament="tournament"
+                    :readonly="readonly"
+                    @update:model-value="onChanged"
+                    show-group
+                    show-phase
+                    show-round
                 />
             </template>
             <template v-else>
                 <!-- start of tournament -->
                 <h3>Upcoming Matches</h3>
                 <GroupedTournamentList
-                    v-model="grouped[nextRound!]"
+                    v-model="groupedByTime[nextStartTime!]"
                     :tournament="tournament"
                     :readonly="readonly"
                     @update:model-value="onChanged"
+                    show-group
+                    show-phase
+                    show-round
                 />
             </template>
-            <div
-                class="actions"
-                :class="{ center: !missingResults.length }"
-                v-if="nextRoundCountdown && !readonly"
-            >
-                <button @click="adjustAndSkip">{{ adjustAndSkipText }}</button>
-            </div>
-            <template v-if="!nextRoundCountdown">
-                <h3>No upcoming matches</h3>
-            </template>
-        </div>
-        <div
-            class="round"
-            v-else
-        >
-            <div
-                class="time"
-                v-if="nextBreakCountdown"
-            >
-                <p>
-                    Until: <strong>{{ new Date(nextBreak!).toLocaleTimeString() }}</strong>
-                </p>
-                <p class="countdown">
-                    <ion-icon name="timer-outline" />
-                    {{ nextBreakCountdown }}
-                </p>
-            </div>
-            <h3>Ongoing</h3>
-            <GroupedTournamentList
-                v-model="grouped[currentTab]"
-                :tournament="tournament"
-                :readonly="readonly"
-                @update:model-value="onChanged"
-            />
-            <div
-                class="actions"
-                v-if="!readonly"
-            >
-                <button
-                    class="secondary"
-                    @click="proceed"
+
+            <!--finish round, proceed to next round-->
+            <template v-if="!readonly && nextRoundCountdown">
+                <div
+                    class="actions"
+                    :class="{ center: !previousStartTime && !currentStartTime }"
+                    v-if="nextRoundCountdown && !readonly"
                 >
-                    <ion-icon name="arrow-forward" />
-                    Proceed
-                </button>
-            </div>
+                    <button
+                        class="secondary"
+                        @click="proceed"
+                        v-if="currentStartTime"
+                    >
+                        <ion-icon name="arrow-forward" />
+                        Proceed
+                    </button>
+                    <button
+                        v-else
+                        @click="adjustAndSkip"
+                    >
+                        {{ adjustAndSkipText }}
+                    </button>
+                </div>
+            </template>
         </div>
         <div
             class="table"
-            v-if="!groupPhaseCompleted"
+            v-if="showTables"
         >
             <TeamTable
                 :tournament="tournament"
@@ -380,8 +358,7 @@ const adjustAndSkipText = computed(() => {
     }
 }
 
-.round,
-.missing-results {
+.round {
     position: sticky;
     top: 5em;
     height: max-content;
@@ -409,6 +386,7 @@ const adjustAndSkipText = computed(() => {
         align-items: center;
         gap: 0.5em;
         padding-left: 0.5em;
+        min-width: max-content;
     }
 }
 

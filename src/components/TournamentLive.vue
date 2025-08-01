@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, ref, toRaw } from "vue";
-import type { GroupTournamentPhase, Match, RichMatch, Tournament } from "@/types/tournament";
+import type { Match, RichMatch, Tournament } from "@/types/tournament";
 import TeamTable from "@/components/TeamTable.vue";
 import { useRoute } from "vue-router";
 import { useTournamentsStore } from "@/stores/tournaments";
@@ -150,8 +150,6 @@ const latestResults = computed<RichMatch[]>(() => {
     return [];
 });
 
-const showTables = computed(() => true);
-
 const route = useRoute();
 const teamMatchesRouteName = computed(() => {
     return String(route.name).split(".")[0] + ".table";
@@ -214,6 +212,18 @@ const adjustAndSkipText = computed(() => {
     return nextRoundCountdown.value == "Soon..."
         ? "Adjust start times & proceed"
         : "Adjust start times & skip";
+});
+
+const currentPhase = computed(() => {
+    let phaseId = "";
+    if (currentStartTime.value) {
+        phaseId = groupedByTime.value[currentStartTime.value][0].phaseId;
+    } else if (previousStartTime.value) {
+        phaseId = groupedByTime.value[previousStartTime.value][0].phaseId;
+    } else if (nextStartTime.value) {
+        phaseId = groupedByTime.value[nextStartTime.value][0].phaseId;
+    }
+    return tournament.value.phases.find((phase) => phase.id === phaseId);
 });
 </script>
 
@@ -315,16 +325,12 @@ const adjustAndSkipText = computed(() => {
         </div>
         <div
             class="table"
-            v-if="showTables"
+            v-if="currentPhase?.type === 'group'"
         >
             <TeamTable
                 :tournament="tournament"
                 :teamMatchesRouteName="teamMatchesRouteName"
-                :phase="
-                    tournament.phases.find(
-                        (phase) => phase.type === 'group',
-                    ) as GroupTournamentPhase
-                "
+                :phase="currentPhase"
             />
         </div>
     </div>

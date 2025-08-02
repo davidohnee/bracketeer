@@ -133,6 +133,13 @@ const selectedGroup = ref("");
 const autoSelectGroup = () => {
     // set the selected group to the first group that has in-progress matches or is scheduled
     const groups = Object.keys(grouped.value);
+
+    if (["team", "court"].includes(selectedGroupOption.value)) {
+        // For 'team' or 'court', we select the first group by default
+        selectedGroup.value = groups[0] || "";
+        return;
+    }
+
     if (groups.length > 0) {
         selectedGroup.value =
             groups.find((group) => {

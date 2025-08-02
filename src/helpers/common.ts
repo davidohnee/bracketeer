@@ -70,3 +70,28 @@ export const ceilToNextMinute = (date: Date) => {
     }
     return date;
 };
+
+export const localeDateTimeString = (
+    date: Date,
+    hide: {
+        today?: boolean;
+        thisYear?: boolean;
+    } = { today: true, thisYear: true },
+): string => {
+    // hide year if it's the current year
+    const options: Intl.DateTimeFormatOptions = {
+        hour: "2-digit",
+        minute: "2-digit",
+        month: "short",
+        day: "2-digit",
+        year: "numeric",
+    };
+    if (hide.today && date.toDateString() === new Date().toDateString()) {
+        options.month = undefined;
+        options.day = undefined;
+    }
+    if (hide.thisYear && date.getFullYear() === new Date().getFullYear()) {
+        options.year = undefined;
+    }
+    return date.toLocaleString(undefined, options);
+};

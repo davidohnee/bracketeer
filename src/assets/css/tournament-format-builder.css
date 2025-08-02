@@ -10,7 +10,7 @@
         flex-direction: column;
         --c: var(--color-primary);
         border: 1px solid var(--color-border);
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        box-shadow: var(--fx-box-shadow);
         overflow: clip;
         border-radius: 1em;
         max-width: 50ch;

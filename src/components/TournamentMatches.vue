@@ -1,10 +1,12 @@
 <script setup lang="ts">
-import { computed, ref, watch } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 import { getCourtName } from "@/helpers";
 import type { RichMatch, Tournament } from "@/types/tournament";
 import { useRoute, useRouter } from "vue-router";
 import GroupedTournamentList from "./GroupedTournamentList.vue";
 import { tournamentRichMatches } from "@/helpers/matches";
+import TabSelector from "./TabSelector.vue";
+import { localeDateTimeString } from "@/helpers/common";
 
 const props = defineProps<{
     modelValue: Tournament;
@@ -94,7 +96,7 @@ const grouped = computed(() => {
         if (selectedGroupOption.value === "round") {
             keys.push(match.roundName);
         } else if (selectedGroupOption.value === "time") {
-            keys.push(match.match.date.toLocaleString());
+            keys.push(localeDateTimeString(match.match.date));
         } else if (selectedGroupOption.value === "team") {
             keys.push(getTeamName(match.match.teams[0].ref?.id));
             keys.push(getTeamName(match.match.teams[1].ref?.id));
@@ -127,6 +129,29 @@ const grouped = computed(() => {
     return groupedMatches;
 });
 
+const selectedGroup = ref("");
+const autoSelectGroup = () => {
+    // set the selected group to the first group that has in-progress matches or is scheduled
+    const groups = Object.keys(grouped.value);
+
+    if (["team", "court"].includes(selectedGroupOption.value)) {
+        // For 'team' or 'court', we select the first group by default
+        selectedGroup.value = groups[0] || "";
+        return;
+    }
+
+    if (groups.length > 0) {
+        selectedGroup.value =
+            groups.find((group) => {
+                return grouped.value[group].some(
+                    (match) =>
+                        match.match.status === "in-progress" || match.match.status === "scheduled",
+                );
+            }) || groups[0];
+    }
+};
+watch(selectedGroupOption, autoSelectGroup);
+
 interface DisplaySetting {
     showPhase: boolean;
     showRound: boolean;
@@ -139,6 +164,10 @@ const displaySettings: { [K in (typeof GROUP_OPTIONS)[number]]: DisplaySetting }
     team: { showPhase: true, showRound: true, showGroup: true },
     court: { showPhase: true, showRound: true, showGroup: false },
 };
+
+onMounted(() => {
+    autoSelectGroup();
+});
 </script>
 
 <template>
@@ -156,14 +185,14 @@ const displaySettings: { [K in (typeof GROUP_OPTIONS)[number]]: DisplaySetting }
             </div>
         </div>
         <div class="rounds">
-            <div
-                class="round"
-                v-for="(_, key) in grouped"
-                :key="key"
-            >
-                <h3 class="round-title">{{ key }}</h3>
+            <TabSelector
+                v-model="selectedGroup"
+                :options="grouped ? Object.keys(grouped) : []"
+            />
+            <div class="round">
                 <GroupedTournamentList
-                    v-model="grouped[key]"
+                    v-if="grouped[selectedGroup]"
+                    v-model="grouped[selectedGroup]"
                     :tournament="tournament"
                     :readonly="readonly"
                     @update:model-value="onChanged"
@@ -189,5 +218,9 @@ h3 {
 
 .chip-group {
     padding: 1em;
+}
+
+.round {
+    margin-top: 1em;
 }
 </style>

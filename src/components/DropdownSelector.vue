@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, nextTick, ref, watch } from "vue";
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from "vue";
 
 const props = defineProps<{
     modelValue: string;
@@ -27,11 +27,17 @@ const select = (value: string) => {
 
 const trueDropdown = ref<HTMLElement | null>(null);
 const container = ref<HTMLElement | null>(null);
+
+let trueDropdownRect: DOMRect | null = null;
+let containerRect: DOMRect | null = null;
+
 watch(expanded, (value) => {
     nextTick(() => {
         if (value && trueDropdown.value && container.value) {
-            const rect = trueDropdown.value.getBoundingClientRect();
-            const containerRect = container.value.getBoundingClientRect();
+            if (!trueDropdownRect || !containerRect) {
+                trueDropdownRect = trueDropdown.value.getBoundingClientRect();
+                containerRect = container.value.getBoundingClientRect();
+            }
 
             const top = containerRect.top;
             const bottom = containerRect.bottom;
@@ -40,21 +46,33 @@ watch(expanded, (value) => {
 
             trueDropdown.value.style.left = containerRect.left + "px";
 
-            const enoughSpaceBelow = spaceBelow > rect.height;
+            const enoughSpaceBelow = spaceBelow > trueDropdownRect.height;
 
             if (enoughSpaceBelow) {
                 trueDropdown.value.style.top = bottom + "px";
                 trueDropdown.value.style.bottom = "auto";
             } else {
                 trueDropdown.value.style.top = "auto";
-                trueDropdown.value.style.bottom = top - rect.height + "px";
+                trueDropdown.value.style.bottom = window.innerHeight - top + "px";
             }
         }
     });
 });
 
-window.addEventListener("click", () => {
+const handleWindowClick = () => {
     expanded.value = false;
+};
+const handleResize = () => {
+    trueDropdownRect = null;
+    containerRect = null;
+};
+onMounted(() => {
+    window.addEventListener("click", handleWindowClick);
+    window.addEventListener("resize", handleResize);
+});
+onBeforeUnmount(() => {
+    window.removeEventListener("click", handleWindowClick);
+    window.removeEventListener("resize", handleResize);
 });
 </script>
 <template>

@@ -353,7 +353,7 @@ const currentPhase = computed(() => {
         grid-template-columns: 1fr !important;
         gap: 3em;
 
-        .no-round {
+        .round {
             position: unset;
         }
 

@@ -1,4 +1,6 @@
+import type { Tournament } from "@/types/tournament";
 import { capitalise } from "./common";
+import { generateId } from "./id";
 
 interface Default {
     name: string;
@@ -51,3 +53,38 @@ export const DEFAULTS: Record<string, Default> = {
         courtLabelPlural: "courts",
     },
 };
+
+const todayAt1800 = new Date();
+todayAt1800.setHours(18, 0, 0, 0);
+export const emptyTournament = () =>
+    ({
+        version: 3,
+        id: generateId(),
+        name: "",
+        teams: [],
+        phases: [
+            {
+                id: generateId(),
+                type: "group",
+                name: "Group Phase",
+                matches: [],
+                groups: [],
+                rounds: 3,
+            },
+            {
+                id: generateId(),
+                type: "knockout",
+                name: "Knockout Phase",
+                rounds: [],
+                teamCount: 8,
+            },
+        ],
+        config: {
+            breakDuration: 5,
+            knockoutBreakDuration: 5,
+            courts: 4,
+            startTime: todayAt1800,
+            matchDuration: 10,
+            sport: "other",
+        },
+    }) as Tournament;

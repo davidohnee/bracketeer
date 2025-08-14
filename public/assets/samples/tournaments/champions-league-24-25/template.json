@@ -1,0 +1,3307 @@
+{
+    "version": 3,
+    "id": "1694b236-7530-4e1d-beb0-00549ec3ce69",
+    "name": "Champions League",
+    "teams": [
+        {
+            "id": "5bfa2dad-e2fb-4ca2-b93a-726bc5c0405e",
+            "name": "Arsenal"
+        },
+        {
+            "id": "85314b25-f029-4c56-a0b1-0db1e5ad5981",
+            "name": "Girona"
+        },
+        {
+            "id": "5c5fff19-9fb2-46ba-ba20-1c6358e405b3",
+            "name": "Sturm Graz"
+        },
+        {
+            "id": "08e57f87-5871-45b9-beec-67c2376c934d",
+            "name": "Benfica"
+        },
+        {
+            "id": "d351c0f1-9129-40a0-9163-38d4aa2b1f97",
+            "name": "RB Leipzig"
+        },
+        {
+            "id": "e4d1bbf4-53f5-4bc7-9a3d-d457c9f4f867",
+            "name": "Young Boys"
+        },
+        {
+            "id": "7ca402e0-ea18-426d-acd0-851023adaa2f",
+            "name": "Salzburg"
+        },
+        {
+            "id": "11a21ebd-23b2-4c10-898b-941dc4dbc445",
+            "name": "Sparta Prague"
+        },
+        {
+            "id": "9e770874-5a18-4ff5-a626-c47ea080ab3e",
+            "name": "Club Brugge"
+        },
+        {
+            "id": "1783b2fc-2aca-41b7-8f66-1ffa0c1efb62",
+            "name": "Inter"
+        },
+        {
+            "id": "69de3b84-39c7-4c51-be75-a3c3887d96c9",
+            "name": "Paris Saint-Germain"
+        },
+        {
+            "id": "55dfc25c-5b8c-43fb-8ea7-4e41b825db19",
+            "name": "Aston Villa"
+        },
+        {
+            "id": "2213ed47-adda-4f27-86ce-391057008ebe",
+            "name": "PSV Eindhoven"
+        },
+        {
+            "id": "5a8f2e33-f2e8-48a6-8be9-3b41bd2e9a4a",
+            "name": "Juventus"
+        },
+        {
+            "id": "c22f1ef6-7978-4a26-8e91-a234db57cd5f",
+            "name": "Atalanta"
+        },
+        {
+            "id": "05186880-dd6e-4e5f-af53-ae0dbd2caa4f",
+            "name": "Bologna"
+        },
+        {
+            "id": "72f3b01a-b17a-4ab5-b560-36b52a88604d",
+            "name": "FK Crvena Zvezda"
+        },
+        {
+            "id": "20ef359d-fd8a-48be-b44c-475c4292c320",
+            "name": "Borussia Dortmund"
+        },
+        {
+            "id": "c0e21c3a-a495-4fb7-88f7-a861e3ddf07f",
+            "name": "Celtic"
+        },
+        {
+            "id": "379c5d82-bc83-45ba-b00a-bc15df3eb26e",
+            "name": "Milan"
+        },
+        {
+            "id": "4a54b6a0-4b38-4b7e-b23e-bab4b40ab00c",
+            "name": "Brest"
+        },
+        {
+            "id": "db9f9b76-7060-407c-bbeb-94beecca7ee7",
+            "name": "Bayer Leverkusen"
+        },
+        {
+            "id": "ab01eb5c-2ff0-412a-b94f-b9c19ac700ae",
+            "name": "Dinamo Zagreb"
+        },
+        {
+            "id": "2edef8c9-c21d-4846-a256-144f70a1fc97",
+            "name": "Manchester City"
+        },
+        {
+            "id": "254f5885-bda2-4e25-b09d-758a3e44d5a4",
+            "name": "Atletico Madrid"
+        },
+        {
+            "id": "bdb56da1-2c3a-45af-aaa4-739bbbf826ff",
+            "name": "Real Madrid"
+        },
+        {
+            "id": "f88d3ae1-b6bc-4fdf-9b14-82a21a68202e",
+            "name": "Bayern München"
+        },
+        {
+            "id": "5f558f4b-b5e2-4dba-b693-02fe439782dd",
+            "name": "Feyenoord"
+        },
+        {
+            "id": "ee5a41aa-8a42-42b1-905b-63cf78ec7e09",
+            "name": "VfB Stuttgart"
+        },
+        {
+            "id": "974e8f01-2b6f-4454-90fb-1923ce0fd5ea",
+            "name": "Lille"
+        },
+        {
+            "id": "74df4d6e-ced1-41a8-8923-be1aa25a327a",
+            "name": "Sporting CP"
+        },
+        {
+            "id": "2c193743-af77-4969-ab02-fd97845cb4fa",
+            "name": "Shakhtar Donetsk"
+        },
+        {
+            "id": "515dcb06-6f6a-401b-a2de-3054e4839535",
+            "name": "Barcelona"
+        },
+        {
+            "id": "a3f367a8-c9c9-47f4-9d63-31dd69c2d2d5",
+            "name": "Slovan Bratislava"
+        },
+        {
+            "id": "71dabb96-90ca-4462-a4e4-54734ca063b3",
+            "name": "Liverpool"
+        },
+        {
+            "id": "76d1d7e9-7976-4bb2-9f26-3db98085e460",
+            "name": "Monaco"
+        }
+    ],
+    "config": {
+        "courts": 15,
+        "matchDuration": 15,
+        "breakDuration": 5,
+        "knockoutBreakDuration": 5,
+        "startTime": "2024-09-17T16:45:00.000Z",
+        "sport": "foosball"
+    },
+    "phases": [
+        {
+            "id": "d6pnhm084we",
+            "type": "group",
+            "name": "Group Phase",
+            "matches": [
+                {
+                    "id": "trwcabimu88",
+                    "court": 1,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "20ef359d-fd8a-48be-b44c-475c4292c320",
+                                "name": "Borussia Dortmund"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "c0e21c3a-a495-4fb7-88f7-a861e3ddf07f",
+                                "name": "Celtic"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T16:30:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "kvzb6pwxak",
+                        "name": "Round 1",
+                        "index": 0
+                    }
+                },
+                {
+                    "id": "zg74efhbczi",
+                    "court": 2,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "5bfa2dad-e2fb-4ca2-b93a-726bc5c0405e",
+                                "name": "Arsenal"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "76d1d7e9-7976-4bb2-9f26-3db98085e460",
+                                "name": "Monaco"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T16:30:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "kvzb6pwxak",
+                        "name": "Round 1",
+                        "index": 0
+                    }
+                },
+                {
+                    "id": "jj1rlgh4yi",
+                    "court": 3,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "85314b25-f029-4c56-a0b1-0db1e5ad5981",
+                                "name": "Girona"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "71dabb96-90ca-4462-a4e4-54734ca063b3",
+                                "name": "Liverpool"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T16:30:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "kvzb6pwxak",
+                        "name": "Round 1",
+                        "index": 0
+                    }
+                },
+                {
+                    "id": "ke0j3ym7zj",
+                    "court": 4,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "5c5fff19-9fb2-46ba-ba20-1c6358e405b3",
+                                "name": "Sturm Graz"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "a3f367a8-c9c9-47f4-9d63-31dd69c2d2d5",
+                                "name": "Slovan Bratislava"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T16:30:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "kvzb6pwxak",
+                        "name": "Round 1",
+                        "index": 0
+                    }
+                },
+                {
+                    "id": "31f5ct3s2g2",
+                    "court": 5,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "08e57f87-5871-45b9-beec-67c2376c934d",
+                                "name": "Benfica"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "515dcb06-6f6a-401b-a2de-3054e4839535",
+                                "name": "Barcelona"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T16:30:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "kvzb6pwxak",
+                        "name": "Round 1",
+                        "index": 0
+                    }
+                },
+                {
+                    "id": "lt9dglqprdk",
+                    "court": 6,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "d351c0f1-9129-40a0-9163-38d4aa2b1f97",
+                                "name": "RB Leipzig"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "2c193743-af77-4969-ab02-fd97845cb4fa",
+                                "name": "Shakhtar Donetsk"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T16:30:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "kvzb6pwxak",
+                        "name": "Round 1",
+                        "index": 0
+                    }
+                },
+                {
+                    "id": "eare0vfcdu",
+                    "court": 7,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "e4d1bbf4-53f5-4bc7-9a3d-d457c9f4f867",
+                                "name": "Young Boys"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "74df4d6e-ced1-41a8-8923-be1aa25a327a",
+                                "name": "Sporting CP"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T16:30:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "kvzb6pwxak",
+                        "name": "Round 1",
+                        "index": 0
+                    }
+                },
+                {
+                    "id": "wcytvvfks2",
+                    "court": 8,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "7ca402e0-ea18-426d-acd0-851023adaa2f",
+                                "name": "Salzburg"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "974e8f01-2b6f-4454-90fb-1923ce0fd5ea",
+                                "name": "Lille"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T16:30:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "kvzb6pwxak",
+                        "name": "Round 1",
+                        "index": 0
+                    }
+                },
+                {
+                    "id": "1be96sewmr7",
+                    "court": 9,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "11a21ebd-23b2-4c10-898b-941dc4dbc445",
+                                "name": "Sparta Prague"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "ee5a41aa-8a42-42b1-905b-63cf78ec7e09",
+                                "name": "VfB Stuttgart"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T16:30:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "kvzb6pwxak",
+                        "name": "Round 1",
+                        "index": 0
+                    }
+                },
+                {
+                    "id": "t91k422o35m",
+                    "court": 10,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "9e770874-5a18-4ff5-a626-c47ea080ab3e",
+                                "name": "Club Brugge"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "5f558f4b-b5e2-4dba-b693-02fe439782dd",
+                                "name": "Feyenoord"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T16:30:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "kvzb6pwxak",
+                        "name": "Round 1",
+                        "index": 0
+                    }
+                },
+                {
+                    "id": "u48o2smg4bc",
+                    "court": 11,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "1783b2fc-2aca-41b7-8f66-1ffa0c1efb62",
+                                "name": "Inter"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "f88d3ae1-b6bc-4fdf-9b14-82a21a68202e",
+                                "name": "Bayern München"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T16:30:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "kvzb6pwxak",
+                        "name": "Round 1",
+                        "index": 0
+                    }
+                },
+                {
+                    "id": "k4vjh8wey9h",
+                    "court": 12,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "69de3b84-39c7-4c51-be75-a3c3887d96c9",
+                                "name": "Paris Saint-Germain"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "bdb56da1-2c3a-45af-aaa4-739bbbf826ff",
+                                "name": "Real Madrid"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T16:30:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "kvzb6pwxak",
+                        "name": "Round 1",
+                        "index": 0
+                    }
+                },
+                {
+                    "id": "jsyfwzb14fq",
+                    "court": 13,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "55dfc25c-5b8c-43fb-8ea7-4e41b825db19",
+                                "name": "Aston Villa"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "254f5885-bda2-4e25-b09d-758a3e44d5a4",
+                                "name": "Atletico Madrid"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T16:30:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "kvzb6pwxak",
+                        "name": "Round 1",
+                        "index": 0
+                    }
+                },
+                {
+                    "id": "xqmxur0h0lf",
+                    "court": 14,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "2213ed47-adda-4f27-86ce-391057008ebe",
+                                "name": "PSV Eindhoven"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "2edef8c9-c21d-4846-a256-144f70a1fc97",
+                                "name": "Manchester City"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T16:30:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "kvzb6pwxak",
+                        "name": "Round 1",
+                        "index": 0
+                    }
+                },
+                {
+                    "id": "7b94h1921nx",
+                    "court": 15,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "5a8f2e33-f2e8-48a6-8be9-3b41bd2e9a4a",
+                                "name": "Juventus"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "ab01eb5c-2ff0-412a-b94f-b9c19ac700ae",
+                                "name": "Dinamo Zagreb"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T16:30:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "kvzb6pwxak",
+                        "name": "Round 1",
+                        "index": 0
+                    }
+                },
+                {
+                    "id": "02ugj4yfuwz8",
+                    "court": 1,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "c22f1ef6-7978-4a26-8e91-a234db57cd5f",
+                                "name": "Atalanta"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "db9f9b76-7060-407c-bbeb-94beecca7ee7",
+                                "name": "Bayer Leverkusen"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T16:50:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "kvzb6pwxak",
+                        "name": "Round 1",
+                        "index": 0
+                    }
+                },
+                {
+                    "id": "xpy91dz82mm",
+                    "court": 2,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "05186880-dd6e-4e5f-af53-ae0dbd2caa4f",
+                                "name": "Bologna"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "4a54b6a0-4b38-4b7e-b23e-bab4b40ab00c",
+                                "name": "Brest"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T16:50:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "kvzb6pwxak",
+                        "name": "Round 1",
+                        "index": 0
+                    }
+                },
+                {
+                    "id": "fropj01ntm6",
+                    "court": 3,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "72f3b01a-b17a-4ab5-b560-36b52a88604d",
+                                "name": "FK Crvena Zvezda"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "379c5d82-bc83-45ba-b00a-bc15df3eb26e",
+                                "name": "Milan"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T16:50:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "kvzb6pwxak",
+                        "name": "Round 1",
+                        "index": 0
+                    }
+                },
+                {
+                    "id": "4abfm90xhwt",
+                    "court": 1,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "c0e21c3a-a495-4fb7-88f7-a861e3ddf07f",
+                                "name": "Celtic"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "05186880-dd6e-4e5f-af53-ae0dbd2caa4f",
+                                "name": "Bologna"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T17:10:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "bmdlbbwrobk",
+                        "name": "Round 2",
+                        "index": 1
+                    }
+                },
+                {
+                    "id": "2wyloz5vksh",
+                    "court": 2,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "20ef359d-fd8a-48be-b44c-475c4292c320",
+                                "name": "Borussia Dortmund"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "72f3b01a-b17a-4ab5-b560-36b52a88604d",
+                                "name": "FK Crvena Zvezda"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T17:10:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "bmdlbbwrobk",
+                        "name": "Round 2",
+                        "index": 1
+                    }
+                },
+                {
+                    "id": "oi2h2nneox",
+                    "court": 4,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "76d1d7e9-7976-4bb2-9f26-3db98085e460",
+                                "name": "Monaco"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "71dabb96-90ca-4462-a4e4-54734ca063b3",
+                                "name": "Liverpool"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T16:50:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "bmdlbbwrobk",
+                        "name": "Round 2",
+                        "index": 1
+                    }
+                },
+                {
+                    "id": "w7203jfa7uc",
+                    "court": 5,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "a3f367a8-c9c9-47f4-9d63-31dd69c2d2d5",
+                                "name": "Slovan Bratislava"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "5bfa2dad-e2fb-4ca2-b93a-726bc5c0405e",
+                                "name": "Arsenal"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T16:50:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "bmdlbbwrobk",
+                        "name": "Round 2",
+                        "index": 1
+                    }
+                },
+                {
+                    "id": "4wzekztryoo",
+                    "court": 6,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "515dcb06-6f6a-401b-a2de-3054e4839535",
+                                "name": "Barcelona"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "85314b25-f029-4c56-a0b1-0db1e5ad5981",
+                                "name": "Girona"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T16:50:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "bmdlbbwrobk",
+                        "name": "Round 2",
+                        "index": 1
+                    }
+                },
+                {
+                    "id": "cudvszgxmyj",
+                    "court": 7,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "2c193743-af77-4969-ab02-fd97845cb4fa",
+                                "name": "Shakhtar Donetsk"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "5c5fff19-9fb2-46ba-ba20-1c6358e405b3",
+                                "name": "Sturm Graz"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T16:50:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "bmdlbbwrobk",
+                        "name": "Round 2",
+                        "index": 1
+                    }
+                },
+                {
+                    "id": "jk4e83fbdco",
+                    "court": 8,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "74df4d6e-ced1-41a8-8923-be1aa25a327a",
+                                "name": "Sporting CP"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "08e57f87-5871-45b9-beec-67c2376c934d",
+                                "name": "Benfica"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T16:50:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "bmdlbbwrobk",
+                        "name": "Round 2",
+                        "index": 1
+                    }
+                },
+                {
+                    "id": "t5789rjdot",
+                    "court": 9,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "974e8f01-2b6f-4454-90fb-1923ce0fd5ea",
+                                "name": "Lille"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "d351c0f1-9129-40a0-9163-38d4aa2b1f97",
+                                "name": "RB Leipzig"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T16:50:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "bmdlbbwrobk",
+                        "name": "Round 2",
+                        "index": 1
+                    }
+                },
+                {
+                    "id": "x781j610ux",
+                    "court": 10,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "ee5a41aa-8a42-42b1-905b-63cf78ec7e09",
+                                "name": "VfB Stuttgart"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "e4d1bbf4-53f5-4bc7-9a3d-d457c9f4f867",
+                                "name": "Young Boys"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T16:50:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "bmdlbbwrobk",
+                        "name": "Round 2",
+                        "index": 1
+                    }
+                },
+                {
+                    "id": "4dc3eyy24ix",
+                    "court": 11,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "5f558f4b-b5e2-4dba-b693-02fe439782dd",
+                                "name": "Feyenoord"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "7ca402e0-ea18-426d-acd0-851023adaa2f",
+                                "name": "Salzburg"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T16:50:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "bmdlbbwrobk",
+                        "name": "Round 2",
+                        "index": 1
+                    }
+                },
+                {
+                    "id": "2prc2mcmxfq",
+                    "court": 12,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "f88d3ae1-b6bc-4fdf-9b14-82a21a68202e",
+                                "name": "Bayern München"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "11a21ebd-23b2-4c10-898b-941dc4dbc445",
+                                "name": "Sparta Prague"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T16:50:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "bmdlbbwrobk",
+                        "name": "Round 2",
+                        "index": 1
+                    }
+                },
+                {
+                    "id": "cnafrz9cvud",
+                    "court": 13,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "bdb56da1-2c3a-45af-aaa4-739bbbf826ff",
+                                "name": "Real Madrid"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "9e770874-5a18-4ff5-a626-c47ea080ab3e",
+                                "name": "Club Brugge"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T16:50:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "bmdlbbwrobk",
+                        "name": "Round 2",
+                        "index": 1
+                    }
+                },
+                {
+                    "id": "p80ev0fms3",
+                    "court": 14,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "254f5885-bda2-4e25-b09d-758a3e44d5a4",
+                                "name": "Atletico Madrid"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "1783b2fc-2aca-41b7-8f66-1ffa0c1efb62",
+                                "name": "Inter"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T16:50:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "bmdlbbwrobk",
+                        "name": "Round 2",
+                        "index": 1
+                    }
+                },
+                {
+                    "id": "ltu05w9m7q",
+                    "court": 15,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "2edef8c9-c21d-4846-a256-144f70a1fc97",
+                                "name": "Manchester City"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "69de3b84-39c7-4c51-be75-a3c3887d96c9",
+                                "name": "Paris Saint-Germain"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T16:50:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "bmdlbbwrobk",
+                        "name": "Round 2",
+                        "index": 1
+                    }
+                },
+                {
+                    "id": "l2f4yb0chem",
+                    "court": 3,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "ab01eb5c-2ff0-412a-b94f-b9c19ac700ae",
+                                "name": "Dinamo Zagreb"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "55dfc25c-5b8c-43fb-8ea7-4e41b825db19",
+                                "name": "Aston Villa"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T17:10:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "bmdlbbwrobk",
+                        "name": "Round 2",
+                        "index": 1
+                    }
+                },
+                {
+                    "id": "91r9fhg6utr",
+                    "court": 4,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "db9f9b76-7060-407c-bbeb-94beecca7ee7",
+                                "name": "Bayer Leverkusen"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "2213ed47-adda-4f27-86ce-391057008ebe",
+                                "name": "PSV Eindhoven"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T17:10:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "bmdlbbwrobk",
+                        "name": "Round 2",
+                        "index": 1
+                    }
+                },
+                {
+                    "id": "519vysyfant",
+                    "court": 5,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "4a54b6a0-4b38-4b7e-b23e-bab4b40ab00c",
+                                "name": "Brest"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "5a8f2e33-f2e8-48a6-8be9-3b41bd2e9a4a",
+                                "name": "Juventus"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T17:10:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "bmdlbbwrobk",
+                        "name": "Round 2",
+                        "index": 1
+                    }
+                },
+                {
+                    "id": "wg6e9gdu01m",
+                    "court": 6,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "379c5d82-bc83-45ba-b00a-bc15df3eb26e",
+                                "name": "Milan"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "c22f1ef6-7978-4a26-8e91-a234db57cd5f",
+                                "name": "Atalanta"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T17:10:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "bmdlbbwrobk",
+                        "name": "Round 2",
+                        "index": 1
+                    }
+                },
+                {
+                    "id": "hxrs84ib9v",
+                    "court": 1,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "5a8f2e33-f2e8-48a6-8be9-3b41bd2e9a4a",
+                                "name": "Juventus"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "c0e21c3a-a495-4fb7-88f7-a861e3ddf07f",
+                                "name": "Celtic"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T17:30:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "xu7gqactk3",
+                        "name": "Round 3",
+                        "index": 2
+                    }
+                },
+                {
+                    "id": "9ek7g1awatg",
+                    "court": 2,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "c22f1ef6-7978-4a26-8e91-a234db57cd5f",
+                                "name": "Atalanta"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "20ef359d-fd8a-48be-b44c-475c4292c320",
+                                "name": "Borussia Dortmund"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T17:30:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "xu7gqactk3",
+                        "name": "Round 3",
+                        "index": 2
+                    }
+                },
+                {
+                    "id": "gs0orpntoug",
+                    "court": 3,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "05186880-dd6e-4e5f-af53-ae0dbd2caa4f",
+                                "name": "Bologna"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "72f3b01a-b17a-4ab5-b560-36b52a88604d",
+                                "name": "FK Crvena Zvezda"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T17:30:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "xu7gqactk3",
+                        "name": "Round 3",
+                        "index": 2
+                    }
+                },
+                {
+                    "id": "6bel82x4udj",
+                    "court": 7,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "a3f367a8-c9c9-47f4-9d63-31dd69c2d2d5",
+                                "name": "Slovan Bratislava"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "76d1d7e9-7976-4bb2-9f26-3db98085e460",
+                                "name": "Monaco"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T17:10:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "xu7gqactk3",
+                        "name": "Round 3",
+                        "index": 2
+                    }
+                },
+                {
+                    "id": "txc5hj3dv9s",
+                    "court": 8,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "71dabb96-90ca-4462-a4e4-54734ca063b3",
+                                "name": "Liverpool"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "515dcb06-6f6a-401b-a2de-3054e4839535",
+                                "name": "Barcelona"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T17:10:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "xu7gqactk3",
+                        "name": "Round 3",
+                        "index": 2
+                    }
+                },
+                {
+                    "id": "xulnvdfz3eh",
+                    "court": 9,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "5bfa2dad-e2fb-4ca2-b93a-726bc5c0405e",
+                                "name": "Arsenal"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "2c193743-af77-4969-ab02-fd97845cb4fa",
+                                "name": "Shakhtar Donetsk"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T17:10:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "xu7gqactk3",
+                        "name": "Round 3",
+                        "index": 2
+                    }
+                },
+                {
+                    "id": "ssdbh1dpajs",
+                    "court": 10,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "85314b25-f029-4c56-a0b1-0db1e5ad5981",
+                                "name": "Girona"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "74df4d6e-ced1-41a8-8923-be1aa25a327a",
+                                "name": "Sporting CP"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T17:10:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "xu7gqactk3",
+                        "name": "Round 3",
+                        "index": 2
+                    }
+                },
+                {
+                    "id": "lv17yl0onz",
+                    "court": 11,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "5c5fff19-9fb2-46ba-ba20-1c6358e405b3",
+                                "name": "Sturm Graz"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "974e8f01-2b6f-4454-90fb-1923ce0fd5ea",
+                                "name": "Lille"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T17:10:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "xu7gqactk3",
+                        "name": "Round 3",
+                        "index": 2
+                    }
+                },
+                {
+                    "id": "ks9npus5th",
+                    "court": 12,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "08e57f87-5871-45b9-beec-67c2376c934d",
+                                "name": "Benfica"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "ee5a41aa-8a42-42b1-905b-63cf78ec7e09",
+                                "name": "VfB Stuttgart"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T17:10:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "xu7gqactk3",
+                        "name": "Round 3",
+                        "index": 2
+                    }
+                },
+                {
+                    "id": "36mtzk0braw",
+                    "court": 13,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "d351c0f1-9129-40a0-9163-38d4aa2b1f97",
+                                "name": "RB Leipzig"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "5f558f4b-b5e2-4dba-b693-02fe439782dd",
+                                "name": "Feyenoord"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T17:10:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "xu7gqactk3",
+                        "name": "Round 3",
+                        "index": 2
+                    }
+                },
+                {
+                    "id": "or960i2295",
+                    "court": 14,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "e4d1bbf4-53f5-4bc7-9a3d-d457c9f4f867",
+                                "name": "Young Boys"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "f88d3ae1-b6bc-4fdf-9b14-82a21a68202e",
+                                "name": "Bayern München"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T17:10:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "xu7gqactk3",
+                        "name": "Round 3",
+                        "index": 2
+                    }
+                },
+                {
+                    "id": "3l5hc207ovv",
+                    "court": 15,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "7ca402e0-ea18-426d-acd0-851023adaa2f",
+                                "name": "Salzburg"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "bdb56da1-2c3a-45af-aaa4-739bbbf826ff",
+                                "name": "Real Madrid"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T17:10:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "xu7gqactk3",
+                        "name": "Round 3",
+                        "index": 2
+                    }
+                },
+                {
+                    "id": "6vwshxqwkfq",
+                    "court": 4,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "11a21ebd-23b2-4c10-898b-941dc4dbc445",
+                                "name": "Sparta Prague"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "254f5885-bda2-4e25-b09d-758a3e44d5a4",
+                                "name": "Atletico Madrid"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T17:30:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "xu7gqactk3",
+                        "name": "Round 3",
+                        "index": 2
+                    }
+                },
+                {
+                    "id": "w64q1827gh",
+                    "court": 5,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "9e770874-5a18-4ff5-a626-c47ea080ab3e",
+                                "name": "Club Brugge"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "2edef8c9-c21d-4846-a256-144f70a1fc97",
+                                "name": "Manchester City"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T17:30:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "xu7gqactk3",
+                        "name": "Round 3",
+                        "index": 2
+                    }
+                },
+                {
+                    "id": "q4x0nfxnfd",
+                    "court": 6,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "1783b2fc-2aca-41b7-8f66-1ffa0c1efb62",
+                                "name": "Inter"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "ab01eb5c-2ff0-412a-b94f-b9c19ac700ae",
+                                "name": "Dinamo Zagreb"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T17:30:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "xu7gqactk3",
+                        "name": "Round 3",
+                        "index": 2
+                    }
+                },
+                {
+                    "id": "575mgsy8cnp",
+                    "court": 7,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "69de3b84-39c7-4c51-be75-a3c3887d96c9",
+                                "name": "Paris Saint-Germain"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "db9f9b76-7060-407c-bbeb-94beecca7ee7",
+                                "name": "Bayer Leverkusen"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T17:30:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "xu7gqactk3",
+                        "name": "Round 3",
+                        "index": 2
+                    }
+                },
+                {
+                    "id": "j5yvd33jtrt",
+                    "court": 8,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "55dfc25c-5b8c-43fb-8ea7-4e41b825db19",
+                                "name": "Aston Villa"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "4a54b6a0-4b38-4b7e-b23e-bab4b40ab00c",
+                                "name": "Brest"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T17:30:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "xu7gqactk3",
+                        "name": "Round 3",
+                        "index": 2
+                    }
+                },
+                {
+                    "id": "85n8y4ruzzn",
+                    "court": 9,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "2213ed47-adda-4f27-86ce-391057008ebe",
+                                "name": "PSV Eindhoven"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "379c5d82-bc83-45ba-b00a-bc15df3eb26e",
+                                "name": "Milan"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T17:30:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "xu7gqactk3",
+                        "name": "Round 3",
+                        "index": 2
+                    }
+                },
+                {
+                    "id": "sn2x2x6hyi",
+                    "court": 1,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "c0e21c3a-a495-4fb7-88f7-a861e3ddf07f",
+                                "name": "Celtic"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "55dfc25c-5b8c-43fb-8ea7-4e41b825db19",
+                                "name": "Aston Villa"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T17:50:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "f5zo261f158",
+                        "name": "Round 4",
+                        "index": 3
+                    }
+                },
+                {
+                    "id": "pfcbebiumb",
+                    "court": 2,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "20ef359d-fd8a-48be-b44c-475c4292c320",
+                                "name": "Borussia Dortmund"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "2213ed47-adda-4f27-86ce-391057008ebe",
+                                "name": "PSV Eindhoven"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T17:50:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "f5zo261f158",
+                        "name": "Round 4",
+                        "index": 3
+                    }
+                },
+                {
+                    "id": "dpe78cx8ti",
+                    "court": 3,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "72f3b01a-b17a-4ab5-b560-36b52a88604d",
+                                "name": "FK Crvena Zvezda"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "5a8f2e33-f2e8-48a6-8be9-3b41bd2e9a4a",
+                                "name": "Juventus"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T17:50:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "f5zo261f158",
+                        "name": "Round 4",
+                        "index": 3
+                    }
+                },
+                {
+                    "id": "eaqxcxmosgn",
+                    "court": 4,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "05186880-dd6e-4e5f-af53-ae0dbd2caa4f",
+                                "name": "Bologna"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "c22f1ef6-7978-4a26-8e91-a234db57cd5f",
+                                "name": "Atalanta"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T17:50:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "f5zo261f158",
+                        "name": "Round 4",
+                        "index": 3
+                    }
+                },
+                {
+                    "id": "npqu2tzi5w",
+                    "court": 10,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "76d1d7e9-7976-4bb2-9f26-3db98085e460",
+                                "name": "Monaco"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "515dcb06-6f6a-401b-a2de-3054e4839535",
+                                "name": "Barcelona"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T17:30:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "f5zo261f158",
+                        "name": "Round 4",
+                        "index": 3
+                    }
+                },
+                {
+                    "id": "fujyqsb42o",
+                    "court": 11,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "2c193743-af77-4969-ab02-fd97845cb4fa",
+                                "name": "Shakhtar Donetsk"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "a3f367a8-c9c9-47f4-9d63-31dd69c2d2d5",
+                                "name": "Slovan Bratislava"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T17:30:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "f5zo261f158",
+                        "name": "Round 4",
+                        "index": 3
+                    }
+                },
+                {
+                    "id": "g6sh0k9ob4",
+                    "court": 12,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "74df4d6e-ced1-41a8-8923-be1aa25a327a",
+                                "name": "Sporting CP"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "71dabb96-90ca-4462-a4e4-54734ca063b3",
+                                "name": "Liverpool"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T17:30:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "f5zo261f158",
+                        "name": "Round 4",
+                        "index": 3
+                    }
+                },
+                {
+                    "id": "e86bji0evd8",
+                    "court": 13,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "974e8f01-2b6f-4454-90fb-1923ce0fd5ea",
+                                "name": "Lille"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "5bfa2dad-e2fb-4ca2-b93a-726bc5c0405e",
+                                "name": "Arsenal"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T17:30:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "f5zo261f158",
+                        "name": "Round 4",
+                        "index": 3
+                    }
+                },
+                {
+                    "id": "60v58u7e3n6",
+                    "court": 14,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "ee5a41aa-8a42-42b1-905b-63cf78ec7e09",
+                                "name": "VfB Stuttgart"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "85314b25-f029-4c56-a0b1-0db1e5ad5981",
+                                "name": "Girona"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T17:30:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "f5zo261f158",
+                        "name": "Round 4",
+                        "index": 3
+                    }
+                },
+                {
+                    "id": "qkhmin7aiie",
+                    "court": 15,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "5f558f4b-b5e2-4dba-b693-02fe439782dd",
+                                "name": "Feyenoord"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "5c5fff19-9fb2-46ba-ba20-1c6358e405b3",
+                                "name": "Sturm Graz"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T17:30:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "f5zo261f158",
+                        "name": "Round 4",
+                        "index": 3
+                    }
+                },
+                {
+                    "id": "v8bqprs6vvg",
+                    "court": 5,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "f88d3ae1-b6bc-4fdf-9b14-82a21a68202e",
+                                "name": "Bayern München"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "08e57f87-5871-45b9-beec-67c2376c934d",
+                                "name": "Benfica"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T17:50:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "f5zo261f158",
+                        "name": "Round 4",
+                        "index": 3
+                    }
+                },
+                {
+                    "id": "kqhpk23wzf",
+                    "court": 6,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "bdb56da1-2c3a-45af-aaa4-739bbbf826ff",
+                                "name": "Real Madrid"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "d351c0f1-9129-40a0-9163-38d4aa2b1f97",
+                                "name": "RB Leipzig"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T17:50:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "f5zo261f158",
+                        "name": "Round 4",
+                        "index": 3
+                    }
+                },
+                {
+                    "id": "w7wal3lae1l",
+                    "court": 7,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "254f5885-bda2-4e25-b09d-758a3e44d5a4",
+                                "name": "Atletico Madrid"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "e4d1bbf4-53f5-4bc7-9a3d-d457c9f4f867",
+                                "name": "Young Boys"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T17:50:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "f5zo261f158",
+                        "name": "Round 4",
+                        "index": 3
+                    }
+                },
+                {
+                    "id": "6mvtuq4azwo",
+                    "court": 8,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "2edef8c9-c21d-4846-a256-144f70a1fc97",
+                                "name": "Manchester City"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "7ca402e0-ea18-426d-acd0-851023adaa2f",
+                                "name": "Salzburg"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T17:50:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "f5zo261f158",
+                        "name": "Round 4",
+                        "index": 3
+                    }
+                },
+                {
+                    "id": "kagrta7lo4",
+                    "court": 9,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "ab01eb5c-2ff0-412a-b94f-b9c19ac700ae",
+                                "name": "Dinamo Zagreb"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "11a21ebd-23b2-4c10-898b-941dc4dbc445",
+                                "name": "Sparta Prague"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T17:50:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "f5zo261f158",
+                        "name": "Round 4",
+                        "index": 3
+                    }
+                },
+                {
+                    "id": "t8pno1qnnab",
+                    "court": 10,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "db9f9b76-7060-407c-bbeb-94beecca7ee7",
+                                "name": "Bayer Leverkusen"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "9e770874-5a18-4ff5-a626-c47ea080ab3e",
+                                "name": "Club Brugge"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T17:50:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "f5zo261f158",
+                        "name": "Round 4",
+                        "index": 3
+                    }
+                },
+                {
+                    "id": "w8pyls9f7n8",
+                    "court": 11,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "4a54b6a0-4b38-4b7e-b23e-bab4b40ab00c",
+                                "name": "Brest"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "1783b2fc-2aca-41b7-8f66-1ffa0c1efb62",
+                                "name": "Inter"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T17:50:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "f5zo261f158",
+                        "name": "Round 4",
+                        "index": 3
+                    }
+                },
+                {
+                    "id": "x7ukyn3gp2",
+                    "court": 12,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "379c5d82-bc83-45ba-b00a-bc15df3eb26e",
+                                "name": "Milan"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "69de3b84-39c7-4c51-be75-a3c3887d96c9",
+                                "name": "Paris Saint-Germain"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T17:50:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "f5zo261f158",
+                        "name": "Round 4",
+                        "index": 3
+                    }
+                },
+                {
+                    "id": "dd6si73kwi",
+                    "court": 1,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "1783b2fc-2aca-41b7-8f66-1ffa0c1efb62",
+                                "name": "Inter"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "c0e21c3a-a495-4fb7-88f7-a861e3ddf07f",
+                                "name": "Celtic"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T18:10:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "0b1mjxwebsn5",
+                        "name": "Round 5",
+                        "index": 4
+                    }
+                },
+                {
+                    "id": "31tg6idnbfu",
+                    "court": 2,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "69de3b84-39c7-4c51-be75-a3c3887d96c9",
+                                "name": "Paris Saint-Germain"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "20ef359d-fd8a-48be-b44c-475c4292c320",
+                                "name": "Borussia Dortmund"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T18:10:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "0b1mjxwebsn5",
+                        "name": "Round 5",
+                        "index": 4
+                    }
+                },
+                {
+                    "id": "1wcfk351h2n",
+                    "court": 3,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "55dfc25c-5b8c-43fb-8ea7-4e41b825db19",
+                                "name": "Aston Villa"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "72f3b01a-b17a-4ab5-b560-36b52a88604d",
+                                "name": "FK Crvena Zvezda"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T18:10:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "0b1mjxwebsn5",
+                        "name": "Round 5",
+                        "index": 4
+                    }
+                },
+                {
+                    "id": "dtdwqlxdrt9",
+                    "court": 4,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "2213ed47-adda-4f27-86ce-391057008ebe",
+                                "name": "PSV Eindhoven"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "05186880-dd6e-4e5f-af53-ae0dbd2caa4f",
+                                "name": "Bologna"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T18:10:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "0b1mjxwebsn5",
+                        "name": "Round 5",
+                        "index": 4
+                    }
+                },
+                {
+                    "id": "ypsqsa9ohad",
+                    "court": 5,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "5a8f2e33-f2e8-48a6-8be9-3b41bd2e9a4a",
+                                "name": "Juventus"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "c22f1ef6-7978-4a26-8e91-a234db57cd5f",
+                                "name": "Atalanta"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T18:10:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "0b1mjxwebsn5",
+                        "name": "Round 5",
+                        "index": 4
+                    }
+                },
+                {
+                    "id": "y2lnmzkhrtp",
+                    "court": 13,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "2c193743-af77-4969-ab02-fd97845cb4fa",
+                                "name": "Shakhtar Donetsk"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "76d1d7e9-7976-4bb2-9f26-3db98085e460",
+                                "name": "Monaco"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T17:50:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "0b1mjxwebsn5",
+                        "name": "Round 5",
+                        "index": 4
+                    }
+                },
+                {
+                    "id": "q01pe6xs8tr",
+                    "court": 14,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "515dcb06-6f6a-401b-a2de-3054e4839535",
+                                "name": "Barcelona"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "74df4d6e-ced1-41a8-8923-be1aa25a327a",
+                                "name": "Sporting CP"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T17:50:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "0b1mjxwebsn5",
+                        "name": "Round 5",
+                        "index": 4
+                    }
+                },
+                {
+                    "id": "9ytv4cslgjo",
+                    "court": 15,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "a3f367a8-c9c9-47f4-9d63-31dd69c2d2d5",
+                                "name": "Slovan Bratislava"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "974e8f01-2b6f-4454-90fb-1923ce0fd5ea",
+                                "name": "Lille"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T17:50:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "0b1mjxwebsn5",
+                        "name": "Round 5",
+                        "index": 4
+                    }
+                },
+                {
+                    "id": "i4k8d8cgukl",
+                    "court": 6,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "71dabb96-90ca-4462-a4e4-54734ca063b3",
+                                "name": "Liverpool"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "ee5a41aa-8a42-42b1-905b-63cf78ec7e09",
+                                "name": "VfB Stuttgart"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T18:10:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "0b1mjxwebsn5",
+                        "name": "Round 5",
+                        "index": 4
+                    }
+                },
+                {
+                    "id": "tna5hqjnqg",
+                    "court": 7,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "5bfa2dad-e2fb-4ca2-b93a-726bc5c0405e",
+                                "name": "Arsenal"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "5f558f4b-b5e2-4dba-b693-02fe439782dd",
+                                "name": "Feyenoord"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T18:10:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "0b1mjxwebsn5",
+                        "name": "Round 5",
+                        "index": 4
+                    }
+                },
+                {
+                    "id": "6albwz1akkw",
+                    "court": 8,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "85314b25-f029-4c56-a0b1-0db1e5ad5981",
+                                "name": "Girona"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "f88d3ae1-b6bc-4fdf-9b14-82a21a68202e",
+                                "name": "Bayern München"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T18:10:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "0b1mjxwebsn5",
+                        "name": "Round 5",
+                        "index": 4
+                    }
+                },
+                {
+                    "id": "dmz1e6bkkjp",
+                    "court": 9,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "5c5fff19-9fb2-46ba-ba20-1c6358e405b3",
+                                "name": "Sturm Graz"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "bdb56da1-2c3a-45af-aaa4-739bbbf826ff",
+                                "name": "Real Madrid"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T18:10:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "0b1mjxwebsn5",
+                        "name": "Round 5",
+                        "index": 4
+                    }
+                },
+                {
+                    "id": "3quxzug14e4",
+                    "court": 10,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "08e57f87-5871-45b9-beec-67c2376c934d",
+                                "name": "Benfica"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "254f5885-bda2-4e25-b09d-758a3e44d5a4",
+                                "name": "Atletico Madrid"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T18:10:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "0b1mjxwebsn5",
+                        "name": "Round 5",
+                        "index": 4
+                    }
+                },
+                {
+                    "id": "np00thz4d5n",
+                    "court": 11,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "d351c0f1-9129-40a0-9163-38d4aa2b1f97",
+                                "name": "RB Leipzig"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "2edef8c9-c21d-4846-a256-144f70a1fc97",
+                                "name": "Manchester City"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T18:10:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "0b1mjxwebsn5",
+                        "name": "Round 5",
+                        "index": 4
+                    }
+                },
+                {
+                    "id": "4wvw9sfwazo",
+                    "court": 12,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "e4d1bbf4-53f5-4bc7-9a3d-d457c9f4f867",
+                                "name": "Young Boys"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "ab01eb5c-2ff0-412a-b94f-b9c19ac700ae",
+                                "name": "Dinamo Zagreb"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T18:10:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "0b1mjxwebsn5",
+                        "name": "Round 5",
+                        "index": 4
+                    }
+                },
+                {
+                    "id": "uliewcu0zpj",
+                    "court": 13,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "7ca402e0-ea18-426d-acd0-851023adaa2f",
+                                "name": "Salzburg"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "db9f9b76-7060-407c-bbeb-94beecca7ee7",
+                                "name": "Bayer Leverkusen"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T18:10:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "0b1mjxwebsn5",
+                        "name": "Round 5",
+                        "index": 4
+                    }
+                },
+                {
+                    "id": "e1zdqeor3sp",
+                    "court": 14,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "11a21ebd-23b2-4c10-898b-941dc4dbc445",
+                                "name": "Sparta Prague"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "4a54b6a0-4b38-4b7e-b23e-bab4b40ab00c",
+                                "name": "Brest"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T18:10:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "0b1mjxwebsn5",
+                        "name": "Round 5",
+                        "index": 4
+                    }
+                },
+                {
+                    "id": "skbr0t1efwg",
+                    "court": 15,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "9e770874-5a18-4ff5-a626-c47ea080ab3e",
+                                "name": "Club Brugge"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "379c5d82-bc83-45ba-b00a-bc15df3eb26e",
+                                "name": "Milan"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T18:10:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "0b1mjxwebsn5",
+                        "name": "Round 5",
+                        "index": 4
+                    }
+                },
+                {
+                    "id": "i367lqrtmfr",
+                    "court": 1,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "c0e21c3a-a495-4fb7-88f7-a861e3ddf07f",
+                                "name": "Celtic"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "11a21ebd-23b2-4c10-898b-941dc4dbc445",
+                                "name": "Sparta Prague"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T18:30:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "mbpt9anu5n8",
+                        "name": "Round 6",
+                        "index": 5
+                    }
+                },
+                {
+                    "id": "be71nn5ur7b",
+                    "court": 2,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "20ef359d-fd8a-48be-b44c-475c4292c320",
+                                "name": "Borussia Dortmund"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "9e770874-5a18-4ff5-a626-c47ea080ab3e",
+                                "name": "Club Brugge"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T18:30:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "mbpt9anu5n8",
+                        "name": "Round 6",
+                        "index": 5
+                    }
+                },
+                {
+                    "id": "c3r7v2i16cl",
+                    "court": 3,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "72f3b01a-b17a-4ab5-b560-36b52a88604d",
+                                "name": "FK Crvena Zvezda"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "1783b2fc-2aca-41b7-8f66-1ffa0c1efb62",
+                                "name": "Inter"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T18:30:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "mbpt9anu5n8",
+                        "name": "Round 6",
+                        "index": 5
+                    }
+                },
+                {
+                    "id": "tfvdm0yypqk",
+                    "court": 4,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "05186880-dd6e-4e5f-af53-ae0dbd2caa4f",
+                                "name": "Bologna"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "69de3b84-39c7-4c51-be75-a3c3887d96c9",
+                                "name": "Paris Saint-Germain"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T18:30:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "mbpt9anu5n8",
+                        "name": "Round 6",
+                        "index": 5
+                    }
+                },
+                {
+                    "id": "gytiupjcu4p",
+                    "court": 5,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "c22f1ef6-7978-4a26-8e91-a234db57cd5f",
+                                "name": "Atalanta"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "55dfc25c-5b8c-43fb-8ea7-4e41b825db19",
+                                "name": "Aston Villa"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T18:30:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "mbpt9anu5n8",
+                        "name": "Round 6",
+                        "index": 5
+                    }
+                },
+                {
+                    "id": "3jny5efk99m",
+                    "court": 6,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "5a8f2e33-f2e8-48a6-8be9-3b41bd2e9a4a",
+                                "name": "Juventus"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "2213ed47-adda-4f27-86ce-391057008ebe",
+                                "name": "PSV Eindhoven"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T18:30:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "mbpt9anu5n8",
+                        "name": "Round 6",
+                        "index": 5
+                    }
+                },
+                {
+                    "id": "xyjjjebla1i",
+                    "court": 7,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "76d1d7e9-7976-4bb2-9f26-3db98085e460",
+                                "name": "Monaco"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "74df4d6e-ced1-41a8-8923-be1aa25a327a",
+                                "name": "Sporting CP"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T18:30:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "mbpt9anu5n8",
+                        "name": "Round 6",
+                        "index": 5
+                    }
+                },
+                {
+                    "id": "eplgtrb5y7j",
+                    "court": 8,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "974e8f01-2b6f-4454-90fb-1923ce0fd5ea",
+                                "name": "Lille"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "2c193743-af77-4969-ab02-fd97845cb4fa",
+                                "name": "Shakhtar Donetsk"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T18:30:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "mbpt9anu5n8",
+                        "name": "Round 6",
+                        "index": 5
+                    }
+                },
+                {
+                    "id": "jaoefypgmg",
+                    "court": 9,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "ee5a41aa-8a42-42b1-905b-63cf78ec7e09",
+                                "name": "VfB Stuttgart"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "515dcb06-6f6a-401b-a2de-3054e4839535",
+                                "name": "Barcelona"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T18:30:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "mbpt9anu5n8",
+                        "name": "Round 6",
+                        "index": 5
+                    }
+                },
+                {
+                    "id": "os6mlelq1k",
+                    "court": 10,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "5f558f4b-b5e2-4dba-b693-02fe439782dd",
+                                "name": "Feyenoord"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "a3f367a8-c9c9-47f4-9d63-31dd69c2d2d5",
+                                "name": "Slovan Bratislava"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T18:30:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "mbpt9anu5n8",
+                        "name": "Round 6",
+                        "index": 5
+                    }
+                },
+                {
+                    "id": "06loht2wpelm",
+                    "court": 11,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "f88d3ae1-b6bc-4fdf-9b14-82a21a68202e",
+                                "name": "Bayern München"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "71dabb96-90ca-4462-a4e4-54734ca063b3",
+                                "name": "Liverpool"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T18:30:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "mbpt9anu5n8",
+                        "name": "Round 6",
+                        "index": 5
+                    }
+                },
+                {
+                    "id": "sortj4lmuj8",
+                    "court": 12,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "bdb56da1-2c3a-45af-aaa4-739bbbf826ff",
+                                "name": "Real Madrid"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "5bfa2dad-e2fb-4ca2-b93a-726bc5c0405e",
+                                "name": "Arsenal"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T18:30:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "mbpt9anu5n8",
+                        "name": "Round 6",
+                        "index": 5
+                    }
+                },
+                {
+                    "id": "66ygog117kb",
+                    "court": 13,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "254f5885-bda2-4e25-b09d-758a3e44d5a4",
+                                "name": "Atletico Madrid"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "85314b25-f029-4c56-a0b1-0db1e5ad5981",
+                                "name": "Girona"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T18:30:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "mbpt9anu5n8",
+                        "name": "Round 6",
+                        "index": 5
+                    }
+                },
+                {
+                    "id": "qseardocqi8",
+                    "court": 14,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "2edef8c9-c21d-4846-a256-144f70a1fc97",
+                                "name": "Manchester City"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "5c5fff19-9fb2-46ba-ba20-1c6358e405b3",
+                                "name": "Sturm Graz"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T18:30:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "mbpt9anu5n8",
+                        "name": "Round 6",
+                        "index": 5
+                    }
+                },
+                {
+                    "id": "9fm3zjid1pv",
+                    "court": 15,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "ab01eb5c-2ff0-412a-b94f-b9c19ac700ae",
+                                "name": "Dinamo Zagreb"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "08e57f87-5871-45b9-beec-67c2376c934d",
+                                "name": "Benfica"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T18:30:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "mbpt9anu5n8",
+                        "name": "Round 6",
+                        "index": 5
+                    }
+                },
+                {
+                    "id": "936rt3qxvgn",
+                    "court": 1,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "db9f9b76-7060-407c-bbeb-94beecca7ee7",
+                                "name": "Bayer Leverkusen"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "d351c0f1-9129-40a0-9163-38d4aa2b1f97",
+                                "name": "RB Leipzig"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T18:50:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "mbpt9anu5n8",
+                        "name": "Round 6",
+                        "index": 5
+                    }
+                },
+                {
+                    "id": "41rbvuuwy59",
+                    "court": 2,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "4a54b6a0-4b38-4b7e-b23e-bab4b40ab00c",
+                                "name": "Brest"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "e4d1bbf4-53f5-4bc7-9a3d-d457c9f4f867",
+                                "name": "Young Boys"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T18:50:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "mbpt9anu5n8",
+                        "name": "Round 6",
+                        "index": 5
+                    }
+                },
+                {
+                    "id": "51kdase8c32",
+                    "court": 3,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "379c5d82-bc83-45ba-b00a-bc15df3eb26e",
+                                "name": "Milan"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "7ca402e0-ea18-426d-acd0-851023adaa2f",
+                                "name": "Salzburg"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T18:50:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "mbpt9anu5n8",
+                        "name": "Round 6",
+                        "index": 5
+                    }
+                }
+            ],
+            "rounds": 6
+        },
+        {
+            "id": "2gabmkca7vc",
+            "type": "knockout",
+            "name": "Knockout Phase",
+            "rounds": [
+                {
+                    "id": "rm44hh7yjwd",
+                    "name": "Quarter-finals",
+                    "matches": [
+                        {
+                            "id": "s810x58t3fj",
+                            "court": 1,
+                            "teams": [
+                                {
+                                    "link": {
+                                        "placement": 0,
+                                        "type": "league",
+                                        "fromRound": -1
+                                    },
+                                    "score": 0
+                                },
+                                {
+                                    "link": {
+                                        "placement": 7,
+                                        "type": "league",
+                                        "fromRound": -1
+                                    },
+                                    "score": 0
+                                }
+                            ],
+                            "date": "2025-04-26T18:35:00.000Z",
+                            "status": "scheduled"
+                        },
+                        {
+                            "id": "faalikru4s8",
+                            "court": 2,
+                            "teams": [
+                                {
+                                    "link": {
+                                        "placement": 1,
+                                        "type": "league",
+                                        "fromRound": -1
+                                    },
+                                    "score": 0
+                                },
+                                {
+                                    "link": {
+                                        "placement": 6,
+                                        "type": "league",
+                                        "fromRound": -1
+                                    },
+                                    "score": 0
+                                }
+                            ],
+                            "date": "2025-04-26T18:35:00.000Z",
+                            "status": "scheduled"
+                        },
+                        {
+                            "id": "tax2p1i49o",
+                            "court": 3,
+                            "teams": [
+                                {
+                                    "link": {
+                                        "placement": 2,
+                                        "type": "league",
+                                        "fromRound": -1
+                                    },
+                                    "score": 0
+                                },
+                                {
+                                    "link": {
+                                        "placement": 5,
+                                        "type": "league",
+                                        "fromRound": -1
+                                    },
+                                    "score": 0
+                                }
+                            ],
+                            "date": "2025-04-26T18:35:00.000Z",
+                            "status": "scheduled"
+                        },
+                        {
+                            "id": "ui8ttbnh6bj",
+                            "court": 4,
+                            "teams": [
+                                {
+                                    "link": {
+                                        "placement": 3,
+                                        "type": "league",
+                                        "fromRound": -1
+                                    },
+                                    "score": 0
+                                },
+                                {
+                                    "link": {
+                                        "placement": 4,
+                                        "type": "league",
+                                        "fromRound": -1
+                                    },
+                                    "score": 0
+                                }
+                            ],
+                            "date": "2025-04-26T18:35:00.000Z",
+                            "status": "scheduled"
+                        }
+                    ]
+                },
+                {
+                    "id": "dpkvtfzhnx",
+                    "name": "Semi-finals",
+                    "matches": [
+                        {
+                            "id": "ffkldtdjmx",
+                            "court": 1,
+                            "teams": [
+                                {
+                                    "link": {
+                                        "placement": 0,
+                                        "type": "winner",
+                                        "fromRound": 0
+                                    },
+                                    "score": 0
+                                },
+                                {
+                                    "link": {
+                                        "placement": 3,
+                                        "type": "winner",
+                                        "fromRound": 0
+                                    },
+                                    "score": 0
+                                }
+                            ],
+                            "date": "2025-04-26T18:55:00.000Z",
+                            "status": "scheduled"
+                        },
+                        {
+                            "id": "qj5s02enob",
+                            "court": 2,
+                            "teams": [
+                                {
+                                    "link": {
+                                        "placement": 1,
+                                        "type": "winner",
+                                        "fromRound": 0
+                                    },
+                                    "score": 0
+                                },
+                                {
+                                    "link": {
+                                        "placement": 2,
+                                        "type": "winner",
+                                        "fromRound": 0
+                                    },
+                                    "score": 0
+                                }
+                            ],
+                            "date": "2025-04-26T18:55:00.000Z",
+                            "status": "scheduled"
+                        }
+                    ]
+                },
+                {
+                    "id": "id1amufylma",
+                    "name": "3rd Place Playoff",
+                    "matches": [
+                        {
+                            "id": "rnjgyi4hnk",
+                            "court": 1,
+                            "teams": [
+                                {
+                                    "link": {
+                                        "type": "loser",
+                                        "placement": 0
+                                    },
+                                    "score": 0
+                                },
+                                {
+                                    "link": {
+                                        "type": "loser",
+                                        "placement": 1
+                                    },
+                                    "score": 0
+                                }
+                            ],
+                            "date": "2025-04-26T19:15:00.000Z",
+                            "status": "scheduled"
+                        }
+                    ]
+                },
+                {
+                    "id": "n23wetvaf6b",
+                    "name": "Final",
+                    "matches": [
+                        {
+                            "id": "uruse02ss",
+                            "court": 1,
+                            "teams": [
+                                {
+                                    "link": {
+                                        "placement": 0,
+                                        "type": "winner",
+                                        "fromRound": 1
+                                    },
+                                    "score": 0
+                                },
+                                {
+                                    "link": {
+                                        "placement": 1,
+                                        "type": "winner",
+                                        "fromRound": 1
+                                    },
+                                    "score": 0
+                                }
+                            ],
+                            "date": "2025-04-26T19:35:00.000Z",
+                            "status": "scheduled"
+                        }
+                    ]
+                }
+            ],
+            "teamCount": 8
+        }
+    ]
+}

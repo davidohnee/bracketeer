@@ -1,0 +1,2335 @@
+{
+    "version": 3,
+    "id": "75ozkgdenjw",
+    "name": "OneHSLU Beerpong Fest",
+    "teams": [
+        {
+            "id": "329e5076-63ea-48a7-ae19-889f22b7c4e1",
+            "name": "Wir drehn Dorsch"
+        },
+        {
+            "id": "2a5e1d8b-6393-4318-81e8-9aef1f66bfc7",
+            "name": "tschuuss"
+        },
+        {
+            "id": "cc834c5e-f3b9-4122-a491-bede4ed94b04",
+            "name": "Splash Bros"
+        },
+        {
+            "id": "b50a7acc-fe03-469a-aefe-af2455fd03bb",
+            "name": "Gsehsch guet us ... und glücklich"
+        },
+        {
+            "id": "8e336029-e0e8-4dfc-a214-93ddbf4706dc",
+            "name": "Giovannis Segen"
+        },
+        {
+            "id": "8305b7da-e58b-42dc-a0b6-faed558276ac",
+            "name": "lirili larilà"
+        },
+        {
+            "id": "401bc396-76c6-4e8e-9474-ee9924c2e3d2",
+            "name": "Beerack Obama"
+        },
+        {
+            "id": "a54d6565-162a-4877-879f-cbed5d0c6e8b",
+            "name": "Ruusch-Ritter"
+        },
+        {
+            "id": "c35b12a1-23dc-4035-ac13-250ab30af2d8",
+            "name": "(t)Obi Pong Kenobi"
+        },
+        {
+            "id": "e5f534c7-020d-4275-8dc8-a769b17b289f",
+            "name": "Lagartoooo"
+        },
+        {
+            "id": "fdba5287-daa5-4567-8e08-0897084b7b20",
+            "name": "Reckless Rimjobers"
+        },
+        {
+            "id": "4f83c918-2ac5-45f2-ac09-617f2cc6126e",
+            "name": "less skill, more promill"
+        },
+        {
+            "id": "a2369591-6a1e-4869-98de-f433d3e05247",
+            "name": "FEMexperte"
+        },
+        {
+            "id": "816cd186-c6fa-4ed0-a02b-eac1877e59e2",
+            "name": "Suufhuse"
+        },
+        {
+            "id": "9ebdbba1-b891-4e8b-ba5b-52f98d1211c2",
+            "name": "ChchchChicken"
+        },
+        {
+            "id": "ce4fb291-c6f4-4421-bd59-8ed847afbd5e",
+            "name": "Pegelbrüder"
+        },
+        {
+            "id": "017960e0-d35a-4401-a5ac-e854b64ec0bd",
+            "name": "Rauschbären"
+        },
+        {
+            "id": "1f7250f3-1e15-43f7-a495-ac5924761b33",
+            "name": "Team Rocket"
+        },
+        {
+            "id": "c67a80ce-afa3-4cfb-8262-cce512e711eb",
+            "name": "Zitrusfrucht"
+        },
+        {
+            "id": "dbd73e01-b3fa-4ade-8e8a-15d40a62ec04",
+            "name": "Becherjäger"
+        },
+        {
+            "id": "7d41f4a5-7b85-48f2-801a-9163303215eb",
+            "name": "MT Grand Prixler"
+        },
+        {
+            "id": "1a930c30-2f72-4773-8422-ba036811cd2d",
+            "name": "Beerliner"
+        },
+        {
+            "id": "fd22450c-9c39-4555-ae77-3b4e5ea1014e",
+            "name": "Liba Rave"
+        },
+        {
+            "id": "a8572244-617f-4512-8d16-ea1fef85d071",
+            "name": "Bombardino crocodilo"
+        },
+        {
+            "id": "cd3dcb91-4ee8-420f-9bc1-6656cfe750ab",
+            "name": "Bob Tschigarillo"
+        },
+        {
+            "id": "1bee259c-2f90-4958-95b5-8187d3b6e658",
+            "name": "Spinnerbande"
+        },
+        {
+            "id": "e0c96727-50d3-410c-bc30-f5f9a3be4bd2",
+            "name": "Buena Vista Vodka Club"
+        },
+        {
+            "id": "78dbed73-70a8-4131-874a-3ef6ec6bdd61",
+            "name": "#niemehalkohol"
+        },
+        {
+            "id": "c50a2273-875d-41e2-9210-74dceec45fb0",
+            "name": "Free Gizmo"
+        },
+        {
+            "id": "bf1e3b9c-2af7-48c2-9e81-e635ef82f01e",
+            "name": "muchos treffos"
+        },
+        {
+            "id": "51886f5a-ab0b-4b42-a0d7-6a81f9f7958c",
+            "name": "NieNüechtern"
+        },
+        {
+            "id": "8c56b036-c952-4310-b9e4-6c6d09315229",
+            "name": "Dosenbier saufen"
+        },
+        {
+            "id": "b6eb5a49-0c43-41ce-81d7-b12ed4f443f0",
+            "name": "2 boys 10 cups"
+        },
+        {
+            "id": "b2541fd3-1e21-42d2-bd86-b6e89d839d2d",
+            "name": "2FAil"
+        },
+        {
+            "id": "4854612b-ff49-48a6-9455-24e7039ddd4d",
+            "name": "Habibi und Tina"
+        },
+        {
+            "id": "0452b74d-72d3-4eec-9284-1ec0917872fe",
+            "name": "Brokeback Mountain Dew"
+        }
+    ],
+    "config": {
+        "courts": 9,
+        "matchDuration": 10,
+        "breakDuration": 5,
+        "knockoutBreakDuration": 5,
+        "startTime": "2025-04-26T16:30:00.000Z",
+        "sport": "beerpong"
+    },
+    "phases": [
+        {
+            "id": "ey8nkhfhwme",
+            "type": "group",
+            "name": "Group Phase",
+            "matches": [
+                {
+                    "id": "jkfwkikv7c",
+                    "court": 1,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "1f7250f3-1e15-43f7-a495-ac5924761b33",
+                                "name": "Team Rocket"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "c67a80ce-afa3-4cfb-8262-cce512e711eb",
+                                "name": "Zitrusfrucht"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T16:30:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "2gsd5b11sgm",
+                        "name": "Round 1",
+                        "index": 0
+                    }
+                },
+                {
+                    "id": "osunxuqrob",
+                    "court": 2,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "329e5076-63ea-48a7-ae19-889f22b7c4e1",
+                                "name": "Wir drehn Dorsch"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "0452b74d-72d3-4eec-9284-1ec0917872fe",
+                                "name": "Brokeback Mountain Dew"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T16:30:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "2gsd5b11sgm",
+                        "name": "Round 1",
+                        "index": 0
+                    }
+                },
+                {
+                    "id": "rbxd10m98up",
+                    "court": 3,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "2a5e1d8b-6393-4318-81e8-9aef1f66bfc7",
+                                "name": "tschuuss"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "4854612b-ff49-48a6-9455-24e7039ddd4d",
+                                "name": "Habibi und Tina"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T16:30:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "2gsd5b11sgm",
+                        "name": "Round 1",
+                        "index": 0
+                    }
+                },
+                {
+                    "id": "bol8m3y153c",
+                    "court": 4,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "cc834c5e-f3b9-4122-a491-bede4ed94b04",
+                                "name": "Splash Bros"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "b2541fd3-1e21-42d2-bd86-b6e89d839d2d",
+                                "name": "2FAil"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T16:30:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "2gsd5b11sgm",
+                        "name": "Round 1",
+                        "index": 0
+                    }
+                },
+                {
+                    "id": "yned1emdl8o",
+                    "court": 5,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "b50a7acc-fe03-469a-aefe-af2455fd03bb",
+                                "name": "Gsehsch guet us ... und glücklich"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "b6eb5a49-0c43-41ce-81d7-b12ed4f443f0",
+                                "name": "2 boys 10 cups"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T16:30:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "2gsd5b11sgm",
+                        "name": "Round 1",
+                        "index": 0
+                    }
+                },
+                {
+                    "id": "pz2dmw4e8c",
+                    "court": 6,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "8e336029-e0e8-4dfc-a214-93ddbf4706dc",
+                                "name": "Giovannis Segen"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "8c56b036-c952-4310-b9e4-6c6d09315229",
+                                "name": "Dosenbier saufen"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T16:30:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "2gsd5b11sgm",
+                        "name": "Round 1",
+                        "index": 0
+                    }
+                },
+                {
+                    "id": "gugoxh0dcae",
+                    "court": 7,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "8305b7da-e58b-42dc-a0b6-faed558276ac",
+                                "name": "lirili larilà"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "51886f5a-ab0b-4b42-a0d7-6a81f9f7958c",
+                                "name": "NieNüechtern"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T16:30:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "2gsd5b11sgm",
+                        "name": "Round 1",
+                        "index": 0
+                    }
+                },
+                {
+                    "id": "7s1aqasmldo",
+                    "court": 8,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "401bc396-76c6-4e8e-9474-ee9924c2e3d2",
+                                "name": "Beerack Obama"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "bf1e3b9c-2af7-48c2-9e81-e635ef82f01e",
+                                "name": "muchos treffos"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T16:30:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "2gsd5b11sgm",
+                        "name": "Round 1",
+                        "index": 0
+                    }
+                },
+                {
+                    "id": "bo1sm2nss9v",
+                    "court": 9,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "a54d6565-162a-4877-879f-cbed5d0c6e8b",
+                                "name": "Ruusch-Ritter"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "c50a2273-875d-41e2-9210-74dceec45fb0",
+                                "name": "Free Gizmo"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T16:30:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "2gsd5b11sgm",
+                        "name": "Round 1",
+                        "index": 0
+                    }
+                },
+                {
+                    "id": "5t8t4aaj3v4",
+                    "court": 1,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "c35b12a1-23dc-4035-ac13-250ab30af2d8",
+                                "name": "(t)Obi Pong Kenobi"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "78dbed73-70a8-4131-874a-3ef6ec6bdd61",
+                                "name": "#niemehalkohol"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T16:45:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "2gsd5b11sgm",
+                        "name": "Round 1",
+                        "index": 0
+                    }
+                },
+                {
+                    "id": "udmai2r0na9",
+                    "court": 2,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "e5f534c7-020d-4275-8dc8-a769b17b289f",
+                                "name": "Lagartoooo"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "e0c96727-50d3-410c-bc30-f5f9a3be4bd2",
+                                "name": "Buena Vista Vodka Club"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T16:45:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "2gsd5b11sgm",
+                        "name": "Round 1",
+                        "index": 0
+                    }
+                },
+                {
+                    "id": "tpzg94srkj9",
+                    "court": 3,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "fdba5287-daa5-4567-8e08-0897084b7b20",
+                                "name": "Reckless Rimjobers"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "1bee259c-2f90-4958-95b5-8187d3b6e658",
+                                "name": "Spinnerbande"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T16:45:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "2gsd5b11sgm",
+                        "name": "Round 1",
+                        "index": 0
+                    }
+                },
+                {
+                    "id": "t0d84vjbay8",
+                    "court": 4,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "4f83c918-2ac5-45f2-ac09-617f2cc6126e",
+                                "name": "less skill, more promill"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "cd3dcb91-4ee8-420f-9bc1-6656cfe750ab",
+                                "name": "Bob Tschigarillo"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T16:45:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "2gsd5b11sgm",
+                        "name": "Round 1",
+                        "index": 0
+                    }
+                },
+                {
+                    "id": "gvqbtf0maur",
+                    "court": 5,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "a2369591-6a1e-4869-98de-f433d3e05247",
+                                "name": "FEMexperte"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "a8572244-617f-4512-8d16-ea1fef85d071",
+                                "name": "Bombardino crocodilo"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T16:45:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "2gsd5b11sgm",
+                        "name": "Round 1",
+                        "index": 0
+                    }
+                },
+                {
+                    "id": "826ao2kzpr8",
+                    "court": 6,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "816cd186-c6fa-4ed0-a02b-eac1877e59e2",
+                                "name": "Suufhuse"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "fd22450c-9c39-4555-ae77-3b4e5ea1014e",
+                                "name": "Liba Rave"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T16:45:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "2gsd5b11sgm",
+                        "name": "Round 1",
+                        "index": 0
+                    }
+                },
+                {
+                    "id": "xe8hh5lox3",
+                    "court": 7,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "9ebdbba1-b891-4e8b-ba5b-52f98d1211c2",
+                                "name": "ChchchChicken"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "1a930c30-2f72-4773-8422-ba036811cd2d",
+                                "name": "Beerliner"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T16:45:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "2gsd5b11sgm",
+                        "name": "Round 1",
+                        "index": 0
+                    }
+                },
+                {
+                    "id": "rgkbtxgpxcf",
+                    "court": 8,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "ce4fb291-c6f4-4421-bd59-8ed847afbd5e",
+                                "name": "Pegelbrüder"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "7d41f4a5-7b85-48f2-801a-9163303215eb",
+                                "name": "MT Grand Prixler"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T16:45:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "2gsd5b11sgm",
+                        "name": "Round 1",
+                        "index": 0
+                    }
+                },
+                {
+                    "id": "b1kv88tjdx",
+                    "court": 9,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "017960e0-d35a-4401-a5ac-e854b64ec0bd",
+                                "name": "Rauschbären"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "dbd73e01-b3fa-4ade-8e8a-15d40a62ec04",
+                                "name": "Becherjäger"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T16:45:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "2gsd5b11sgm",
+                        "name": "Round 1",
+                        "index": 0
+                    }
+                },
+                {
+                    "id": "np32e8snvz9",
+                    "court": 1,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "c67a80ce-afa3-4cfb-8262-cce512e711eb",
+                                "name": "Zitrusfrucht"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "ce4fb291-c6f4-4421-bd59-8ed847afbd5e",
+                                "name": "Pegelbrüder"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T17:00:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "y8ta4xj22c",
+                        "name": "Round 2",
+                        "index": 1
+                    }
+                },
+                {
+                    "id": "pa56kcf8w2",
+                    "court": 2,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "1f7250f3-1e15-43f7-a495-ac5924761b33",
+                                "name": "Team Rocket"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "017960e0-d35a-4401-a5ac-e854b64ec0bd",
+                                "name": "Rauschbären"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T17:00:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "y8ta4xj22c",
+                        "name": "Round 2",
+                        "index": 1
+                    }
+                },
+                {
+                    "id": "cpcp6cljzbs",
+                    "court": 3,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "0452b74d-72d3-4eec-9284-1ec0917872fe",
+                                "name": "Brokeback Mountain Dew"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "4854612b-ff49-48a6-9455-24e7039ddd4d",
+                                "name": "Habibi und Tina"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T17:00:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "y8ta4xj22c",
+                        "name": "Round 2",
+                        "index": 1
+                    }
+                },
+                {
+                    "id": "qq113cig6m8",
+                    "court": 4,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "b2541fd3-1e21-42d2-bd86-b6e89d839d2d",
+                                "name": "2FAil"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "329e5076-63ea-48a7-ae19-889f22b7c4e1",
+                                "name": "Wir drehn Dorsch"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T17:00:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "y8ta4xj22c",
+                        "name": "Round 2",
+                        "index": 1
+                    }
+                },
+                {
+                    "id": "20ulgwrz5up",
+                    "court": 5,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "b6eb5a49-0c43-41ce-81d7-b12ed4f443f0",
+                                "name": "2 boys 10 cups"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "2a5e1d8b-6393-4318-81e8-9aef1f66bfc7",
+                                "name": "tschuuss"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T17:00:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "y8ta4xj22c",
+                        "name": "Round 2",
+                        "index": 1
+                    }
+                },
+                {
+                    "id": "ywf77d26il",
+                    "court": 6,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "8c56b036-c952-4310-b9e4-6c6d09315229",
+                                "name": "Dosenbier saufen"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "cc834c5e-f3b9-4122-a491-bede4ed94b04",
+                                "name": "Splash Bros"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T17:00:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "y8ta4xj22c",
+                        "name": "Round 2",
+                        "index": 1
+                    }
+                },
+                {
+                    "id": "f8aedb5l2fk",
+                    "court": 7,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "51886f5a-ab0b-4b42-a0d7-6a81f9f7958c",
+                                "name": "NieNüechtern"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "b50a7acc-fe03-469a-aefe-af2455fd03bb",
+                                "name": "Gsehsch guet us ... und glücklich"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T17:00:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "y8ta4xj22c",
+                        "name": "Round 2",
+                        "index": 1
+                    }
+                },
+                {
+                    "id": "upblxxb6ei",
+                    "court": 8,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "bf1e3b9c-2af7-48c2-9e81-e635ef82f01e",
+                                "name": "muchos treffos"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "8e336029-e0e8-4dfc-a214-93ddbf4706dc",
+                                "name": "Giovannis Segen"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T17:00:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "y8ta4xj22c",
+                        "name": "Round 2",
+                        "index": 1
+                    }
+                },
+                {
+                    "id": "xxv0hgy6c9f",
+                    "court": 9,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "c50a2273-875d-41e2-9210-74dceec45fb0",
+                                "name": "Free Gizmo"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "8305b7da-e58b-42dc-a0b6-faed558276ac",
+                                "name": "lirili larilà"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T17:00:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "y8ta4xj22c",
+                        "name": "Round 2",
+                        "index": 1
+                    }
+                },
+                {
+                    "id": "tts8kw8cq0j",
+                    "court": 1,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "78dbed73-70a8-4131-874a-3ef6ec6bdd61",
+                                "name": "#niemehalkohol"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "401bc396-76c6-4e8e-9474-ee9924c2e3d2",
+                                "name": "Beerack Obama"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T17:15:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "y8ta4xj22c",
+                        "name": "Round 2",
+                        "index": 1
+                    }
+                },
+                {
+                    "id": "0v1aldiyjs2o",
+                    "court": 2,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "e0c96727-50d3-410c-bc30-f5f9a3be4bd2",
+                                "name": "Buena Vista Vodka Club"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "a54d6565-162a-4877-879f-cbed5d0c6e8b",
+                                "name": "Ruusch-Ritter"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T17:15:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "y8ta4xj22c",
+                        "name": "Round 2",
+                        "index": 1
+                    }
+                },
+                {
+                    "id": "7175hdsqmms",
+                    "court": 3,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "1bee259c-2f90-4958-95b5-8187d3b6e658",
+                                "name": "Spinnerbande"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "c35b12a1-23dc-4035-ac13-250ab30af2d8",
+                                "name": "(t)Obi Pong Kenobi"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T17:15:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "y8ta4xj22c",
+                        "name": "Round 2",
+                        "index": 1
+                    }
+                },
+                {
+                    "id": "fb7zt0yh3p",
+                    "court": 4,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "cd3dcb91-4ee8-420f-9bc1-6656cfe750ab",
+                                "name": "Bob Tschigarillo"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "e5f534c7-020d-4275-8dc8-a769b17b289f",
+                                "name": "Lagartoooo"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T17:15:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "y8ta4xj22c",
+                        "name": "Round 2",
+                        "index": 1
+                    }
+                },
+                {
+                    "id": "hppd6f59t9",
+                    "court": 5,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "a8572244-617f-4512-8d16-ea1fef85d071",
+                                "name": "Bombardino crocodilo"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "fdba5287-daa5-4567-8e08-0897084b7b20",
+                                "name": "Reckless Rimjobers"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T17:15:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "y8ta4xj22c",
+                        "name": "Round 2",
+                        "index": 1
+                    }
+                },
+                {
+                    "id": "y0ouc8owu9",
+                    "court": 6,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "fd22450c-9c39-4555-ae77-3b4e5ea1014e",
+                                "name": "Liba Rave"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "4f83c918-2ac5-45f2-ac09-617f2cc6126e",
+                                "name": "less skill, more promill"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T17:15:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "y8ta4xj22c",
+                        "name": "Round 2",
+                        "index": 1
+                    }
+                },
+                {
+                    "id": "2jxeaothcb",
+                    "court": 7,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "1a930c30-2f72-4773-8422-ba036811cd2d",
+                                "name": "Beerliner"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "a2369591-6a1e-4869-98de-f433d3e05247",
+                                "name": "FEMexperte"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T17:15:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "y8ta4xj22c",
+                        "name": "Round 2",
+                        "index": 1
+                    }
+                },
+                {
+                    "id": "iofyt670cjr",
+                    "court": 8,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "7d41f4a5-7b85-48f2-801a-9163303215eb",
+                                "name": "MT Grand Prixler"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "816cd186-c6fa-4ed0-a02b-eac1877e59e2",
+                                "name": "Suufhuse"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T17:15:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "y8ta4xj22c",
+                        "name": "Round 2",
+                        "index": 1
+                    }
+                },
+                {
+                    "id": "4jf6f5c11pq",
+                    "court": 9,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "dbd73e01-b3fa-4ade-8e8a-15d40a62ec04",
+                                "name": "Becherjäger"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "9ebdbba1-b891-4e8b-ba5b-52f98d1211c2",
+                                "name": "ChchchChicken"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T17:15:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "y8ta4xj22c",
+                        "name": "Round 2",
+                        "index": 1
+                    }
+                },
+                {
+                    "id": "9j6n41d5fnr",
+                    "court": 1,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "816cd186-c6fa-4ed0-a02b-eac1877e59e2",
+                                "name": "Suufhuse"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "c67a80ce-afa3-4cfb-8262-cce512e711eb",
+                                "name": "Zitrusfrucht"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T17:30:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "893jef8kb55",
+                        "name": "Round 3",
+                        "index": 2
+                    }
+                },
+                {
+                    "id": "5cf4c92q31",
+                    "court": 2,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "9ebdbba1-b891-4e8b-ba5b-52f98d1211c2",
+                                "name": "ChchchChicken"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "1f7250f3-1e15-43f7-a495-ac5924761b33",
+                                "name": "Team Rocket"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T17:30:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "893jef8kb55",
+                        "name": "Round 3",
+                        "index": 2
+                    }
+                },
+                {
+                    "id": "d27krizhvw",
+                    "court": 3,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "ce4fb291-c6f4-4421-bd59-8ed847afbd5e",
+                                "name": "Pegelbrüder"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "017960e0-d35a-4401-a5ac-e854b64ec0bd",
+                                "name": "Rauschbären"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T17:30:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "893jef8kb55",
+                        "name": "Round 3",
+                        "index": 2
+                    }
+                },
+                {
+                    "id": "ijnbppyfyi8",
+                    "court": 4,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "b2541fd3-1e21-42d2-bd86-b6e89d839d2d",
+                                "name": "2FAil"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "0452b74d-72d3-4eec-9284-1ec0917872fe",
+                                "name": "Brokeback Mountain Dew"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T17:30:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "893jef8kb55",
+                        "name": "Round 3",
+                        "index": 2
+                    }
+                },
+                {
+                    "id": "egrqyy0jcha",
+                    "court": 5,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "4854612b-ff49-48a6-9455-24e7039ddd4d",
+                                "name": "Habibi und Tina"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "b6eb5a49-0c43-41ce-81d7-b12ed4f443f0",
+                                "name": "2 boys 10 cups"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T17:30:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "893jef8kb55",
+                        "name": "Round 3",
+                        "index": 2
+                    }
+                },
+                {
+                    "id": "232vqbakoj7j",
+                    "court": 6,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "329e5076-63ea-48a7-ae19-889f22b7c4e1",
+                                "name": "Wir drehn Dorsch"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "8c56b036-c952-4310-b9e4-6c6d09315229",
+                                "name": "Dosenbier saufen"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T17:30:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "893jef8kb55",
+                        "name": "Round 3",
+                        "index": 2
+                    }
+                },
+                {
+                    "id": "2rys0prpbq2",
+                    "court": 7,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "2a5e1d8b-6393-4318-81e8-9aef1f66bfc7",
+                                "name": "tschuuss"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "51886f5a-ab0b-4b42-a0d7-6a81f9f7958c",
+                                "name": "NieNüechtern"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T17:30:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "893jef8kb55",
+                        "name": "Round 3",
+                        "index": 2
+                    }
+                },
+                {
+                    "id": "1c3zxwducg8",
+                    "court": 8,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "cc834c5e-f3b9-4122-a491-bede4ed94b04",
+                                "name": "Splash Bros"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "bf1e3b9c-2af7-48c2-9e81-e635ef82f01e",
+                                "name": "muchos treffos"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T17:30:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "893jef8kb55",
+                        "name": "Round 3",
+                        "index": 2
+                    }
+                },
+                {
+                    "id": "f53do1n4g8",
+                    "court": 9,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "b50a7acc-fe03-469a-aefe-af2455fd03bb",
+                                "name": "Gsehsch guet us ... und glücklich"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "c50a2273-875d-41e2-9210-74dceec45fb0",
+                                "name": "Free Gizmo"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T17:30:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "893jef8kb55",
+                        "name": "Round 3",
+                        "index": 2
+                    }
+                },
+                {
+                    "id": "1bfq821zi5g",
+                    "court": 1,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "8e336029-e0e8-4dfc-a214-93ddbf4706dc",
+                                "name": "Giovannis Segen"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "78dbed73-70a8-4131-874a-3ef6ec6bdd61",
+                                "name": "#niemehalkohol"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T17:45:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "893jef8kb55",
+                        "name": "Round 3",
+                        "index": 2
+                    }
+                },
+                {
+                    "id": "jd8q5v1n7c",
+                    "court": 2,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "8305b7da-e58b-42dc-a0b6-faed558276ac",
+                                "name": "lirili larilà"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "e0c96727-50d3-410c-bc30-f5f9a3be4bd2",
+                                "name": "Buena Vista Vodka Club"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T17:45:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "893jef8kb55",
+                        "name": "Round 3",
+                        "index": 2
+                    }
+                },
+                {
+                    "id": "qcqynr4unf",
+                    "court": 3,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "401bc396-76c6-4e8e-9474-ee9924c2e3d2",
+                                "name": "Beerack Obama"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "1bee259c-2f90-4958-95b5-8187d3b6e658",
+                                "name": "Spinnerbande"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T17:45:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "893jef8kb55",
+                        "name": "Round 3",
+                        "index": 2
+                    }
+                },
+                {
+                    "id": "oswvwd9s55",
+                    "court": 4,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "a54d6565-162a-4877-879f-cbed5d0c6e8b",
+                                "name": "Ruusch-Ritter"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "cd3dcb91-4ee8-420f-9bc1-6656cfe750ab",
+                                "name": "Bob Tschigarillo"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T17:45:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "893jef8kb55",
+                        "name": "Round 3",
+                        "index": 2
+                    }
+                },
+                {
+                    "id": "gswkpc6mrd",
+                    "court": 5,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "c35b12a1-23dc-4035-ac13-250ab30af2d8",
+                                "name": "(t)Obi Pong Kenobi"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "a8572244-617f-4512-8d16-ea1fef85d071",
+                                "name": "Bombardino crocodilo"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T17:45:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "893jef8kb55",
+                        "name": "Round 3",
+                        "index": 2
+                    }
+                },
+                {
+                    "id": "kq1sdymo6q",
+                    "court": 6,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "e5f534c7-020d-4275-8dc8-a769b17b289f",
+                                "name": "Lagartoooo"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "fd22450c-9c39-4555-ae77-3b4e5ea1014e",
+                                "name": "Liba Rave"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T17:45:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "893jef8kb55",
+                        "name": "Round 3",
+                        "index": 2
+                    }
+                },
+                {
+                    "id": "ovs2gaw55ki",
+                    "court": 7,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "fdba5287-daa5-4567-8e08-0897084b7b20",
+                                "name": "Reckless Rimjobers"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "1a930c30-2f72-4773-8422-ba036811cd2d",
+                                "name": "Beerliner"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T17:45:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "893jef8kb55",
+                        "name": "Round 3",
+                        "index": 2
+                    }
+                },
+                {
+                    "id": "ny2qmmzsoyn",
+                    "court": 8,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "4f83c918-2ac5-45f2-ac09-617f2cc6126e",
+                                "name": "less skill, more promill"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "7d41f4a5-7b85-48f2-801a-9163303215eb",
+                                "name": "MT Grand Prixler"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T17:45:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "893jef8kb55",
+                        "name": "Round 3",
+                        "index": 2
+                    }
+                },
+                {
+                    "id": "e1d1la7pqnc",
+                    "court": 9,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "a2369591-6a1e-4869-98de-f433d3e05247",
+                                "name": "FEMexperte"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "dbd73e01-b3fa-4ade-8e8a-15d40a62ec04",
+                                "name": "Becherjäger"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T17:45:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "893jef8kb55",
+                        "name": "Round 3",
+                        "index": 2
+                    }
+                },
+                {
+                    "id": "rozgazu0fb",
+                    "court": 1,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "c67a80ce-afa3-4cfb-8262-cce512e711eb",
+                                "name": "Zitrusfrucht"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "4f83c918-2ac5-45f2-ac09-617f2cc6126e",
+                                "name": "less skill, more promill"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T18:00:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "akloefxkx6",
+                        "name": "Round 4",
+                        "index": 3
+                    }
+                },
+                {
+                    "id": "y3bcwek3hrr",
+                    "court": 2,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "1f7250f3-1e15-43f7-a495-ac5924761b33",
+                                "name": "Team Rocket"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "a2369591-6a1e-4869-98de-f433d3e05247",
+                                "name": "FEMexperte"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T18:00:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "akloefxkx6",
+                        "name": "Round 4",
+                        "index": 3
+                    }
+                },
+                {
+                    "id": "dytt9jpxjnv",
+                    "court": 3,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "017960e0-d35a-4401-a5ac-e854b64ec0bd",
+                                "name": "Rauschbären"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "816cd186-c6fa-4ed0-a02b-eac1877e59e2",
+                                "name": "Suufhuse"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T18:00:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "akloefxkx6",
+                        "name": "Round 4",
+                        "index": 3
+                    }
+                },
+                {
+                    "id": "0i1ype9c8gm8",
+                    "court": 4,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "ce4fb291-c6f4-4421-bd59-8ed847afbd5e",
+                                "name": "Pegelbrüder"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "9ebdbba1-b891-4e8b-ba5b-52f98d1211c2",
+                                "name": "ChchchChicken"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T18:00:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "akloefxkx6",
+                        "name": "Round 4",
+                        "index": 3
+                    }
+                },
+                {
+                    "id": "9w2zbr56owu",
+                    "court": 5,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "0452b74d-72d3-4eec-9284-1ec0917872fe",
+                                "name": "Brokeback Mountain Dew"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "b6eb5a49-0c43-41ce-81d7-b12ed4f443f0",
+                                "name": "2 boys 10 cups"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T18:00:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "akloefxkx6",
+                        "name": "Round 4",
+                        "index": 3
+                    }
+                },
+                {
+                    "id": "6rr975limjn",
+                    "court": 6,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "8c56b036-c952-4310-b9e4-6c6d09315229",
+                                "name": "Dosenbier saufen"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "b2541fd3-1e21-42d2-bd86-b6e89d839d2d",
+                                "name": "2FAil"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T18:00:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "akloefxkx6",
+                        "name": "Round 4",
+                        "index": 3
+                    }
+                },
+                {
+                    "id": "0z69pb16845l",
+                    "court": 7,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "51886f5a-ab0b-4b42-a0d7-6a81f9f7958c",
+                                "name": "NieNüechtern"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "4854612b-ff49-48a6-9455-24e7039ddd4d",
+                                "name": "Habibi und Tina"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T18:00:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "akloefxkx6",
+                        "name": "Round 4",
+                        "index": 3
+                    }
+                },
+                {
+                    "id": "adxr3ed3vdq",
+                    "court": 8,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "bf1e3b9c-2af7-48c2-9e81-e635ef82f01e",
+                                "name": "muchos treffos"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "329e5076-63ea-48a7-ae19-889f22b7c4e1",
+                                "name": "Wir drehn Dorsch"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T18:00:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "akloefxkx6",
+                        "name": "Round 4",
+                        "index": 3
+                    }
+                },
+                {
+                    "id": "f9asyea05mp",
+                    "court": 9,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "c50a2273-875d-41e2-9210-74dceec45fb0",
+                                "name": "Free Gizmo"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "2a5e1d8b-6393-4318-81e8-9aef1f66bfc7",
+                                "name": "tschuuss"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T18:00:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "akloefxkx6",
+                        "name": "Round 4",
+                        "index": 3
+                    }
+                },
+                {
+                    "id": "u3tw97izcqf",
+                    "court": 1,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "78dbed73-70a8-4131-874a-3ef6ec6bdd61",
+                                "name": "#niemehalkohol"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "cc834c5e-f3b9-4122-a491-bede4ed94b04",
+                                "name": "Splash Bros"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T18:15:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "akloefxkx6",
+                        "name": "Round 4",
+                        "index": 3
+                    }
+                },
+                {
+                    "id": "9k3xzmi3qk5",
+                    "court": 2,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "e0c96727-50d3-410c-bc30-f5f9a3be4bd2",
+                                "name": "Buena Vista Vodka Club"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "b50a7acc-fe03-469a-aefe-af2455fd03bb",
+                                "name": "Gsehsch guet us ... und glücklich"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T18:15:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "akloefxkx6",
+                        "name": "Round 4",
+                        "index": 3
+                    }
+                },
+                {
+                    "id": "qkm7qvfcikc",
+                    "court": 3,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "1bee259c-2f90-4958-95b5-8187d3b6e658",
+                                "name": "Spinnerbande"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "8e336029-e0e8-4dfc-a214-93ddbf4706dc",
+                                "name": "Giovannis Segen"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T18:15:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "akloefxkx6",
+                        "name": "Round 4",
+                        "index": 3
+                    }
+                },
+                {
+                    "id": "sfa5egrpb2",
+                    "court": 4,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "cd3dcb91-4ee8-420f-9bc1-6656cfe750ab",
+                                "name": "Bob Tschigarillo"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "8305b7da-e58b-42dc-a0b6-faed558276ac",
+                                "name": "lirili larilà"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T18:15:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "akloefxkx6",
+                        "name": "Round 4",
+                        "index": 3
+                    }
+                },
+                {
+                    "id": "1qfsyq42145",
+                    "court": 5,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "a8572244-617f-4512-8d16-ea1fef85d071",
+                                "name": "Bombardino crocodilo"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "401bc396-76c6-4e8e-9474-ee9924c2e3d2",
+                                "name": "Beerack Obama"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T18:15:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "akloefxkx6",
+                        "name": "Round 4",
+                        "index": 3
+                    }
+                },
+                {
+                    "id": "o5fh5md9rd",
+                    "court": 6,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "fd22450c-9c39-4555-ae77-3b4e5ea1014e",
+                                "name": "Liba Rave"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "a54d6565-162a-4877-879f-cbed5d0c6e8b",
+                                "name": "Ruusch-Ritter"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T18:15:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "akloefxkx6",
+                        "name": "Round 4",
+                        "index": 3
+                    }
+                },
+                {
+                    "id": "sdpojxg7fo",
+                    "court": 7,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "1a930c30-2f72-4773-8422-ba036811cd2d",
+                                "name": "Beerliner"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "c35b12a1-23dc-4035-ac13-250ab30af2d8",
+                                "name": "(t)Obi Pong Kenobi"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T18:15:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "akloefxkx6",
+                        "name": "Round 4",
+                        "index": 3
+                    }
+                },
+                {
+                    "id": "uqnl69c0lui",
+                    "court": 8,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "7d41f4a5-7b85-48f2-801a-9163303215eb",
+                                "name": "MT Grand Prixler"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "e5f534c7-020d-4275-8dc8-a769b17b289f",
+                                "name": "Lagartoooo"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T18:15:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "akloefxkx6",
+                        "name": "Round 4",
+                        "index": 3
+                    }
+                },
+                {
+                    "id": "zsb3qq2yoi",
+                    "court": 9,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "dbd73e01-b3fa-4ade-8e8a-15d40a62ec04",
+                                "name": "Becherjäger"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "fdba5287-daa5-4567-8e08-0897084b7b20",
+                                "name": "Reckless Rimjobers"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-04-26T18:15:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "akloefxkx6",
+                        "name": "Round 4",
+                        "index": 3
+                    }
+                }
+            ],
+            "rounds": 4
+        },
+        {
+            "id": "60zezvgk0ai",
+            "type": "knockout",
+            "name": "Knockout Phase",
+            "rounds": [
+                {
+                    "id": "nfoht2wbn2",
+                    "name": "Quarter-finals",
+                    "matches": [
+                        {
+                            "id": "gyb5s6tcn4p",
+                            "court": 1,
+                            "teams": [
+                                {
+                                    "link": {
+                                        "placement": 0,
+                                        "type": "league",
+                                        "fromRound": -1
+                                    },
+                                    "score": 0
+                                },
+                                {
+                                    "link": {
+                                        "placement": 7,
+                                        "type": "league",
+                                        "fromRound": -1
+                                    },
+                                    "score": 0
+                                }
+                            ],
+                            "date": "2025-04-26T18:42:00.530Z",
+                            "status": "scheduled"
+                        },
+                        {
+                            "id": "wf3w4oohej",
+                            "court": 2,
+                            "teams": [
+                                {
+                                    "link": {
+                                        "placement": 1,
+                                        "type": "league",
+                                        "fromRound": -1
+                                    },
+                                    "score": 0
+                                },
+                                {
+                                    "link": {
+                                        "placement": 6,
+                                        "type": "league",
+                                        "fromRound": -1
+                                    },
+                                    "score": 0
+                                }
+                            ],
+                            "date": "2025-04-26T18:42:00.530Z",
+                            "status": "scheduled"
+                        },
+                        {
+                            "id": "xbj39zeri9",
+                            "court": 3,
+                            "teams": [
+                                {
+                                    "link": {
+                                        "placement": 2,
+                                        "type": "league",
+                                        "fromRound": -1
+                                    },
+                                    "score": 0
+                                },
+                                {
+                                    "link": {
+                                        "placement": 5,
+                                        "type": "league",
+                                        "fromRound": -1
+                                    },
+                                    "score": 0
+                                }
+                            ],
+                            "date": "2025-04-26T18:42:00.530Z",
+                            "status": "scheduled"
+                        },
+                        {
+                            "id": "o5wlw4eyey",
+                            "court": 4,
+                            "teams": [
+                                {
+                                    "link": {
+                                        "placement": 3,
+                                        "type": "league",
+                                        "fromRound": -1
+                                    },
+                                    "score": 0
+                                },
+                                {
+                                    "link": {
+                                        "placement": 4,
+                                        "type": "league",
+                                        "fromRound": -1
+                                    },
+                                    "score": 0
+                                }
+                            ],
+                            "date": "2025-04-26T18:42:00.530Z",
+                            "status": "scheduled"
+                        }
+                    ]
+                },
+                {
+                    "id": "nvif434z55b",
+                    "name": "Semi-finals",
+                    "matches": [
+                        {
+                            "id": "bs3vejnq81m",
+                            "court": 1,
+                            "teams": [
+                                {
+                                    "link": {
+                                        "placement": 0,
+                                        "type": "winner",
+                                        "fromRound": 0
+                                    },
+                                    "score": 0
+                                },
+                                {
+                                    "link": {
+                                        "placement": 3,
+                                        "type": "winner",
+                                        "fromRound": 0
+                                    },
+                                    "score": 0
+                                }
+                            ],
+                            "date": "2025-04-26T18:57:00.530Z",
+                            "status": "scheduled"
+                        },
+                        {
+                            "id": "b0vwaa8ky6d",
+                            "court": 2,
+                            "teams": [
+                                {
+                                    "link": {
+                                        "placement": 1,
+                                        "type": "winner",
+                                        "fromRound": 0
+                                    },
+                                    "score": 0
+                                },
+                                {
+                                    "link": {
+                                        "placement": 2,
+                                        "type": "winner",
+                                        "fromRound": 0
+                                    },
+                                    "score": 0
+                                }
+                            ],
+                            "date": "2025-04-26T18:57:00.530Z",
+                            "status": "scheduled"
+                        }
+                    ]
+                },
+                {
+                    "id": "cu3u4pz39b",
+                    "name": "3rd Place Playoff",
+                    "matches": [
+                        {
+                            "id": "3ezvyvtbz9",
+                            "court": 1,
+                            "teams": [
+                                {
+                                    "link": {
+                                        "type": "loser",
+                                        "placement": 0
+                                    },
+                                    "score": 0
+                                },
+                                {
+                                    "link": {
+                                        "type": "loser",
+                                        "placement": 1
+                                    },
+                                    "score": 0
+                                }
+                            ],
+                            "date": "2025-04-26T19:12:00.530Z",
+                            "status": "scheduled"
+                        }
+                    ]
+                },
+                {
+                    "id": "1nquedcse7i",
+                    "name": "Final",
+                    "matches": [
+                        {
+                            "id": "ybrrks9yfq8",
+                            "court": 1,
+                            "teams": [
+                                {
+                                    "link": {
+                                        "placement": 0,
+                                        "type": "winner",
+                                        "fromRound": 1
+                                    },
+                                    "score": 0
+                                },
+                                {
+                                    "link": {
+                                        "placement": 1,
+                                        "type": "winner",
+                                        "fromRound": 1
+                                    },
+                                    "score": 0
+                                }
+                            ],
+                            "date": "2025-04-26T19:27:00.530Z",
+                            "status": "scheduled"
+                        }
+                    ]
+                }
+            ],
+            "teamCount": 8
+        }
+    ]
+}

@@ -1,0 +1,1049 @@
+{
+    "version": 3,
+    "id": "d6f12139-0c36-4d90-8063-a1c93569bc44",
+    "name": "Women's Euro",
+    "teams": [
+        {
+            "id": "3f17a47c-9013-4078-af46-6a748d4a6f4e",
+            "name": "Norway"
+        },
+        {
+            "id": "317507df-9aca-4b0d-9381-79df1bc7ed34",
+            "name": "Switzerland"
+        },
+        {
+            "id": "6a350b75-cc3c-4c0f-93da-af3463dc4e1d",
+            "name": "Sweden"
+        },
+        {
+            "id": "e2fe0192-46d2-443f-803d-ebbf9d7c8aeb",
+            "name": "Finland"
+        },
+        {
+            "id": "d27e8e40-a55f-4379-857d-4644394cc39f",
+            "name": "Belgium"
+        },
+        {
+            "id": "53a40bef-be82-4554-b37d-ac466b178ff0",
+            "name": "Iceland"
+        },
+        {
+            "id": "26e5484f-50ff-4d7b-9a3c-488443ee6163",
+            "name": "England"
+        },
+        {
+            "id": "a59a3cb4-27f8-4271-96b8-3f38fe852525",
+            "name": "Portugal"
+        },
+        {
+            "id": "960095c0-e97b-4431-9b14-28570e34e9ea",
+            "name": "Italy"
+        },
+        {
+            "id": "78f778c3-4543-4554-bd76-fd41996c287d",
+            "name": "Germany"
+        },
+        {
+            "id": "f41fd65a-5957-4d07-80db-1b103c87a331",
+            "name": "France"
+        },
+        {
+            "id": "abd8a445-c807-4ffd-a8ad-775cee099bcf",
+            "name": "Denmark"
+        },
+        {
+            "id": "4ebc45b6-e48a-4ac1-b348-160b50a41488",
+            "name": "Netherlands"
+        },
+        {
+            "id": "80f39a20-a187-48c9-b514-d9e66e74111d",
+            "name": "Spain"
+        },
+        {
+            "id": "7551f288-3549-4571-ae6b-43037f97363d",
+            "name": "Wales"
+        },
+        {
+            "id": "06541d31-904d-4ab1-88b3-3ada84d9b947",
+            "name": "Poland"
+        }
+    ],
+    "phases": [
+        {
+            "id": "29e5377e-c734-42d3-a0db-f6dbfc59880a",
+            "type": "group",
+            "name": "Group Phase",
+            "matches": [
+                {
+                    "id": "bcblilq11zr",
+                    "court": 1,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "e2fe0192-46d2-443f-803d-ebbf9d7c8aeb",
+                                "name": "Team 9"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "317507df-9aca-4b0d-9381-79df1bc7ed34",
+                                "name": "Team 7"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-07-02T16:00:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "4y3ckz5kujb",
+                        "name": "Round 1",
+                        "index": 0
+                    }
+                },
+                {
+                    "id": "ln6dbtc06db",
+                    "court": 2,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "53a40bef-be82-4554-b37d-ac466b178ff0",
+                                "name": "Team 8"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "3f17a47c-9013-4078-af46-6a748d4a6f4e",
+                                "name": "Team 6"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-07-02T16:00:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "4y3ckz5kujb",
+                        "name": "Round 1",
+                        "index": 0
+                    }
+                },
+                {
+                    "id": "oyizle2luj",
+                    "court": 3,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "a59a3cb4-27f8-4271-96b8-3f38fe852525",
+                                "name": "Team 16"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "80f39a20-a187-48c9-b514-d9e66e74111d",
+                                "name": "Team 11"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-07-02T16:00:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "w0qb0tb7zj",
+                        "name": "Round 1",
+                        "index": 0
+                    }
+                },
+                {
+                    "id": "9utlgwxq0hw",
+                    "court": 4,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "d27e8e40-a55f-4379-857d-4644394cc39f",
+                                "name": "Team 12"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "960095c0-e97b-4431-9b14-28570e34e9ea",
+                                "name": "Team 15"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-07-02T16:00:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "w0qb0tb7zj",
+                        "name": "Round 1",
+                        "index": 0
+                    }
+                },
+                {
+                    "id": "vb3dxyx4rvm",
+                    "court": 5,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "abd8a445-c807-4ffd-a8ad-775cee099bcf",
+                                "name": "Team 5"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "06541d31-904d-4ab1-88b3-3ada84d9b947",
+                                "name": "Team 13"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-07-02T16:00:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "osgm9wsar7",
+                        "name": "Round 1",
+                        "index": 0
+                    }
+                },
+                {
+                    "id": "0bk1s08n0d2c",
+                    "court": 6,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "78f778c3-4543-4554-bd76-fd41996c287d",
+                                "name": "Team 3"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "6a350b75-cc3c-4c0f-93da-af3463dc4e1d",
+                                "name": "Team 4"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-07-02T16:00:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "osgm9wsar7",
+                        "name": "Round 1",
+                        "index": 0
+                    }
+                },
+                {
+                    "id": "xhl211g0xw",
+                    "court": 7,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "f41fd65a-5957-4d07-80db-1b103c87a331",
+                                "name": "Team 14"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "26e5484f-50ff-4d7b-9a3c-488443ee6163",
+                                "name": "Team 10"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-07-02T16:00:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "abxppe07f0v",
+                        "name": "Round 1",
+                        "index": 0
+                    }
+                },
+                {
+                    "id": "gdt9409h1m8",
+                    "court": 8,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "7551f288-3549-4571-ae6b-43037f97363d",
+                                "name": "Team 1"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "4ebc45b6-e48a-4ac1-b348-160b50a41488",
+                                "name": "Team 2"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-07-02T16:00:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "abxppe07f0v",
+                        "name": "Round 1",
+                        "index": 0
+                    }
+                },
+                {
+                    "id": "faro46zuekh",
+                    "court": 1,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "3f17a47c-9013-4078-af46-6a748d4a6f4e",
+                                "name": "Team 6"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "317507df-9aca-4b0d-9381-79df1bc7ed34",
+                                "name": "Team 7"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-07-02T16:20:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "rh4amqqq7l",
+                        "name": "Round 2",
+                        "index": 1
+                    }
+                },
+                {
+                    "id": "9hiarzl5u9e",
+                    "court": 2,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "e2fe0192-46d2-443f-803d-ebbf9d7c8aeb",
+                                "name": "Team 9"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "53a40bef-be82-4554-b37d-ac466b178ff0",
+                                "name": "Team 8"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-07-02T16:20:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "rh4amqqq7l",
+                        "name": "Round 2",
+                        "index": 1
+                    }
+                },
+                {
+                    "id": "am9qgfcfwl6",
+                    "court": 3,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "960095c0-e97b-4431-9b14-28570e34e9ea",
+                                "name": "Team 15"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "80f39a20-a187-48c9-b514-d9e66e74111d",
+                                "name": "Team 11"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-07-02T16:20:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "f1hf0wxoz4",
+                        "name": "Round 2",
+                        "index": 1
+                    }
+                },
+                {
+                    "id": "nkirev2xzza",
+                    "court": 4,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "a59a3cb4-27f8-4271-96b8-3f38fe852525",
+                                "name": "Team 16"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "d27e8e40-a55f-4379-857d-4644394cc39f",
+                                "name": "Team 12"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-07-02T16:20:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "f1hf0wxoz4",
+                        "name": "Round 2",
+                        "index": 1
+                    }
+                },
+                {
+                    "id": "mf0nic3xfin",
+                    "court": 5,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "6a350b75-cc3c-4c0f-93da-af3463dc4e1d",
+                                "name": "Team 4"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "06541d31-904d-4ab1-88b3-3ada84d9b947",
+                                "name": "Team 13"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-07-02T16:20:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "sfkh73u6hh",
+                        "name": "Round 2",
+                        "index": 1
+                    }
+                },
+                {
+                    "id": "iclgkw0qtj",
+                    "court": 6,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "abd8a445-c807-4ffd-a8ad-775cee099bcf",
+                                "name": "Team 5"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "78f778c3-4543-4554-bd76-fd41996c287d",
+                                "name": "Team 3"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-07-02T16:20:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "sfkh73u6hh",
+                        "name": "Round 2",
+                        "index": 1
+                    }
+                },
+                {
+                    "id": "0047kjp28vgaw",
+                    "court": 7,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "4ebc45b6-e48a-4ac1-b348-160b50a41488",
+                                "name": "Team 2"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "26e5484f-50ff-4d7b-9a3c-488443ee6163",
+                                "name": "Team 10"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-07-02T16:20:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "jkue3rhxxab",
+                        "name": "Round 2",
+                        "index": 1
+                    }
+                },
+                {
+                    "id": "2qnx50wyi3v",
+                    "court": 8,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "f41fd65a-5957-4d07-80db-1b103c87a331",
+                                "name": "Team 14"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "7551f288-3549-4571-ae6b-43037f97363d",
+                                "name": "Team 1"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-07-02T16:20:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "jkue3rhxxab",
+                        "name": "Round 2",
+                        "index": 1
+                    }
+                },
+                {
+                    "id": "rk1ucgnnq1",
+                    "court": 1,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "317507df-9aca-4b0d-9381-79df1bc7ed34",
+                                "name": "Team 7"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "53a40bef-be82-4554-b37d-ac466b178ff0",
+                                "name": "Team 8"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-07-02T16:40:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "oowvg6u91zb",
+                        "name": "Round 3",
+                        "index": 2
+                    }
+                },
+                {
+                    "id": "vaeemotyyc9",
+                    "court": 2,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "e2fe0192-46d2-443f-803d-ebbf9d7c8aeb",
+                                "name": "Team 9"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "3f17a47c-9013-4078-af46-6a748d4a6f4e",
+                                "name": "Team 6"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-07-02T16:40:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "oowvg6u91zb",
+                        "name": "Round 3",
+                        "index": 2
+                    }
+                },
+                {
+                    "id": "ue7dd4yv7h9",
+                    "court": 3,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "80f39a20-a187-48c9-b514-d9e66e74111d",
+                                "name": "Team 11"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "d27e8e40-a55f-4379-857d-4644394cc39f",
+                                "name": "Team 12"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-07-02T16:40:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "tpebm9mhvna",
+                        "name": "Round 3",
+                        "index": 2
+                    }
+                },
+                {
+                    "id": "cuvk299b3zr",
+                    "court": 4,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "a59a3cb4-27f8-4271-96b8-3f38fe852525",
+                                "name": "Team 16"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "960095c0-e97b-4431-9b14-28570e34e9ea",
+                                "name": "Team 15"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-07-02T16:40:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "tpebm9mhvna",
+                        "name": "Round 3",
+                        "index": 2
+                    }
+                },
+                {
+                    "id": "5f106s5fzf",
+                    "court": 5,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "06541d31-904d-4ab1-88b3-3ada84d9b947",
+                                "name": "Team 13"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "78f778c3-4543-4554-bd76-fd41996c287d",
+                                "name": "Team 3"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-07-02T16:40:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "5u84c0jn14k",
+                        "name": "Round 3",
+                        "index": 2
+                    }
+                },
+                {
+                    "id": "6r1l43a6h1b",
+                    "court": 6,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "abd8a445-c807-4ffd-a8ad-775cee099bcf",
+                                "name": "Team 5"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "6a350b75-cc3c-4c0f-93da-af3463dc4e1d",
+                                "name": "Team 4"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-07-02T16:40:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "5u84c0jn14k",
+                        "name": "Round 3",
+                        "index": 2
+                    }
+                },
+                {
+                    "id": "j9nromfrlnm",
+                    "court": 7,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "26e5484f-50ff-4d7b-9a3c-488443ee6163",
+                                "name": "Team 10"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "7551f288-3549-4571-ae6b-43037f97363d",
+                                "name": "Team 1"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-07-02T16:40:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "6ldsu67w9yq",
+                        "name": "Round 3",
+                        "index": 2
+                    }
+                },
+                {
+                    "id": "cfz5f3p497b",
+                    "court": 8,
+                    "teams": [
+                        {
+                            "ref": {
+                                "id": "f41fd65a-5957-4d07-80db-1b103c87a331",
+                                "name": "Team 14"
+                            },
+                            "score": 0
+                        },
+                        {
+                            "ref": {
+                                "id": "4ebc45b6-e48a-4ac1-b348-160b50a41488",
+                                "name": "Team 2"
+                            },
+                            "score": 0
+                        }
+                    ],
+                    "date": "2025-07-02T16:40:00.000Z",
+                    "status": "scheduled",
+                    "round": {
+                        "id": "6ldsu67w9yq",
+                        "name": "Round 3",
+                        "index": 2
+                    }
+                }
+            ],
+            "groups": [
+                {
+                    "id": "7f7681ba-1ab6-49ac-8735-7f3c8f8987f8",
+                    "name": "Group A",
+                    "teams": [
+                        {
+                            "id": "53a40bef-be82-4554-b37d-ac466b178ff0",
+                            "name": "Team 8"
+                        },
+                        {
+                            "id": "e2fe0192-46d2-443f-803d-ebbf9d7c8aeb",
+                            "name": "Team 9"
+                        },
+                        {
+                            "id": "317507df-9aca-4b0d-9381-79df1bc7ed34",
+                            "name": "Team 7"
+                        },
+                        {
+                            "id": "3f17a47c-9013-4078-af46-6a748d4a6f4e",
+                            "name": "Team 6"
+                        }
+                    ]
+                },
+                {
+                    "id": "f5029b35-456f-4869-9c87-e3a7b318b9bf",
+                    "name": "Group B",
+                    "teams": [
+                        {
+                            "id": "d27e8e40-a55f-4379-857d-4644394cc39f",
+                            "name": "Team 12"
+                        },
+                        {
+                            "id": "a59a3cb4-27f8-4271-96b8-3f38fe852525",
+                            "name": "Team 16"
+                        },
+                        {
+                            "id": "80f39a20-a187-48c9-b514-d9e66e74111d",
+                            "name": "Team 11"
+                        },
+                        {
+                            "id": "960095c0-e97b-4431-9b14-28570e34e9ea",
+                            "name": "Team 15"
+                        }
+                    ]
+                },
+                {
+                    "id": "6c696c81-1537-400e-a20f-572faee041ff",
+                    "name": "Group C",
+                    "teams": [
+                        {
+                            "id": "78f778c3-4543-4554-bd76-fd41996c287d",
+                            "name": "Team 3"
+                        },
+                        {
+                            "id": "abd8a445-c807-4ffd-a8ad-775cee099bcf",
+                            "name": "Team 5"
+                        },
+                        {
+                            "id": "06541d31-904d-4ab1-88b3-3ada84d9b947",
+                            "name": "Team 13"
+                        },
+                        {
+                            "id": "6a350b75-cc3c-4c0f-93da-af3463dc4e1d",
+                            "name": "Team 4"
+                        }
+                    ]
+                },
+                {
+                    "id": "1f745c33-3413-4e3b-91be-01c0df649e99",
+                    "name": "Group D",
+                    "teams": [
+                        {
+                            "id": "7551f288-3549-4571-ae6b-43037f97363d",
+                            "name": "Team 1"
+                        },
+                        {
+                            "id": "f41fd65a-5957-4d07-80db-1b103c87a331",
+                            "name": "Team 14"
+                        },
+                        {
+                            "id": "26e5484f-50ff-4d7b-9a3c-488443ee6163",
+                            "name": "Team 10"
+                        },
+                        {
+                            "id": "4ebc45b6-e48a-4ac1-b348-160b50a41488",
+                            "name": "Team 2"
+                        }
+                    ]
+                }
+            ],
+            "rounds": 3
+        },
+        {
+            "id": "c3f67657-f174-4832-b9f5-a78506c04d4e",
+            "type": "knockout",
+            "name": "Knockout Phase",
+            "rounds": [
+                {
+                    "id": "t0r91rhtdc",
+                    "name": "Quarter-finals",
+                    "matches": [
+                        {
+                            "id": "85snqxxu6q8",
+                            "court": 1,
+                            "teams": [
+                                {
+                                    "link": {
+                                        "placement": 0,
+                                        "type": "league",
+                                        "fromRound": -1
+                                    },
+                                    "score": 0
+                                },
+                                {
+                                    "link": {
+                                        "placement": 7,
+                                        "type": "league",
+                                        "fromRound": -1
+                                    },
+                                    "score": 0
+                                }
+                            ],
+                            "date": "2025-07-02T17:00:00.000Z",
+                            "status": "scheduled"
+                        },
+                        {
+                            "id": "ekeu7lc3klk",
+                            "court": 2,
+                            "teams": [
+                                {
+                                    "link": {
+                                        "placement": 1,
+                                        "type": "league",
+                                        "fromRound": -1
+                                    },
+                                    "score": 0
+                                },
+                                {
+                                    "link": {
+                                        "placement": 6,
+                                        "type": "league",
+                                        "fromRound": -1
+                                    },
+                                    "score": 0
+                                }
+                            ],
+                            "date": "2025-07-02T17:00:00.000Z",
+                            "status": "scheduled"
+                        },
+                        {
+                            "id": "d9uui02ukr7",
+                            "court": 3,
+                            "teams": [
+                                {
+                                    "link": {
+                                        "placement": 2,
+                                        "type": "league",
+                                        "fromRound": -1
+                                    },
+                                    "score": 0
+                                },
+                                {
+                                    "link": {
+                                        "placement": 5,
+                                        "type": "league",
+                                        "fromRound": -1
+                                    },
+                                    "score": 0
+                                }
+                            ],
+                            "date": "2025-07-02T17:00:00.000Z",
+                            "status": "scheduled"
+                        },
+                        {
+                            "id": "xd6ck5gqrmc",
+                            "court": 4,
+                            "teams": [
+                                {
+                                    "link": {
+                                        "placement": 3,
+                                        "type": "league",
+                                        "fromRound": -1
+                                    },
+                                    "score": 0
+                                },
+                                {
+                                    "link": {
+                                        "placement": 4,
+                                        "type": "league",
+                                        "fromRound": -1
+                                    },
+                                    "score": 0
+                                }
+                            ],
+                            "date": "2025-07-02T17:00:00.000Z",
+                            "status": "scheduled"
+                        }
+                    ]
+                },
+                {
+                    "id": "xecty33n7zl",
+                    "name": "Semi-finals",
+                    "matches": [
+                        {
+                            "id": "sdx3jvfu5o",
+                            "court": 1,
+                            "teams": [
+                                {
+                                    "link": {
+                                        "placement": 0,
+                                        "type": "winner",
+                                        "fromRound": 0
+                                    },
+                                    "score": 0
+                                },
+                                {
+                                    "link": {
+                                        "placement": 3,
+                                        "type": "winner",
+                                        "fromRound": 0
+                                    },
+                                    "score": 0
+                                }
+                            ],
+                            "date": "2025-07-02T17:20:00.000Z",
+                            "status": "scheduled"
+                        },
+                        {
+                            "id": "0237gjzjmiwv",
+                            "court": 2,
+                            "teams": [
+                                {
+                                    "link": {
+                                        "placement": 1,
+                                        "type": "winner",
+                                        "fromRound": 0
+                                    },
+                                    "score": 0
+                                },
+                                {
+                                    "link": {
+                                        "placement": 2,
+                                        "type": "winner",
+                                        "fromRound": 0
+                                    },
+                                    "score": 0
+                                }
+                            ],
+                            "date": "2025-07-02T17:20:00.000Z",
+                            "status": "scheduled"
+                        }
+                    ]
+                },
+                {
+                    "id": "svp3pcxpqzl",
+                    "name": "3rd Place Playoff",
+                    "matches": [
+                        {
+                            "id": "brgan9zr0eh",
+                            "court": 1,
+                            "teams": [
+                                {
+                                    "link": {
+                                        "type": "loser",
+                                        "placement": 0
+                                    },
+                                    "score": 0
+                                },
+                                {
+                                    "link": {
+                                        "type": "loser",
+                                        "placement": 1
+                                    },
+                                    "score": 0
+                                }
+                            ],
+                            "date": "2025-07-02T17:40:00.000Z",
+                            "status": "scheduled"
+                        }
+                    ]
+                },
+                {
+                    "id": "4rbhzx44xeu",
+                    "name": "Final",
+                    "matches": [
+                        {
+                            "id": "66znpb57r3w",
+                            "court": 1,
+                            "teams": [
+                                {
+                                    "link": {
+                                        "placement": 0,
+                                        "type": "winner",
+                                        "fromRound": 1
+                                    },
+                                    "score": 0
+                                },
+                                {
+                                    "link": {
+                                        "placement": 1,
+                                        "type": "winner",
+                                        "fromRound": 1
+                                    },
+                                    "score": 0
+                                }
+                            ],
+                            "date": "2025-07-02T18:00:00.000Z",
+                            "status": "scheduled"
+                        }
+                    ]
+                }
+            ],
+            "teamCount": 8
+        }
+    ],
+    "config": {
+        "breakDuration": 5,
+        "knockoutBreakDuration": 5,
+        "courts": 8,
+        "startTime": "2025-07-02T16:00:00.000Z",
+        "matchDuration": 15,
+        "sport": "foosball"
+    }
+}

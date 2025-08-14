@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import StepProgress from "@/components/StepProgress.vue";
+import TemplateView from "./Create/TemplateView.vue";
 import Basics from "./Create/BasicsView.vue";
 import Logistics from "./Create/LogisticsView.vue";
 import Format from "./Create/FormatView.vue";
@@ -8,45 +9,13 @@ import { ref, watch } from "vue";
 import { tournamentFromJson } from "@/helpers";
 import { useTournamentsStore } from "@/stores/tournaments";
 import { useRouter } from "vue-router";
+import { emptyTournament } from "@/helpers/defaults";
 
 const tournament = ref<Tournament | null>(null);
 const tournaments = useTournamentsStore();
 const router = useRouter();
 
-const todayAt1800 = new Date();
-todayAt1800.setHours(18, 0, 0, 0);
-
-const initTournament: Tournament = {
-    version: 3,
-    id: crypto.randomUUID(),
-    name: "",
-    teams: [],
-    phases: [
-        {
-            id: crypto.randomUUID(),
-            type: "group",
-            name: "Group Phase",
-            matches: [],
-            groups: [],
-            rounds: 3,
-        },
-        {
-            id: crypto.randomUUID(),
-            type: "knockout",
-            name: "Knockout Phase",
-            rounds: [],
-            teamCount: 8,
-        },
-    ],
-    config: {
-        breakDuration: 5,
-        knockoutBreakDuration: 5,
-        courts: 4,
-        startTime: todayAt1800,
-        matchDuration: 10,
-        sport: "other",
-    },
-};
+const initTournament: Tournament = emptyTournament();
 
 const getTournament = () => {
     const sessionValue = sessionStorage.getItem("creator.tournament");
@@ -65,8 +34,13 @@ watch(
     },
     { deep: true },
 );
-const STEPS = ["Basics", "Logistics", "Format"];
-const TITLES = ["Set Up Your Tournament", "Define Match Logistics", "Design the Competition"];
+const STEPS = ["Template", "Basics", "Logistics", "Format"];
+const TITLES = [
+    "Choose a template",
+    "Set Up Your Tournament",
+    "Define Match Logistics",
+    "Design the Competition",
+];
 const currentStep = ref(parseInt(sessionStorage.getItem("creator.step") ?? "0"));
 
 watch(currentStep, (newValue) => {
@@ -98,6 +72,7 @@ const create = () => {
                 @click="currentStep++"
                 v-if="currentStep < STEPS.length - 1"
             >
+                <ion-icon name="arrow-forward"></ion-icon>
                 Continue
             </button>
             <button
@@ -105,20 +80,26 @@ const create = () => {
                 @click="create"
                 v-else
             >
+                <ion-icon name="checkmark"></ion-icon>
                 Create
             </button>
         </div>
 
-        <Basics
+        <TemplateView
             v-if="currentStep === 0"
+            v-model="tournament"
+            @continue="currentStep++"
+        />
+        <Basics
+            v-if="currentStep === 1"
             v-model="tournament"
         />
         <Logistics
-            v-else-if="currentStep === 1"
+            v-else-if="currentStep === 2"
             v-model="tournament"
         />
         <Format
-            v-else-if="currentStep === 2"
+            v-else-if="currentStep === 3"
             v-model="tournament"
         />
     </div>

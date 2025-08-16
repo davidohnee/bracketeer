@@ -113,4 +113,14 @@ h2 {
 .row.baseline {
     align-items: baseline;
 }
+
+@media (max-width: 768px) {
+    .form {
+        margin: 1em;
+    }
+
+    .desktop-only {
+        display: none;
+    }
+}
 </style>

@@ -69,13 +69,16 @@ const sectionTitle = computed(() => {
 <style scoped>
 .split {
     display: grid;
-    grid-template-columns: 200px 1fr;
+    grid-template-columns: 30ch 1fr;
     gap: 1em;
 
     & aside {
         display: flex;
         flex-direction: column;
         gap: 1em;
+        background: var(--color-surface);
+        border-radius: 0.5em;
+        padding: 1em;
     }
 
     & h5 {
@@ -96,7 +99,7 @@ const sectionTitle = computed(() => {
         border-radius: 0.5em;
 
         &.router-link-active {
-            background-color: var(--color-surface-hover);
+            background: var(--color-background);
             border-color: var(--color-border);
         }
     }

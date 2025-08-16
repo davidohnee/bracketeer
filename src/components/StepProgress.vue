@@ -20,28 +20,30 @@ const jumpTo = (index: number) => {
 </script>
 
 <template>
-    <div class="progress">
-        <template
-            v-for="(name, index) in steps"
-            :key="index"
-        >
-            <div class="step">
-                <div
-                    class="circle"
-                    :class="{
-                        done: index < modelValue,
-                        active: index === modelValue,
-                        pending: index > modelValue,
-                        clickable:
-                            (canGoForward && index > modelValue) ||
-                            (canGoBack && index < modelValue),
-                    }"
-                    @click="jumpTo(index)"
-                ></div>
-                <span>{{ name }}</span>
-            </div>
-            <div class="divider"></div>
-        </template>
+    <div class="wrapper">
+        <div class="progress">
+            <template
+                v-for="(name, index) in steps"
+                :key="index"
+            >
+                <div class="step">
+                    <div
+                        class="circle"
+                        :class="{
+                            done: index < modelValue,
+                            active: index === modelValue,
+                            pending: index > modelValue,
+                            clickable:
+                                (canGoForward && index > modelValue) ||
+                                (canGoBack && index < modelValue),
+                        }"
+                        @click="jumpTo(index)"
+                    ></div>
+                    <span>{{ name }}</span>
+                </div>
+                <div class="divider"></div>
+            </template>
+        </div>
     </div>
 </template>
 
@@ -114,6 +116,7 @@ const jumpTo = (index: number) => {
     height: 1px;
     background: var(--color-text-secondary);
     display: block;
+    min-width: 10ch;
 
     &:last-child {
         display: none;
@@ -143,5 +146,12 @@ const jumpTo = (index: number) => {
     counter-reset: section;
     gap: 1em;
     margin-bottom: 0.5em;
+}
+
+.wrapper {
+    overflow-x: auto;
+    padding-top: 2em;
+    padding-left: 2ch;
+    padding-right: 2ch;
 }
 </style>

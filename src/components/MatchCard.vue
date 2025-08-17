@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { getCourtName } from "@/helpers";
-import { ALPHABET } from "@/helpers/common";
+import { formatPlacement } from "@/helpers/common";
 import type { MatchStatus, Match, MatchTeam, Ref, Tournament } from "@/types/tournament";
 import { onMounted, onUnmounted, ref, watch } from "vue";
 import MatchEditorModal from "@/components/modals/MatchEditorModal.vue";
@@ -43,12 +43,7 @@ const teamIndex = (team: Ref | undefined) =>
 const teamDisplay = (team: MatchTeam) => {
     const i = teamIndex(team.ref);
     if (i >= 0) return props.tournament.teams[i].name;
-    const asRef = team.link!;
-    if (asRef.type == "league") {
-        return `Place ${asRef.placement + 1}`;
-    }
-    const label = { winner: "Winner", loser: "Loser" };
-    return `${label[asRef.type]} ${ALPHABET[asRef.placement]}`;
+    return formatPlacement(team.link!);
 };
 
 const emitStatusChanged = debounce(() => {

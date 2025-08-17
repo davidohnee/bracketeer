@@ -31,6 +31,7 @@ export type Ref = {
 
 export type DynamicTeamRef = {
     placement: number;
+    label?: string;
     type: "winner" | "loser" | "league";
     fromRound?: number;
 };

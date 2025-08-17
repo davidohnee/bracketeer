@@ -1,4 +1,4 @@
-import type { Match, Ref, TournamentPhase } from "@/types/tournament";
+import type { Match, Ref, Tournament, TournamentPhase } from "@/types/tournament";
 import { generateTables } from "./tables";
 
 export const allMatches = (phase?: TournamentPhase) => {
@@ -61,4 +61,15 @@ export const rankedTeams = (phase: TournamentPhase): Ref[] => {
     }
 
     return rankedTeams;
+};
+
+export const previousPhase = (
+    tournament: Tournament,
+    phase: TournamentPhase,
+): TournamentPhase | null => {
+    const phaseI = tournament.phases.findIndex((p) => p.id === phase.id);
+    if (phaseI > 0) {
+        return tournament.phases[phaseI - 1];
+    }
+    return null;
 };

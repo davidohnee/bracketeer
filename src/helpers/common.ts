@@ -1,4 +1,4 @@
-import type { MatchStatus, Tournament } from "@/types/tournament";
+import type { DynamicTeamRef, MatchStatus, Tournament } from "@/types/tournament";
 
 export const chunks = <T>(a: T[], size: number) =>
     Array.from(Array.from({ length: Math.ceil(a.length / size) }), (_, i) =>
@@ -94,4 +94,21 @@ export const localeDateTimeString = (
         options.year = undefined;
     }
     return date.toLocaleString(undefined, options);
+};
+
+export const formatPlacement = (placement: DynamicTeamRef) => {
+    if (placement.type == "league") {
+        if (placement.label == null) {
+            return `Place ${placement.placement + 1}`;
+        }
+
+        return `Place ${placement.label}`;
+    }
+    const label = { winner: "Winner", loser: "Loser" };
+
+    if (placement.label == null) {
+        return `${label[placement.type]} ${ALPHABET[placement.placement]}`;
+    }
+
+    return `${label[placement.type]} ${placement.label}`;
 };

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ALPHABET } from "@/helpers/common";
+import { formatPlacement } from "@/helpers/common";
 import type { MatchStatus, Match, MatchTeam, Ref, Team } from "@/types/tournament";
 import { computed, onMounted, ref } from "vue";
 import { debounce } from "lodash-es";
@@ -9,12 +9,7 @@ const teamIndex = (team: Ref | undefined) => props.teams.findIndex((x) => x.id =
 const teamDisplay = (team: MatchTeam) => {
     const i = teamIndex(team.ref);
     if (i >= 0) return props.teams[i].name;
-    const asRef = team.link!;
-    if (asRef.type == "league") {
-        return `Place ${asRef.placement + 1}`;
-    }
-    const label = { winner: "Winner", loser: "Loser" };
-    return `${label[asRef.type]} ${ALPHABET[asRef.placement]}`;
+    return formatPlacement(team.link!);
 };
 const props = defineProps<{ match: Match; teams: Team[]; matchDuration: number }>();
 

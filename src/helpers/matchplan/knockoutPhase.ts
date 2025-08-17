@@ -9,7 +9,24 @@ import type {
 import { getLastMatchOf } from "..";
 import { generateId } from "../id";
 import { ALPHABET, ROUND_NAME } from "../common";
-import { allMatches, rankedTeams } from "../phase";
+import { allMatches, previousPhase, rankedTeams } from "../phase";
+
+const getPlacement = (fromPhase: TournamentPhase, placement: number): string => {
+    if (fromPhase.type === "group") {
+        const groupCount = fromPhase.groups?.length || 0;
+
+        if (groupCount > 0) {
+            const groupRank = Math.floor(placement / groupCount);
+            const inGroup = placement % groupCount;
+
+            return ALPHABET[inGroup] + (groupRank + 1);
+        }
+
+        return String(placement + 1);
+    }
+
+    return ALPHABET[placement];
+};
 
 export const generateKnockoutBracket = (
     phase: KnockoutTournamentPhase,
@@ -33,6 +50,8 @@ export const generateKnockoutBracket = (
     let teamsInRound = progressingTeams.length;
     let roundNumber = 1;
 
+    const previous = previousPhase(tournament, phase);
+
     const startTime = new Date(lastGroupPhaseMatchDate);
 
     while (teamsInRound > 1) {
@@ -42,6 +61,8 @@ export const generateKnockoutBracket = (
         startTime.setMinutes(startTime.getMinutes() + roundDuration);
 
         for (let i = 0; i < teamsInRound / 2; i++) {
+            const teamFromPhase = teamsInRound == knockoutTeamCount ? (previous ?? phase) : phase;
+
             const match: Match = {
                 id: generateId(),
                 court: court++,
@@ -49,6 +70,7 @@ export const generateKnockoutBracket = (
                     {
                         link: {
                             placement: i,
+                            label: getPlacement(teamFromPhase, i),
                             type: roundNumber == 1 ? "league" : "winner",
                             fromRound: roundNumber - 2,
                         },
@@ -57,6 +79,7 @@ export const generateKnockoutBracket = (
                     {
                         link: {
                             placement: progressingTeams.length - 1 - i,
+                            label: getPlacement(teamFromPhase, progressingTeams.length - 1 - i),
                             type: roundNumber == 1 ? "league" : "winner",
                             fromRound: roundNumber - 2,
                         },
@@ -95,6 +118,7 @@ export const generateKnockoutBracket = (
                 link: {
                     type: "loser",
                     placement: 0,
+                    label: ALPHABET[0],
                 },
                 score: 0,
             },
@@ -102,6 +126,7 @@ export const generateKnockoutBracket = (
                 link: {
                     type: "loser",
                     placement: 1,
+                    label: ALPHABET[1],
                 },
                 score: 0,
             },
@@ -152,15 +177,14 @@ const updateKnockoutPhase = (phase: KnockoutTournamentPhase, tournament: Tournam
 
     if (!knockout) return;
 
-    const phaseI = tournament.phases.findIndex((p) => p.id === phase.id);
     let table: Ref[] = tournament.teams;
 
-    if (phaseI > 0) {
-        table = rankedTeams(tournament.phases[phaseI - 1]);
+    const previous = previousPhase(tournament, phase);
 
-        if (
-            allMatches(tournament.phases[phaseI - 1]).some((match) => match.status !== "completed")
-        ) {
+    if (previous) {
+        table = rankedTeams(previous);
+
+        if (allMatches(previous).some((match) => match.status !== "completed")) {
             return;
         }
     }

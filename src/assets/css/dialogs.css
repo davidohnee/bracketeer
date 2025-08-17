@@ -11,7 +11,6 @@ dialog[open] {
         display: flex;
         flex-direction: column;
         width: 100%;
-        width: 40vw;
         overflow: hidden;
         gap: 1em;
         position: relative;

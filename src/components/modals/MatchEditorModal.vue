@@ -2,6 +2,7 @@
 import { formatPlacement } from "@/helpers/common";
 import type { Match, MatchTeam, Tournament, Ref, MatchStatus } from "@/types/tournament";
 import { computed, ref } from "vue";
+import SegmentPicker from "../SegmentPicker.vue";
 
 const props = defineProps<{
     modelValue: Match;
@@ -64,65 +65,106 @@ defineExpose({
 <template>
     <dialog ref="matcheditor">
         <div class="content">
-            <h2>Edit</h2>
+            <h2>Result</h2>
             <ion-icon
                 @click="closeMatchEditor"
                 class="close"
                 name="close"
             ></ion-icon>
             <div class="form">
-                <div
-                    v-for="(team, index) in match.teams"
-                    class="row"
-                    :key="index"
-                >
-                    <template v-if="teamIndex(team.ref) >= 0">
-                        <div class="field">
-                            <label :for="`team-${index}`">Team {{ index + 1 }}</label>
-                            <input
-                                disabled
-                                type="text"
-                                :id="`team-${index}`"
-                                :value="teamDisplay(team)"
-                            />
-                        </div>
-                        <div class="field">
-                            <label :for="`team-score-${index}`">Score</label>
-                            <input
-                                type="number"
-                                :id="`team-score-${index}`"
-                                v-model="scores[index]"
-                                @change="onScoreChanged(index)"
-                            />
-                        </div>
-                    </template>
-                </div>
-
-                <div v-if="match.status == 'completed'">
-                    <div class="field">
-                        <label for="team1">Winner</label>
+                <div class="row">
+                    <div
+                        class="teamScore"
+                        :class="{ winner: winner === teamDisplay(team) }"
+                        v-for="(team, index) in match.teams"
+                        :key="index"
+                    >
                         <input
-                            disabled
-                            type="text"
-                            id="team1"
-                            v-model="winner"
+                            type="number"
+                            class="score"
+                            :id="match.id + '-team' + (index + 1) + '-score'"
+                            v-model="scores[index]"
+                            @change="onScoreChanged(index)"
                         />
+                        <label
+                            :for="match.id + '-team' + (index + 1) + '-score'"
+                            class="text-muted"
+                        >
+                            {{ teamDisplay(team) }}
+                        </label>
                     </div>
                 </div>
 
-                <div class="field">
-                    <label for="team2-score">Status</label>
-                    <select
+                <div class="match-status">
+                    <SegmentPicker
                         v-model="match.status"
-                        id="status"
+                        :options="[
+                            { value: 'scheduled', label: 'Scheduled' },
+                            { value: 'in-progress', label: 'In Progress' },
+                            { value: 'completed', label: 'Finished' },
+                        ]"
                         @change="onStatusChanged"
-                    >
-                        <option value="scheduled">Scheduled</option>
-                        <option value="in-progress">In Progress</option>
-                        <option value="completed">Finished</option>
-                    </select>
+                    />
                 </div>
             </div>
         </div>
     </dialog>
 </template>
+
+<style scoped>
+.row:has(.teamScore) {
+    gap: 2em;
+    justify-content: center;
+}
+
+.form {
+    min-width: 40vw;
+}
+
+@media (max-width: 768px) {
+    .form {
+        min-width: 80vw;
+    }
+}
+
+.teamScore {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+
+    & input {
+        margin-bottom: 0.25em;
+        font-size: var(--typography-heading-fontSize-xl);
+        width: 3ch;
+        text-align: center;
+        padding: 0.25em;
+    }
+
+    & label {
+        font-size: var(--typography-body-fontSize-sm);
+    }
+
+    &:first-child:after {
+        content: ":";
+        font-size: var(--typography-heading-fontSize-m);
+        position: absolute;
+        display: block;
+        right: -1em;
+        translate: -50% 0;
+        top: 30%;
+    }
+
+    &.winner input {
+        background-color: var(--color-background);
+        outline: 2px solid var(--color-primary);
+    }
+}
+
+.match-status {
+    width: max-content;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 2em;
+}
+</style>

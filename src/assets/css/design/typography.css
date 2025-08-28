@@ -20,6 +20,9 @@
     --typography-heading-fontSize-xl: 2.5rem;
     --typography-heading-lineHeight-xl: 1.1;
 
+    --typography-heading-fontSize-xxl: 5rem;
+    --typography-heading-lineHeight-xxl: 1.1;
+
     --typography-heading-font-l: var(--typography-heading-font);
     --typography-heading-fontWeight-l: var(--typography-fontWeight-bold);
     --typography-heading-fontSize-l: 2rem;

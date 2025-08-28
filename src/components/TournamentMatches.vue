@@ -33,7 +33,7 @@ watch(
 
 const teamFilter = computed({
     get() {
-        return route.query.team as string;
+        return route.query.team as string | undefined;
     },
     set(team) {
         router.replace({
@@ -172,16 +172,37 @@ onMounted(() => {
 
 <template>
     <div class="all-matches">
-        <div class="chip-group">
+        <div class="filter-row">
+            <div class="chip-group">
+                <div
+                    v-for="option in GROUP_OPTIONS"
+                    :key="option"
+                    :value="option"
+                    class="chip-option"
+                    :class="{ selected: selectedGroupOption === option }"
+                    @click="selectedGroupOption = option"
+                >
+                    by {{ option }}
+                </div>
+            </div>
             <div
-                v-for="option in GROUP_OPTIONS"
-                :key="option"
-                :value="option"
-                class="chip-option"
-                :class="{ selected: selectedGroupOption === option }"
-                @click="selectedGroupOption = option"
+                class="filter"
+                :class="{ active: teamFilter }"
+                v-if="teamFilter"
             >
-                by {{ option }}
+                <ion-icon
+                    v-if="!teamFilter"
+                    name="filter"
+                ></ion-icon>
+                <template v-else>
+                    <span :title="`Filtering for ${getTeamName(teamFilter)}`">
+                        {{ getTeamName(teamFilter) }}
+                    </span>
+                    <ion-icon
+                        @click="teamFilter = undefined"
+                        name="close-outline"
+                    ></ion-icon>
+                </template>
             </div>
         </div>
         <div class="rounds">
@@ -212,12 +233,61 @@ onMounted(() => {
     flex-direction: column;
 }
 
-h3 {
-    text-align: center;
+.filter-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1em;
+    margin-bottom: 1em;
+    gap: 1em;
+
+    & .filter {
+        border-radius: 100vmax;
+        width: 2em;
+        height: 2em;
+        border: 1px solid var(--color-border);
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        position: relative;
+
+        & ion-icon {
+            font-size: 1.2rem;
+        }
+
+        &:hover {
+            background-color: var(--color-text-primary);
+            color: var(--color-surface);
+        }
+
+        &.active {
+            width: max-content;
+            overflow: clip;
+            padding: 0 0.5em 0 1em;
+
+            & span {
+                max-width: 15ch;
+                overflow: hidden;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+            }
+
+            &:hover {
+                color: var(--color-primary-inverse);
+                background-color: var(--color-primary);
+            }
+        }
+    }
+
+    & .chip-group {
+        margin: 0;
+    }
 }
 
-.chip-group {
-    padding: 1em;
+h3 {
+    text-align: center;
 }
 
 .round {

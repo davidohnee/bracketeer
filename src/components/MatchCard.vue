@@ -50,7 +50,6 @@ const emitStatusChanged = debounce(() => {
     emit("statusChanged", match.value.status);
 }, 1000);
 
-// mm:ss of Date() - match.start
 const currentTime = ref("00:00");
 
 let currentTimeTimer = 0;

@@ -254,9 +254,15 @@ watch(
     }
 
     .match.row {
-        grid-template-columns: 7ch 1fr 10ch 1fr 7ch;
+        grid-template-columns: 6ch 1fr 9ch 1fr 6ch;
         gap: 0.25em;
         font-size: 0.9rem !important;
+        padding: 1em 0;
+    }
+
+    .team {
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 }
 </style>

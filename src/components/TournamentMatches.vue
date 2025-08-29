@@ -268,7 +268,7 @@ onMounted(() => {
             padding: 0 0.5em 0 1em;
 
             & span {
-                max-width: 15ch;
+                max-width: 20ch;
                 overflow: hidden;
                 white-space: nowrap;
                 text-overflow: ellipsis;

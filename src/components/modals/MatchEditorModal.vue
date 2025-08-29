@@ -156,7 +156,6 @@ defineExpose({
     }
 
     &.winner input {
-        background-color: var(--color-background);
         outline: 2px solid var(--color-primary);
     }
 }

@@ -64,11 +64,12 @@ onMounted(() => {
 header {
     padding: 1em;
     background-color: var(--color-surface);
-    place-items: center;
     margin-bottom: 4em;
     position: sticky;
     top: 0;
     z-index: 10;
+    display: flex;
+    justify-content: center;
     border-bottom: 1px solid var(--color-border);
 
     .full {

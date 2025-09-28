@@ -263,8 +263,7 @@ onMounted(() => {
         }
 
         &.active {
-            width: max-content;
-            overflow: clip;
+            width: fit-content;
             padding: 0 0.5em 0 1em;
 
             & span {

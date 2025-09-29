@@ -7,6 +7,7 @@ import GroupedTournamentList from "./GroupedTournamentList.vue";
 import { tournamentRichMatches } from "@/helpers/matches";
 import TabSelector from "./TabSelector.vue";
 import { localeDateTimeString } from "@/helpers/common";
+import MatchFilter from "./Filter/MatchFilter.vue";
 
 const props = defineProps<{
     modelValue: Tournament;
@@ -185,16 +186,12 @@ onMounted(() => {
                     by {{ option }}
                 </div>
             </div>
-            <div
-                class="filter"
-                :class="{ active: teamFilter }"
-                v-if="teamFilter"
-            >
-                <ion-icon
-                    v-if="!teamFilter"
-                    name="filter"
-                ></ion-icon>
-                <template v-else>
+            <div class="filters">
+                <div
+                    class="filter"
+                    :class="{ active: teamFilter }"
+                    v-if="teamFilter"
+                >
                     <span :title="`Filtering for ${getTeamName(teamFilter)}`">
                         {{ getTeamName(teamFilter) }}
                     </span>
@@ -202,7 +199,13 @@ onMounted(() => {
                         @click="teamFilter = undefined"
                         name="close-outline"
                     ></ion-icon>
-                </template>
+                </div>
+                <div class="filter">
+                    <MatchFilter
+                        :tournament="tournament"
+                        v-model:team-filter="teamFilter"
+                    />
+                </div>
             </div>
         </div>
         <div class="rounds">
@@ -240,6 +243,12 @@ onMounted(() => {
     padding: 1em;
     margin-bottom: 1em;
     gap: 1em;
+
+    .filters {
+        display: flex;
+        align-items: center;
+        gap: 0.5em;
+    }
 
     & .filter {
         border-radius: 100vmax;

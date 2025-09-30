@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed } from "vue";
+import { computed, ref } from "vue";
 import IconContextMenu from "../IconContextMenu.vue";
 import type { Tournament } from "@/types/tournament";
 
@@ -7,6 +7,12 @@ const props = defineProps<{
     tournament: Tournament;
     teamFilter: string | undefined;
 }>();
+
+const contextMenu = ref<typeof IconContextMenu>();
+
+defineExpose({
+    contextMenu,
+});
 
 const emit = defineEmits<{
     (e: "update:teamFilter", teamId: string | undefined): void;
@@ -22,7 +28,10 @@ const teamFilter = computed({
 });
 </script>
 <template>
-    <IconContextMenu alignment="right">
+    <IconContextMenu
+        alignment="right"
+        ref="contextMenu"
+    >
         <template #activator>
             <div class="icon">
                 <ion-icon name="filter"></ion-icon>
@@ -30,7 +39,7 @@ const teamFilter = computed({
         </template>
         <template v-slot:context-menu>
             <div class="filter-menu">
-                <div class="team-list">
+                <div class="field">
                     <label for="team-filter">Filter by team</label>
                     <select
                         v-model="teamFilter"
@@ -66,6 +75,16 @@ const teamFilter = computed({
 }
 
 .filter-menu {
-    padding: 2em;
+    padding: 1em;
+}
+
+select {
+    max-width: 25ch;
+}
+
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
 }
 </style>

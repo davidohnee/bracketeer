@@ -75,6 +75,7 @@ const getTeamName = (teamId: string | undefined) => {
 };
 
 const allMatches = computed(() => tournamentRichMatches(tournament.value));
+const matchFilter = ref<typeof MatchFilter>();
 
 const GROUP_OPTIONS = ["round", "time", "team", "court"] as const;
 
@@ -200,8 +201,13 @@ onMounted(() => {
                         name="close-outline"
                     ></ion-icon>
                 </div>
-                <div class="filter">
+                <div
+                    class="filter"
+                    :class="{ open: matchFilter?.contextMenu?.isOpen }"
+                    @click.stop.prevent="matchFilter?.contextMenu?.toggle()"
+                >
                     <MatchFilter
+                        ref="matchFilter"
                         :tournament="tournament"
                         v-model:team-filter="teamFilter"
                     />
@@ -271,20 +277,22 @@ onMounted(() => {
             color: var(--color-surface);
         }
 
+        &.open,
+        &.active:hover {
+            color: var(--color-primary-inverse);
+            background-color: var(--color-primary);
+        }
+
         &.active {
             width: fit-content;
-            padding: 0 0.5em 0 1em;
+            padding: 0 0.25em 0 0.5em;
 
             & span {
                 max-width: 20ch;
                 overflow: hidden;
                 white-space: nowrap;
                 text-overflow: ellipsis;
-            }
-
-            &:hover {
-                color: var(--color-primary-inverse);
-                background-color: var(--color-primary);
+                margin-right: 1ch;
             }
         }
     }

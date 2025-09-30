@@ -21,9 +21,15 @@ const open = () => {
     expanded.value = true;
 };
 
+const toggle = () => {
+    expanded.value = !expanded.value;
+};
+
 defineExpose({
     open,
     close,
+    toggle,
+    isOpen: expanded,
 });
 
 watch(expanded, (value) => {
@@ -81,7 +87,7 @@ onBeforeUnmount(() => {
     >
         <div
             class="activator"
-            @click.stop="open()"
+            @click.stop="toggle"
         >
             <slot
                 name="activator"
@@ -122,7 +128,7 @@ onBeforeUnmount(() => {
     max-width: 20rem;
     max-height: 20rem;
     overflow-y: auto;
-    background: var(--color-surface);
+    background: var(--color-background);
     border-radius: 1em;
     border: 1px solid var(--color-border);
     box-shadow: var(--fx-box-shadow);

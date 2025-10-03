@@ -39,31 +39,43 @@ const teamFilter = computed({
     set(team) {
         router.replace({
             query: {
+                ...route.query,
                 team,
-                court: route.query.court,
-                group: route.query.group,
             },
         });
     },
 });
-const courtFilter = computed({
+const courtFilter = computed<number | undefined>({
     get() {
-        return parseInt(route.query.court as string);
+        const int = parseInt(route.query.court as string);
+        return isNaN(int) ? undefined : int;
     },
     set(court) {
-        router.replace({ query: { court, team: route.query.team, group: route.query.group } });
+        router.replace({ query: { ...route.query, court } });
     },
 });
-const selectedGroupOption = computed<(typeof GROUP_OPTIONS)[number]>({
+const groupFilter = computed({
     get() {
-        return (route.query.group ?? GROUP_OPTIONS[0]) as (typeof GROUP_OPTIONS)[number];
+        return route.query.group as string | undefined;
     },
     set(group) {
         router.replace({
             query: {
+                ...route.query,
                 group,
-                team: route.query.team,
-                court: route.query.court,
+            },
+        });
+    },
+});
+const selectedGroupOption = computed<(typeof GROUP_OPTIONS)[number]>({
+    get() {
+        return (route.query["group-by"] ?? GROUP_OPTIONS[0]) as (typeof GROUP_OPTIONS)[number];
+    },
+    set(groupBy) {
+        router.replace({
+            query: {
+                ...route.query,
+                "group-by": groupBy,
             },
         });
     },
@@ -92,6 +104,22 @@ const grouped = computed(() => {
         }
         if (courtFilter.value && match.match.court !== courtFilter.value) {
             continue;
+        }
+        if (groupFilter.value) {
+            // if any of the match's teams is linked to the group, include it
+            const [phaseId, groupId] = groupFilter.value.split(".") as [string, string];
+            const phase = tournament.value.phases.find((p) => p.id === phaseId);
+            if (
+                phase?.type === "group" &&
+                phase.groups &&
+                !match.match.teams.some((team) =>
+                    phase.groups
+                        ?.find((g) => g.id === groupId)
+                        ?.teams?.some((x) => x.id === team.ref?.id),
+                )
+            ) {
+                continue;
+            }
         }
 
         const keys: (string | null)[] = [];
@@ -152,7 +180,7 @@ const autoSelectGroup = () => {
             }) || groups[0];
     }
 };
-watch(selectedGroupOption, autoSelectGroup);
+watch([selectedGroupOption, courtFilter, groupFilter, teamFilter], autoSelectGroup);
 
 interface DisplaySetting {
     showPhase: boolean;
@@ -165,6 +193,44 @@ const displaySettings: { [K in (typeof GROUP_OPTIONS)[number]]: DisplaySetting }
     time: { showPhase: true, showRound: true, showGroup: true },
     team: { showPhase: true, showRound: true, showGroup: true },
     court: { showPhase: true, showRound: true, showGroup: false },
+};
+
+const activeFilterSummary = computed(() => {
+    const filters = [];
+    if (teamFilter.value) {
+        filters.push(getTeamName(teamFilter.value));
+    }
+    if (courtFilter.value) {
+        filters.push(getCourtName(tournament.value.config.sport, courtFilter.value));
+    }
+    if (groupFilter.value) {
+        const [phaseId, groupId] = groupFilter.value.split(".") as [string, string];
+        const phase = tournament.value.phases.find((p) => p.id === phaseId);
+        if (phase?.type === "group" && phase.groups) {
+            const group = phase.groups.find((g) => g.id === groupId);
+            if (group) {
+                filters.push(group.name);
+            }
+        }
+    }
+
+    if (filters.length === 0) {
+        return null;
+    }
+    if (filters.length === 1) {
+        return filters[0];
+    }
+    return `${filters[0]} (+${filters.length - 1})`;
+});
+
+const activeFilterSummaryTooltip = computed(() => {
+    return "";
+});
+
+const resetFilters = () => {
+    router.replace({
+        query: { ...route.query, team: undefined, court: undefined, group: undefined },
+    });
 };
 
 onMounted(() => {
@@ -189,15 +255,14 @@ onMounted(() => {
             </div>
             <div class="filters">
                 <div
-                    class="filter"
-                    :class="{ active: teamFilter }"
-                    v-if="teamFilter"
+                    class="filter active"
+                    v-if="activeFilterSummary"
                 >
-                    <span :title="`Filtering for ${getTeamName(teamFilter)}`">
-                        {{ getTeamName(teamFilter) }}
+                    <span :title="activeFilterSummaryTooltip">
+                        {{ activeFilterSummary }}
                     </span>
                     <ion-icon
-                        @click="teamFilter = undefined"
+                        @click="resetFilters"
                         name="close-outline"
                     ></ion-icon>
                 </div>
@@ -210,6 +275,8 @@ onMounted(() => {
                         ref="matchFilter"
                         :tournament="tournament"
                         v-model:team-filter="teamFilter"
+                        v-model:court-filter="courtFilter"
+                        v-model:group-filter="groupFilter"
                     />
                 </div>
             </div>

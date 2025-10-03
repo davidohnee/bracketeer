@@ -195,7 +195,7 @@ const displaySettings: { [K in (typeof GROUP_OPTIONS)[number]]: DisplaySetting }
     court: { showPhase: true, showRound: true, showGroup: false },
 };
 
-const activeFilterSummary = computed(() => {
+const activeFilters = computed(() => {
     const filters = [];
     if (teamFilter.value) {
         filters.push(getTeamName(teamFilter.value));
@@ -213,7 +213,11 @@ const activeFilterSummary = computed(() => {
             }
         }
     }
+    return filters;
+});
 
+const activeFilterSummary = computed(() => {
+    const filters = activeFilters.value;
     if (filters.length === 0) {
         return null;
     }
@@ -224,7 +228,7 @@ const activeFilterSummary = computed(() => {
 });
 
 const activeFilterSummaryTooltip = computed(() => {
-    return "";
+    return "Filtering for: " + activeFilters.value.join(", ");
 });
 
 const resetFilters = () => {

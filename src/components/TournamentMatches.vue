@@ -288,11 +288,19 @@ onMounted(() => {
             padding: 0 0.25em 0 0.5em;
 
             & span {
-                max-width: 20ch;
+                max-width: 25ch;
                 overflow: hidden;
                 white-space: nowrap;
                 text-overflow: ellipsis;
                 margin-right: 1ch;
+
+                @media screen and (max-width: 768px) {
+                    max-width: 18ch;
+                }
+
+                @media screen and (max-width: 400px) {
+                    max-width: 12ch;
+                }
             }
         }
     }

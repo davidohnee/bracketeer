@@ -10,6 +10,7 @@ interface Default {
     breakDuration: number;
     courtLabel: string;
     courtLabelPlural?: string;
+    supportsSets?: boolean; // whether this sport typically uses sets
 }
 
 export const getCourtType = (sport: string, plural: boolean, capitalised: boolean): string => {
@@ -31,6 +32,7 @@ export const DEFAULTS: Record<string, Default> = {
         breakDuration: 5,
         courtLabel: "table",
         courtLabelPlural: "tables",
+        supportsSets: false,
     },
     foosball: {
         name: "Foosball",
@@ -41,6 +43,7 @@ export const DEFAULTS: Record<string, Default> = {
         breakDuration: 5,
         courtLabel: "table",
         courtLabelPlural: "tables",
+        supportsSets: false,
     },
     other: {
         name: "Other",
@@ -51,6 +54,7 @@ export const DEFAULTS: Record<string, Default> = {
         breakDuration: 5,
         courtLabel: "court",
         courtLabelPlural: "courts",
+        supportsSets: true,
     },
 };
 

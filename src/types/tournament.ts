@@ -36,6 +36,11 @@ export type DynamicTeamRef = {
     fromRound?: number;
 };
 
+export type SetScore = {
+    team1: number;
+    team2: number;
+};
+
 export type MatchTeam = {
     ref?: Ref;
     score: number;
@@ -55,6 +60,8 @@ export interface Match {
     date: Date;
     status: MatchStatus;
     round?: MatchRound; // used only for group phase matches
+    sets?: SetScore[]; // set scores when using set-based scoring
+    manualScoreOverride?: boolean; // true if score was manually overridden
 }
 
 export interface RichMatch {
@@ -82,6 +89,7 @@ export interface TournamentConfigV2 {
     knockoutBreakDuration: number;
     startTime: Date;
     sport: string;
+    useSets?: boolean; // whether to use set-based scoring
 }
 
 export interface TournamentConfigV1 extends TournamentConfigV2 {

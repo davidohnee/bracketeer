@@ -52,6 +52,10 @@ watch(
         tournament.value.config.matchDuration = DEFAULTS[newSport].matchDuration;
     },
 );
+
+const sportSupportsSets = computed(() => {
+    return DEFAULTS[tournament.value.config.sport]?.supportsSets ?? false;
+});
 </script>
 <template>
     <div class="field">
@@ -88,5 +92,22 @@ watch(
             id="start"
             v-model="startTime"
         />
+    </div>
+    <div
+        v-if="sportSupportsSets"
+        class="field"
+    >
+        <label
+            class="checkbox-label"
+            for="use-sets"
+        >
+            <input
+                type="checkbox"
+                id="use-sets"
+                v-model="tournament.config.useSets"
+            />
+            <span>Use set-based scoring</span>
+        </label>
+        <p class="text-muted text-sm">Enable this to track individual set scores (e.g., 6-4, 7-5). The match score will be automatically calculated based on sets won.</p>
     </div>
 </template>

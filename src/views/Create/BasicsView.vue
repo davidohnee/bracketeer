@@ -48,8 +48,8 @@ const breakDuration = computed({
 watch(
     () => tournament.value.config.sport,
     (newSport) => {
-        breakDuration.value = DEFAULTS[newSport].breakDuration;
-        tournament.value.config.matchDuration = DEFAULTS[newSport].matchDuration;
+        breakDuration.value = DEFAULTS[newSport]!.breakDuration;
+        tournament.value.config.matchDuration = DEFAULTS[newSport]!.matchDuration;
     },
 );
 </script>

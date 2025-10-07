@@ -22,7 +22,7 @@ export const getLastMatchOf = ({
     const matchComparator = (a: Match, b: Match) => a.date.getTime() - b.date.getTime();
 
     const sorted = input.sort(matchComparator);
-    const last = sorted[sorted.length - 1];
+    const last = sorted[sorted.length - 1]!;
     return last;
 };
 
@@ -32,7 +32,7 @@ export const randomiseGroupPhaseResults = (tournament: Tournament) => {
 
         for (const match of phase.matches) {
             for (let j = 0; j < match.teams.length; j++) {
-                const team = match.teams[j];
+                const team = match.teams[j]!;
                 team.score = Math.floor(Math.random() * 10);
             }
             match.status = "completed";

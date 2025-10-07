@@ -23,7 +23,7 @@ const onStatusChanged = () => {
 };
 const scores = ref(match.value.teams.map((team) => team.score) ?? []);
 const onScoreChanged = (teamIndex: number) => {
-    match.value.teams[teamIndex].score = scores.value[teamIndex];
+    match.value.teams[teamIndex]!.score = scores.value[teamIndex]!;
     onChanged();
 };
 
@@ -44,14 +44,14 @@ const teamIndex = (team: Ref | undefined) =>
 
 const teamDisplay = (team: MatchTeam) => {
     const i = teamIndex(team.ref);
-    if (i >= 0) return props.tournament.teams[i].name;
+    if (i >= 0) return props.tournament.teams[i]!.name;
     return formatPlacement(team.link!);
 };
 
 const winner = computed(() => {
     if (match.value.status !== "completed") return "";
-    const team1 = scores.value[0];
-    const team2 = scores.value[1];
+    const team1 = scores.value[0]!;
+    const team2 = scores.value[1]!;
     if (team1 > team2) return teamDisplay(match.value.teams[0]);
     if (team2 > team1) return teamDisplay(match.value.teams[1]);
     return "Draw";

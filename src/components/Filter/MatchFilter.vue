@@ -66,7 +66,7 @@ const allGroups = computed(() => {
     }
     // if only one phase with groups, return just the groups
     if (groupsInPhases.length === 1) {
-        return groupsInPhases[0].groups;
+        return groupsInPhases[0]!.groups;
     }
     // else add the phase name as prefix
     const all: IdentifiableString[] = [];

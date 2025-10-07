@@ -38,13 +38,13 @@ const updateTask = async () => {
         sessionStorage.setItem(base64, updated.value.toString());
     }
 
-    if (importObject.error) {
+    if (importObject?.error) {
         error.value = importObject.error;
         return;
     }
 
-    tournament.value = importObject.tournament;
-    who.value = importObject.author ?? "(unknown)";
+    tournament.value = importObject!.tournament;
+    who.value = importObject!.author ?? "(unknown)";
     updateSubtitle();
 };
 
@@ -81,7 +81,7 @@ onUnmounted(() => {
     />
     <div
         v-else-if="error == 'not-found'"
-        class="error flex-col"
+        class="error flex-col p-4"
     >
         <h1>Guess you'll have to create it yourself...</h1>
         <p>
@@ -117,12 +117,8 @@ onUnmounted(() => {
     font-size: 0.8rem;
 }
 
-.p-4 {
-    padding: 1rem;
-}
-
 .mt-4 {
-    margin-top: 1rem;
+    margin-top: 1em;
 }
 
 .w-max {

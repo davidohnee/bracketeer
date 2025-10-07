@@ -68,6 +68,10 @@ section {
     color: var(--color-text-secondary);
 }
 
+.p-4 {
+    padding: 1em;
+}
+
 .text-sm {
     font-size: var(--typography-body-fontSize-sm);
     font-weight: var(--typography-body-fontWeight-sm);

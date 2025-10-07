@@ -51,7 +51,7 @@ const startTimesDesc = computed(() => [...startTimes.value].reverse());
 const firstStartTimeWith = (status: Match["status"]) => {
     return computed(() => {
         for (const key of startTimes.value) {
-            const matches = groupedByTime.value[key];
+            const matches = groupedByTime.value[key]!;
             if (matches.some((match) => match.match.status === status)) {
                 return key;
             }
@@ -62,7 +62,7 @@ const firstStartTimeWith = (status: Match["status"]) => {
 const lastStartTimeWith = (status: Match["status"]) => {
     return computed(() => {
         for (const key of startTimesDesc.value) {
-            const matches = groupedByTime.value[key];
+            const matches = groupedByTime.value[key]!;
             if (matches.some((match) => match.match.status === status)) {
                 return key;
             }
@@ -194,7 +194,7 @@ const adjustAndSkip = () => {
  */
 const proceed = () => {
     const key = currentStartTime.value!;
-    const matches = toRaw(groupedByTime.value[key]);
+    const matches = toRaw(groupedByTime.value[key])!;
     for (const match of matches) {
         if (match.match.status === "in-progress") {
             match.match.status = "completed";
@@ -217,11 +217,11 @@ const adjustAndSkipText = computed(() => {
 const currentPhase = computed(() => {
     let phaseId = "";
     if (currentStartTime.value) {
-        phaseId = groupedByTime.value[currentStartTime.value][0].phaseId;
+        phaseId = groupedByTime.value[currentStartTime.value]![0]!.phaseId;
     } else if (previousStartTime.value) {
-        phaseId = groupedByTime.value[previousStartTime.value][0].phaseId;
+        phaseId = groupedByTime.value[previousStartTime.value]![0]!.phaseId;
     } else if (nextStartTime.value) {
-        phaseId = groupedByTime.value[nextStartTime.value][0].phaseId;
+        phaseId = groupedByTime.value[nextStartTime.value]![0]!.phaseId;
     }
     return tournament.value.phases.find((phase) => phase.id === phaseId);
 });
@@ -264,7 +264,7 @@ const currentPhase = computed(() => {
             <template v-if="currentStartTime">
                 <h3>Ongoing</h3>
                 <GroupedTournamentList
-                    v-model="groupedByTime[currentStartTime]"
+                    v-model="groupedByTime[currentStartTime]!"
                     :tournament="tournament"
                     :readonly="readonly"
                     @update:model-value="onChanged"
@@ -289,7 +289,7 @@ const currentPhase = computed(() => {
                 <!-- start of tournament -->
                 <h3>Upcoming Matches</h3>
                 <GroupedTournamentList
-                    v-model="groupedByTime[nextStartTime!]"
+                    v-model="groupedByTime[nextStartTime!]!"
                     :tournament="tournament"
                     :readonly="readonly"
                     @update:model-value="onChanged"

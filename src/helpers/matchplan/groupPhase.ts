@@ -48,14 +48,13 @@ const createBalanceRound = (
     };
 
     for (const matchup of chunks(teamsMissing, 2)) {
-        const team1 = matchup[0];
-        const team2 = matchup[1];
+        const [team1, team2] = matchup;
 
         const { time, court } = earliestFreeSlot(
             [...allMatches, ...round.matches],
             tournament.config.startTime,
             tournament.config.matchDuration + tournament.config.breakDuration,
-            [team1, team2],
+            [team1!, team2!],
             tournament.config.courts,
         );
 
@@ -109,12 +108,12 @@ const generateForGroup = (group: Group, rounds: number, tournament: Tournament):
 
     for (let i = 0; i < rounds; i++) {
         const matchI = i % draw.length;
-        const matchPairs = draw[matchI];
+        const matchPairs = draw[matchI]!;
         const roundId = generateId();
 
         for (let j = 0; j < matchPairs.length; j++) {
-            const team1 = matchPairs[j][0];
-            const team2 = matchPairs[j][1];
+            const team1 = matchPairs[j]![0];
+            const team2 = matchPairs[j]![1];
 
             const matchObj: Match = {
                 id: generateId(),
@@ -157,7 +156,7 @@ export const generateGroupPhase = (
     let table: Ref[] = tournament.teams;
 
     if (phaseI > 0) {
-        table = rankedTeams(tournament.phases[phaseI - 1]);
+        table = rankedTeams(tournament.phases[phaseI - 1]!);
     }
 
     const shuffledTeams = shuffle(table);

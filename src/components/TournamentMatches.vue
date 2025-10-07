@@ -173,11 +173,11 @@ const autoSelectGroup = () => {
     if (groups.length > 0) {
         selectedGroup.value =
             groups.find((group) => {
-                return grouped.value[group].some(
+                return grouped.value[group]!.some(
                     (match) =>
                         match.match.status === "in-progress" || match.match.status === "scheduled",
                 );
-            }) || groups[0];
+            }) || groups[0]!;
     }
 };
 watch([selectedGroupOption, courtFilter, groupFilter, teamFilter], autoSelectGroup);
@@ -293,7 +293,7 @@ onMounted(() => {
             <div class="round">
                 <GroupedTournamentList
                     v-if="grouped[selectedGroup]"
-                    v-model="grouped[selectedGroup]"
+                    v-model="grouped[selectedGroup]!"
                     :tournament="tournament"
                     :readonly="readonly"
                     @update:model-value="onChanged"

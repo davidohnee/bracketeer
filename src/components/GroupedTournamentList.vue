@@ -59,7 +59,7 @@ const groupings = computed(() => {
         if (!groupedMatches[key]) {
             groupedMatches[key] = [];
         }
-        groupedMatches[key].push(match.match);
+        groupedMatches[key]!.push(match.match);
     }
     return groupedMatches;
 });
@@ -81,7 +81,7 @@ const groupings = computed(() => {
                 <MatchRow
                     v-for="(match, i) in group"
                     :key="match.id"
-                    v-model="groupings[key][i]"
+                    v-model="groupings[key]![i]!"
                     :tournament="tournament"
                     :readonly="readonly"
                 />

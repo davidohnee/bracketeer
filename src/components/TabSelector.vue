@@ -26,7 +26,7 @@ const index = computed({
     },
     set(value) {
         if (value >= 0 && value < props.options.length) {
-            emit("update:modelValue", props.options[value]);
+            emit("update:modelValue", props.options[value]!);
         }
     },
 });

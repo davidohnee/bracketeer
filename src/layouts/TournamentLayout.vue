@@ -50,7 +50,7 @@ const baseRoute = computed(() => {
 
 const isMine = computed(() => {
     if (!tournament.value?.remote?.length) return false;
-    const identifier = tournament.value?.remote[0].identifier;
+    const identifier = tournament.value?.remote[0]!.identifier;
     return gistClient.isMine(identifier);
 });
 </script>

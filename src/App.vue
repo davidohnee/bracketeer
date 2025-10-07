@@ -99,7 +99,7 @@ header {
     }
 }
 
-@media (max-width: 400px) {
+@media (max-width: 440px) {
     header {
         & h3 {
             font-size: 0;

@@ -8,7 +8,7 @@ const teamIndex = (team: Ref | undefined) => props.teams.findIndex((x) => x.id =
 
 const teamDisplay = (team: MatchTeam) => {
     const i = teamIndex(team.ref);
-    if (i >= 0) return props.teams[i].name;
+    if (i >= 0) return props.teams[i]!.name;
     return formatPlacement(team.link!);
 };
 const props = defineProps<{ match: Match; teams: Team[]; matchDuration: number }>();
@@ -23,8 +23,8 @@ const winner = computed(() => {
     if (status.value !== "completed") return "";
     const team1 = props.match.teams[0].score;
     const team2 = props.match.teams[1].score;
-    if (team1 > team2) return props.teams[teamIndex(props.match.teams[0].ref)].name;
-    if (team2 > team1) return props.teams[teamIndex(props.match.teams[1].ref)].name;
+    if (team1 > team2) return props.teams[teamIndex(props.match.teams[0].ref)]!.name;
+    if (team2 > team1) return props.teams[teamIndex(props.match.teams[1].ref)]!.name;
     return "Draw";
 });
 
@@ -45,8 +45,8 @@ const onScoreChanged = [
 ];
 
 onMounted(() => {
-    onScoreChanged[0](scores.value[0]);
-    onScoreChanged[1](scores.value[1]);
+    onScoreChanged[0]!(scores.value[0]!);
+    onScoreChanged[1]!(scores.value[1]!);
 });
 </script>
 
@@ -63,7 +63,7 @@ onMounted(() => {
                         class="team"
                         :class="{ winner: winner === teamDisplay(team) }"
                     >
-                        {{ teams[teamIndex(team.ref)].name }}
+                        {{ teams[teamIndex(team.ref)!]!.name }}
                     </p>
                     <div class="field">
                         <label :for="`team-score-${index}`">Cups still standing</label>
@@ -71,7 +71,7 @@ onMounted(() => {
                             type="number"
                             :id="`team-score-${index}`"
                             v-model="scores[index]"
-                            @change="onScoreChanged[index](scores[index])"
+                            @change="onScoreChanged[index]!(scores[index]!)"
                         />
                     </div>
                 </template>

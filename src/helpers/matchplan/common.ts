@@ -45,7 +45,7 @@ export const earliestFreeSlot = (
         const isTeamOccupied = scheduledMatches.some((match) =>
             match.teams.some(
                 (team) =>
-                    (team.ref?.id === teams[0].id || team.ref?.id === teams[1].id) &&
+                    (team.ref?.id === teams[0]!.id || team.ref?.id === teams[1]!.id) &&
                     time.getTime() == match.date.getTime(),
             ),
         );

@@ -25,17 +25,18 @@ onMounted(async () => {
     const base64 = route.params.id as string;
     const importObject = await pull(base64);
 
-    if (importObject.error) {
+    if (importObject?.error) {
         error.value = importObject.error;
         return;
     }
 
-    what.value = [importObject.tournament];
-    who.value = importObject.author ?? "(unknown)";
+    what.value = [importObject!.tournament];
+    who.value = importObject!.author ?? "(unknown)";
 });
 
 const confirm = async () => {
     const tournament = what.value[0];
+    if (!tournament) return;
     tournament.remote ??= [];
     tournament.remote.push({
         identifier: route.params.id as string,
@@ -49,9 +50,10 @@ const confirm = async () => {
 };
 
 const viewOnly = () => {
+    if (!what.value.length) return;
     router.push({
         name: "viewer.table",
-        params: { tournamentId: what.value[0].id },
+        params: { tournamentId: what.value[0]!.id },
     });
 };
 </script>

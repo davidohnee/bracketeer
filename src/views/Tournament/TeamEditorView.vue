@@ -18,7 +18,8 @@ const processPastedTeams = () => {
     const teams = lines.map((line) => line.trim()).filter((line) => line.length > 0);
     for (let i = 0; i < teams.length; i++) {
         if (i >= tournament.teams.length) break;
-        tournament.teams[i].name = teams[i];
+        if (i >= teams.length) break;
+        tournament.teams[i]!.name = teams[i]!;
     }
     teamsPaste.value = "";
 };

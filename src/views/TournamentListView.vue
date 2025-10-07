@@ -14,6 +14,10 @@ const tournaments = useTournamentsStore();
 </template>
 
 <style scoped>
+h1 {
+    padding: 0 1rem;
+}
+
 @media (max-width: 768px) {
     h1 {
         place-self: center;

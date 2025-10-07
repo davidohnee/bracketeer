@@ -172,14 +172,14 @@ export const useTournamentsStore = defineStore("tournaments", () => {
         }
 
         const newTournament = await pull(pullSource);
-        if (newTournament.error) {
+        if (newTournament?.error) {
             throw new Error(newTournament.error);
         }
 
         if (tournament) {
-            tournament.name = newTournament.tournament.name;
-            tournament.config = newTournament.tournament.config;
-            tournament.phases = newTournament.tournament.phases;
+            tournament.name = newTournament!.tournament.name;
+            tournament.config = newTournament!.tournament.config;
+            tournament.phases = newTournament!.tournament.phases;
             return tournament;
         }
     };

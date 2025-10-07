@@ -19,13 +19,13 @@ const getPlacement = (fromPhase: TournamentPhase, placement: number): string => 
             const groupRank = Math.floor(placement / groupCount);
             const inGroup = placement % groupCount;
 
-            return ALPHABET[inGroup] + (groupRank + 1);
+            return ALPHABET[inGroup]! + (groupRank + 1);
         }
 
         return String(placement + 1);
     }
 
-    return ALPHABET[placement];
+    return ALPHABET[placement]!;
 };
 
 export const generateKnockoutBracket = (
@@ -131,7 +131,7 @@ export const generateKnockoutBracket = (
                 score: 0,
             },
         ],
-        date: finalRound.matches[0].date,
+        date: finalRound.matches[0]!.date,
         status: "scheduled",
     };
     rounds.push({
@@ -140,7 +140,7 @@ export const generateKnockoutBracket = (
         matches: [finalMatch],
     });
     rounds.push(finalRound);
-    rounds[rounds.length - 1].matches[0].date = startTime;
+    rounds[rounds.length - 1]!.matches[0]!.date = startTime;
 
     return rounds;
 };
@@ -192,17 +192,17 @@ const updateKnockoutPhase = (phase: KnockoutTournamentPhase, tournament: Tournam
     const roundWinners: Ref[][] = [];
     const roundLosers: Ref[][] = [];
     for (let i = 0; i < knockout.length; i++) {
-        const round = knockout[i];
+        const round = knockout[i]!;
         const winners: Ref[] = [];
         const losers: Ref[] = [];
         roundWinners.push(winners);
         roundLosers.push(losers);
 
         // not all matches the same status
-        const firstState = round.matches[0].status;
+        const firstState = round.matches[0]!.status;
         if (round.matches.some((match) => match.status !== firstState)) return;
 
-        const roundRefIndex = round.matches[0].teams[0].link?.fromRound ?? i - 1;
+        const roundRefIndex = round.matches[0]!.teams[0].link?.fromRound ?? i - 1;
         const prevRoundWinners = i === 0 ? [] : roundWinners[roundRefIndex];
         const prevRoundLosers = i === 0 ? [] : roundLosers[roundRefIndex];
 
@@ -222,21 +222,21 @@ const updateKnockoutPhase = (phase: KnockoutTournamentPhase, tournament: Tournam
 
             if (match.status === "scheduled") {
                 for (let i = 0; i < match.teams.length; i++) {
-                    const link = match.teams[i].link!;
+                    const link = match.teams[i]!.link!;
 
                     if (link.type === "winner") {
                         match.teams[i] = {
-                            ...match.teams[i],
-                            ref: prevRoundWinners[link.placement],
+                            ...match.teams[i]!,
+                            ref: prevRoundWinners![link.placement],
                         };
                     } else if (link.type === "loser") {
                         match.teams[i] = {
-                            ...match.teams[i],
-                            ref: prevRoundLosers[link.placement],
+                            ...match.teams[i]!,
+                            ref: prevRoundLosers![link.placement],
                         };
                     } else if (link.type === "league") {
                         match.teams[i] = {
-                            ...match.teams[i],
+                            ...match.teams[i]!,
                             ref: table[link.placement],
                         };
                     }

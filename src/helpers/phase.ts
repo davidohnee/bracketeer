@@ -27,7 +27,7 @@ export const rankedTeams = (phase: TournamentPhase): Ref[] => {
         for (let i = 0; i < teamsPerTable; i++) {
             for (const table of tables) {
                 if (table.teams[i]) {
-                    rankedTeams.push(table.teams[i].team);
+                    rankedTeams.push(table.teams[i]!.team);
                 }
             }
         }
@@ -35,7 +35,7 @@ export const rankedTeams = (phase: TournamentPhase): Ref[] => {
 
     if (phase.type === "knockout") {
         for (let i = phase.rounds.length - 1; i >= 0; i--) {
-            const round = phase.rounds[i];
+            const round = phase.rounds[i]!;
             // for each match in round, 1st winner
             // then for each match in round loser
             const winners = [];
@@ -69,7 +69,7 @@ export const previousPhase = (
 ): TournamentPhase | null => {
     const phaseI = tournament.phases.findIndex((p) => p.id === phase.id);
     if (phaseI > 0) {
-        return tournament.phases[phaseI - 1];
+        return tournament.phases[phaseI - 1]!;
     }
     return null;
 };

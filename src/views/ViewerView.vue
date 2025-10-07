@@ -38,13 +38,13 @@ const updateTask = async () => {
         sessionStorage.setItem(base64, updated.value.toString());
     }
 
-    if (importObject.error) {
+    if (importObject?.error) {
         error.value = importObject.error;
         return;
     }
 
-    tournament.value = importObject.tournament;
-    who.value = importObject.author ?? "(unknown)";
+    tournament.value = importObject!.tournament;
+    who.value = importObject!.author ?? "(unknown)";
     updateSubtitle();
 };
 

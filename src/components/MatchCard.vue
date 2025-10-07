@@ -42,7 +42,7 @@ const teamIndex = (team: Ref | undefined) =>
 
 const teamDisplay = (team: MatchTeam) => {
     const i = teamIndex(team.ref);
-    if (i >= 0) return props.tournament.teams[i].name;
+    if (i >= 0) return props.tournament.teams[i]!.name;
     return formatPlacement(team.link!);
 };
 

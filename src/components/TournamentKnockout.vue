@@ -31,7 +31,7 @@ const knockoutBracket = computed<TournamentRound[]>(() => {
             <MatchCard
                 v-for="(_, index) in round.matches"
                 :key="index"
-                v-model="knockoutBracket[roundIndex].matches[index]"
+                v-model="knockoutBracket[roundIndex]!.matches[index]!"
                 :readonly="readonly"
                 :tournament="tournament"
                 @update:modelValue="onChanged"

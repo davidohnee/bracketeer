@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { formatPlacement } from "@/helpers/common";
-import type { Match, MatchTeam, Tournament, Ref, MatchStatus } from "@/types/tournament";
+import type { Match, MatchTeam, Tournament, Ref, MatchStatus, SetScore } from "@/types/tournament";
 import { computed, ref } from "vue";
 import SegmentPicker from "../SegmentPicker.vue";
+import { calculateScoresFromSets } from "@/helpers/scoring";
 
 const props = defineProps<{
     modelValue: Match;
@@ -24,8 +25,58 @@ const onStatusChanged = () => {
 const scores = ref(match.value.teams.map((team) => team.score) ?? []);
 const onScoreChanged = (teamIndex: number) => {
     match.value.teams[teamIndex]!.score = scores.value[teamIndex]!;
+    if (useSets.value && sets.value.length > 0) {
+        scoreInSyncWithSets.value = false;
+    }
     onChanged();
 };
+
+const useSets = computed(() => props.tournament.config.useSets ?? false);
+const sets = ref<SetScore[]>(match.value.sets ?? []);
+
+const addSet = () => {
+    sets.value.push({ team1: 0, team2: 0 });
+    onSetsChanged();
+};
+
+const removeSet = (index: number) => {
+    sets.value.splice(index, 1);
+    onSetsChanged();
+};
+
+const scoreFromSets = computed(() => {
+    return calculateScoresFromSets(sets.value);
+});
+
+const scoreInSyncWithSets = ref(
+    sets.value.length > 0
+        ? scores.value.every((score, index) => score === scoreFromSets.value[index])
+        : true,
+);
+
+const onSetsChanged = () => {
+    match.value.sets = sets.value;
+    if (sets.value.length > 0 && scoreInSyncWithSets.value) {
+        // Auto-calculate scores from sets
+        const [team1Score, team2Score] = scoreFromSets.value;
+        scores.value = [team1Score, team2Score];
+
+        match.value.teams[0]!.score = team1Score;
+        match.value.teams[1]!.score = team2Score;
+    }
+    onChanged();
+};
+
+const syncScoresWithSets = () => {
+    scoreInSyncWithSets.value = true;
+    onSetsChanged();
+};
+
+const scoresOutOfSync = computed(() => {
+    if (!useSets.value || sets.value.length === 0) return false;
+    const [team1Score, team2Score] = scoreFromSets.value;
+    return scores.value[0] !== team1Score || scores.value[1] !== team2Score;
+});
 
 const matcheditor = ref<HTMLDialogElement | null>(null);
 const openMatchEditor = () => {
@@ -95,6 +146,64 @@ defineExpose({
                     </div>
                 </div>
 
+                <div
+                    v-if="useSets"
+                    class="sets-section card"
+                >
+                    <div class="set-and-sync">
+                        <h3>Sets</h3>
+                        <button
+                            v-if="scoresOutOfSync"
+                            class="ghost text-sm"
+                            @click="syncScoresWithSets"
+                        >
+                            Sync Scores
+                        </button>
+                    </div>
+                    <div class="sets-list">
+                        <div
+                            v-for="(set, index) in sets"
+                            :key="index"
+                            class="set-row"
+                        >
+                            <span class="set-label">Set {{ index + 1 }}</span>
+                            <div class="set-scores">
+                                <input
+                                    type="number"
+                                    min="0"
+                                    v-model.number="set.team1"
+                                    @input="onSetsChanged"
+                                    class="set-score-input"
+                                />
+                                <span class="separator">:</span>
+                                <input
+                                    type="number"
+                                    min="0"
+                                    v-model.number="set.team2"
+                                    @input="onSetsChanged"
+                                    class="set-score-input"
+                                />
+                            </div>
+                            <button
+                                class="ghost"
+                                @click="removeSet(index)"
+                                title="Remove set"
+                            >
+                                <ion-icon name="trash-outline"></ion-icon>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="add-set">
+                        <button
+                            class="ghost"
+                            @click="addSet"
+                        >
+                            <ion-icon name="add-outline"></ion-icon>
+                            Add Set
+                        </button>
+                    </div>
+                </div>
+
                 <div class="match-status">
                     <SegmentPicker
                         v-model="match.status"
@@ -157,6 +266,66 @@ defineExpose({
 
     &.winner input {
         outline: 2px solid var(--color-primary);
+    }
+}
+
+.sets-section {
+    margin-top: 2em;
+    padding-top: 1em;
+
+    h3 {
+        margin-bottom: 1em;
+        font-size: var(--typography-heading-fontSize-m);
+    }
+
+    .set-and-sync {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+    }
+
+    .add-set {
+        display: flex;
+        justify-content: center;
+    }
+}
+
+.sets-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75em;
+    margin-bottom: 1em;
+}
+
+.set-row {
+    display: grid;
+    grid-template-columns: 4rem 1fr auto;
+    align-items: center;
+    gap: 1em;
+
+    .set-label {
+        font-size: 0.9em;
+        color: var(--color-text-secondary);
+    }
+
+    .set-scores {
+        display: flex;
+        align-items: center;
+        gap: 0.5em;
+        justify-content: center;
+
+        .set-score-input {
+            width: 5ch;
+            text-align: center;
+            padding: 0.25em;
+            font-size: 1.1em;
+            margin-bottom: 0;
+        }
+
+        .separator {
+            font-size: 1.1em;
+            color: var(--color-text-secondary);
+        }
     }
 }
 

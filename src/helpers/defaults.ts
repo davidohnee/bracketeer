@@ -8,16 +8,22 @@ interface Default {
     icon: string;
     matchDuration: number;
     breakDuration: number;
-    courtLabel: string;
-    courtLabelPlural?: string;
+    courtLabel: {
+        singular: string;
+        plural: string;
+    };
+    sets: {
+        supported: boolean;
+        default: boolean;
+    };
 }
 
 export const getCourtType = (sport: string, plural: boolean, capitalised: boolean): string => {
     const sportDefaults = DEFAULTS[sport] || DEFAULTS.other!;
 
     const courtLabel = plural
-        ? sportDefaults.courtLabelPlural || sportDefaults.courtLabel + "s"
-        : sportDefaults.courtLabel;
+        ? sportDefaults.courtLabel.plural || sportDefaults.courtLabel.singular + "s"
+        : sportDefaults.courtLabel.singular;
     return capitalised ? capitalise(courtLabel) : courtLabel;
 };
 
@@ -29,8 +35,14 @@ export const DEFAULTS: Record<string, Default> = {
         icon: "beer-outline",
         matchDuration: 10,
         breakDuration: 5,
-        courtLabel: "table",
-        courtLabelPlural: "tables",
+        courtLabel: {
+            singular: "table",
+            plural: "tables",
+        },
+        sets: {
+            supported: false,
+            default: false,
+        },
     },
     foosball: {
         name: "Foosball",
@@ -39,8 +51,14 @@ export const DEFAULTS: Record<string, Default> = {
         icon: "football-outline",
         matchDuration: 15,
         breakDuration: 5,
-        courtLabel: "table",
-        courtLabelPlural: "tables",
+        courtLabel: {
+            singular: "table",
+            plural: "tables",
+        },
+        sets: {
+            supported: true,
+            default: true,
+        },
     },
     other: {
         name: "Other",
@@ -49,8 +67,14 @@ export const DEFAULTS: Record<string, Default> = {
         icon: "help-outline",
         matchDuration: 15,
         breakDuration: 5,
-        courtLabel: "court",
-        courtLabelPlural: "courts",
+        courtLabel: {
+            singular: "court",
+            plural: "courts",
+        },
+        sets: {
+            supported: true,
+            default: false,
+        },
     },
 };
 

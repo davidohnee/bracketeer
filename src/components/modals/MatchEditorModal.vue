@@ -269,33 +269,6 @@ defineExpose({
     }
 }
 
-.warning {
-    display: flex;
-    align-items: center;
-    gap: 0.5em;
-    padding: 0.75em;
-    margin-top: 1em;
-    background-color: var(--color-warning-bg, #fff3cd);
-    border: 1px solid var(--color-warning-border, #ffc107);
-    border-radius: 0.25em;
-    color: var(--color-warning-text, #856404);
-    font-size: 0.9em;
-
-    ion-icon {
-        font-size: 1.2em;
-    }
-}
-
-.btn-link {
-    background: none;
-    border: none;
-    color: var(--color-primary);
-    text-decoration: underline;
-    cursor: pointer;
-    padding: 0;
-    margin-left: auto;
-}
-
 .sets-section {
     margin-top: 2em;
     padding-top: 1em;
@@ -353,44 +326,6 @@ defineExpose({
             font-size: 1.1em;
             color: var(--color-text-secondary);
         }
-    }
-}
-
-.btn-icon {
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 0.25em;
-    color: var(--color-text-secondary);
-    display: flex;
-    align-items: center;
-
-    &:hover {
-        color: var(--color-danger, #dc3545);
-    }
-
-    ion-icon {
-        font-size: 1.2em;
-    }
-}
-
-.btn-secondary {
-    display: flex;
-    align-items: center;
-    gap: 0.5em;
-    padding: 0.5em 1em;
-    background-color: var(--color-background-secondary);
-    border: 1px solid var(--color-border);
-    border-radius: 0.25em;
-    cursor: pointer;
-    font-size: 0.9em;
-
-    &:hover {
-        background-color: var(--color-background-tertiary);
-    }
-
-    ion-icon {
-        font-size: 1.1em;
     }
 }
 

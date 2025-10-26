@@ -51,7 +51,7 @@ const scoreFromSets = computed(() => {
 const scoreInSyncWithSets = ref(
     sets.value.length > 0
         ? scores.value.every((score, index) => score === scoreFromSets.value[index])
-        : false,
+        : true,
 );
 
 const onSetsChanged = () => {

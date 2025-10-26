@@ -61,7 +61,6 @@ export interface Match {
     status: MatchStatus;
     round?: MatchRound; // used only for group phase matches
     sets?: SetScore[]; // set scores when using set-based scoring
-    manualScoreOverride?: boolean; // true if score was manually overridden
 }
 
 export interface RichMatch {

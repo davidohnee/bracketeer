@@ -54,8 +54,14 @@ watch(
 );
 
 const sportSupportsSets = computed(() => {
-    return DEFAULTS[tournament.value.config.sport]?.supportsSets ?? false;
+    return DEFAULTS[tournament.value.config.sport]?.sets?.supported ?? false;
 });
+
+const setSport = (sportKey: string) => {
+    tournament.value.config.sport = sportKey;
+    tournament.value.config.useSets =
+        DEFAULTS[tournament.value.config.sport]?.sets?.default ?? false;
+};
 </script>
 <template>
     <div class="field">
@@ -74,7 +80,7 @@ const sportSupportsSets = computed(() => {
                 :key="k"
                 class="chip-option"
                 :class="{ selected: tournament.config.sport === k }"
-                @click="tournament.config.sport = k"
+                @click="setSport(k)"
                 :title="v.description"
             >
                 <ion-icon
@@ -83,6 +89,24 @@ const sportSupportsSets = computed(() => {
                 ></ion-icon>
                 <span>{{ v.name }}</span>
             </div>
+        </div>
+
+        <div
+            v-if="sportSupportsSets"
+            class="field"
+        >
+            <label
+                class="checkbox-label"
+                for="use-sets"
+                title="Enable this to track individual set scores (e.g., 6-4, 7-5). The match score will be automatically calculated based on sets won, but can be overridden manually."
+            >
+                <input
+                    type="checkbox"
+                    id="use-sets"
+                    v-model="tournament.config.useSets"
+                />
+                <span>Use set-based scoring</span>
+            </label>
         </div>
     </div>
     <div class="field">
@@ -93,21 +117,25 @@ const sportSupportsSets = computed(() => {
             v-model="startTime"
         />
     </div>
-    <div
-        v-if="sportSupportsSets"
-        class="field"
-    >
-        <label
-            class="checkbox-label"
-            for="use-sets"
-        >
-            <input
-                type="checkbox"
-                id="use-sets"
-                v-model="tournament.config.useSets"
-            />
-            <span>Use set-based scoring</span>
-        </label>
-        <p class="text-muted text-sm">Enable this to track individual set scores (e.g., 6-4, 7-5). The match score will be automatically calculated based on sets won.</p>
-    </div>
 </template>
+
+<style scoped>
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+
+    & input {
+        margin: 0;
+        width: 3ch;
+        height: 3ch;
+        accent-color: var(--color-primary);
+    }
+
+    & span {
+        color: var(--color-text-primary);
+        font-size: 0.9rem;
+    }
+}
+</style>

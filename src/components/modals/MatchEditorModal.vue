@@ -25,7 +25,7 @@ const onStatusChanged = () => {
 const scores = ref(match.value.teams.map((team) => team.score) ?? []);
 const onScoreChanged = (teamIndex: number) => {
     match.value.teams[teamIndex]!.score = scores.value[teamIndex]!;
-    match.value.manualScoreOverride = useSets.value && sets.value.length > 0;
+    scoreInSyncWithSets.value = false;
     onChanged();
 };
 
@@ -42,30 +42,38 @@ const removeSet = (index: number) => {
     onSetsChanged();
 };
 
+const scoreFromSets = computed(() => {
+    return calculateScoresFromSets(sets.value);
+});
+
+const scoreInSyncWithSets = ref(
+    sets.value.length > 0
+        ? scores.value.every((score, index) => score === scoreFromSets.value[index])
+        : false,
+);
+
 const onSetsChanged = () => {
     match.value.sets = sets.value;
-    if (sets.value.length > 0 && !match.value.manualScoreOverride) {
+    if (sets.value.length > 0 && scoreInSyncWithSets.value) {
         // Auto-calculate scores from sets
-        const [team1Score, team2Score] = calculateScoresFromSets(sets.value);
+        const [team1Score, team2Score] = scoreFromSets.value;
         scores.value = [team1Score, team2Score];
-        match.value.teams[0].score = team1Score;
-        match.value.teams[1].score = team2Score;
+
+        match.value.teams[0]!.score = team1Score;
+        match.value.teams[1]!.score = team2Score;
     }
     onChanged();
 };
 
 const syncScoresWithSets = () => {
-    match.value.manualScoreOverride = false;
+    scoreInSyncWithSets.value = true;
     onSetsChanged();
 };
 
 const scoresOutOfSync = computed(() => {
     if (!useSets.value || sets.value.length === 0) return false;
-    const [team1Score, team2Score] = calculateScoresFromSets(sets.value);
-    return (
-        match.value.manualScoreOverride &&
-        (scores.value[0] !== team1Score || scores.value[1] !== team2Score)
-    );
+    const [team1Score, team2Score] = scoreFromSets.value;
+    return scores.value[0] !== team1Score || scores.value[1] !== team2Score;
 });
 
 const matcheditor = ref<HTMLDialogElement | null>(null);
@@ -137,24 +145,19 @@ defineExpose({
                 </div>
 
                 <div
-                    v-if="scoresOutOfSync"
-                    class="warning"
-                >
-                    <ion-icon name="warning-outline"></ion-icon>
-                    <span>Score not in sync with sets</span>
-                    <button
-                        class="btn-link"
-                        @click="syncScoresWithSets"
-                    >
-                        Sync with sets
-                    </button>
-                </div>
-
-                <div
                     v-if="useSets"
-                    class="sets-section"
+                    class="sets-section card"
                 >
-                    <h3>Sets</h3>
+                    <div class="set-and-sync">
+                        <h3>Sets</h3>
+                        <button
+                            v-if="scoresOutOfSync"
+                            class="ghost text-sm"
+                            @click="syncScoresWithSets"
+                        >
+                            Sync Scores
+                        </button>
+                    </div>
                     <div class="sets-list">
                         <div
                             v-for="(set, index) in sets"
@@ -180,7 +183,7 @@ defineExpose({
                                 />
                             </div>
                             <button
-                                class="btn-icon"
+                                class="ghost"
                                 @click="removeSet(index)"
                                 title="Remove set"
                             >
@@ -188,13 +191,15 @@ defineExpose({
                             </button>
                         </div>
                     </div>
-                    <button
-                        class="btn-secondary"
-                        @click="addSet"
-                    >
-                        <ion-icon name="add-outline"></ion-icon>
-                        Add Set
-                    </button>
+                    <div class="add-set">
+                        <button
+                            class="ghost"
+                            @click="addSet"
+                        >
+                            <ion-icon name="add-outline"></ion-icon>
+                            Add Set
+                        </button>
+                    </div>
                 </div>
 
                 <div class="match-status">
@@ -292,11 +297,21 @@ defineExpose({
 .sets-section {
     margin-top: 2em;
     padding-top: 1em;
-    border-top: 1px solid var(--color-border);
 
     h3 {
         margin-bottom: 1em;
         font-size: var(--typography-heading-fontSize-m);
+    }
+
+    .set-and-sync {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+    }
+
+    .add-set {
+        display: flex;
+        justify-content: center;
     }
 }
 
@@ -325,10 +340,11 @@ defineExpose({
         justify-content: center;
 
         .set-score-input {
-            width: 3ch;
+            width: 5ch;
             text-align: center;
             padding: 0.25em;
             font-size: 1.1em;
+            margin-bottom: 0;
         }
 
         .separator {

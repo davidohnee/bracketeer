@@ -20,10 +20,10 @@ const push = async (tournament: Tournament, isPublic: boolean = false) => {
     delete copy.remote;
 
     if (tournament.remote?.length) {
-        const remote = tournament.remote[0].identifier;
+        const remote = tournament.remote[0]!.identifier;
         const { tag } = fromShare(remote);
         const [gist] = tag.split(":");
-        jdata = await gistClient.update({ [name]: copy }, options, gist);
+        jdata = await gistClient.update({ [name]: copy }, options, gist!);
     } else {
         jdata = await gistClient.save({ [name]: copy }, options);
     }
@@ -32,13 +32,13 @@ const push = async (tournament: Tournament, isPublic: boolean = false) => {
         return { error: "not-allowed" } as Import;
     }
 
-    const file = jdata.files[name];
+    const file = jdata.files[name]!;
     const rawUrl = file.raw_url;
     // "https://gist.githubusercontent.com/{user}/{gist}/raw/{file}/{filename}"
     // gist:{user}:{gist}:{filename}
     const gistId = jdata.id;
     const user = jdata.owner.login;
-    const sha = rawUrl.split("/raw/")[1].split("/")[0];
+    const sha = rawUrl.split("/raw/")[1]!.split("/")[0];
 
     const { identifier, link } = toShare("gist", user, `${gistId}:${sha}`);
 
@@ -50,7 +50,7 @@ const push = async (tournament: Tournament, isPublic: boolean = false) => {
             },
         ];
     } else {
-        tournament.remote[0].pushDate = new Date();
+        tournament.remote[0]!.pushDate = new Date();
     }
 
     return { author: jdata.owner.login, tournament, link } as Import;
@@ -58,6 +58,8 @@ const push = async (tournament: Tournament, isPublic: boolean = false) => {
 
 const pull = async (identifier: string) => {
     const { mode, author, tag } = fromShare(identifier);
+    if (!author || !tag) return;
+
     if (mode === "gist") {
         const [gist] = tag.split(":");
         const url = `https://gist.githubusercontent.com/${author}/${gist}/raw/`;

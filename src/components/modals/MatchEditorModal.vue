@@ -24,7 +24,7 @@ const onStatusChanged = () => {
 };
 const scores = ref(match.value.teams.map((team) => team.score) ?? []);
 const onScoreChanged = (teamIndex: number) => {
-    match.value.teams[teamIndex].score = scores.value[teamIndex];
+    match.value.teams[teamIndex]!.score = scores.value[teamIndex]!;
     match.value.manualScoreOverride = useSets.value && sets.value.length > 0;
     onChanged();
 };
@@ -62,8 +62,10 @@ const syncScoresWithSets = () => {
 const scoresOutOfSync = computed(() => {
     if (!useSets.value || sets.value.length === 0) return false;
     const [team1Score, team2Score] = calculateScoresFromSets(sets.value);
-    return match.value.manualScoreOverride && 
-           (scores.value[0] !== team1Score || scores.value[1] !== team2Score);
+    return (
+        match.value.manualScoreOverride &&
+        (scores.value[0] !== team1Score || scores.value[1] !== team2Score)
+    );
 });
 
 const matcheditor = ref<HTMLDialogElement | null>(null);
@@ -83,14 +85,14 @@ const teamIndex = (team: Ref | undefined) =>
 
 const teamDisplay = (team: MatchTeam) => {
     const i = teamIndex(team.ref);
-    if (i >= 0) return props.tournament.teams[i].name;
+    if (i >= 0) return props.tournament.teams[i]!.name;
     return formatPlacement(team.link!);
 };
 
 const winner = computed(() => {
     if (match.value.status !== "completed") return "";
-    const team1 = scores.value[0];
-    const team2 = scores.value[1];
+    const team1 = scores.value[0]!;
+    const team2 = scores.value[1]!;
     if (team1 > team2) return teamDisplay(match.value.teams[0]);
     if (team2 > team1) return teamDisplay(match.value.teams[1]);
     return "Draw";

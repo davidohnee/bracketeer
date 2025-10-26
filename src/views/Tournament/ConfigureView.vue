@@ -110,13 +110,13 @@ const duplicateTournament = () => {
 
 const canUpdate = computed(() => {
     if (!props.tournament.remote?.length) return false;
-    const identifier = props.tournament.remote[0].identifier;
+    const identifier = props.tournament.remote[0]!.identifier;
     return gistClient.isMine(identifier);
 });
 
 const canPull = computed(() => {
     if (!props.tournament.remote?.length) return false;
-    return !!props.tournament.remote[0].identifier;
+    return !!props.tournament.remote[0]!.identifier;
 });
 
 const pull = async () => {
@@ -141,7 +141,7 @@ const pull = async () => {
 
 const lastPushed = computed(() => {
     if (!props.tournament.remote?.length) return null;
-    const pushed = props.tournament.remote[0].pushDate;
+    const pushed = props.tournament.remote[0]!.pushDate;
     if (!pushed) return null;
     return typeof pushed === "string" ? new Date(pushed) : pushed;
 });

@@ -25,7 +25,9 @@ const onStatusChanged = () => {
 const scores = ref(match.value.teams.map((team) => team.score) ?? []);
 const onScoreChanged = (teamIndex: number) => {
     match.value.teams[teamIndex]!.score = scores.value[teamIndex]!;
-    scoreInSyncWithSets.value = false;
+    if (useSets.value && sets.value.length > 0) {
+        scoreInSyncWithSets.value = false;
+    }
     onChanged();
 };
 

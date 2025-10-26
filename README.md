@@ -8,12 +8,13 @@ bracketeer is a versatile and user-friendly tool designed to generate and manage
 - **Player Management**: Easily add, remove, and organize participants.
 - **Game Tracking**: Keep track of scores and progress in real-time.
 - **Multi-Game Support**: Works with various games and activities.
+- **Sets and Phases**: Supports multiple sets per game and flexible tournament structures.
 
 ## Use
 
 ### Online
 
-You can use bracketeer online [here](https://davidohnee.github.io/bracketeer). This version is hosted via GitHub Pages.
+You can use bracketeer online [here](https://bracketeer.davidohnee.com/). This version is hosted via GitHub Pages.
 
 ### Self-Hosted
 

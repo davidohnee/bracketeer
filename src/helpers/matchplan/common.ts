@@ -1,4 +1,6 @@
-import type { Match, Ref } from "@/types/tournament";
+import type { Match, Ref, Tournament } from "@/types/tournament";
+import { ceilToNextMinute } from "../common";
+import { allMatches } from "../phase";
 
 /**
  * find the earliest time slot for two teams to play a match on a specific court
@@ -60,4 +62,50 @@ export const earliestFreeSlot = (
     }
 
     return { time: matchTime, court };
+};
+
+export const adjustStartTimes = (
+    tournament: Tournament,
+    {
+        startTime,
+        startMatches,
+    }: {
+        startTime?: Date;
+        startMatches?: boolean;
+    } = {},
+) => {
+    startTime = startTime || tournament.config.startTime;
+    const veryNextRound = new Date(startTime);
+
+    const adjustedBaseDate = new Date();
+    console.log("Adjusting start times to:", veryNextRound, "from", adjustedBaseDate);
+
+    // all games that are scheduled, get the difference to "veryNextRound", ceilToNextMinute and apply
+
+    const updateMatch = (match: Match) => {
+        if (match.status === "scheduled") {
+            const matchDate = new Date(match.date);
+            const diff = matchDate.getTime() - veryNextRound.getTime();
+
+            if (diff > 0) {
+                const adjustedDate = new Date(adjustedBaseDate.getTime() + diff);
+                const newDate = ceilToNextMinute(adjustedDate);
+                match.date = newDate;
+                match.status = "scheduled";
+            } else if (diff == 0) {
+                match.date = new Date(adjustedBaseDate);
+                if (startMatches) {
+                    match.status = "in-progress";
+                }
+            }
+        }
+    };
+
+    for (const phase of tournament.phases) {
+        for (const match of allMatches(phase)) {
+            updateMatch(match);
+        }
+    }
+
+    return tournament;
 };

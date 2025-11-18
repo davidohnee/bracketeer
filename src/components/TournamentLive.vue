@@ -4,11 +4,10 @@ import type { Match, RichMatch, Tournament } from "@/types/tournament";
 import TeamTable from "@/components/TeamTable.vue";
 import { useRoute } from "vue-router";
 import { useTournamentsStore } from "@/stores/tournaments";
-import { allMatches as getAllMatches } from "@/helpers/phase";
 import { updateKnockoutMatches } from "@/helpers/matchplan/knockoutPhase";
 import GroupedTournamentList from "./GroupedTournamentList.vue";
 import { tournamentRichMatches } from "@/helpers/matches";
-import { ceilToNextMinute } from "@/helpers/common";
+import { adjustStartTimes } from "@/helpers/matchplan/common";
 
 const props = defineProps<{
     tournament: Tournament;
@@ -157,34 +156,12 @@ const teamMatchesRouteName = computed(() => {
 
 const adjustAndSkip = () => {
     const veryNextRound = new Date(nextStartTime.value!);
-    const adjustedBaseDate = new Date();
-
-    // all games that are scheduled, get the difference to "veryNextRound", ceilToNextMinute and apply
-
-    const updateMatch = (match: Match) => {
-        if (match.status === "scheduled") {
-            const matchDate = new Date(match.date);
-            const diff = matchDate.getTime() - veryNextRound.getTime();
-
-            if (diff > 0) {
-                const adjustedDate = new Date(adjustedBaseDate.getTime() + diff);
-                const newDate = ceilToNextMinute(adjustedDate);
-                match.date = newDate;
-                match.status = "scheduled";
-            } else if (diff == 0) {
-                match.date = new Date(adjustedBaseDate);
-                match.status = "in-progress";
-            }
-        }
-    };
-
     const rawTournament = toRaw(tournament.value);
-    updateKnockoutMatches(tournament.value);
-    for (const phase of rawTournament.phases) {
-        for (const match of getAllMatches(phase)) {
-            updateMatch(match);
-        }
-    }
+    updateKnockoutMatches(rawTournament);
+    adjustStartTimes(rawTournament, {
+        startTime: veryNextRound,
+        startMatches: true,
+    });
     tournament.value.phases = [...rawTournament.phases];
 };
 

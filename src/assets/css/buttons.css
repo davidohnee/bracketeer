@@ -49,6 +49,10 @@ button {
 
         &:hover {
             background: color-mix(in srgb, transparent 95%, black);
+
+            @media (prefers-color-scheme: dark) {
+                background: color-mix(in srgb, transparent 95%, white);
+            }
         }
     }
 

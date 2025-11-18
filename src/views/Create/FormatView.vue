@@ -26,7 +26,6 @@ const tournamentEndsAt = computed(() => {
     const lastMatch = getLastMatchOf({
         phase: p[p.length - 1],
     });
-    console.log("Last match:", lastMatch);
     if (!lastMatch) return null;
     const endTime = new Date(lastMatch.date);
     endTime.setMinutes(endTime.getMinutes() + tournament.value.config.matchDuration);

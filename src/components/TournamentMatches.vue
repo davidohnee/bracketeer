@@ -8,6 +8,7 @@ import { tournamentRichMatches } from "@/helpers/matches";
 import TabSelector from "./TabSelector.vue";
 import { localeDateTimeString } from "@/helpers/common";
 import MatchFilter from "./Filter/MatchFilter.vue";
+import type { Option } from "@/types/common";
 
 const props = defineProps<{
     modelValue: Tournament;
@@ -91,9 +92,22 @@ const matchFilter = ref<typeof MatchFilter>();
 
 const GROUP_OPTIONS = ["round", "time", "team", "court"] as const;
 
+const groupLookup = computed<Record<string, Option>>(() => {
+    const lookup: Record<string, Option> = {};
+    for (const match of allMatches.value) {
+        const id = `${match.phaseId}.${match.roundName}`;
+        lookup[id] = {
+            label: match.roundName,
+            group: match.phaseName,
+            id,
+        };
+    }
+    return lookup;
+});
 const grouped = computed(() => {
     // Group matches by the selected option
     const groupedMatches: Record<string, RichMatch[]> = {};
+
     for (const match of allMatches.value) {
         // filter
         if (
@@ -124,7 +138,7 @@ const grouped = computed(() => {
 
         const keys: (string | null)[] = [];
         if (selectedGroupOption.value === "round") {
-            keys.push(match.roundName);
+            keys.push(`${match.phaseId}.${match.roundName}`);
         } else if (selectedGroupOption.value === "time") {
             keys.push(localeDateTimeString(match.match.date));
         } else if (selectedGroupOption.value === "team") {
@@ -157,6 +171,17 @@ const grouped = computed(() => {
     }
 
     return groupedMatches;
+});
+
+const tabOptions = computed<Option[] | string[]>(() => {
+    const groupedKeys = Object.keys(grouped.value) ?? [];
+
+    if (groupedKeys.length && groupLookup.value[groupedKeys[0]!]) {
+        return Object.keys(grouped.value).map((key) => {
+            return groupLookup.value[key]!;
+        });
+    }
+    return groupedKeys;
 });
 
 const selectedGroup = ref("");
@@ -288,7 +313,7 @@ onMounted(() => {
         <div class="rounds">
             <TabSelector
                 v-model="selectedGroup"
-                :options="grouped ? Object.keys(grouped) : []"
+                :options="tabOptions"
             />
             <div class="round">
                 <GroupedTournamentList

@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import DropdownSelector from "./DropdownSelector.vue";
+import type { Option } from "@/types/common";
 
 const props = defineProps<{
     modelValue: string;
-    options: string[];
+    options: string[] | Option[];
 }>();
 
 const emit = defineEmits<{
@@ -22,11 +23,19 @@ const selectedValue = computed({
 
 const index = computed({
     get() {
-        return props.options.indexOf(selectedValue.value);
+        if (typeof props.options[0] === "string") {
+            return (props.options as string[]).indexOf(selectedValue.value);
+        }
+        return props.options.findIndex((option) => (option as Option).id === selectedValue.value);
     },
     set(value) {
         if (value >= 0 && value < props.options.length) {
-            emit("update:modelValue", props.options[value]!);
+            emit(
+                "update:modelValue",
+                typeof props.options[0] === "string"
+                    ? (props.options as string[])[value]!
+                    : (props.options[value] as Option).id,
+            );
         }
     },
 });

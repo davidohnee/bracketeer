@@ -78,7 +78,6 @@ export const adjustStartTimes = (
     const veryNextRound = new Date(startTime);
 
     const adjustedBaseDate = new Date();
-    console.log("Adjusting start times to:", veryNextRound, "from", adjustedBaseDate);
 
     // all games that are scheduled, get the difference to "veryNextRound", ceilToNextMinute and apply
 

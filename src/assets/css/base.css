@@ -78,6 +78,11 @@ section {
     line-height: var(--typography-body-lineHeight-sm);
 }
 
+.uppercase {
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
 .status {
     padding: 0.25em;
     border-radius: 0.5em;

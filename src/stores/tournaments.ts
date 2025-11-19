@@ -82,8 +82,6 @@ export const useTournamentsStore = defineStore("tournaments", () => {
     };
 
     const share = async (tournament: Tournament, asPublic: boolean = false) => {
-        if (!tournament.remote) return;
-
         const result = await push(tournament, asPublic);
         if (result.tournament) {
             getTournamentById(tournament.id)!.remote = result.tournament.remote;

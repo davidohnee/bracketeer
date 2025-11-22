@@ -63,6 +63,11 @@ export const generateKnockoutBracket = (
         for (let i = 0; i < teamsInRound / 2; i++) {
             const teamFromPhase = teamsInRound == knockoutTeamCount ? (previous ?? phase) : phase;
 
+            if (court > tournament.config.courts) {
+                court = 1;
+                startTime.setMinutes(startTime.getMinutes() + roundDuration);
+            }
+
             const match: Match = {
                 id: generateId(),
                 court: court++,

@@ -53,6 +53,39 @@ Contributions are welcome! Please follow these steps:
 4. Push to the branch: `git push origin feature-name`.
 5. Open a pull request.
 
+### Development
+
+#### Testing
+
+This project uses [Vitest](https://vitest.dev/) for unit testing. To run tests:
+
+```bash
+# Run tests in watch mode
+npm test
+
+# Run tests once
+npm run test:run
+
+# Run tests with UI
+npm run test:ui
+
+# Run tests with coverage
+npm run test:coverage
+```
+
+#### Building
+
+```bash
+# Type check
+npm run type-check
+
+# Build for production
+npm run build
+
+# Lint code
+npm run lint
+```
+
 ## License
 
 This project is licensed under the GPL-3.0 License. See the [LICENSE](LICENSE) file for details.

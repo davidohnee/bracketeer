@@ -30,22 +30,39 @@ const updateGithub = async () => {
             <p v-if="me">
                 You are logged in as
 
-                <a :href="me.html_url" target="_blank">
-                    <strong>{{ me.login }}</strong></a>.
+                <a
+                    :href="me.html_url"
+                    target="_blank"
+                >
+                    <strong>{{ me.login }}</strong></a
+                >.
             </p>
             <p v-else>You are not logged in yet.</p>
             <div class="row center">
                 <div class="field left">
                     <label for="pat">Personal Access Token</label>
-                    <input type="password" v-model="pat" placeholder="Enter your GitHub PAT" id="pat"
-                        @input="canUpdate = true" />
+                    <input
+                        type="password"
+                        v-model="pat"
+                        placeholder="Enter your GitHub PAT"
+                        id="pat"
+                        @input="canUpdate = true"
+                    />
                 </div>
-                <button class="primary" :disabled="!canUpdate" @click="updateGithub">
+                <button
+                    class="primary"
+                    :disabled="!canUpdate"
+                    @click="updateGithub"
+                >
                     Save
                 </button>
             </div>
         </div>
-        <button class="danger" :disabled="!me && !pat" @click="resetGithub">
+        <button
+            class="danger"
+            :disabled="!me && !pat"
+            @click="resetGithub"
+        >
             Reset
         </button>
     </div>

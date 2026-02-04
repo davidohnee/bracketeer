@@ -55,24 +55,53 @@ const create = () => {
 };
 </script>
 <template>
-    <div class="form" v-if="tournament">
-        <StepProgress :steps="STEPS" v-model="currentStep" can-go-back can-go-forward />
+    <div
+        class="form"
+        v-if="tournament"
+    >
+        <StepProgress
+            :steps="STEPS"
+            v-model="currentStep"
+            can-go-back
+            can-go-forward
+        />
         <div class="row between baseline">
             <h2>{{ TITLES[currentStep] }}</h2>
-            <button class="button" @click="currentStep++" v-if="currentStep < STEPS.length - 1">
+            <button
+                class="button"
+                @click="currentStep++"
+                v-if="currentStep < STEPS.length - 1"
+            >
                 <ion-icon name="arrow-forward"></ion-icon>
                 Continue
             </button>
-            <button class="button" @click="create" v-else>
+            <button
+                class="button"
+                @click="create"
+                v-else
+            >
                 <ion-icon name="checkmark"></ion-icon>
                 Create
             </button>
         </div>
 
-        <TemplateView v-if="currentStep === 0" v-model="tournament" @continue="currentStep++" />
-        <Basics v-if="currentStep === 1" v-model="tournament" />
-        <Logistics v-else-if="currentStep === 2" v-model="tournament" />
-        <Format v-else-if="currentStep === 3" v-model="tournament" />
+        <TemplateView
+            v-if="currentStep === 0"
+            v-model="tournament"
+            @continue="currentStep++"
+        />
+        <Basics
+            v-if="currentStep === 1"
+            v-model="tournament"
+        />
+        <Logistics
+            v-else-if="currentStep === 2"
+            v-model="tournament"
+        />
+        <Format
+            v-else-if="currentStep === 3"
+            v-model="tournament"
+        />
     </div>
 </template>
 

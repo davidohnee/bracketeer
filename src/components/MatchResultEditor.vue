@@ -53,15 +53,26 @@ onMounted(() => {
 <template>
     <div class="match row">
         <div class="form">
-            <div v-for="(team, index) in match.teams" class="team-row" :key="index">
+            <div
+                v-for="(team, index) in match.teams"
+                class="team-row"
+                :key="index"
+            >
                 <template v-if="teamIndex(team.ref) >= 0">
-                    <p class="team" :class="{ winner: winner === teamDisplay(team) }">
+                    <p
+                        class="team"
+                        :class="{ winner: winner === teamDisplay(team) }"
+                    >
                         {{ teams[teamIndex(team.ref)!]!.name }}
                     </p>
                     <div class="field">
                         <label :for="`team-score-${index}`">Cups still standing</label>
-                        <input type="number" :id="`team-score-${index}`" v-model="scores[index]"
-                            @change="onScoreChanged[index]!(scores[index]!)" />
+                        <input
+                            type="number"
+                            :id="`team-score-${index}`"
+                            v-model="scores[index]"
+                            @change="onScoreChanged[index]!(scores[index]!)"
+                        />
                     </div>
                 </template>
             </div>

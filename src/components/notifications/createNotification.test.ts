@@ -5,8 +5,8 @@ describe("Notifications", () => {
     let eventListener: EventListenerOrEventListenerObject | null = null;
 
     beforeEach(() => {
-        // Mock window.dispatchEvent to capture events
-        vi.spyOn(window, "dispatchEvent").mockImplementation((event: Event) => {
+        // Mock globalThis.dispatchEvent to capture events
+        vi.spyOn(globalThis, "dispatchEvent").mockImplementation((event: Event) => {
             if (eventListener && typeof eventListener === "function") {
                 eventListener(event);
             }
@@ -14,7 +14,7 @@ describe("Notifications", () => {
         });
 
         // Mock addEventListener to capture the listener
-        vi.spyOn(window, "addEventListener").mockImplementation((
+        vi.spyOn(globalThis, "addEventListener").mockImplementation((
             _type: string,
             listener: EventListenerOrEventListenerObject
         ) => {
@@ -30,13 +30,13 @@ describe("Notifications", () => {
     describe("addSuccess", () => {
         it("should dispatch success notification event", () => {
             let capturedEvent: CustomEvent<IFullNotification> | null = null;
-            window.addEventListener("notification.add", ((e: Event) => {
+            globalThis.addEventListener("notification.add", ((e: Event) => {
                 capturedEvent = e as CustomEvent<IFullNotification>;
             }) as EventListener);
 
             Notifications.addSuccess("Success message");
 
-            expect(window.dispatchEvent).toHaveBeenCalled();
+            expect(globalThis.dispatchEvent).toHaveBeenCalled();
             expect(capturedEvent).not.toBeNull();
             expect(capturedEvent!.detail.message).toBe("Success message");
             expect(capturedEvent!.detail.type).toBe("success");
@@ -53,7 +53,7 @@ describe("Notifications", () => {
 
         it("should include all optional parameters", () => {
             let capturedEvent: CustomEvent<IFullNotification> | null = null;
-            window.addEventListener("notification.add", ((e: Event) => {
+            globalThis.addEventListener("notification.add", ((e: Event) => {
                 capturedEvent = e as CustomEvent<IFullNotification>;
             }) as EventListener);
 
@@ -77,7 +77,7 @@ describe("Notifications", () => {
     describe("addError", () => {
         it("should dispatch error notification event", () => {
             let capturedEvent: CustomEvent<IFullNotification> | null = null;
-            window.addEventListener("notification.add", ((e: Event) => {
+            globalThis.addEventListener("notification.add", ((e: Event) => {
                 capturedEvent = e as CustomEvent<IFullNotification>;
             }) as EventListener);
 
@@ -96,7 +96,7 @@ describe("Notifications", () => {
 
         it("should include details when provided", () => {
             let capturedEvent: CustomEvent<IFullNotification> | null = null;
-            window.addEventListener("notification.add", ((e: Event) => {
+            globalThis.addEventListener("notification.add", ((e: Event) => {
                 capturedEvent = e as CustomEvent<IFullNotification>;
             }) as EventListener);
 
@@ -110,7 +110,7 @@ describe("Notifications", () => {
     describe("addInfo", () => {
         it("should dispatch info notification event", () => {
             let capturedEvent: CustomEvent<IFullNotification> | null = null;
-            window.addEventListener("notification.add", ((e: Event) => {
+            globalThis.addEventListener("notification.add", ((e: Event) => {
                 capturedEvent = e as CustomEvent<IFullNotification>;
             }) as EventListener);
 
@@ -131,7 +131,7 @@ describe("Notifications", () => {
     describe("addWarning", () => {
         it("should dispatch warning notification event", () => {
             let capturedEvent: CustomEvent<IFullNotification> | null = null;
-            window.addEventListener("notification.add", ((e: Event) => {
+            globalThis.addEventListener("notification.add", ((e: Event) => {
                 capturedEvent = e as CustomEvent<IFullNotification>;
             }) as EventListener);
 
@@ -152,7 +152,7 @@ describe("Notifications", () => {
     describe("addYesNo", () => {
         it("should dispatch yes-no notification event", () => {
             let capturedEvent: CustomEvent<IFullNotification> | null = null;
-            window.addEventListener("notification.add", ((e: Event) => {
+            globalThis.addEventListener("notification.add", ((e: Event) => {
                 capturedEvent = e as CustomEvent<IFullNotification>;
             }) as EventListener);
 
@@ -171,7 +171,7 @@ describe("Notifications", () => {
 
         it("should include all callback parameters", () => {
             let capturedEvent: CustomEvent<IFullNotification> | null = null;
-            window.addEventListener("notification.add", ((e: Event) => {
+            globalThis.addEventListener("notification.add", ((e: Event) => {
                 capturedEvent = e as CustomEvent<IFullNotification>;
             }) as EventListener);
 
@@ -205,19 +205,19 @@ describe("Notifications", () => {
     describe("remove", () => {
         it("should dispatch remove notification event with id", () => {
             let capturedEvent: CustomEvent<string> | null = null;
-            window.addEventListener("notification.remove", ((e: Event) => {
+            globalThis.addEventListener("notification.remove", ((e: Event) => {
                 capturedEvent = e as CustomEvent<string>;
             }) as EventListener);
 
             Notifications.remove("notification-id");
 
-            expect(window.dispatchEvent).toHaveBeenCalled();
+            expect(globalThis.dispatchEvent).toHaveBeenCalled();
             expect(capturedEvent!.detail).toBe("notification-id");
         });
 
         it("should handle removing multiple notifications", () => {
             const removedIds: string[] = [];
-            window.addEventListener("notification.remove", ((e: Event) => {
+            globalThis.addEventListener("notification.remove", ((e: Event) => {
                 const customEvent = e as CustomEvent<string>;
                 removedIds.push(customEvent.detail);
             }) as EventListener);
@@ -233,19 +233,19 @@ describe("Notifications", () => {
     describe("clear", () => {
         it("should dispatch clear notification event", () => {
             let eventDispatched = false;
-            window.addEventListener("notification.clear", () => {
+            globalThis.addEventListener("notification.clear", () => {
                 eventDispatched = true;
             });
 
             Notifications.clear();
 
-            expect(window.dispatchEvent).toHaveBeenCalled();
+            expect(globalThis.dispatchEvent).toHaveBeenCalled();
             expect(eventDispatched).toBe(true);
         });
 
         it("should dispatch event without detail", () => {
             let capturedEvent: Event | null = null;
-            window.addEventListener("notification.clear", ((e: Event) => {
+            globalThis.addEventListener("notification.clear", ((e: Event) => {
                 capturedEvent = e;
             }) as EventListener);
 
@@ -281,7 +281,7 @@ describe("Notifications", () => {
     describe("notification structure", () => {
         it("should create notification with correct structure", () => {
             let capturedNotification: IFullNotification | null = null;
-            window.addEventListener("notification.add", ((e: Event) => {
+            globalThis.addEventListener("notification.add", ((e: Event) => {
                 const customEvent = e as CustomEvent<IFullNotification>;
                 capturedNotification = customEvent.detail;
             }) as EventListener);
@@ -299,7 +299,7 @@ describe("Notifications", () => {
 
         it("should create yes-no notification with extended structure", () => {
             let capturedNotification: IFullNotification | null = null;
-            window.addEventListener("notification.add", ((e: Event) => {
+            globalThis.addEventListener("notification.add", ((e: Event) => {
                 const customEvent = e as CustomEvent<IFullNotification>;
                 capturedNotification = customEvent.detail;
             }) as EventListener);

@@ -20,8 +20,8 @@
     "test:webkit": "npx playwright open --browser webkit http://localhost:5173"
   },
   "dependencies": {
-    "lodash": "^4.17.21",
-    "lodash-es": "^4.17.21",
+    "lodash": "^4.17.23",
+    "lodash-es": "^4.17.23",
     "pinia": "^3.0.3",
     "qrcode.vue": "^3.6.0",
     "vue": "^3.5.22",
@@ -45,7 +45,8 @@
     "typescript": "~5.9.3",
     "vite": "^7.1.12",
     "vite-plugin-vue-devtools": "^8.0.2",
-    "vitest": "^4.0.13",
+    "vitest": "^4.0.18",
+    "@vitest/coverage-v8": "4.0.18",
     "vue-tsc": "^3.1.1"
   }
 }

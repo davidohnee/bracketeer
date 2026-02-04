@@ -48,8 +48,8 @@ const teamFilter = computed({
 });
 const courtFilter = computed<number | undefined>({
     get() {
-        const int = parseInt(route.query.court as string);
-        return isNaN(int) ? undefined : int;
+        const int = Number.parseInt(route.query.court as string);
+        return Number.isNaN(int) ? undefined : int;
     },
     set(court) {
         router.replace({ query: { ...route.query, court } });
@@ -142,8 +142,10 @@ const grouped = computed(() => {
         } else if (selectedGroupOption.value === "time") {
             keys.push(localeDateTimeString(match.match.date));
         } else if (selectedGroupOption.value === "team") {
-            keys.push(getTeamName(match.match.teams[0].ref?.id));
-            keys.push(getTeamName(match.match.teams[1].ref?.id));
+            keys.push(
+                getTeamName(match.match.teams[0].ref?.id),
+                getTeamName(match.match.teams[1].ref?.id),
+            );
         } else if (selectedGroupOption.value === "court") {
             keys.push(getCourtName(tournament.value.config.sport, match.match.court));
         }

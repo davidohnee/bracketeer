@@ -40,11 +40,12 @@ const updateGithub = async () => {
             <p v-else>You are not logged in yet.</p>
             <div class="row center">
                 <div class="field left">
-                    <label>Personal Access Token</label>
+                    <label for="pat">Personal Access Token</label>
                     <input
                         type="password"
                         v-model="pat"
                         placeholder="Enter your GitHub PAT"
+                        id="pat"
                         @input="canUpdate = true"
                     />
                 </div>

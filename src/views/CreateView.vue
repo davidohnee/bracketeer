@@ -41,7 +41,7 @@ const TITLES = [
     "Define Match Logistics",
     "Design the Competition",
 ];
-const currentStep = ref(parseInt(sessionStorage.getItem("creator.step") ?? "0"));
+const currentStep = ref(Number.parseInt(sessionStorage.getItem("creator.step") ?? "0"));
 
 watch(currentStep, (newValue) => {
     sessionStorage.setItem("creator.step", newValue.toString());

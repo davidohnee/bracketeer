@@ -213,7 +213,6 @@ watch(
     }
 
     .time {
-        font-size: 19px;
         font-weight: 500;
         border-radius: 100vmax;
         padding: 0.5em 1em;

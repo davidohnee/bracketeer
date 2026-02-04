@@ -47,13 +47,13 @@ const generateGroups = () => {
 
     const groups: Group[] = Array.from({ length: groupCount }, (_, i) => ({
         id: crypto.randomUUID(),
-        name: `Group ${String.fromCharCode(65 + i)}`,
+        name: `Group ${String.fromCodePoint(65 + i)}`,
         teams: [],
     }));
     const shuffledTeams = shuffle(tournament.value.teams);
     let groupIndex = 0;
-    for (let i = 0; i < shuffledTeams.length; i++) {
-        groups[groupIndex]!.teams.push(shuffledTeams[i]!);
+    for (const shuffledTeam of shuffledTeams) {
+        groups[groupIndex]!.teams.push(shuffledTeam);
         groupIndex = (groupIndex + 1) % groups.length;
     }
     phase.groups = groups;

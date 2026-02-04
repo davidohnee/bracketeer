@@ -1,12 +1,6 @@
 import { describe, it, expect, beforeEach } from "vitest";
 import { generateGroupPhase, generateGroupPhases } from "./groupPhase";
-import type {
-    Tournament,
-    GroupTournamentPhase,
-    Team,
-    Group,
-    Match,
-} from "@/types/tournament";
+import type { Tournament, GroupTournamentPhase, Team, Group, Match } from "@/types/tournament";
 
 describe("Group Phase Generation", () => {
     let tournament: Tournament;
@@ -228,7 +222,9 @@ describe("Group Phase Generation", () => {
             tournament.phases = [phase];
             const matches = generateGroupPhase(phase, tournament);
 
-            const uniqueTimes = [...new Set(matches.map((m) => m.date.getTime()))].sort();
+            const uniqueTimes = [...new Set(matches.map((m) => m.date.getTime()))].sort(
+                (a, b) => a - b,
+            );
             const roundDuration = tournament.config.matchDuration + tournament.config.breakDuration;
 
             // Check time differences between consecutive time slots

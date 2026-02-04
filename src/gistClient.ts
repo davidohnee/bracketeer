@@ -44,7 +44,7 @@ const getHeaders = async (forcePat: string | null = null) => {
 };
 
 const body = (files: Files, options: IOptions) => {
-    const base = window.location.origin + window.location.pathname;
+    const base = globalThis.location.origin + globalThis.location.pathname;
     const body = {
         public: options.isPublic ?? false,
         description: options.description,
@@ -129,7 +129,7 @@ const isMine = async (identifier: string) => {
 
     if (!myData) return false;
 
-    const myName = myData.login as string;
+    const myName = myData.login;
 
     const { author } = fromShare(identifier);
     return myName === author;

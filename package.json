@@ -20,8 +20,8 @@
     "test:webkit": "npx playwright open --browser webkit http://localhost:5173"
   },
   "dependencies": {
-    "lodash": "^4.17.21",
-    "lodash-es": "^4.17.21",
+    "lodash": "^4.17.23",
+    "lodash-es": "^4.17.23",
     "pinia": "^3.0.3",
     "qrcode.vue": "^3.6.0",
     "vue": "^3.5.22",

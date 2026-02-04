@@ -6,6 +6,7 @@ describe("Scoring Helper Functions", () => {
     describe("calculateTeamPoints", () => {
         it("should calculate points correctly for wins only", () => {
             const teamScore: TeamScore = {
+                team: { id: "team-1" },
                 wins: 3,
                 draws: 0,
                 losses: 0,
@@ -16,6 +17,7 @@ describe("Scoring Helper Functions", () => {
 
         it("should calculate points correctly for draws only", () => {
             const teamScore: TeamScore = {
+                team: { id: "team-1" },
                 wins: 0,
                 draws: 2,
                 losses: 0,
@@ -26,6 +28,7 @@ describe("Scoring Helper Functions", () => {
 
         it("should calculate points correctly for wins and draws", () => {
             const teamScore: TeamScore = {
+                team: { id: "team-1" },
                 wins: 2,
                 draws: 1,
                 losses: 1,
@@ -36,6 +39,7 @@ describe("Scoring Helper Functions", () => {
 
         it("should return 0 for no wins or draws", () => {
             const teamScore: TeamScore = {
+                team: { id: "team-1" },
                 wins: 0,
                 draws: 0,
                 losses: 3,
@@ -46,6 +50,7 @@ describe("Scoring Helper Functions", () => {
 
         it("should handle mixed results", () => {
             const teamScore: TeamScore = {
+                team: { id: "team-1" },
                 wins: 4,
                 draws: 3,
                 losses: 2,
@@ -58,6 +63,7 @@ describe("Scoring Helper Functions", () => {
     describe("calculateDifference", () => {
         it("should return positive difference with + prefix", () => {
             const teamScore: TeamScore = {
+                team: { id: "team-1" },
                 wins: 2,
                 draws: 0,
                 losses: 0,
@@ -68,6 +74,7 @@ describe("Scoring Helper Functions", () => {
 
         it("should return negative difference without + prefix", () => {
             const teamScore: TeamScore = {
+                team: { id: "team-1" },
                 wins: 0,
                 draws: 0,
                 losses: 2,
@@ -78,6 +85,7 @@ describe("Scoring Helper Functions", () => {
 
         it("should return 0 for equal points", () => {
             const teamScore: TeamScore = {
+                team: { id: "team-1" },
                 wins: 1,
                 draws: 1,
                 losses: 1,
@@ -88,6 +96,7 @@ describe("Scoring Helper Functions", () => {
 
         it("should handle large positive differences", () => {
             const teamScore: TeamScore = {
+                team: { id: "team-1" },
                 wins: 5,
                 draws: 0,
                 losses: 0,
@@ -98,6 +107,7 @@ describe("Scoring Helper Functions", () => {
 
         it("should handle large negative differences", () => {
             const teamScore: TeamScore = {
+                team: { id: "team-1" },
                 wins: 0,
                 draws: 0,
                 losses: 5,

@@ -4,39 +4,42 @@ import { getCourtType, DEFAULTS, emptyTournament } from "./defaults";
 describe("Defaults Helper Functions", () => {
     describe("DEFAULTS constant", () => {
         it("should contain beerpong defaults", () => {
-            expect(DEFAULTS.beerpong).toBeDefined();
-            expect(DEFAULTS.beerpong.name).toBe("Beer Pong");
-            expect(DEFAULTS.beerpong.icon).toBe("beer-outline");
-            expect(DEFAULTS.beerpong.courtLabel.singular).toBe("table");
-            expect(DEFAULTS.beerpong.courtLabel.plural).toBe("tables");
-            expect(DEFAULTS.beerpong.matchDuration).toBe(10);
-            expect(DEFAULTS.beerpong.breakDuration).toBe(5);
-            expect(DEFAULTS.beerpong.sets.supported).toBe(false);
-            expect(DEFAULTS.beerpong.sets.default).toBe(false);
+            const beerpong = DEFAULTS.beerpong;
+            expect(beerpong).toBeDefined();
+            expect(beerpong!.name).toBe("Beer Pong");
+            expect(beerpong!.icon).toBe("beer-outline");
+            expect(beerpong!.courtLabel.singular).toBe("table");
+            expect(beerpong!.courtLabel.plural).toBe("tables");
+            expect(beerpong!.matchDuration).toBe(10);
+            expect(beerpong!.breakDuration).toBe(5);
+            expect(beerpong!.sets.supported).toBe(false);
+            expect(beerpong!.sets.default).toBe(false);
         });
 
         it("should contain foosball defaults", () => {
-            expect(DEFAULTS.foosball).toBeDefined();
-            expect(DEFAULTS.foosball.name).toBe("Foosball");
-            expect(DEFAULTS.foosball.icon).toBe("football-outline");
-            expect(DEFAULTS.foosball.courtLabel.singular).toBe("table");
-            expect(DEFAULTS.foosball.courtLabel.plural).toBe("tables");
-            expect(DEFAULTS.foosball.matchDuration).toBe(15);
-            expect(DEFAULTS.foosball.breakDuration).toBe(5);
-            expect(DEFAULTS.foosball.sets.supported).toBe(true);
-            expect(DEFAULTS.foosball.sets.default).toBe(true);
+            const foosball = DEFAULTS.foosball;
+            expect(foosball).toBeDefined();
+            expect(foosball!.name).toBe("Foosball");
+            expect(foosball!.icon).toBe("football-outline");
+            expect(foosball!.courtLabel.singular).toBe("table");
+            expect(foosball!.courtLabel.plural).toBe("tables");
+            expect(foosball!.matchDuration).toBe(15);
+            expect(foosball!.breakDuration).toBe(5);
+            expect(foosball!.sets.supported).toBe(true);
+            expect(foosball!.sets.default).toBe(true);
         });
 
         it("should contain other defaults", () => {
-            expect(DEFAULTS.other).toBeDefined();
-            expect(DEFAULTS.other.name).toBe("Other");
-            expect(DEFAULTS.other.icon).toBe("help-outline");
-            expect(DEFAULTS.other.courtLabel.singular).toBe("court");
-            expect(DEFAULTS.other.courtLabel.plural).toBe("courts");
-            expect(DEFAULTS.other.matchDuration).toBe(15);
-            expect(DEFAULTS.other.breakDuration).toBe(5);
-            expect(DEFAULTS.other.sets.supported).toBe(true);
-            expect(DEFAULTS.other.sets.default).toBe(false);
+            const other = DEFAULTS.other;
+            expect(other).toBeDefined();
+            expect(other!.name).toBe("Other");
+            expect(other!.icon).toBe("help-outline");
+            expect(other!.courtLabel.singular).toBe("court");
+            expect(other!.courtLabel.plural).toBe("courts");
+            expect(other!.matchDuration).toBe(15);
+            expect(other!.breakDuration).toBe(5);
+            expect(other!.sets.supported).toBe(true);
+            expect(other!.sets.default).toBe(false);
         });
     });
 

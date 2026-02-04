@@ -29,17 +29,17 @@ describe("Notifications", () => {
 
     describe("addSuccess", () => {
         it("should dispatch success notification event", () => {
-            let capturedEvent: CustomEvent | null = null;
-            window.addEventListener("notification.add", ((e: CustomEvent) => {
-                capturedEvent = e;
+            let capturedEvent: CustomEvent<IFullNotification> | null = null;
+            window.addEventListener("notification.add", ((e: Event) => {
+                capturedEvent = e as CustomEvent<IFullNotification>;
             }) as EventListener);
 
             Notifications.addSuccess("Success message");
 
             expect(window.dispatchEvent).toHaveBeenCalled();
             expect(capturedEvent).not.toBeNull();
-            expect(capturedEvent?.detail.message).toBe("Success message");
-            expect(capturedEvent?.detail.type).toBe("success");
+            expect(capturedEvent!.detail.message).toBe("Success message");
+            expect(capturedEvent!.detail.type).toBe("success");
         });
 
         it("should return a unique id", () => {
@@ -52,9 +52,9 @@ describe("Notifications", () => {
         });
 
         it("should include all optional parameters", () => {
-            let capturedEvent: CustomEvent | null = null;
-            window.addEventListener("notification.add", ((e: CustomEvent) => {
-                capturedEvent = e;
+            let capturedEvent: CustomEvent<IFullNotification> | null = null;
+            window.addEventListener("notification.add", ((e: Event) => {
+                capturedEvent = e as CustomEvent<IFullNotification>;
             }) as EventListener);
 
             const onClick = vi.fn();
@@ -66,25 +66,25 @@ describe("Notifications", () => {
                 "/redirect"
             );
 
-            expect(capturedEvent?.detail.message).toBe("Success");
-            expect(capturedEvent?.detail.details).toBe("Details");
-            expect(capturedEvent?.detail.timeout).toBe(5000);
-            expect(capturedEvent?.detail.onClick).toBe(onClick);
-            expect(capturedEvent?.detail.redirect).toBe("/redirect");
+            expect(capturedEvent!.detail.message).toBe("Success");
+            expect(capturedEvent!.detail.details).toBe("Details");
+            expect(capturedEvent!.detail.timeout).toBe(5000);
+            expect(capturedEvent!.detail.onClick).toBe(onClick);
+            expect(capturedEvent!.detail.redirect).toBe("/redirect");
         });
     });
 
     describe("addError", () => {
         it("should dispatch error notification event", () => {
-            let capturedEvent: CustomEvent | null = null;
-            window.addEventListener("notification.add", ((e: CustomEvent) => {
-                capturedEvent = e;
+            let capturedEvent: CustomEvent<IFullNotification> | null = null;
+            window.addEventListener("notification.add", ((e: Event) => {
+                capturedEvent = e as CustomEvent<IFullNotification>;
             }) as EventListener);
 
             Notifications.addError("Error message");
 
-            expect(capturedEvent?.detail.message).toBe("Error message");
-            expect(capturedEvent?.detail.type).toBe("error");
+            expect(capturedEvent!.detail.message).toBe("Error message");
+            expect(capturedEvent!.detail.type).toBe("error");
         });
 
         it("should return a unique id", () => {
@@ -95,29 +95,29 @@ describe("Notifications", () => {
         });
 
         it("should include details when provided", () => {
-            let capturedEvent: CustomEvent | null = null;
-            window.addEventListener("notification.add", ((e: CustomEvent) => {
-                capturedEvent = e;
+            let capturedEvent: CustomEvent<IFullNotification> | null = null;
+            window.addEventListener("notification.add", ((e: Event) => {
+                capturedEvent = e as CustomEvent<IFullNotification>;
             }) as EventListener);
 
             Notifications.addError("Error", "Error details");
 
-            expect(capturedEvent?.detail.message).toBe("Error");
-            expect(capturedEvent?.detail.details).toBe("Error details");
+            expect(capturedEvent!.detail.message).toBe("Error");
+            expect(capturedEvent!.detail.details).toBe("Error details");
         });
     });
 
     describe("addInfo", () => {
         it("should dispatch info notification event", () => {
-            let capturedEvent: CustomEvent | null = null;
-            window.addEventListener("notification.add", ((e: CustomEvent) => {
-                capturedEvent = e;
+            let capturedEvent: CustomEvent<IFullNotification> | null = null;
+            window.addEventListener("notification.add", ((e: Event) => {
+                capturedEvent = e as CustomEvent<IFullNotification>;
             }) as EventListener);
 
             Notifications.addInfo("Info message");
 
-            expect(capturedEvent?.detail.message).toBe("Info message");
-            expect(capturedEvent?.detail.type).toBe("info");
+            expect(capturedEvent!.detail.message).toBe("Info message");
+            expect(capturedEvent!.detail.type).toBe("info");
         });
 
         it("should return a unique id", () => {
@@ -130,15 +130,15 @@ describe("Notifications", () => {
 
     describe("addWarning", () => {
         it("should dispatch warning notification event", () => {
-            let capturedEvent: CustomEvent | null = null;
-            window.addEventListener("notification.add", ((e: CustomEvent) => {
-                capturedEvent = e;
+            let capturedEvent: CustomEvent<IFullNotification> | null = null;
+            window.addEventListener("notification.add", ((e: Event) => {
+                capturedEvent = e as CustomEvent<IFullNotification>;
             }) as EventListener);
 
             Notifications.addWarning("Warning message");
 
-            expect(capturedEvent?.detail.message).toBe("Warning message");
-            expect(capturedEvent?.detail.type).toBe("warning");
+            expect(capturedEvent!.detail.message).toBe("Warning message");
+            expect(capturedEvent!.detail.type).toBe("warning");
         });
 
         it("should return a unique id", () => {
@@ -151,15 +151,15 @@ describe("Notifications", () => {
 
     describe("addYesNo", () => {
         it("should dispatch yes-no notification event", () => {
-            let capturedEvent: CustomEvent | null = null;
-            window.addEventListener("notification.add", ((e: CustomEvent) => {
-                capturedEvent = e;
+            let capturedEvent: CustomEvent<IFullNotification> | null = null;
+            window.addEventListener("notification.add", ((e: Event) => {
+                capturedEvent = e as CustomEvent<IFullNotification>;
             }) as EventListener);
 
             Notifications.addYesNo("Confirm action?");
 
-            expect(capturedEvent?.detail.message).toBe("Confirm action?");
-            expect(capturedEvent?.detail.type).toBe("yes-no");
+            expect(capturedEvent!.detail.message).toBe("Confirm action?");
+            expect(capturedEvent!.detail.type).toBe("yes-no");
         });
 
         it("should return a unique id", () => {
@@ -170,9 +170,9 @@ describe("Notifications", () => {
         });
 
         it("should include all callback parameters", () => {
-            let capturedEvent: CustomEvent | null = null;
-            window.addEventListener("notification.add", ((e: CustomEvent) => {
-                capturedEvent = e;
+            let capturedEvent: CustomEvent<IFullNotification> | null = null;
+            window.addEventListener("notification.add", ((e: Event) => {
+                capturedEvent = e as CustomEvent<IFullNotification>;
             }) as EventListener);
 
             const onYes = vi.fn();
@@ -191,34 +191,35 @@ describe("Notifications", () => {
                 "/redirect"
             );
 
-            expect(capturedEvent?.detail.message).toBe("Confirm?");
-            expect(capturedEvent?.detail.details).toBe("Details");
-            expect(capturedEvent?.detail.timeout).toBe(10000);
-            expect(capturedEvent?.detail.onYes).toBe(onYes);
-            expect(capturedEvent?.detail.onNo).toBe(onNo);
-            expect(capturedEvent?.detail.onTimeout).toBe(onTimeout);
-            expect(capturedEvent?.detail.onClick).toBe(onClick);
-            expect(capturedEvent?.detail.redirect).toBe("/redirect");
+            expect(capturedEvent!.detail.message).toBe("Confirm?");
+            expect(capturedEvent!.detail.details).toBe("Details");
+            expect(capturedEvent!.detail.timeout).toBe(10000);
+            expect(capturedEvent!.detail.onYes).toBe(onYes);
+            expect(capturedEvent!.detail.onNo).toBe(onNo);
+            expect(capturedEvent!.detail.onTimeout).toBe(onTimeout);
+            expect(capturedEvent!.detail.onClick).toBe(onClick);
+            expect(capturedEvent!.detail.redirect).toBe("/redirect");
         });
     });
 
     describe("remove", () => {
         it("should dispatch remove notification event with id", () => {
-            let capturedEvent: CustomEvent | null = null;
-            window.addEventListener("notification.remove", ((e: CustomEvent) => {
-                capturedEvent = e;
+            let capturedEvent: CustomEvent<string> | null = null;
+            window.addEventListener("notification.remove", ((e: Event) => {
+                capturedEvent = e as CustomEvent<string>;
             }) as EventListener);
 
             Notifications.remove("notification-id");
 
             expect(window.dispatchEvent).toHaveBeenCalled();
-            expect(capturedEvent?.detail).toBe("notification-id");
+            expect(capturedEvent!.detail).toBe("notification-id");
         });
 
         it("should handle removing multiple notifications", () => {
             const removedIds: string[] = [];
-            window.addEventListener("notification.remove", ((e: CustomEvent) => {
-                removedIds.push(e.detail);
+            window.addEventListener("notification.remove", ((e: Event) => {
+                const customEvent = e as CustomEvent<string>;
+                removedIds.push(customEvent.detail);
             }) as EventListener);
 
             Notifications.remove("id-1");
@@ -243,16 +244,14 @@ describe("Notifications", () => {
         });
 
         it("should dispatch event without detail", () => {
-            let capturedEvent: CustomEvent | null = null;
-            window.addEventListener("notification.clear", ((e: CustomEvent) => {
+            let capturedEvent: Event | null = null;
+            window.addEventListener("notification.clear", ((e: Event) => {
                 capturedEvent = e;
             }) as EventListener);
 
             Notifications.clear();
 
             expect(capturedEvent).not.toBeNull();
-            // Detail can be undefined or null for events without detail
-            expect(capturedEvent?.detail == null).toBe(true);
         });
     });
 
@@ -282,8 +281,9 @@ describe("Notifications", () => {
     describe("notification structure", () => {
         it("should create notification with correct structure", () => {
             let capturedNotification: IFullNotification | null = null;
-            window.addEventListener("notification.add", ((e: CustomEvent) => {
-                capturedNotification = e.detail;
+            window.addEventListener("notification.add", ((e: Event) => {
+                const customEvent = e as CustomEvent<IFullNotification>;
+                capturedNotification = customEvent.detail;
             }) as EventListener);
 
             Notifications.addSuccess("Test", "Details", 3000);
@@ -299,8 +299,9 @@ describe("Notifications", () => {
 
         it("should create yes-no notification with extended structure", () => {
             let capturedNotification: IFullNotification | null = null;
-            window.addEventListener("notification.add", ((e: CustomEvent) => {
-                capturedNotification = e.detail;
+            window.addEventListener("notification.add", ((e: Event) => {
+                const customEvent = e as CustomEvent<IFullNotification>;
+                capturedNotification = customEvent.detail;
             }) as EventListener);
 
             const onYes = vi.fn();

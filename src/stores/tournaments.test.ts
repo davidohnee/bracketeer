@@ -342,8 +342,8 @@ describe("Tournaments Store", () => {
                 href: "",
                 download: "",
                 click: vi.fn(),
-            };
-            vi.spyOn(document, "createElement").mockReturnValue(mockElement as any);
+            } as unknown as HTMLAnchorElement;
+            vi.spyOn(document, "createElement").mockReturnValue(mockElement);
             vi.spyOn(URL, "createObjectURL").mockReturnValue("blob:mock-url");
 
             store.download(tournament);

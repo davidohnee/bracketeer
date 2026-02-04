@@ -11,9 +11,10 @@ describe("Theme Store", () => {
         localStorage.clear();
 
         // Mock document.querySelector
-        vi.spyOn(document, "querySelector").mockReturnValue({
+        const mockElement = {
             setAttribute: vi.fn(),
-        } as any);
+        } as unknown as Element;
+        vi.spyOn(document, "querySelector").mockReturnValue(mockElement);
     });
 
     afterEach(() => {
@@ -49,8 +50,8 @@ describe("Theme Store", () => {
         it("should set HTML data-theme attribute", () => {
             const mockElement = {
                 setAttribute: vi.fn(),
-            };
-            vi.spyOn(document, "querySelector").mockReturnValue(mockElement as any);
+            } as unknown as Element;
+            vi.spyOn(document, "querySelector").mockReturnValue(mockElement);
 
             const store = useThemeStore();
             store.set("dark");
@@ -91,8 +92,8 @@ describe("Theme Store", () => {
         it("should apply the current theme on initialization", () => {
             const mockElement = {
                 setAttribute: vi.fn(),
-            };
-            vi.spyOn(document, "querySelector").mockReturnValue(mockElement as any);
+            } as unknown as Element;
+            vi.spyOn(document, "querySelector").mockReturnValue(mockElement);
 
             localStorage.setItem("theme", "light");
             const store = useThemeStore();
@@ -104,8 +105,8 @@ describe("Theme Store", () => {
         it("should apply system theme when no theme is stored", () => {
             const mockElement = {
                 setAttribute: vi.fn(),
-            };
-            vi.spyOn(document, "querySelector").mockReturnValue(mockElement as any);
+            } as unknown as Element;
+            vi.spyOn(document, "querySelector").mockReturnValue(mockElement);
 
             const store = useThemeStore();
             store.init();

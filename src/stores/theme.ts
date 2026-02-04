@@ -13,10 +13,9 @@ export const useThemeStore = defineStore("theme", () => {
         document.querySelector("html")?.setAttribute("data-theme", newTheme);
 
         if (newTheme === "system") {
-            window.localStorage.removeItem(KEY);
-            return;
+            globalThis.localStorage.removeItem(KEY);
         } else {
-            window.localStorage.setItem(KEY, newTheme);
+            globalThis.localStorage.setItem(KEY, newTheme);
         }
     };
 

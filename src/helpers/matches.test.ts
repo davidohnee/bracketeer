@@ -1,6 +1,47 @@
 import { describe, it, expect, beforeEach } from "vitest";
 import { tournamentRichMatches } from "./matches";
-import type { Tournament } from "@/types/tournament";
+import type { Tournament, TournamentConfig, Match, MatchTeam, MatchRound } from "@/types/tournament";
+
+// Test helper constants
+const TEST_TOURNAMENT_CONFIG: TournamentConfig = {
+    courts: 2,
+    matchDuration: 30,
+    breakDuration: 5,
+    knockoutBreakDuration: 10,
+    startTime: new Date("2024-01-01T10:00:00"),
+    sport: "test",
+};
+
+const TEST_TEAMS = [
+    { id: "team-1", name: "Team 1", players: [] },
+    { id: "team-2", name: "Team 2", players: [] },
+    { id: "team-3", name: "Team 3", players: [] },
+    { id: "team-4", name: "Team 4", players: [] },
+];
+
+// Test helper functions
+const createMatchTeams = (team1Id: string, team2Id: string, score1 = 0, score2 = 0): [MatchTeam, MatchTeam] => [
+    { ref: { id: team1Id }, score: score1 },
+    { ref: { id: team2Id }, score: score2 },
+];
+
+const createMatchRound = (id: string, name: string): MatchRound => ({ id, name });
+
+const createMatch = (
+    id: string,
+    teams: [MatchTeam, MatchTeam],
+    date: Date,
+    status: "scheduled" | "in-progress" | "completed" = "scheduled",
+    court = 1,
+    round?: MatchRound
+): Match => ({
+    id,
+    court,
+    teams,
+    date,
+    status,
+    ...(round && { round }),
+});
 
 describe("Matches Helper Functions", () => {
     let tournament: Tournament;
@@ -10,21 +51,9 @@ describe("Matches Helper Functions", () => {
             id: "test-tournament",
             version: 3,
             name: "Test Tournament",
-            teams: [
-                { id: "team-1", name: "Team 1", players: [] },
-                { id: "team-2", name: "Team 2", players: [] },
-                { id: "team-3", name: "Team 3", players: [] },
-                { id: "team-4", name: "Team 4", players: [] },
-            ],
+            teams: TEST_TEAMS,
             phases: [],
-            config: {
-                courts: 2,
-                matchDuration: 30,
-                breakDuration: 5,
-                knockoutBreakDuration: 10,
-                startTime: new Date("2024-01-01T10:00:00"),
-                sport: "test",
-            },
+            config: TEST_TOURNAMENT_CONFIG,
         };
     });
 
@@ -42,28 +71,22 @@ describe("Matches Helper Functions", () => {
                     name: "Group Phase",
                     rounds: 2,
                     matches: [
-                        {
-                            id: "match-1",
-                            court: 1,
-                            teams: [
-                                { ref: { id: "team-1" }, score: 0 },
-                                { ref: { id: "team-2" }, score: 0 },
-                            ],
-                            date: new Date("2024-01-01T10:00:00"),
-                            status: "scheduled",
-                            round: { id: "round-1", name: "Round 1" },
-                        },
-                        {
-                            id: "match-2",
-                            court: 2,
-                            teams: [
-                                { ref: { id: "team-3" }, score: 0 },
-                                { ref: { id: "team-4" }, score: 0 },
-                            ],
-                            date: new Date("2024-01-01T10:30:00"),
-                            status: "scheduled",
-                            round: { id: "round-1", name: "Round 1" },
-                        },
+                        createMatch(
+                            "match-1",
+                            createMatchTeams("team-1", "team-2"),
+                            new Date("2024-01-01T10:00:00"),
+                            "scheduled",
+                            1,
+                            createMatchRound("round-1", "Round 1")
+                        ),
+                        createMatch(
+                            "match-2",
+                            createMatchTeams("team-3", "team-4"),
+                            new Date("2024-01-01T10:30:00"),
+                            "scheduled",
+                            2,
+                            createMatchRound("round-1", "Round 1")
+                        ),
                     ],
                 },
             ];
@@ -88,32 +111,22 @@ describe("Matches Helper Functions", () => {
                             id: "round-1",
                             name: "Semi-finals",
                             matches: [
-                                {
-                                    id: "match-1",
-                                    court: 1,
-                                    teams: [
-                                        { ref: { id: "team-1" }, score: 0 },
-                                        { ref: { id: "team-2" }, score: 0 },
-                                    ],
-                                    date: new Date("2024-01-01T12:00:00"),
-                                    status: "scheduled",
-                                },
+                                createMatch(
+                                    "match-1",
+                                    createMatchTeams("team-1", "team-2"),
+                                    new Date("2024-01-01T12:00:00")
+                                ),
                             ],
                         },
                         {
                             id: "round-2",
                             name: "Final",
                             matches: [
-                                {
-                                    id: "match-2",
-                                    court: 1,
-                                    teams: [
-                                        { ref: { id: "team-1" }, score: 0 },
-                                        { ref: { id: "team-3" }, score: 0 },
-                                    ],
-                                    date: new Date("2024-01-01T14:00:00"),
-                                    status: "scheduled",
-                                },
+                                createMatch(
+                                    "match-2",
+                                    createMatchTeams("team-1", "team-3"),
+                                    new Date("2024-01-01T14:00:00")
+                                ),
                             ],
                         },
                     ],
@@ -137,17 +150,14 @@ describe("Matches Helper Functions", () => {
                     name: "Group Phase",
                     rounds: 2,
                     matches: [
-                        {
-                            id: "match-1",
-                            court: 1,
-                            teams: [
-                                { ref: { id: "team-1" }, score: 0 },
-                                { ref: { id: "team-2" }, score: 0 },
-                            ],
-                            date: new Date("2024-01-01T10:00:00"),
-                            status: "scheduled",
-                            round: { id: "round-1", name: "Round 1" },
-                        },
+                        createMatch(
+                            "match-1",
+                            createMatchTeams("team-1", "team-2"),
+                            new Date("2024-01-01T10:00:00"),
+                            "scheduled",
+                            1,
+                            createMatchRound("round-1", "Round 1")
+                        ),
                     ],
                 },
                 {
@@ -160,16 +170,11 @@ describe("Matches Helper Functions", () => {
                             id: "round-1",
                             name: "Final",
                             matches: [
-                                {
-                                    id: "match-2",
-                                    court: 1,
-                                    teams: [
-                                        { ref: { id: "team-1" }, score: 0 },
-                                        { ref: { id: "team-2" }, score: 0 },
-                                    ],
-                                    date: new Date("2024-01-01T12:00:00"),
-                                    status: "scheduled",
-                                },
+                                createMatch(
+                                    "match-2",
+                                    createMatchTeams("team-1", "team-2"),
+                                    new Date("2024-01-01T12:00:00")
+                                ),
                             ],
                         },
                     ],
@@ -190,28 +195,22 @@ describe("Matches Helper Functions", () => {
                     name: "Group Phase",
                     rounds: 2,
                     matches: [
-                        {
-                            id: "match-2",
-                            court: 1,
-                            teams: [
-                                { ref: { id: "team-1" }, score: 0 },
-                                { ref: { id: "team-2" }, score: 0 },
-                            ],
-                            date: new Date("2024-01-01T12:00:00"),
-                            status: "scheduled",
-                            round: { id: "round-2", name: "Round 2" },
-                        },
-                        {
-                            id: "match-1",
-                            court: 2,
-                            teams: [
-                                { ref: { id: "team-3" }, score: 0 },
-                                { ref: { id: "team-4" }, score: 0 },
-                            ],
-                            date: new Date("2024-01-01T10:00:00"),
-                            status: "scheduled",
-                            round: { id: "round-1", name: "Round 1" },
-                        },
+                        createMatch(
+                            "match-2",
+                            createMatchTeams("team-1", "team-2"),
+                            new Date("2024-01-01T12:00:00"),
+                            "scheduled",
+                            1,
+                            createMatchRound("round-2", "Round 2")
+                        ),
+                        createMatch(
+                            "match-1",
+                            createMatchTeams("team-3", "team-4"),
+                            new Date("2024-01-01T10:00:00"),
+                            "scheduled",
+                            2,
+                            createMatchRound("round-1", "Round 1")
+                        ),
                     ],
                 },
             ];
@@ -230,28 +229,22 @@ describe("Matches Helper Functions", () => {
                     name: "Group Phase",
                     rounds: 2,
                     matches: [
-                        {
-                            id: "match-b",
-                            court: 1,
-                            teams: [
-                                { ref: { id: "team-1" }, score: 0 },
-                                { ref: { id: "team-2" }, score: 0 },
-                            ],
-                            date: sameDate,
-                            status: "scheduled",
-                            round: { id: "round-b", name: "Round B" },
-                        },
-                        {
-                            id: "match-a",
-                            court: 2,
-                            teams: [
-                                { ref: { id: "team-3" }, score: 0 },
-                                { ref: { id: "team-4" }, score: 0 },
-                            ],
-                            date: sameDate,
-                            status: "scheduled",
-                            round: { id: "round-a", name: "Round A" },
-                        },
+                        createMatch(
+                            "match-b",
+                            createMatchTeams("team-1", "team-2"),
+                            sameDate,
+                            "scheduled",
+                            1,
+                            createMatchRound("round-b", "Round B")
+                        ),
+                        createMatch(
+                            "match-a",
+                            createMatchTeams("team-3", "team-4"),
+                            sameDate,
+                            "scheduled",
+                            2,
+                            createMatchRound("round-a", "Round A")
+                        ),
                     ],
                 },
             ];
@@ -284,17 +277,14 @@ describe("Matches Helper Functions", () => {
                     name: "Group Phase",
                     rounds: 1,
                     matches: [
-                        {
-                            id: "match-1",
-                            court: 1,
-                            teams: [
-                                { ref: { id: "team-1" }, score: 0 },
-                                { ref: { id: "team-2" }, score: 0 },
-                            ],
-                            date: new Date("2024-01-01T10:00:00"),
-                            status: "scheduled",
-                            round: { id: "round-1", name: "Round 1" },
-                        },
+                        createMatch(
+                            "match-1",
+                            createMatchTeams("team-1", "team-2"),
+                            new Date("2024-01-01T10:00:00"),
+                            "scheduled",
+                            1,
+                            createMatchRound("round-1", "Round 1")
+                        ),
                     ],
                 },
             ];

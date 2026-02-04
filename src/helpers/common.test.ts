@@ -12,7 +12,31 @@ import {
     localeDateTimeString,
     formatPlacement,
 } from "./common";
-import type { Tournament, DynamicTeamRef } from "@/types/tournament";
+import type { Tournament, DynamicTeamRef, TournamentConfig, Match, MatchTeam } from "@/types/tournament";
+
+// Test helper constants
+const TEST_TOURNAMENT_CONFIG: TournamentConfig = {
+    courts: 2,
+    matchDuration: 30,
+    breakDuration: 5,
+    knockoutBreakDuration: 10,
+    startTime: new Date(),
+    sport: "test",
+};
+
+// Test helper functions
+const createMatchTeams = (team1Id: string, team2Id: string, score1 = 0, score2 = 0): [MatchTeam, MatchTeam] => [
+    { ref: { id: team1Id }, score: score1 },
+    { ref: { id: team2Id }, score: score2 },
+];
+
+const createMatch = (id: string, teams: [MatchTeam, MatchTeam], status: "scheduled" | "in-progress" | "completed" = "scheduled", court = 1, date = new Date()): Match => ({
+    id,
+    court,
+    teams,
+    date,
+    status,
+});
 
 describe("Common Helper Functions", () => {
     describe("chunks", () => {
@@ -168,14 +192,7 @@ describe("Common Helper Functions", () => {
                 name: "Test Tournament",
                 teams: [],
                 phases: [],
-                config: {
-                    courts: 2,
-                    matchDuration: 30,
-                    breakDuration: 5,
-                    knockoutBreakDuration: 10,
-                    startTime: new Date(),
-                    sport: "test",
-                },
+                config: TEST_TOURNAMENT_CONFIG,
             };
         });
 
@@ -187,26 +204,8 @@ describe("Common Helper Functions", () => {
                     name: "Group Phase",
                     rounds: 2,
                     matches: [
-                        {
-                            id: "match-1",
-                            court: 1,
-                            teams: [
-                                { ref: { id: "team-1" }, score: 2 },
-                                { ref: { id: "team-2" }, score: 1 },
-                            ],
-                            date: new Date(),
-                            status: "completed",
-                        },
-                        {
-                            id: "match-2",
-                            court: 2,
-                            teams: [
-                                { ref: { id: "team-3" }, score: 3 },
-                                { ref: { id: "team-4" }, score: 0 },
-                            ],
-                            date: new Date(),
-                            status: "completed",
-                        },
+                        createMatch("match-1", createMatchTeams("team-1", "team-2", 2, 1), "completed"),
+                        createMatch("match-2", createMatchTeams("team-3", "team-4", 3, 0), "completed", 2),
                     ],
                 },
             ];
@@ -222,26 +221,8 @@ describe("Common Helper Functions", () => {
                     name: "Group Phase",
                     rounds: 2,
                     matches: [
-                        {
-                            id: "match-1",
-                            court: 1,
-                            teams: [
-                                { ref: { id: "team-1" }, score: 1 },
-                                { ref: { id: "team-2" }, score: 1 },
-                            ],
-                            date: new Date(),
-                            status: "in-progress",
-                        },
-                        {
-                            id: "match-2",
-                            court: 2,
-                            teams: [
-                                { ref: { id: "team-3" }, score: 0 },
-                                { ref: { id: "team-4" }, score: 0 },
-                            ],
-                            date: new Date(),
-                            status: "scheduled",
-                        },
+                        createMatch("match-1", createMatchTeams("team-1", "team-2", 1, 1), "in-progress"),
+                        createMatch("match-2", createMatchTeams("team-3", "team-4"), "scheduled", 2),
                     ],
                 },
             ];
@@ -257,26 +238,8 @@ describe("Common Helper Functions", () => {
                     name: "Group Phase",
                     rounds: 2,
                     matches: [
-                        {
-                            id: "match-1",
-                            court: 1,
-                            teams: [
-                                { ref: { id: "team-1" }, score: 2 },
-                                { ref: { id: "team-2" }, score: 1 },
-                            ],
-                            date: new Date(),
-                            status: "completed",
-                        },
-                        {
-                            id: "match-2",
-                            court: 2,
-                            teams: [
-                                { ref: { id: "team-3" }, score: 0 },
-                                { ref: { id: "team-4" }, score: 0 },
-                            ],
-                            date: new Date(),
-                            status: "scheduled",
-                        },
+                        createMatch("match-1", createMatchTeams("team-1", "team-2", 2, 1), "completed"),
+                        createMatch("match-2", createMatchTeams("team-3", "team-4"), "scheduled", 2),
                     ],
                 },
             ];
@@ -292,16 +255,7 @@ describe("Common Helper Functions", () => {
                     name: "Group Phase",
                     rounds: 2,
                     matches: [
-                        {
-                            id: "match-1",
-                            court: 1,
-                            teams: [
-                                { ref: { id: "team-1" }, score: 0 },
-                                { ref: { id: "team-2" }, score: 0 },
-                            ],
-                            date: new Date(),
-                            status: "scheduled",
-                        },
+                        createMatch("match-1", createMatchTeams("team-1", "team-2")),
                     ],
                 },
             ];
@@ -321,16 +275,7 @@ describe("Common Helper Functions", () => {
                             id: "round-1",
                             name: "Final",
                             matches: [
-                                {
-                                    id: "match-1",
-                                    court: 1,
-                                    teams: [
-                                        { ref: { id: "team-1" }, score: 2 },
-                                        { ref: { id: "team-2" }, score: 1 },
-                                    ],
-                                    date: new Date(),
-                                    status: "completed",
-                                },
+                                createMatch("match-1", createMatchTeams("team-1", "team-2", 2, 1), "completed"),
                             ],
                         },
                     ],

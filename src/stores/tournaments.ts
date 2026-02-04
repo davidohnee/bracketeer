@@ -133,18 +133,13 @@ export const useTournamentsStore = defineStore("tournaments", () => {
                 const promises = [] as Promise<Tournament>[];
                 for (const file of Array.from(element.files)) {
                     promises.push(
-                        new Promise((resolve, reject) => {
-                            const reader = new FileReader();
-                            reader.onload = () => {
-                                const result = reader.result as string;
-                                try {
-                                    const tournament = tournamentFromJson(JSON.parse(result));
-                                    resolve(tournament);
-                                } catch (error) {
-                                    reject(error);
-                                }
-                            };
-                            reader.readAsText(file);
+                        file.text().then((text) => {
+                            try {
+                                const tournament = tournamentFromJson(JSON.parse(text));
+                                return tournament;
+                            } catch (error) {
+                                throw new Error(`Error parsing file ${file.name}: ${error}`);
+                            }
                         }),
                     );
                 }
@@ -157,7 +152,7 @@ export const useTournamentsStore = defineStore("tournaments", () => {
 
     const addFromUpload = async () => {
         const tournaments = await uploadTournaments();
-        tournaments.map((x) => add(x));
+        tournaments.forEach((x) => add(x));
     };
 
     const pullFromRemote = async (options: { tournament?: Tournament; remote?: IRemote }) => {

@@ -46,7 +46,9 @@ describe("roundRobin", () => {
         const schedule = roundRobin(teams);
 
         const allPairs = schedule.flat();
-        const pairStrings = allPairs.map(([a, b]) => [a, b].sort().join("-"));
+        const pairStrings = allPairs.map(([a, b]) =>
+            [a, b].sort((x, y) => x!.localeCompare(y!)).join("-"),
+        );
 
         // Check uniqueness - no duplicate pairings
         const uniquePairs = new Set(pairStrings);
@@ -63,7 +65,7 @@ describe("roundRobin", () => {
         ];
 
         expectedPairs.forEach(([team1, team2]) => {
-            const pairStr = [team1, team2].sort().join("-");
+            const pairStr = [team1, team2].sort((x, y) => x!.localeCompare(y!)).join("-");
             expect(uniquePairs.has(pairStr)).toBe(true);
         });
     });

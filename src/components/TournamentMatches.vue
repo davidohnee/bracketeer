@@ -48,8 +48,8 @@ const teamFilter = computed({
 });
 const courtFilter = computed<number | undefined>({
     get() {
-        const int = parseInt(route.query.court as string);
-        return isNaN(int) ? undefined : int;
+        const int = Number.parseInt(route.query.court as string);
+        return Number.isNaN(int) ? undefined : int;
     },
     set(court) {
         router.replace({ query: { ...route.query, court } });
@@ -142,8 +142,7 @@ const grouped = computed(() => {
         } else if (selectedGroupOption.value === "time") {
             keys.push(localeDateTimeString(match.match.date));
         } else if (selectedGroupOption.value === "team") {
-            keys.push(getTeamName(match.match.teams[0].ref?.id));
-            keys.push(getTeamName(match.match.teams[1].ref?.id));
+            keys.push(getTeamName(match.match.teams[0].ref?.id), getTeamName(match.match.teams[1].ref?.id));
         } else if (selectedGroupOption.value === "court") {
             keys.push(getCourtName(tournament.value.config.sport, match.match.court));
         }
@@ -271,61 +270,33 @@ onMounted(() => {
     <div class="all-matches">
         <div class="filter-row">
             <div class="chip-group">
-                <div
-                    v-for="option in GROUP_OPTIONS"
-                    :key="option"
-                    :value="option"
-                    class="chip-option"
-                    :class="{ selected: selectedGroupOption === option }"
-                    @click="selectedGroupOption = option"
-                >
+                <div v-for="option in GROUP_OPTIONS" :key="option" :value="option" class="chip-option"
+                    :class="{ selected: selectedGroupOption === option }" @click="selectedGroupOption = option">
                     by {{ option }}
                 </div>
             </div>
             <div class="filters">
-                <div
-                    class="filter active"
-                    v-if="activeFilterSummary"
-                >
+                <div class="filter active" v-if="activeFilterSummary">
                     <span :title="activeFilterSummaryTooltip">
                         {{ activeFilterSummary }}
                     </span>
-                    <ion-icon
-                        @click="resetFilters"
-                        name="close-outline"
-                    ></ion-icon>
+                    <ion-icon @click="resetFilters" name="close-outline"></ion-icon>
                 </div>
-                <div
-                    class="filter"
-                    :class="{ open: matchFilter?.contextMenu?.isOpen }"
-                    @click.stop.prevent="matchFilter?.contextMenu?.toggle()"
-                >
-                    <MatchFilter
-                        ref="matchFilter"
-                        :tournament="tournament"
-                        v-model:team-filter="teamFilter"
-                        v-model:court-filter="courtFilter"
-                        v-model:group-filter="groupFilter"
-                    />
+                <div class="filter" :class="{ open: matchFilter?.contextMenu?.isOpen }"
+                    @click.stop.prevent="matchFilter?.contextMenu?.toggle()">
+                    <MatchFilter ref="matchFilter" :tournament="tournament" v-model:team-filter="teamFilter"
+                        v-model:court-filter="courtFilter" v-model:group-filter="groupFilter" />
                 </div>
             </div>
         </div>
         <div class="rounds">
-            <TabSelector
-                v-model="selectedGroup"
-                :options="tabOptions"
-            />
+            <TabSelector v-model="selectedGroup" :options="tabOptions" />
             <div class="round">
-                <GroupedTournamentList
-                    v-if="grouped[selectedGroup]"
-                    v-model="grouped[selectedGroup]!"
-                    :tournament="tournament"
-                    :readonly="readonly"
-                    @update:model-value="onChanged"
+                <GroupedTournamentList v-if="grouped[selectedGroup]" v-model="grouped[selectedGroup]!"
+                    :tournament="tournament" :readonly="readonly" @update:model-value="onChanged"
                     :show-group="displaySettings[selectedGroupOption].showGroup"
                     :show-phase="displaySettings[selectedGroupOption].showPhase"
-                    :show-round="displaySettings[selectedGroupOption].showRound"
-                />
+                    :show-round="displaySettings[selectedGroupOption].showRound" />
             </div>
         </div>
     </div>

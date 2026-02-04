@@ -1,5 +1,7 @@
 # bracketeer
 
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=davidohnee_bracketeer&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=davidohnee_bracketeer)
+
 bracketeer is a versatile and user-friendly tool designed to generate and manage tournaments for your social evenings. Whether you're organizing beer pong, foosball, or other games, bracketeer ensures your tournaments are structured and fun.
 
 ## Features

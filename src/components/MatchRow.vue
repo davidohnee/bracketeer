@@ -100,29 +100,14 @@ watch(
 </script>
 
 <template>
-    <MatchEditorModal
-        ref="matcheditor"
-        v-model="match"
-        :tournament="props.tournament"
-        @update:modelValue="emit('update:modelValue', $event)"
-        @statusChanged="emitStatusChanged"
-    />
-    <div
-        class="match row"
-        :class="{ readonly }"
-        @click="openMatchEditor"
-    >
+    <MatchEditorModal ref="matcheditor" v-model="match" :tournament="props.tournament"
+        @update:modelValue="emit('update:modelValue', $event)" @statusChanged="emitStatusChanged" />
+    <div class="match row" :class="{ readonly }" @click="openMatchEditor">
         <div class="time-progress">
-            <span
-                v-if="match.status === 'in-progress'"
-                class="time progress"
-            >
+            <span v-if="match.status === 'in-progress'" class="time progress">
                 {{ currentTime }}
             </span>
-            <span
-                v-else-if="match.status === 'completed'"
-                class="time full"
-            >
+            <span v-else-if="match.status === 'completed'" class="time full">
                 FT
             </span>
         </div>
@@ -130,16 +115,10 @@ watch(
         <div class="team">{{ teamDisplay(match.teams[0]) }}</div>
 
         <div class="details">
-            <div
-                v-if="match.status === 'scheduled'"
-                class="match-time"
-            >
+            <div v-if="match.status === 'scheduled'" class="match-time">
                 {{ match.date?.toLocaleTimeString?.([], { hour: "2-digit", minute: "2-digit" }) }}
             </div>
-            <div
-                class="score"
-                v-else
-            >
+            <div class="score" v-else>
                 <div class="for">{{ match.teams[0].score }}</div>
                 <span>-</span>
                 <div class="against">{{ match.teams[1].score }}</div>
@@ -213,7 +192,6 @@ watch(
     }
 
     .time {
-        font-size: 19px;
         font-weight: 500;
         border-radius: 100vmax;
         padding: 0.5em 1em;
@@ -239,6 +217,7 @@ watch(
 }
 
 @media (max-width: 600px) {
+
     .time-progress span,
     .venue .court {
         font-size: 0.7rem !important;

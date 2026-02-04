@@ -19,7 +19,7 @@ jobs:
           node-version: 20
           cache: "npm"
       - name: Install dependencies
-        run: npm ci
+        run: npm ci --include=dev --ignore-scripts
       - name: SonarQube Scan
         uses: SonarSource/sonarqube-scan-action@v6
         env:

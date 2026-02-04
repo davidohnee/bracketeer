@@ -1,10 +1,15 @@
-import { defineConfig } from "vitest/config";
+import { defineConfig, mergeConfig } from "vitest/config";
+import viteConfig from "./vite.config";
 
-export default defineConfig({
-    test: {
-        coverage: {
-            provider: "v8", // or 'istanbul'
-            reporter: ["text", "lcov"],
+export default mergeConfig(
+    viteConfig,
+    defineConfig({
+        test: {
+            environment: "happy-dom",
+            coverage: {
+                provider: "v8", // or 'istanbul'
+                reporter: ["text", "lcov"],
+            },
         },
-    },
-});
+    }),
+);

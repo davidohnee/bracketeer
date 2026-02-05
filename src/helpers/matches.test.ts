@@ -1,6 +1,13 @@
 import { describe, it, expect, beforeEach } from "vitest";
 import { tournamentRichMatches } from "./matches";
-import type { Tournament, TournamentConfig, Match, MatchTeam, MatchRound } from "@/types/tournament";
+import type {
+    Tournament,
+    TournamentConfig,
+    Match,
+    MatchTeam,
+    MatchRound,
+    GroupTournamentPhase,
+} from "@/types/tournament";
 
 // Test helper constants
 const TEST_TOURNAMENT_CONFIG: TournamentConfig = {
@@ -20,7 +27,12 @@ const TEST_TEAMS = [
 ];
 
 // Test helper functions
-const createMatchTeams = (team1Id: string, team2Id: string, score1 = 0, score2 = 0): [MatchTeam, MatchTeam] => [
+const createMatchTeams = (
+    team1Id: string,
+    team2Id: string,
+    score1 = 0,
+    score2 = 0,
+): [MatchTeam, MatchTeam] => [
     { ref: { id: team1Id }, score: score1 },
     { ref: { id: team2Id }, score: score2 },
 ];
@@ -33,7 +45,7 @@ const createMatch = (
     date: Date,
     status: "scheduled" | "in-progress" | "completed" = "scheduled",
     court = 1,
-    round?: MatchRound
+    round?: MatchRound,
 ): Match => ({
     id,
     court,
@@ -41,6 +53,19 @@ const createMatch = (
     date,
     status,
     ...(round && { round }),
+});
+
+const createGroupPhase = (
+    matches: Match[],
+    id: string = "phase-1",
+    rounds: number = 1,
+    name: string = "Group Phase",
+): GroupTournamentPhase => ({
+    id,
+    type: "group",
+    name,
+    rounds,
+    matches,
 });
 
 describe("Matches Helper Functions", () => {
@@ -65,30 +90,24 @@ describe("Matches Helper Functions", () => {
 
         it("should extract matches from group phase", () => {
             tournament.phases = [
-                {
-                    id: "phase-1",
-                    type: "group",
-                    name: "Group Phase",
-                    rounds: 2,
-                    matches: [
-                        createMatch(
-                            "match-1",
-                            createMatchTeams("team-1", "team-2"),
-                            new Date("2024-01-01T10:00:00"),
-                            "scheduled",
-                            1,
-                            createMatchRound("round-1", "Round 1")
-                        ),
-                        createMatch(
-                            "match-2",
-                            createMatchTeams("team-3", "team-4"),
-                            new Date("2024-01-01T10:30:00"),
-                            "scheduled",
-                            2,
-                            createMatchRound("round-1", "Round 1")
-                        ),
-                    ],
-                },
+                createGroupPhase([
+                    createMatch(
+                        "match-1",
+                        createMatchTeams("team-1", "team-2"),
+                        new Date("2024-01-01T10:00:00"),
+                        "scheduled",
+                        1,
+                        createMatchRound("round-1", "Round 1"),
+                    ),
+                    createMatch(
+                        "match-2",
+                        createMatchTeams("team-3", "team-4"),
+                        new Date("2024-01-01T10:30:00"),
+                        "scheduled",
+                        2,
+                        createMatchRound("round-1", "Round 1"),
+                    ),
+                ]),
             ];
 
             const richMatches = tournamentRichMatches(tournament);
@@ -114,7 +133,7 @@ describe("Matches Helper Functions", () => {
                                 createMatch(
                                     "match-1",
                                     createMatchTeams("team-1", "team-2"),
-                                    new Date("2024-01-01T12:00:00")
+                                    new Date("2024-01-01T12:00:00"),
                                 ),
                             ],
                         },
@@ -125,7 +144,7 @@ describe("Matches Helper Functions", () => {
                                 createMatch(
                                     "match-2",
                                     createMatchTeams("team-1", "team-3"),
-                                    new Date("2024-01-01T14:00:00")
+                                    new Date("2024-01-01T14:00:00"),
                                 ),
                             ],
                         },
@@ -156,7 +175,7 @@ describe("Matches Helper Functions", () => {
                             new Date("2024-01-01T10:00:00"),
                             "scheduled",
                             1,
-                            createMatchRound("round-1", "Round 1")
+                            createMatchRound("round-1", "Round 1"),
                         ),
                     ],
                 },
@@ -173,7 +192,7 @@ describe("Matches Helper Functions", () => {
                                 createMatch(
                                     "match-2",
                                     createMatchTeams("team-1", "team-2"),
-                                    new Date("2024-01-01T12:00:00")
+                                    new Date("2024-01-01T12:00:00"),
                                 ),
                             ],
                         },
@@ -189,30 +208,24 @@ describe("Matches Helper Functions", () => {
 
         it("should sort matches by date", () => {
             tournament.phases = [
-                {
-                    id: "phase-1",
-                    type: "group",
-                    name: "Group Phase",
-                    rounds: 2,
-                    matches: [
-                        createMatch(
-                            "match-2",
-                            createMatchTeams("team-1", "team-2"),
-                            new Date("2024-01-01T12:00:00"),
-                            "scheduled",
-                            1,
-                            createMatchRound("round-2", "Round 2")
-                        ),
-                        createMatch(
-                            "match-1",
-                            createMatchTeams("team-3", "team-4"),
-                            new Date("2024-01-01T10:00:00"),
-                            "scheduled",
-                            2,
-                            createMatchRound("round-1", "Round 1")
-                        ),
-                    ],
-                },
+                createGroupPhase([
+                    createMatch(
+                        "match-2",
+                        createMatchTeams("team-3", "team-4"),
+                        new Date("2024-01-01T10:30:00"),
+                        "scheduled",
+                        2,
+                        createMatchRound("round-1", "Round 1"),
+                    ),
+                    createMatch(
+                        "match-1",
+                        createMatchTeams("team-1", "team-2"),
+                        new Date("2024-01-01T10:00:00"),
+                        "scheduled",
+                        1,
+                        createMatchRound("round-1", "Round 1"),
+                    ),
+                ]),
             ];
 
             const richMatches = tournamentRichMatches(tournament);
@@ -235,7 +248,7 @@ describe("Matches Helper Functions", () => {
                             sameDate,
                             "scheduled",
                             1,
-                            createMatchRound("round-b", "Round B")
+                            createMatchRound("round-b", "Round B"),
                         ),
                         createMatch(
                             "match-a",
@@ -243,7 +256,7 @@ describe("Matches Helper Functions", () => {
                             sameDate,
                             "scheduled",
                             2,
-                            createMatchRound("round-a", "Round A")
+                            createMatchRound("round-a", "Round A"),
                         ),
                     ],
                 },
@@ -283,7 +296,7 @@ describe("Matches Helper Functions", () => {
                             new Date("2024-01-01T10:00:00"),
                             "scheduled",
                             1,
-                            createMatchRound("round-1", "Round 1")
+                            createMatchRound("round-1", "Round 1"),
                         ),
                     ],
                 },
@@ -291,7 +304,7 @@ describe("Matches Helper Functions", () => {
 
             const richMatches = tournamentRichMatches(tournament);
             const richMatch = richMatches[0];
-            
+
             expect(richMatch).toHaveProperty("match");
             expect(richMatch).toHaveProperty("roundName");
             expect(richMatch).toHaveProperty("phaseName");

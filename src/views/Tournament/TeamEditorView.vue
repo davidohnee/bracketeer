@@ -2,6 +2,7 @@
 import type { Team, Tournament } from "@/types/tournament";
 import { useTournamentsStore } from "@/stores/tournaments";
 import { computed, ref } from "vue";
+import { deepCopy } from "@/helpers/common";
 
 const props = defineProps<{
     tournament: Tournament;
@@ -10,7 +11,7 @@ const props = defineProps<{
 const tournamentStore = useTournamentsStore();
 const tournament = tournamentStore.getTournamentById(props.tournament.id)!;
 
-const teams = ref<Team[]>(structuredClone(props.tournament.teams));
+const teams = ref<Team[]>(deepCopy(props.tournament.teams));
 const teamsPaste = ref<string>("");
 
 const processPastedTeams = () => {

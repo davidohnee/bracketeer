@@ -1,4 +1,5 @@
 import type { DynamicTeamRef, MatchStatus, Tournament } from "@/types/tournament";
+import { toRaw } from "vue";
 
 export const chunks = <T>(a: T[], size: number) =>
     Array.from(Array.from({ length: Math.ceil(a.length / size) }), (_, i) =>
@@ -14,7 +15,7 @@ export const ROUND_NAME: Record<number, string> = {
     2: "Final",
 };
 
-export const deepCopy = <T>(item: T): T => structuredClone(item);
+export const deepCopy = <T>(item: T): T => structuredClone(toRaw(item));
 
 export const agoString = (date: Date) => {
     const now = new Date();

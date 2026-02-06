@@ -1,6 +1,18 @@
 import { describe, it, expect, beforeEach } from "vitest";
-import { generateKnockoutBracket, generateKnockoutBrackets } from "./knockoutPhase";
-import type { Tournament, KnockoutTournamentPhase, Team } from "@/types/tournament";
+import {
+    generateKnockoutBracket,
+    generateKnockoutBrackets,
+    updateKnockoutMatches,
+} from "./knockoutPhase";
+import type {
+    Tournament,
+    KnockoutTournamentPhase,
+    Team,
+    GroupTournamentPhase,
+    Group,
+} from "@/types/tournament";
+import { generateGroupPhase } from "./groupPhase";
+import { randomiseGroupPhaseResults } from "..";
 
 describe("Knockout Phase Generation", () => {
     let tournament: Tournament;
@@ -189,7 +201,8 @@ describe("Knockout Phase Generation", () => {
 
             // Each subsequent round should start after the previous round
             for (let i = 1; i < rounds.length; i++) {
-                const prevRoundLastMatch = rounds[i - 1]!.matches[rounds[i - 1]!.matches.length - 1];
+                const prevRoundLastMatch =
+                    rounds[i - 1]!.matches[rounds[i - 1]!.matches.length - 1];
                 const currentRoundFirstMatch = rounds[i]!.matches[0];
 
                 const prevTime = prevRoundLastMatch!.date.getTime();
@@ -343,10 +356,10 @@ describe("Knockout Phase Generation", () => {
         });
 
         it("should preserve group phases unchanged", () => {
-            const groupPhase = {
+            const groupPhase: GroupTournamentPhase = {
                 id: "phase-group",
                 name: "Group Phase",
-                type: "group" as const,
+                type: "group",
                 rounds: 2,
                 matches: [],
             };
@@ -359,12 +372,51 @@ describe("Knockout Phase Generation", () => {
         });
 
         it("should handle mixed phase types", () => {
-            const groupPhase = {
+            const groupPhase: GroupTournamentPhase = {
                 id: "phase-1",
                 name: "Group Phase",
-                type: "group" as const,
+                type: "group",
                 rounds: 2,
                 matches: [],
+            };
+
+            const knockoutPhase: KnockoutTournamentPhase = {
+                id: "phase-2",
+                name: "Knockout Phase",
+                type: "knockout",
+                teamCount: 8,
+                rounds: [],
+            };
+
+            tournament.phases = [groupPhase, knockoutPhase];
+            const phases = generateKnockoutBrackets(tournament);
+
+            expect(phases.length).toBe(2);
+            expect(phases[0]!.type).toBe("group");
+            expect(phases[1]!.type).toBe("knockout");
+        });
+
+        it("should handle mixed phase with multiple groups", () => {
+            const groups: Group[] = [];
+
+            for (let i = 0; i < 4; i++) {
+                groups.push({
+                    id: `group-${i + 1}`,
+                    name: `Group ${i + 1}`,
+                    teams: teams.slice(i * 4, (i + 1) * 4).map((t) => ({
+                        id: t.id,
+                        name: t.name,
+                    })),
+                });
+            }
+
+            const groupPhase: GroupTournamentPhase = {
+                id: "phase-1",
+                name: "Group Phase 1",
+                type: "group",
+                rounds: 2,
+                matches: [],
+                groups,
             };
 
             const knockoutPhase: KnockoutTournamentPhase = {
@@ -431,6 +483,93 @@ describe("Knockout Phase Generation", () => {
             const quarterTime = quarterFinals!.matches[0]!.date.getTime();
 
             expect(quarterTime).toBeGreaterThan(r16Time);
+        });
+    });
+});
+
+describe("Knockout Phase Update", () => {
+    let tournament: Tournament;
+    let teams: Team[];
+
+    beforeEach(() => {
+        teams = Array.from({ length: 16 }, (_, i) => ({
+            id: `team-${i + 1}`,
+            name: `Team ${i + 1}`,
+        }));
+
+        tournament = {
+            id: "test-tournament",
+            version: 3,
+            name: "Test Tournament",
+            teams,
+            phases: [],
+            config: {
+                courts: 2,
+                matchDuration: 30,
+                breakDuration: 5,
+                knockoutBreakDuration: 10,
+                startTime: new Date("2024-01-01T10:00:00"),
+                sport: "test",
+            },
+        };
+    });
+
+    describe("updateKnockoutMatches", () => {
+        it("should update when group phase has finished", () => {
+            const groupPhase: GroupTournamentPhase = {
+                id: "phase-group",
+                name: "Group Phase",
+                type: "group",
+                rounds: 2,
+                matches: [],
+            };
+
+            groupPhase.matches = generateGroupPhase(groupPhase, tournament);
+
+            const knockoutPhase: KnockoutTournamentPhase = {
+                id: "phase-knockout",
+                name: "Knockout Phase",
+                type: "knockout",
+                teamCount: 8,
+                rounds: [],
+            };
+
+            tournament.phases = [groupPhase, knockoutPhase];
+            const updatedTournament = generateKnockoutBrackets(tournament);
+
+            // knockout phase is using placeholders
+            const knockout = updatedTournament.find((p) => p.type === "knockout");
+            expect(knockout).toBeDefined();
+            if (knockout?.type === "knockout") {
+                const firstRound = knockout.rounds[0]!;
+                firstRound.matches.forEach((match) => {
+                    expect(match.teams[0].link?.type).toBe("league");
+                    expect(match.teams[1].link?.type).toBe("league");
+                    expect(match.teams[0].link?.placement).toBeDefined();
+                    expect(match.teams[1].link?.placement).toBeDefined();
+                    expect(match.teams[0].ref).toBeUndefined();
+                    expect(match.teams[1].ref).toBeUndefined();
+                });
+            }
+
+            // Simulate finishing group phase
+            randomiseGroupPhaseResults(tournament);
+
+            // Update knockout matches based on group results
+            knockoutPhase.rounds = generateKnockoutBracket(knockoutPhase, tournament);
+            updateKnockoutMatches(tournament);
+
+            const updatedKnockout = tournament.phases.find((p) => p.type === "knockout");
+            expect(updatedKnockout).toBeDefined();
+            if (updatedKnockout?.type === "knockout") {
+                const firstRound = updatedKnockout.rounds[0]!;
+                firstRound.matches.forEach((match) => {
+                    expect(match.teams[0].link?.type).toBe("league");
+                    expect(match.teams[1].link?.type).toBe("league");
+                    expect(match.teams[0].ref).toBeDefined();
+                    expect(match.teams[1].ref).toBeDefined();
+                });
+            }
         });
     });
 });

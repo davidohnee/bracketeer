@@ -7,32 +7,15 @@ import type {
     GroupTournamentPhase,
     KnockoutTournamentPhase,
 } from "@/types/tournament";
+import { generateTestTournament, inNHours } from "../test";
 
 describe("Matchplan Common Functions", () => {
     let tournament: Tournament;
     let baseDate: Date;
 
     beforeEach(() => {
-        baseDate = new Date("2024-01-01T10:00:00");
-
-        tournament = {
-            id: "test-tournament",
-            version: 3,
-            name: "Test Tournament",
-            teams: Array.from({ length: 8 }, (_, i) => ({
-                id: `team-${i + 1}`,
-                name: `Team ${i + 1}`,
-            })),
-            phases: [],
-            config: {
-                courts: 2,
-                matchDuration: 30,
-                breakDuration: 5,
-                knockoutBreakDuration: 10,
-                startTime: new Date(baseDate),
-                sport: "test",
-            },
-        };
+        tournament = generateTestTournament(8);
+        baseDate = tournament.config.startTime;
     });
 
     describe("earliestFreeSlot", () => {
@@ -174,6 +157,9 @@ describe("Matchplan Common Functions", () => {
 
     describe("adjustStartTimes", () => {
         beforeEach(() => {
+            const inAnHour = inNHours(1);
+            const inTwoHours = inNHours(2);
+
             // Create a group phase with scheduled matches
             const phase: GroupTournamentPhase = {
                 id: "phase-1",
@@ -188,7 +174,7 @@ describe("Matchplan Common Functions", () => {
                             { ref: { id: "team-1" }, score: 0 },
                             { ref: { id: "team-2" }, score: 0 },
                         ],
-                        date: new Date("2024-01-01T10:00:00"),
+                        date: inAnHour,
                         status: "scheduled",
                         round: { id: "round-1", name: "Round 1" },
                     },
@@ -199,7 +185,7 @@ describe("Matchplan Common Functions", () => {
                             { ref: { id: "team-3" }, score: 0 },
                             { ref: { id: "team-4" }, score: 0 },
                         ],
-                        date: new Date("2024-01-01T10:00:00"),
+                        date: inAnHour,
                         status: "scheduled",
                         round: { id: "round-1", name: "Round 1" },
                     },
@@ -210,7 +196,7 @@ describe("Matchplan Common Functions", () => {
                             { ref: { id: "team-5" }, score: 0 },
                             { ref: { id: "team-6" }, score: 0 },
                         ],
-                        date: new Date("2024-01-01T10:35:00"),
+                        date: inTwoHours,
                         status: "scheduled",
                         round: { id: "round-2", name: "Round 2" },
                     },
@@ -238,19 +224,13 @@ describe("Matchplan Common Functions", () => {
         it("should preserve relative time differences between matches (approximately)", () => {
             const oldPhase = tournament.phases[0] as GroupTournamentPhase;
             const oldTimes = oldPhase.matches.map((m) => m.date.getTime());
-            const oldDiffs = [
-                oldTimes[1]! - oldTimes[0]!,
-                oldTimes[2]! - oldTimes[1]!,
-            ];
+            const oldDiffs = [oldTimes[1]! - oldTimes[0]!, oldTimes[2]! - oldTimes[1]!];
 
             const result = adjustStartTimes(tournament);
 
             const newPhase = result.phases[0] as GroupTournamentPhase;
             const newTimes = newPhase.matches.map((m) => m.date.getTime());
-            const newDiffs = [
-                newTimes[1]! - newTimes[0]!,
-                newTimes[2]! - newTimes[1]!,
-            ];
+            const newDiffs = [newTimes[1]! - newTimes[0]!, newTimes[2]! - newTimes[1]!];
 
             // Time differences should be approximately preserved (within 1 minute due to ceiling)
             expect(Math.abs(newDiffs[0]! - oldDiffs[0]!)).toBeLessThanOrEqual(60000);

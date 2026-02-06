@@ -1,29 +1,13 @@
 import { describe, it, expect, beforeEach } from "vitest";
 import { allMatches, rankedTeams, previousPhase } from "./phase";
 import type { Tournament, GroupTournamentPhase, KnockoutTournamentPhase } from "@/types/tournament";
+import { generateTestTournament } from "./test";
 
 describe("Phase Helper Functions", () => {
     let tournament: Tournament;
 
     beforeEach(() => {
-        tournament = {
-            id: "test-tournament",
-            version: 3,
-            name: "Test Tournament",
-            teams: Array.from({ length: 8 }, (_, i) => ({
-                id: `team-${i + 1}`,
-                name: `Team ${i + 1}`,
-            })),
-            phases: [],
-            config: {
-                courts: 2,
-                matchDuration: 30,
-                breakDuration: 5,
-                knockoutBreakDuration: 10,
-                startTime: new Date("2024-01-01T10:00:00"),
-                sport: "test",
-            },
-        };
+        tournament = generateTestTournament(8);
     });
 
     describe("allMatches", () => {

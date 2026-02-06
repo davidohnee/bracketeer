@@ -37,6 +37,9 @@ vi.mock("@/helpers", () => ({
     tournamentFromJson: vi.fn((json) => json),
 }));
 
+const THROTTLE_DURATION = 600;
+const asyncThrottleDelay = () => new Promise((resolve) => setTimeout(resolve, THROTTLE_DURATION));
+
 describe("Tournaments Store", () => {
     let mockConfig: TournamentConfig;
 
@@ -369,7 +372,7 @@ describe("Tournaments Store", () => {
             store.add(tournament);
 
             // Wait for throttled sync
-            await new Promise((resolve) => setTimeout(resolve, 400));
+            await asyncThrottleDelay();
 
             const stored = localStorage.getItem("tournaments");
             expect(stored).not.toBeNull();
@@ -390,10 +393,10 @@ describe("Tournaments Store", () => {
             };
 
             store.add(tournament);
-            await new Promise((resolve) => setTimeout(resolve, 400));
+            await asyncThrottleDelay();
 
             store.update({ ...tournament, name: "Updated" });
-            await new Promise((resolve) => setTimeout(resolve, 400));
+            await asyncThrottleDelay();
 
             const stored = localStorage.getItem("tournaments");
             const parsed = JSON.parse(stored!);

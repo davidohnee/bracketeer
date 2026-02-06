@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import type { IRemote, Tournament, TournamentConfig } from "../types/tournament";
-import { ref, watch } from "vue";
+import { computed, ref, watch } from "vue";
 import { tournamentFromJson } from "@/helpers";
 
 import { pull, push } from "@/share";
@@ -17,11 +17,20 @@ import { throttle } from "lodash";
 export const useTournamentsStore = defineStore("tournaments", () => {
     const tournaments = ref<Tournament[]>([]);
 
-    const syncToLocalStorage = throttle(() => {
+    const throttlingEnabled = ref(true);
+    const _syncToLocalStorage = () =>
         localStorage.setItem("tournaments", JSON.stringify(tournaments.value));
+    const _throttledSyncToLocalStorage = throttle(() => {
+        _syncToLocalStorage();
     }, 300);
+    const syncToLocalStorage = computed(() => {
+        if (!throttlingEnabled.value) {
+            return _syncToLocalStorage;
+        }
+        return _throttledSyncToLocalStorage;
+    });
 
-    watch(tournaments, syncToLocalStorage, { deep: true });
+    watch(tournaments, () => syncToLocalStorage.value(), { deep: true });
     // Load tournaments from local storage on initial load
     const storedTournaments = localStorage.getItem("tournaments");
     if (storedTournaments) {
@@ -187,5 +196,13 @@ export const useTournamentsStore = defineStore("tournaments", () => {
         download,
         addFromUpload,
         pull: pullFromRemote,
+        disableThrottling: () => {
+            console.warn("Disabling throttling for tournaments store");
+            throttlingEnabled.value = false;
+        },
+        enableThrottling: () => {
+            console.info("Enabling throttling for tournaments store");
+            throttlingEnabled.value = true;
+        },
     };
 });

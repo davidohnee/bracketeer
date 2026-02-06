@@ -37,7 +37,7 @@ vi.mock("@/helpers", () => ({
     tournamentFromJson: vi.fn((json) => json),
 }));
 
-const THROTTLE_DURATION = 600;
+const THROTTLE_DURATION = 100;
 const asyncThrottleDelay = () => new Promise((resolve) => setTimeout(resolve, THROTTLE_DURATION));
 
 describe("Tournaments Store", () => {
@@ -369,6 +369,7 @@ describe("Tournaments Store", () => {
                 config: mockConfig,
             };
 
+            store.disableThrottling();
             store.add(tournament);
 
             // Wait for throttled sync
@@ -391,6 +392,8 @@ describe("Tournaments Store", () => {
                 phases: [],
                 config: mockConfig,
             };
+
+            store.disableThrottling();
 
             store.add(tournament);
             await asyncThrottleDelay();

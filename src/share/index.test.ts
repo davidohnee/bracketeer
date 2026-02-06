@@ -1,29 +1,6 @@
 import { test, vi, expect, afterEach, describe, it, beforeEach } from "vitest";
 import { pull, toShare, push } from ".";
-import type { Tournament } from "@/types/tournament";
-
-const generateTestTournament = (teamCount: number): Tournament => {
-    const teams = Array.from({ length: teamCount }, (_, i) => ({
-        id: `team-${i + 1}`,
-        name: `Team ${i + 1}`,
-    }));
-
-    return {
-        id: "test-tournament",
-        version: 3,
-        name: "Test Tournament",
-        teams,
-        phases: [],
-        config: {
-            courts: 2,
-            matchDuration: 30,
-            breakDuration: 5,
-            knockoutBreakDuration: 10,
-            startTime: new Date("2024-01-01T10:00:00"),
-            sport: "test",
-        },
-    };
-};
+import { generateTestTournament } from "@/helpers/test";
 
 test("pull", async () => {
     const tournament = generateTestTournament(4);

@@ -12,7 +12,13 @@ import {
     localeDateTimeString,
     formatPlacement,
 } from "./common";
-import type { Tournament, DynamicTeamRef, TournamentConfig, Match, MatchTeam } from "@/types/tournament";
+import type {
+    Tournament,
+    DynamicTeamRef,
+    TournamentConfig,
+    Match,
+    MatchTeam,
+} from "@/types/tournament";
 
 // Test helper constants
 const TEST_TOURNAMENT_CONFIG: TournamentConfig = {
@@ -25,12 +31,23 @@ const TEST_TOURNAMENT_CONFIG: TournamentConfig = {
 };
 
 // Test helper functions
-const createMatchTeams = (team1Id: string, team2Id: string, score1 = 0, score2 = 0): [MatchTeam, MatchTeam] => [
+const createMatchTeams = (
+    team1Id: string,
+    team2Id: string,
+    score1 = 0,
+    score2 = 0,
+): [MatchTeam, MatchTeam] => [
     { ref: { id: team1Id }, score: score1 },
     { ref: { id: team2Id }, score: score2 },
 ];
 
-const createMatch = (id: string, teams: [MatchTeam, MatchTeam], status: "scheduled" | "in-progress" | "completed" = "scheduled", court = 1, date = new Date()): Match => ({
+const createMatch = (
+    id: string,
+    teams: [MatchTeam, MatchTeam],
+    status: "scheduled" | "in-progress" | "completed" = "scheduled",
+    court = 1,
+    date = new Date(),
+): Match => ({
     id,
     court,
     teams,
@@ -42,7 +59,11 @@ describe("Common Helper Functions", () => {
     describe("chunks", () => {
         it("should split array into chunks of specified size", () => {
             const result = chunks([1, 2, 3, 4, 5, 6], 2);
-            expect(result).toEqual([[1, 2], [3, 4], [5, 6]]);
+            expect(result).toEqual([
+                [1, 2],
+                [3, 4],
+                [5, 6],
+            ]);
         });
 
         it("should handle arrays that don't divide evenly", () => {
@@ -81,7 +102,7 @@ describe("Common Helper Functions", () => {
         it("should create a deep copy of an object", () => {
             const original = { a: 1, b: { c: 2 } };
             const copy = deepCopy(original);
-            
+
             expect(copy).toEqual(original);
             expect(copy).not.toBe(original);
             expect(copy.b).not.toBe(original.b);
@@ -90,7 +111,7 @@ describe("Common Helper Functions", () => {
         it("should create a deep copy of an array", () => {
             const original = [1, 2, [3, 4]];
             const copy = deepCopy(original);
-            
+
             expect(copy).toEqual(original);
             expect(copy).not.toBe(original);
             expect(copy[2]).not.toBe(original[2]);
@@ -111,7 +132,7 @@ describe("Common Helper Functions", () => {
     describe("agoString", () => {
         beforeEach(() => {
             vi.useFakeTimers();
-            vi.setSystemTime(new Date("2024-01-15T12:00:00"));
+            vi.setSystemTime(new Date("2026-01-01T12:00:00"));
         });
 
         afterEach(() => {
@@ -119,40 +140,40 @@ describe("Common Helper Functions", () => {
         });
 
         it("should return 'Just now' for times less than 60 seconds ago", () => {
-            const date = new Date("2024-01-15T11:59:30");
+            const date = new Date("2026-01-01T11:59:30");
             expect(agoString(date)).toBe("Just now");
         });
 
         it("should return minutes for times less than 60 minutes ago", () => {
-            const date = new Date("2024-01-15T11:45:00");
+            const date = new Date("2026-01-01T11:45:00");
             expect(agoString(date)).toBe("15 minutes ago");
         });
 
         it("should return '1 minute ago' for exactly 1 minute", () => {
-            const date = new Date("2024-01-15T11:59:00");
+            const date = new Date("2026-01-01T11:59:00");
             expect(agoString(date)).toBe("1 minute ago");
         });
 
         it("should return hours for times less than 24 hours ago", () => {
-            const date = new Date("2024-01-15T08:00:00");
+            const date = new Date("2026-01-01T08:00:00");
             expect(agoString(date)).toBe("4 hours ago");
         });
 
         it("should return '1 hour ago' for exactly 1 hour", () => {
-            const date = new Date("2024-01-15T11:00:00");
+            const date = new Date("2026-01-01T11:00:00");
             expect(agoString(date)).toBe("1 hour ago");
         });
 
         it("should return days for times less than 7 days ago", () => {
-            const date = new Date("2024-01-12T12:00:00");
+            const date = new Date("2025-12-29T12:00:00");
             expect(agoString(date)).toBe("3 days ago");
         });
 
         it("should return formatted date for times more than 7 days ago", () => {
-            const date = new Date("2024-01-01T12:00:00");
+            const date = new Date("2025-01-01T12:00:00");
             const result = agoString(date);
             expect(result).toContain("01");
-            expect(result).toContain("2024");
+            expect(result).toContain("2025");
         });
     });
 
@@ -166,7 +187,7 @@ describe("Common Helper Functions", () => {
         it("should contain all original elements", () => {
             const items = [1, 2, 3, 4, 5];
             const shuffled = shuffle([...items]);
-            items.forEach(item => {
+            items.forEach((item) => {
                 expect(shuffled).toContain(item);
             });
         });
@@ -204,12 +225,21 @@ describe("Common Helper Functions", () => {
                     name: "Group Phase",
                     rounds: 2,
                     matches: [
-                        createMatch("match-1", createMatchTeams("team-1", "team-2", 2, 1), "completed"),
-                        createMatch("match-2", createMatchTeams("team-3", "team-4", 3, 0), "completed", 2),
+                        createMatch(
+                            "match-1",
+                            createMatchTeams("team-1", "team-2", 2, 1),
+                            "completed",
+                        ),
+                        createMatch(
+                            "match-2",
+                            createMatchTeams("team-3", "team-4", 3, 0),
+                            "completed",
+                            2,
+                        ),
                     ],
                 },
             ];
-            
+
             expect(getTournamentStatus(tournament)).toBe("completed");
         });
 
@@ -221,12 +251,21 @@ describe("Common Helper Functions", () => {
                     name: "Group Phase",
                     rounds: 2,
                     matches: [
-                        createMatch("match-1", createMatchTeams("team-1", "team-2", 1, 1), "in-progress"),
-                        createMatch("match-2", createMatchTeams("team-3", "team-4"), "scheduled", 2),
+                        createMatch(
+                            "match-1",
+                            createMatchTeams("team-1", "team-2", 1, 1),
+                            "in-progress",
+                        ),
+                        createMatch(
+                            "match-2",
+                            createMatchTeams("team-3", "team-4"),
+                            "scheduled",
+                            2,
+                        ),
                     ],
                 },
             ];
-            
+
             expect(getTournamentStatus(tournament)).toBe("in-progress");
         });
 
@@ -238,12 +277,21 @@ describe("Common Helper Functions", () => {
                     name: "Group Phase",
                     rounds: 2,
                     matches: [
-                        createMatch("match-1", createMatchTeams("team-1", "team-2", 2, 1), "completed"),
-                        createMatch("match-2", createMatchTeams("team-3", "team-4"), "scheduled", 2),
+                        createMatch(
+                            "match-1",
+                            createMatchTeams("team-1", "team-2", 2, 1),
+                            "completed",
+                        ),
+                        createMatch(
+                            "match-2",
+                            createMatchTeams("team-3", "team-4"),
+                            "scheduled",
+                            2,
+                        ),
                     ],
                 },
             ];
-            
+
             expect(getTournamentStatus(tournament)).toBe("in-progress");
         });
 
@@ -254,12 +302,10 @@ describe("Common Helper Functions", () => {
                     type: "group",
                     name: "Group Phase",
                     rounds: 2,
-                    matches: [
-                        createMatch("match-1", createMatchTeams("team-1", "team-2")),
-                    ],
+                    matches: [createMatch("match-1", createMatchTeams("team-1", "team-2"))],
                 },
             ];
-            
+
             expect(getTournamentStatus(tournament)).toBe("scheduled");
         });
 
@@ -275,13 +321,17 @@ describe("Common Helper Functions", () => {
                             id: "round-1",
                             name: "Final",
                             matches: [
-                                createMatch("match-1", createMatchTeams("team-1", "team-2", 2, 1), "completed"),
+                                createMatch(
+                                    "match-1",
+                                    createMatchTeams("team-1", "team-2", 2, 1),
+                                    "completed",
+                                ),
                             ],
                         },
                     ],
                 },
             ];
-            
+
             expect(getTournamentStatus(tournament)).toBe("completed");
         });
     });
@@ -310,21 +360,21 @@ describe("Common Helper Functions", () => {
 
     describe("ceilToNextMinute", () => {
         it("should not change time if seconds are 0", () => {
-            const date = new Date("2024-01-15T12:30:00");
+            const date = new Date("2026-01-01T12:30:00");
             const result = ceilToNextMinute(date);
             expect(result.getMinutes()).toBe(30);
             expect(result.getSeconds()).toBe(0);
         });
 
         it("should ceil to next minute if seconds > 0", () => {
-            const date = new Date("2024-01-15T12:30:30");
+            const date = new Date("2026-01-01T12:30:30");
             const result = ceilToNextMinute(date);
             expect(result.getMinutes()).toBe(31);
             expect(result.getSeconds()).toBe(0);
         });
 
         it("should handle hour boundary", () => {
-            const date = new Date("2024-01-15T12:59:30");
+            const date = new Date("2026-01-01T12:59:30");
             const result = ceilToNextMinute(date);
             expect(result.getHours()).toBe(13);
             expect(result.getMinutes()).toBe(0);
@@ -334,25 +384,20 @@ describe("Common Helper Functions", () => {
 
     describe("localeDateTimeString", () => {
         it("should format date with time", () => {
-            const date = new Date("2024-01-15T12:30:00");
+            const date = new Date("2026-01-01T12:30:00");
             const result = localeDateTimeString(date, { today: false, thisYear: false });
             expect(result).toContain("12:30");
         });
 
         it("should hide date if today", () => {
             const now = new Date();
-            const result = localeDateTimeString(now, { today: true });
-            // Should contain time but the format depends on locale
-            expect(result.length).toBeGreaterThan(0);
-            // Should not contain month/day when today
-            expect(result.toLowerCase()).not.toContain("jan");
-            expect(result.toLowerCase()).not.toContain("feb");
+            const result = localeDateTimeString(now, { today: true, thisYear: false });
+            const month = now.toLocaleString(undefined, { month: "short" });
+            expect(result).not.toContain(month);
         });
 
         it("should hide year if this year", () => {
             const date = new Date();
-            date.setMonth(0);
-            date.setDate(1);
             const result = localeDateTimeString(date, { today: false, thisYear: true });
             expect(result).not.toContain(date.getFullYear().toString());
         });

@@ -1,33 +1,13 @@
 import { describe, it, expect, beforeEach } from "vitest";
 import { generateGroupPhase, generateGroupPhases } from "./groupPhase";
-import type { Tournament, GroupTournamentPhase, Team, Group, Match } from "@/types/tournament";
+import type { Tournament, GroupTournamentPhase, Group, Match } from "@/types/tournament";
+import { generateTestTournament } from "../test";
 
 describe("Group Phase Generation", () => {
     let tournament: Tournament;
-    let teams: Team[];
 
     beforeEach(() => {
-        // Create test teams
-        teams = Array.from({ length: 8 }, (_, i) => ({
-            id: `team-${i + 1}`,
-            name: `Team ${i + 1}`,
-        }));
-
-        tournament = {
-            id: "test-tournament",
-            version: 3,
-            name: "Test Tournament",
-            teams,
-            phases: [],
-            config: {
-                courts: 2,
-                matchDuration: 30,
-                breakDuration: 5,
-                knockoutBreakDuration: 10,
-                startTime: new Date("2024-01-01T10:00:00"),
-                sport: "test",
-            },
-        };
+        tournament = generateTestTournament(8);
     });
 
     describe("generateGroupPhase", () => {
@@ -152,12 +132,12 @@ describe("Group Phase Generation", () => {
                 {
                     id: "group-a",
                     name: "Group A",
-                    teams: teams.slice(0, 4).map((t) => ({ id: t.id })),
+                    teams: tournament.teams.slice(0, 4).map((t) => ({ id: t.id })),
                 },
                 {
                     id: "group-b",
                     name: "Group B",
-                    teams: teams.slice(4, 8).map((t) => ({ id: t.id })),
+                    teams: tournament.teams.slice(4, 8).map((t) => ({ id: t.id })),
                 },
             ];
 
@@ -303,7 +283,7 @@ describe("Group Phase Generation", () => {
     describe("balance round", () => {
         it("should create balance rounds when teams have unequal match counts", () => {
             // Create scenario with odd number of teams requiring balance round
-            const oddTeams = teams.slice(0, 5);
+            const oddTeams = tournament.teams.slice(0, 5);
             tournament.teams = oddTeams;
 
             const phase: GroupTournamentPhase = {

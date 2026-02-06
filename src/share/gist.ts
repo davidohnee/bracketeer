@@ -38,9 +38,9 @@ const push = async (tournament: Tournament, isPublic: boolean = false) => {
     // gist:{user}:{gist}:{filename}
     const gistId = jdata.id;
     const user = jdata.owner.login;
-    const sha = rawUrl.split("/raw/")[1]!.split("/")[0];
+    const fileName = rawUrl.split("/raw/")[1]!.split("/")[0];
 
-    const { identifier, link } = toShare("gist", user, `${gistId}:${sha}`);
+    const { identifier, link } = toShare("gist", user, `${gistId}:${fileName}`);
 
     if (tournament.remote?.length) {
         tournament.remote[0]!.pushDate = new Date();

@@ -30,18 +30,29 @@ const triggerNotification = (notification: IFullNotification) => {
     const notificationEvent = new CustomEvent("notification.add", {
         detail: notification,
     });
-    window.dispatchEvent(notificationEvent);
+    globalThis.dispatchEvent(notificationEvent);
+};
+
+const generateId = () => {
+    return Math.random().toString(36).substring(7);
 };
 
 export const Notifications = {
     addSuccess(
         message: string,
-        details?: string,
-        timeout?: number,
-        onClick?: () => void,
-        redirect?: string,
+        {
+            details,
+            timeout,
+            onClick,
+            redirect,
+        }: {
+            details?: string;
+            timeout?: number;
+            onClick?: () => void;
+            redirect?: string;
+        } = {},
     ) {
-        const id = Math.random().toString(36).substring(7);
+        const id = generateId();
         const notification: IFullNotification = {
             id,
             message,
@@ -56,12 +67,19 @@ export const Notifications = {
     },
     addError(
         message: string,
-        details?: string,
-        timeout?: number,
-        onClick?: () => void,
-        redirect?: string,
+        {
+            details,
+            timeout,
+            onClick,
+            redirect,
+        }: {
+            details?: string;
+            timeout?: number;
+            onClick?: () => void;
+            redirect?: string;
+        } = {},
     ) {
-        const id = Math.random().toString(36).substring(7);
+        const id = generateId();
         const notification: IFullNotification = {
             id,
             message,
@@ -76,12 +94,19 @@ export const Notifications = {
     },
     addInfo(
         message: string,
-        details?: string,
-        timeout?: number,
-        onClick?: () => void,
-        redirect?: string,
+        {
+            details,
+            timeout,
+            onClick,
+            redirect,
+        }: {
+            details?: string;
+            timeout?: number;
+            onClick?: () => void;
+            redirect?: string;
+        } = {},
     ) {
-        const id = Math.random().toString(36).substring(7);
+        const id = generateId();
         const notification: IFullNotification = {
             id,
             message,
@@ -96,12 +121,19 @@ export const Notifications = {
     },
     addWarning(
         message: string,
-        details?: string,
-        timeout?: number,
-        onClick?: () => void,
-        redirect?: string,
+        {
+            details,
+            timeout,
+            onClick,
+            redirect,
+        }: {
+            details?: string;
+            timeout?: number;
+            onClick?: () => void;
+            redirect?: string;
+        } = {},
     ) {
-        const id = Math.random().toString(36).substring(7);
+        const id = generateId();
         const notification: IFullNotification = {
             id,
             message,
@@ -116,15 +148,25 @@ export const Notifications = {
     },
     addYesNo(
         message: string,
-        details?: string,
-        timeout?: number,
-        onYes?: () => void,
-        onNo?: () => void,
-        onTimeout?: () => void,
-        onClick?: () => void,
-        redirect?: string,
+        {
+            details,
+            timeout,
+            onYes,
+            onNo,
+            onTimeout,
+            onClick,
+            redirect,
+        }: {
+            details?: string;
+            timeout?: number;
+            onYes?: () => void;
+            onNo?: () => void;
+            onTimeout?: () => void;
+            onClick?: () => void;
+            redirect?: string;
+        } = {},
     ) {
-        const id = Math.random().toString(36).substring(7);
+        const id = generateId();
         const notification: IYesNoNotification = {
             id,
             message,
@@ -144,10 +186,10 @@ export const Notifications = {
         const notificationEvent = new CustomEvent("notification.remove", {
             detail: id,
         });
-        window.dispatchEvent(notificationEvent);
+        globalThis.dispatchEvent(notificationEvent);
     },
     clear() {
         const notificationEvent = new CustomEvent("notification.clear");
-        window.dispatchEvent(notificationEvent);
+        globalThis.dispatchEvent(notificationEvent);
     },
 };

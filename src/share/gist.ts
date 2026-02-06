@@ -16,7 +16,7 @@ const push = async (tournament: Tournament, isPublic: boolean = false) => {
         files: Record<string, { raw_url: string }>;
     };
 
-    const copy = JSON.parse(JSON.stringify(tournament));
+    const copy = structuredClone(tournament);
     delete copy.remote;
 
     if (tournament.remote?.length) {
@@ -42,15 +42,15 @@ const push = async (tournament: Tournament, isPublic: boolean = false) => {
 
     const { identifier, link } = toShare("gist", user, `${gistId}:${sha}`);
 
-    if (!tournament.remote?.length) {
+    if (tournament.remote?.length) {
+        tournament.remote[0]!.pushDate = new Date();
+    } else {
         tournament.remote = [
             {
                 identifier,
                 pushDate: new Date(),
             },
         ];
-    } else {
-        tournament.remote[0]!.pushDate = new Date();
     }
 
     return { author: jdata.owner.login, tournament, link } as Import;

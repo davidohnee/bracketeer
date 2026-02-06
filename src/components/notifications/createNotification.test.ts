@@ -14,12 +14,11 @@ describe("Notifications", () => {
         });
 
         // Mock addEventListener to capture the listener
-        vi.spyOn(globalThis, "addEventListener").mockImplementation((
-            _type: string,
-            listener: EventListenerOrEventListenerObject
-        ) => {
-            eventListener = listener;
-        });
+        vi.spyOn(globalThis, "addEventListener").mockImplementation(
+            (_type: string, listener: EventListenerOrEventListenerObject) => {
+                eventListener = listener;
+            },
+        );
     });
 
     afterEach(() => {
@@ -45,7 +44,7 @@ describe("Notifications", () => {
         it("should return a unique id", () => {
             const id1 = Notifications.addSuccess("Message 1");
             const id2 = Notifications.addSuccess("Message 2");
-            
+
             expect(id1).toBeTruthy();
             expect(id2).toBeTruthy();
             expect(id1).not.toBe(id2);
@@ -58,13 +57,12 @@ describe("Notifications", () => {
             }) as EventListener);
 
             const onClick = vi.fn();
-            Notifications.addSuccess(
-                "Success",
-                "Details",
-                5000,
+            Notifications.addSuccess("Success", {
+                details: "Details",
+                timeout: 5000,
                 onClick,
-                "/redirect"
-            );
+                redirect: "/redirect",
+            });
 
             expect(capturedEvent!.detail.message).toBe("Success");
             expect(capturedEvent!.detail.details).toBe("Details");
@@ -90,7 +88,7 @@ describe("Notifications", () => {
         it("should return a unique id", () => {
             const id1 = Notifications.addError("Error 1");
             const id2 = Notifications.addError("Error 2");
-            
+
             expect(id1).not.toBe(id2);
         });
 
@@ -100,7 +98,7 @@ describe("Notifications", () => {
                 capturedEvent = e as CustomEvent<IFullNotification>;
             }) as EventListener);
 
-            Notifications.addError("Error", "Error details");
+            Notifications.addError("Error", { details: "Error details" });
 
             expect(capturedEvent!.detail.message).toBe("Error");
             expect(capturedEvent!.detail.details).toBe("Error details");
@@ -123,7 +121,7 @@ describe("Notifications", () => {
         it("should return a unique id", () => {
             const id1 = Notifications.addInfo("Info 1");
             const id2 = Notifications.addInfo("Info 2");
-            
+
             expect(id1).not.toBe(id2);
         });
     });
@@ -144,7 +142,7 @@ describe("Notifications", () => {
         it("should return a unique id", () => {
             const id1 = Notifications.addWarning("Warning 1");
             const id2 = Notifications.addWarning("Warning 2");
-            
+
             expect(id1).not.toBe(id2);
         });
     });
@@ -165,7 +163,7 @@ describe("Notifications", () => {
         it("should return a unique id", () => {
             const id1 = Notifications.addYesNo("Question 1?");
             const id2 = Notifications.addYesNo("Question 2?");
-            
+
             expect(id1).not.toBe(id2);
         });
 
@@ -180,16 +178,15 @@ describe("Notifications", () => {
             const onTimeout = vi.fn();
             const onClick = vi.fn();
 
-            Notifications.addYesNo(
-                "Confirm?",
-                "Details",
-                10000,
+            Notifications.addYesNo("Confirm?", {
+                details: "Details",
+                timeout: 10000,
                 onYes,
                 onNo,
                 onTimeout,
                 onClick,
-                "/redirect"
-            );
+                redirect: "/redirect",
+            });
 
             expect(capturedEvent!.detail.message).toBe("Confirm?");
             expect(capturedEvent!.detail.details).toBe("Details");
@@ -258,19 +255,19 @@ describe("Notifications", () => {
     describe("notification id generation", () => {
         it("should generate different ids for concurrent notifications", () => {
             const ids = new Set<string>();
-            
+
             for (let i = 0; i < 100; i++) {
                 const id = Notifications.addSuccess("Test");
                 ids.add(id);
             }
-            
+
             // All ids should be unique
             expect(ids.size).toBe(100);
         });
 
         it("should generate ids with expected format", () => {
             const id = Notifications.addSuccess("Test");
-            
+
             // ID should be a string
             expect(typeof id).toBe("string");
             // ID should have reasonable length (Math.random().toString(36).substring(7) typically produces 7-11 chars)
@@ -286,7 +283,10 @@ describe("Notifications", () => {
                 capturedNotification = customEvent.detail;
             }) as EventListener);
 
-            Notifications.addSuccess("Test", "Details", 3000);
+            Notifications.addSuccess("Test", {
+                details: "Details",
+                timeout: 3000,
+            });
 
             expect(capturedNotification).toMatchObject({
                 id: expect.any(String),
@@ -307,7 +307,10 @@ describe("Notifications", () => {
             const onYes = vi.fn();
             const onNo = vi.fn();
 
-            Notifications.addYesNo("Confirm?", undefined, undefined, onYes, onNo);
+            Notifications.addYesNo("Confirm?", {
+                onYes,
+                onNo,
+            });
 
             expect(capturedNotification).toMatchObject({
                 id: expect.any(String),

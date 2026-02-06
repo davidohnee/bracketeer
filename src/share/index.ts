@@ -22,7 +22,7 @@ interface IImportError extends IImportResult {
 export type Import = IImportSuccess | IImportError;
 
 export const getShareLink = (identifier: string) => {
-    const base = window.location.origin;
+    const base = globalThis.location.origin;
     return `${base}/s/${identifier}`;
 };
 

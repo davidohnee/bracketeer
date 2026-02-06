@@ -10,7 +10,7 @@ const props = defineProps<{
 const tournamentStore = useTournamentsStore();
 const tournament = tournamentStore.getTournamentById(props.tournament.id)!;
 
-const teams = ref<Team[]>(JSON.parse(JSON.stringify(props.tournament.teams)));
+const teams = ref<Team[]>(structuredClone(props.tournament.teams));
 const teamsPaste = ref<string>("");
 
 const processPastedTeams = () => {

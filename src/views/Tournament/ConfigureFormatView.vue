@@ -7,6 +7,7 @@ import { tournamentFromJson } from "@/helpers";
 import { useRouter } from "vue-router";
 import { generateGroupPhases } from "@/helpers/matchplan/groupPhase";
 import { generateKnockoutBrackets } from "@/helpers/matchplan/knockoutPhase";
+import { deepCopy } from "@/helpers/common";
 
 const props = defineProps<{
     tournament: Tournament;
@@ -36,7 +37,7 @@ const updateStartTime = () => {
     }
 };
 
-const editableTournament = ref<Tournament>(tournamentFromJson(structuredClone(tournament)));
+const editableTournament = ref<Tournament>(tournamentFromJson(deepCopy(tournament)));
 
 const router = useRouter();
 

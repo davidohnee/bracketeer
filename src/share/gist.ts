@@ -2,6 +2,7 @@ import type { Tournament } from "@/types/tournament";
 import gistClient from "@/gistClient";
 import { toShare, fromShare, type Import } from ".";
 import { tournamentFromJson } from "@/helpers";
+import { deepCopy } from "@/helpers/common";
 
 const push = async (tournament: Tournament, isPublic: boolean = false) => {
     const name = `${tournament.name}.bra`;
@@ -16,7 +17,7 @@ const push = async (tournament: Tournament, isPublic: boolean = false) => {
         files: Record<string, { raw_url: string }>;
     };
 
-    const copy = structuredClone(tournament);
+    const copy = deepCopy(tournament);
     delete copy.remote;
 
     if (tournament.remote?.length) {

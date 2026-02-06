@@ -147,7 +147,6 @@ const hasStarted = ref(getTournamentStatus(tournament) !== "scheduled");
 
 <template>
     <ShareModal ref="shareModal" />
-    <TrackModal ref="trackModal" />
     <div class="form">
         <section>
             <h3>Settings</h3>

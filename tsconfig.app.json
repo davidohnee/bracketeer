@@ -14,7 +14,7 @@
     "noUncheckedSideEffectImports": true,
     "lib": [
       "dom",
-      "es2022"
+      "es2023"
     ]
   },
   "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue"]

@@ -1,7 +1,4 @@
-/*
- * Copyright (c) 2023, reAudioPlayer ONE.
- * Licenced under the GNU General Public License v3.0
- */
+import { generateId } from "@/helpers/id";
 
 export interface INotification {
     id: string;
@@ -31,10 +28,6 @@ const triggerNotification = (notification: IFullNotification) => {
         detail: notification,
     });
     globalThis.dispatchEvent(notificationEvent);
-};
-
-const generateId = () => {
-    return Math.random().toString(36).substring(7);
 };
 
 export const Notifications = {

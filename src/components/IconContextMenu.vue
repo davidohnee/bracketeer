@@ -43,12 +43,12 @@ watch(expanded, (value) => {
             const top = containerRect.top;
             const bottom = containerRect.bottom;
 
-            const spaceBelow = window.innerHeight - bottom;
+            const spaceBelow = globalThis.innerHeight - bottom;
 
             trueDropdown.value.style.left = containerRect.left + "px";
             if (props.alignment === "right") {
                 trueDropdown.value.style.left = "auto";
-                trueDropdown.value.style.right = window.innerWidth - containerRect.right + "px";
+                trueDropdown.value.style.right = globalThis.innerWidth - containerRect.right + "px";
             }
 
             const enoughSpaceBelow = spaceBelow > trueDropdownRect.height;
@@ -58,7 +58,7 @@ watch(expanded, (value) => {
                 trueDropdown.value.style.bottom = "auto";
             } else {
                 trueDropdown.value.style.top = "auto";
-                trueDropdown.value.style.bottom = window.innerHeight - top + "px";
+                trueDropdown.value.style.bottom = globalThis.innerHeight - top + "px";
             }
         }
     });
@@ -72,12 +72,12 @@ const handleResize = () => {
     containerRect = null;
 };
 onMounted(() => {
-    window.addEventListener("click", handleWindowClick);
-    window.addEventListener("resize", handleResize);
+    globalThis.addEventListener("click", handleWindowClick);
+    globalThis.addEventListener("resize", handleResize);
 });
 onBeforeUnmount(() => {
-    window.removeEventListener("click", handleWindowClick);
-    window.removeEventListener("resize", handleResize);
+    globalThis.removeEventListener("click", handleWindowClick);
+    globalThis.removeEventListener("resize", handleResize);
 });
 </script>
 <template>

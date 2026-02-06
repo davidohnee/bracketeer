@@ -14,7 +14,7 @@ export const ROUND_NAME: Record<number, string> = {
     2: "Final",
 };
 
-export const deepCopy = <T>(item: T): T => JSON.parse(JSON.stringify(item));
+export const deepCopy = <T>(item: T): T => structuredClone(item);
 
 export const agoString = (date: Date) => {
     const now = new Date();
@@ -37,7 +37,7 @@ export const agoString = (date: Date) => {
     });
 };
 
-export const shuffle = <T>(items: T[]): T[] => items.sort(() => Math.random() - 0.5);
+export const shuffle = <T>(items: T[]): T[] => items.toSorted(() => Math.random() - 0.5);
 
 export const getTournamentStatus = (tournament: Tournament): MatchStatus => {
     const allMatches = tournament.phases.flatMap((phase) => {

@@ -36,9 +36,7 @@ const updateStartTime = () => {
     }
 };
 
-const editableTournament = ref<Tournament>(
-    tournamentFromJson(JSON.parse(JSON.stringify(tournament))),
-);
+const editableTournament = ref<Tournament>(tournamentFromJson(structuredClone(tournament)));
 
 const router = useRouter();
 

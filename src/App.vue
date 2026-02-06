@@ -9,7 +9,7 @@ const router = useRouter();
 const theme = useThemeStore();
 
 onMounted(() => {
-    const hash = window.location.hash;
+    const hash = globalThis.location.hash;
     const route = hash.replace("#", "");
     if (route) {
         router.push(route);

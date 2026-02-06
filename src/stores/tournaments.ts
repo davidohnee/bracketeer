@@ -87,23 +87,21 @@ export const useTournamentsStore = defineStore("tournaments", () => {
             getTournamentById(tournament.id)!.remote = result.tournament.remote;
         } else if (result.error) {
             console.error("Error sharing tournament:", result.error);
-            Notifications.addError(
-                "Sharing failed",
-                "There was an error sharing the tournament. Please try again.",
-                5000,
-            );
+            Notifications.addError("Sharing failed", {
+                details: "There was an error sharing the tournament. Please try again.",
+                timeout: 5000,
+            });
             return;
         }
 
-        Notifications.addSuccess(
-            "Tournament shared",
-            "The tournament has been shared successfully.",
-            5000,
-            () => {
-                window.open(result.link, "_blank");
+        Notifications.addSuccess("Tournament shared", {
+            details: "The tournament has been shared successfully.",
+            timeout: 5000,
+            onClick: () => {
+                globalThis.open(result.link, "_blank");
             },
-            result.link,
-        );
+            redirect: result.link,
+        });
 
         return result.link;
     };

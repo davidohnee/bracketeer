@@ -23,7 +23,7 @@ const emitStatusChanged = (status: MatchStatus) => {
 const componentType = shallowRef<typeof MatchRow | typeof MatchCard | null>(null);
 
 onMounted(() => {
-    if (window.innerWidth < 540) {
+    if (globalThis.innerWidth < 540) {
         componentType.value = MatchCard;
     } else {
         componentType.value = MatchRow;

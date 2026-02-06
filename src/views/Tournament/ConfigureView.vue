@@ -11,7 +11,6 @@ import { useRouter } from "vue-router";
 import { computed, ref, toRaw } from "vue";
 import ShareModal from "@/components/modals/ShareFullModal.vue";
 import gistClient from "@/gistClient";
-import TrackModal from "@/components/modals/ShareViewerModal.vue";
 import { Notifications } from "@/components/notifications/createNotification";
 import { generateKnockoutBracket, updateKnockoutMatches } from "@/helpers/matchplan/knockoutPhase";
 import { agoString, getTournamentStatus } from "@/helpers/common";
@@ -26,7 +25,6 @@ const tournament = tournaments.getTournamentById(props.tournament.id)!;
 const router = useRouter();
 
 const shareModal = ref<typeof ShareModal>();
-const trackModal = ref<typeof TrackModal>();
 
 const randomGroupPhase = () => {
     const rawTournament = toRaw(tournament);
@@ -40,28 +38,24 @@ const update = () => {
     const rawTournament = toRaw(tournament);
     updateKnockoutMatches(rawTournament);
     tournament.phases = [...rawTournament.phases];
-    Notifications.addSuccess(
-        "Knockout matches updated",
-        "The knockout matches have been updated based on the current group phase results.",
-        3000,
-    );
+    Notifications.addSuccess("Knockout matches updated", {
+        details: "The knockout matches have been updated based on the current group phase results.",
+        timeout: 3000,
+    });
 };
 
 const deleteTournament = () => {
-    Notifications.addYesNo(
-        "Delete Tournament",
-        "Are you sure you want to delete the tournament? This action cannot be undone.",
-        undefined,
-        () => {
+    Notifications.addYesNo("Delete Tournament", {
+        details: "Are you sure you want to delete the tournament? This action cannot be undone.",
+        onYes: () => {
             tournaments.deleteTournament(props.tournament.id);
             router.push({ name: "home" });
-            Notifications.addSuccess(
-                "Tournament deleted",
-                "The tournament has been deleted successfully.",
-                3000,
-            );
+            Notifications.addSuccess("Tournament deleted", {
+                details: "The tournament has been deleted successfully.",
+                timeout: 3000,
+            });
         },
-    );
+    });
 };
 
 const resetGroupPhase = (phase: GroupTournamentPhase, tournament: Tournament) => {
@@ -79,11 +73,10 @@ const resetPhase = (phase: TournamentPhase, tournament: Tournament) => {
 };
 
 const resetTournament = () => {
-    Notifications.addYesNo(
-        "Reset Tournament",
-        "Are you sure you want to reset the tournament? This will remove all results and start the tournament from scratch.",
-        undefined,
-        () => {
+    Notifications.addYesNo("Reset Tournament", {
+        details:
+            "Are you sure you want to reset the tournament? This will remove all results and start the tournament from scratch.",
+        onYes: () => {
             const rawTournament = toRaw(tournament);
 
             for (const phase of rawTournament.phases) {
@@ -93,13 +86,12 @@ const resetTournament = () => {
             tournament.phases = [...rawTournament.phases];
             hasStarted.value = false;
 
-            Notifications.addSuccess(
-                "Tournament reset",
-                "The tournament has been reset. All results have been removed.",
-                3000,
-            );
+            Notifications.addSuccess("Tournament reset", {
+                details: "The tournament has been reset. All results have been removed.",
+                timeout: 3000,
+            });
         },
-    );
+    });
 };
 
 const duplicateTournament = () => {
@@ -124,18 +116,16 @@ const pull = async () => {
         await tournaments.pull({
             tournament,
         });
-        Notifications.addSuccess(
-            "Tournament updated",
-            "The tournament has been updated successfully.",
-            3000,
-        );
+        Notifications.addSuccess("Tournament updated", {
+            details: "The tournament has been updated successfully.",
+            timeout: 3000,
+        });
     } catch (error) {
         console.error("Error pulling tournament:", error);
-        Notifications.addError(
-            "Error updating tournament",
-            "There was an error updating the tournament. Please try again.",
-            3000,
-        );
+        Notifications.addError("Error updating tournament", {
+            details: "There was an error updating the tournament. Please try again.",
+            timeout: 3000,
+        });
     }
 };
 

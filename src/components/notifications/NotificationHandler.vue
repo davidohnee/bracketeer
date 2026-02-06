@@ -31,17 +31,17 @@ const clear = () => {
     notifications.value = [];
 };
 
-window.addEventListener("notification.add", (e) => {
+globalThis.addEventListener("notification.add", (e) => {
     const notification = (e as CustomEvent).detail;
     add(notification);
 });
 
-window.addEventListener("notification.remove", (e) => {
+globalThis.addEventListener("notification.remove", (e) => {
     const id = (e as CustomEvent).detail;
     remove(id);
 });
 
-window.addEventListener("notification.clear", () => {
+globalThis.addEventListener("notification.clear", () => {
     clear();
 });
 </script>

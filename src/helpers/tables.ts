@@ -5,21 +5,18 @@ export const generateTables = (forPhase: GroupTournamentPhase): Table[] => {
     const table: { [key: string]: TeamScore } = {};
     const matches = forPhase.matches;
 
-    for (let j = 0; j < matches.length; j++) {
-        const match = matches[j]!;
-
+    for (const match of matches) {
         for (let i = 0; i < match.teams.length; i++) {
             const teamRef = match.teams[i]!.ref!;
 
-            if (!table[teamRef.id]) {
-                table[teamRef.id] = {
-                    team: teamRef,
-                    wins: 0,
-                    losses: 0,
-                    draws: 0,
-                    points: { for: 0, against: 0 },
-                };
-            }
+            table[teamRef.id] ??= {
+                team: teamRef,
+                wins: 0,
+                losses: 0,
+                draws: 0,
+                points: { for: 0, against: 0 },
+            };
+
             const team = table[teamRef.id]!;
             team.points.for += match.teams[i]!.score;
             team.points.against += match.teams[1 - i]!.score;

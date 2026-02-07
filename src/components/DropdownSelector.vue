@@ -53,9 +53,7 @@ const groups = computed(() => {
     const groups: Record<string, (string | Option)[]> = {};
     props.options.forEach((option) => {
         let groupName = "";
-        if (typeof option === "string") {
-            groupName = "";
-        } else {
+        if (typeof option !== "string") {
             groupName = option.group;
         }
         if (!groups[groupName]) {

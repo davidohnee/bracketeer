@@ -325,7 +325,7 @@ describe("Matchplan Common Functions", () => {
 
             const koPhase = result.phases[1];
             expect(koPhase!.type).toBe("knockout");
-            if (koPhase && koPhase.type === "knockout") {
+            if (koPhase?.type === "knockout") {
                 expect(koPhase.rounds[0]!.matches[0]!.status).toBe("scheduled");
             }
         });

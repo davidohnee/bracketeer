@@ -139,13 +139,15 @@ export const generateKnockoutBracket = (
         date: finalRound.matches[0]!.date,
         status: "scheduled",
     };
-    rounds.push({
-        id: generateId(),
-        name: "3rd Place Playoff",
-        matches: [finalMatch],
-    });
-    rounds.push(finalRound);
-    rounds[rounds.length - 1]!.matches[0]!.date = startTime;
+    rounds.push(
+        {
+            id: generateId(),
+            name: "3rd Place Playoff",
+            matches: [finalMatch],
+        },
+        finalRound,
+    );
+    rounds.at(-1)!.matches[0]!.date = startTime;
 
     return rounds;
 };

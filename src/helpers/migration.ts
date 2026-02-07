@@ -2,7 +2,7 @@ import type {
     TournamentV1,
     TournamentV2,
     AnyTournament,
-    LatestTournament,
+    Tournament as LatestTournament,
     TournamentV3,
     TournamentPhase,
 } from "@/types/tournament";
@@ -10,10 +10,10 @@ import { generateId } from "./id";
 
 export const migrateTournament = (tournament: AnyTournament): LatestTournament => {
     if (!tournament.version) {
-        tournament = migrateTournamentV1ToV2(tournament as TournamentV1);
+        tournament = migrateTournamentV1ToV2(tournament);
     }
     if (tournament.version === 2) {
-        tournament = migrateTournamentV2ToV3(tournament as TournamentV2);
+        tournament = migrateTournamentV2ToV3(tournament);
     }
     return migrateFromJson(tournament);
 };

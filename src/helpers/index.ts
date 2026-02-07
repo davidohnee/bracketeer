@@ -1,9 +1,8 @@
 import type { Match, Tournament, TournamentPhase, TournamentRound } from "@/types/tournament";
-import { migrateTournament } from "./migration";
 import { allMatches } from "./phase";
 import { getCourtType } from "./defaults";
 
-export const tournamentFromJson = migrateTournament;
+export { migrateTournament as tournamentFromJson } from "./migration";
 
 export const getCourtName = (sport: string, courtNumber: number | null): string =>
     courtNumber ? `${getCourtType(sport, false, true)} ${courtNumber}` : "N/A";
@@ -21,8 +20,8 @@ export const getLastMatchOf = ({
 
     const matchComparator = (a: Match, b: Match) => a.date.getTime() - b.date.getTime();
 
-    const sorted = input.sort(matchComparator);
-    const last = sorted[sorted.length - 1]!;
+    const sorted = input.toSorted(matchComparator);
+    const last = sorted.at(-1)!;
     return last;
 };
 
@@ -31,8 +30,7 @@ export const randomiseGroupPhaseResults = (tournament: Tournament) => {
         if (phase.type !== "group") continue;
 
         for (const match of phase.matches) {
-            for (let j = 0; j < match.teams.length; j++) {
-                const team = match.teams[j]!;
+            for (const team of match.teams) {
                 team.score = Math.floor(Math.random() * 10);
             }
             match.status = "completed";

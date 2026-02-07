@@ -11,9 +11,8 @@ const props = defineProps<{
     showRound?: boolean;
     showGroup?: boolean;
 }>();
-const emit = defineEmits<{
-    (e: "update:modelValue", value: RichMatch[]): void;
-}>();
+
+const emit = defineEmits<(e: "update:modelValue", value: RichMatch[]) => void>();
 
 const matches = computed({
     get() {

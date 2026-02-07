@@ -8,9 +8,8 @@ const props = defineProps<{
     readonly?: boolean;
 }>();
 const tournament = ref(props.tournament);
-const emit = defineEmits<{
-    (e: "update:modelValue", tournament: Tournament): void;
-}>();
+
+const emit = defineEmits<(e: "update:modelValue", tournament: Tournament) => void>();
 const onChanged = () => {
     emit("update:modelValue", tournament.value);
 };

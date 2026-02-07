@@ -6,14 +6,13 @@ const props = defineProps<{
     canGoBack?: boolean;
 }>();
 
-const emit = defineEmits<{
-    (e: "update:modelValue", value: number): void;
-}>();
+const emit = defineEmits<(e: "update:modelValue", value: number) => void>();
 
 const jumpTo = (index: number) => {
-    if (index > props.modelValue && props.canGoForward) {
-        emit("update:modelValue", index);
-    } else if (index < props.modelValue && props.canGoBack) {
+    if (
+        (index > props.modelValue && props.canGoForward) ||
+        (index < props.modelValue && props.canGoBack)
+    ) {
         emit("update:modelValue", index);
     }
 };

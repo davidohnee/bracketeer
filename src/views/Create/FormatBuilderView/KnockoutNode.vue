@@ -9,9 +9,8 @@ const props = defineProps<{
     modelValue: Tournament;
     phase: KnockoutTournamentPhase;
 }>();
-const emit = defineEmits<{
-    (e: "update:modelValue", value: Tournament): void;
-}>();
+
+const emit = defineEmits<(e: "update:modelValue", value: Tournament) => void>();
 
 const tournament = computed({
     get() {

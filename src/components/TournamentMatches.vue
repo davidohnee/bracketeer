@@ -14,9 +14,8 @@ const props = defineProps<{
     modelValue: Tournament;
     readonly?: boolean;
 }>();
-const emit = defineEmits<{
-    (e: "update:modelValue", tournament: Tournament): void;
-}>();
+
+const emit = defineEmits<(e: "update:modelValue", tournament: Tournament) => void>();
 
 const tournament = ref(props.modelValue);
 const route = useRoute();

@@ -6,9 +6,8 @@ const props = defineProps<{
     hideValue?: boolean;
     readonly?: boolean;
 }>();
-const emit = defineEmits<{
-    (e: "update:modelValue", value: number | undefined): void;
-}>();
+
+const emit = defineEmits<(e: "update:modelValue", value: number | undefined) => void>();
 
 const value = computed({
     get() {

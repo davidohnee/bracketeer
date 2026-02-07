@@ -8,9 +8,7 @@ const props = defineProps<{
     options: string[] | Option[];
 }>();
 
-const emit = defineEmits<{
-    (e: "update:modelValue", value: string): void;
-}>();
+const emit = defineEmits<(e: "update:modelValue", value: string) => void>();
 
 const selectedValue = computed({
     get() {

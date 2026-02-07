@@ -111,9 +111,9 @@ const generateForGroup = (group: Group, rounds: number, tournament: Tournament):
         const matchPairs = draw[matchI]!;
         const roundId = generateId();
 
-        for (let j = 0; j < matchPairs.length; j++) {
-            const team1 = matchPairs[j]![0];
-            const team2 = matchPairs[j]![1];
+        for (const matchPair of matchPairs) {
+            const team1 = matchPair[0];
+            const team2 = matchPair[1];
 
             const matchObj: Match = {
                 id: generateId(),

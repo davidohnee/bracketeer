@@ -165,6 +165,5 @@ export interface TournamentV3 {
 
 export type TournamentConfig = TournamentConfigV2;
 
-export type LatestTournament = TournamentV3;
 export type AnyTournament = TournamentV1 | TournamentV2 | TournamentV3;
-export type Tournament = LatestTournament;
+export type Tournament = TournamentV3;

@@ -102,10 +102,6 @@ section {
     flex-direction: column;
     align-items: flex-start;
 
-    & span.source {
-        margin-left: 1rem;
-    }
-
     &:has(span.source) {
         .title-component {
             padding-bottom: 0;
@@ -117,6 +113,7 @@ section {
 
     & span.source {
         margin-bottom: 1rem;
+        margin-left: 1rem;
     }
 
     .tabs {

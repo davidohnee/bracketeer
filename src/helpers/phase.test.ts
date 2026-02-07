@@ -12,7 +12,7 @@ describe("Phase Helper Functions", () => {
 
     describe("allMatches", () => {
         it("should return empty array when phase is undefined", () => {
-            const matches = allMatches(undefined);
+            const matches = allMatches();
             expect(matches).toEqual([]);
         });
 

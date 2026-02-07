@@ -23,9 +23,8 @@ const props = defineProps<{
     subtitle?: string;
     readonly?: boolean;
 }>();
-const emit = defineEmits<{
-    (e: "update:modelValue", value: Tournament): void;
-}>();
+
+const emit = defineEmits<(e: "update:modelValue", value: Tournament) => void>();
 
 const tabs = computed(() => {
     return props.tabs ?? Object.keys(TAB_LOOKUP);

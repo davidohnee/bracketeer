@@ -6,9 +6,8 @@ import { computed, ref, watch } from "vue";
 const props = defineProps<{
     modelValue: Tournament;
 }>();
-const emit = defineEmits<{
-    (e: "update:modelValue", value: Tournament): void;
-}>();
+
+const emit = defineEmits<(e: "update:modelValue", value: Tournament) => void>();
 
 const tournament = computed({
     get() {

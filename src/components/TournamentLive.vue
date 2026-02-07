@@ -15,9 +15,8 @@ const props = defineProps<{
 }>();
 const tournament = ref(props.tournament);
 const tournamentStore = useTournamentsStore();
-const emit = defineEmits<{
-    (e: "update:modelValue", value: Tournament): void;
-}>();
+
+const emit = defineEmits<(e: "update:modelValue", value: Tournament) => void>();
 const onChanged = () => {
     emit("update:modelValue", tournament.value);
 };

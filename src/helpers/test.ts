@@ -1,6 +1,9 @@
 import type { Tournament } from "@/types/tournament";
 
-export const generateTestTournament = (teamCount: number): Tournament => {
+export const generateTestTournament = ({
+    teamCount = 8,
+    matchDuration = 30,
+}: { teamCount?: number; matchDuration?: number } = {}): Tournament => {
     const teams = Array.from({ length: teamCount }, (_, i) => ({
         id: `team-${i + 1}`,
         name: `Team ${i + 1}`,
@@ -14,7 +17,7 @@ export const generateTestTournament = (teamCount: number): Tournament => {
         phases: [],
         config: {
             courts: 2,
-            matchDuration: 30,
+            matchDuration,
             breakDuration: 5,
             knockoutBreakDuration: 10,
             startTime: new Date(),

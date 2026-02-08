@@ -7,7 +7,7 @@ describe("Group Phase Generation", () => {
     let tournament: Tournament;
 
     beforeEach(() => {
-        tournament = generateTestTournament(8);
+        tournament = generateTestTournament({ teamCount: 8 });
     });
 
     describe("generateGroupPhase", () => {

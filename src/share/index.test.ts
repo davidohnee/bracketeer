@@ -3,7 +3,7 @@ import { pull, toShare, push } from ".";
 import { generateTestTournament } from "@/helpers/test";
 
 test("pull", async () => {
-    const tournament = generateTestTournament(4);
+    const tournament = generateTestTournament();
 
     // @ts-expect-error - Mocking global fetch
     globalThis.fetch = vi.fn(() =>
@@ -36,7 +36,7 @@ test("pull", async () => {
 });
 
 describe("push", () => {
-    const tournament = generateTestTournament(4);
+    const tournament = generateTestTournament();
     const fileName = `${tournament.name}.bra`;
     const author = "user";
     const gistId = "new-gist-id";

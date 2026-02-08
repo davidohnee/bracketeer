@@ -14,7 +14,7 @@ describe("Matchplan Common Functions", () => {
     let baseDate: Date;
 
     beforeEach(() => {
-        tournament = generateTestTournament(8);
+        tournament = generateTestTournament({ teamCount: 8 });
         baseDate = tournament.config.startTime;
     });
 

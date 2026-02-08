@@ -119,7 +119,6 @@ export const formatCurrentMatchTime = (match: Match, tournament: Tournament): st
     const start = match.date;
 
     if (match.status === "completed") return "FT";
-    if (!start) return "00:00";
     if (start.getTime() > now.getTime()) return "00:00";
 
     const diff = now.getTime() - start.getTime();

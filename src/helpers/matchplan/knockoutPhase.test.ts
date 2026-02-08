@@ -18,7 +18,7 @@ describe("Knockout Phase Generation", () => {
     let tournament: Tournament;
 
     beforeEach(() => {
-        tournament = generateTestTournament(16);
+        tournament = generateTestTournament({ teamCount: 16 });
     });
 
     describe("generateKnockoutBracket", () => {
@@ -471,7 +471,7 @@ describe("Knockout Phase Update", () => {
     let tournament: Tournament;
 
     beforeEach(() => {
-        tournament = generateTestTournament(16);
+        tournament = generateTestTournament({ teamCount: 16 });
     });
 
     describe("updateKnockoutMatches", () => {

@@ -11,6 +11,7 @@ import {
     ceilToNextMinute,
     localeDateTimeString,
     formatPlacement,
+    formatCurrentMatchTime,
 } from "./common";
 import type {
     Tournament,
@@ -19,6 +20,7 @@ import type {
     Match,
     MatchTeam,
 } from "@/types/tournament";
+import { generateTestTournament } from "./test";
 
 // Test helper constants
 const TEST_TOURNAMENT_CONFIG: TournamentConfig = {
@@ -453,6 +455,64 @@ describe("Common Helper Functions", () => {
                 label: "SF1",
             };
             expect(formatPlacement(placement)).toBe("Loser SF1");
+        });
+    });
+
+    describe("formatCurrentMatchTime", () => {
+        const tournament: Tournament = generateTestTournament({ matchDuration: 30 });
+
+        it("should format time until match starts", () => {
+            const now = new Date();
+            const match: Match = {
+                id: "match-1",
+                court: 1,
+                teams: createMatchTeams("team-1", "team-2"),
+                date: new Date(now.getTime() + 5 * 60 * 1000), // 5 minutes from now
+                status: "scheduled",
+            };
+
+            const result = formatCurrentMatchTime(match, tournament);
+            expect(result).toBe("00:00");
+        });
+
+        it("should format time until match ends", () => {
+            const now = new Date();
+            const match: Match = {
+                id: "match-1",
+                court: 1,
+                teams: createMatchTeams("team-1", "team-2"),
+                date: new Date(now.getTime() - 10 * 60 * 1000), // 10 minutes ago
+                status: "in-progress",
+            };
+
+            const result = formatCurrentMatchTime(match, tournament);
+            expect(result).toBe("10:00");
+        });
+
+        it("should return 'FT' for after regular time", () => {
+            const match: Match = {
+                id: "match-1",
+                court: 1,
+                teams: createMatchTeams("team-1", "team-2"),
+                date: new Date(Date.now() - 40 * 60 * 1000), // 40 minutes ago
+                status: "in-progress",
+            };
+
+            const result = formatCurrentMatchTime(match, tournament);
+            expect(result).toBe("FT");
+        });
+
+        it("should return 'FT' for completed matches", () => {
+            const match: Match = {
+                id: "match-1",
+                court: 1,
+                teams: createMatchTeams("team-1", "team-2"),
+                date: new Date(),
+                status: "completed",
+            };
+
+            const result = formatCurrentMatchTime(match, tournament);
+            expect(result).toBe("FT");
         });
     });
 });

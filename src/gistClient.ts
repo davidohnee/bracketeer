@@ -73,10 +73,10 @@ const save = async (
 
 const update = async (
     files: Files,
+    id: string,
     options: IOptions = {
         isPublic: false,
     },
-    id: string,
 ) => {
     return await setGist(files, options, id);
 };

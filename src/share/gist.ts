@@ -24,7 +24,7 @@ const push = async (tournament: Tournament, isPublic: boolean = false) => {
         const remote = tournament.remote[0]!.identifier;
         const { tag } = fromShare(remote);
         const [gist] = tag.split(":");
-        jdata = await gistClient.update({ [name]: copy }, options, gist!);
+        jdata = await gistClient.update({ [name]: copy }, gist!, options);
     } else {
         jdata = await gistClient.save({ [name]: copy }, options);
     }

@@ -7,7 +7,7 @@ describe("Phase Helper Functions", () => {
     let tournament: Tournament;
 
     beforeEach(() => {
-        tournament = generateTestTournament(8);
+        tournament = generateTestTournament({ teamCount: 8 });
     });
 
     describe("allMatches", () => {

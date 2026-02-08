@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { getCourtName } from "@/helpers";
-import { formatPlacement } from "@/helpers/common";
+import { formatCurrentMatchTime, formatPlacement } from "@/helpers/common";
 import type { MatchStatus, Match, MatchTeam, Ref, Tournament } from "@/types/tournament";
 import { onMounted, onUnmounted, ref, watch } from "vue";
 import MatchEditorModal from "@/components/modals/MatchEditorModal.vue";
@@ -54,23 +54,7 @@ const currentTime = ref("00:00");
 
 let currentTimeTimer = 0;
 
-const updateCurrentTime = () => {
-    const now = new Date();
-    const start = match.value.date;
-    if (!start) return "00:00";
-
-    if (start.getTime() > now.getTime()) return "00:00";
-
-    const diff = now.getTime() - start.getTime();
-    const minutes = Math.floor(diff / 60000);
-    const seconds = Math.floor((diff % 60000) / 1000);
-
-    if (minutes > props.tournament.config.matchDuration) {
-        return "FT";
-    }
-
-    return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
-};
+const updateCurrentTime = () => formatCurrentMatchTime(match.value, props.tournament);
 onUnmounted(() => {
     if (currentTimeTimer) {
         clearInterval(currentTimeTimer);

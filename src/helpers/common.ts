@@ -1,4 +1,4 @@
-import type { DynamicTeamRef, MatchStatus, Tournament } from "@/types/tournament";
+import type { DynamicTeamRef, Match, MatchStatus, Tournament } from "@/types/tournament";
 import { toRaw } from "vue";
 
 export const chunks = <T>(a: T[], size: number) =>
@@ -112,4 +112,22 @@ export const formatPlacement = (placement: DynamicTeamRef) => {
     }
 
     return `${label[placement.type]} ${placement.label}`;
+};
+
+export const formatCurrentMatchTime = (match: Match, tournament: Tournament): string => {
+    const now = new Date();
+    const start = match.date;
+
+    if (!start) return "00:00";
+    if (start.getTime() > now.getTime()) return "00:00";
+
+    const diff = now.getTime() - start.getTime();
+    const minutes = Math.floor(diff / 60000);
+    const seconds = Math.floor((diff % 60000) / 1000);
+
+    if (minutes > tournament.config.matchDuration) {
+        return "FT";
+    }
+
+    return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
 };

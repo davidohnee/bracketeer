@@ -7,7 +7,7 @@ import GroupedTournamentList from "./GroupedTournamentList.vue";
 import { tournamentRichMatches } from "@/helpers/matches";
 import TabSelector from "./TabSelector.vue";
 import { localeDateTimeString } from "@/helpers/common";
-import MatchFilter from "./Filter/MatchFilter.vue";
+import MatchFilter from "./filter/MatchFilter.vue";
 import type { Option } from "@/types/common";
 
 const props = defineProps<{

@@ -18,20 +18,29 @@ const UNSCHEDULED = {
     DATE: new Date(0),
 };
 
+const missingTeams = (allMatches: Match[], teams: Ref[]): Ref[] => {
+    const rounds = [...new Set(allMatches.map((match) => match.round!.id))];
+
+    const matchHasTeam = (match: Match, team: Ref): boolean => {
+        return match.teams.some((t) => t.ref?.id === team.id);
+    };
+
+    const teamNotInRound = (roundId: string, team: Ref): boolean => {
+        return !allMatches
+            .filter((match) => match.round!.id === roundId)
+            .some((match) => matchHasTeam(match, team));
+    };
+
+    const teamsMissing = rounds.flatMap((round) => teams.filter((t) => teamNotInRound(round, t)));
+    return teamsMissing;
+};
+
 const createBalanceRound = (
     allMatches: Match[],
     teams: Ref[],
     tournament: Tournament,
 ): Match[] | null => {
-    const rounds = [...new Set(allMatches.map((match) => match.round!.id))];
-    const teamsMissing = rounds.flatMap((round) =>
-        teams.filter(
-            (t) =>
-                !allMatches
-                    .filter((match) => match.round!.id === round)
-                    .some((match) => match.teams.some((team) => team.ref?.id === t.id)),
-        ),
-    );
+    const teamsMissing = missingTeams(allMatches, teams);
 
     if (teamsMissing.length % 2 !== 0) {
         return null;

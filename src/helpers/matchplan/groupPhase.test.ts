@@ -297,8 +297,25 @@ describe("Group Phase Generation", () => {
             tournament.phases = [phase];
             const matches = generateGroupPhase(phase, tournament);
 
-            // Check if balance round exists (just verify matches were generated)
-            expect(matches.length).toBeGreaterThan(0);
+            console.log("Generated Matches with Balance Round:", matches);
+
+            // Check if "Balance Round" exists
+            expect(matches.some((m) => m.round?.name === "Balance Round")).toBe(true);
+
+            // match count per team
+            const teamMatchCounts: Record<string, number> = {};
+            matches.forEach((match) => {
+                match.teams.forEach((team) => {
+                    if (team.ref?.id) {
+                        teamMatchCounts[team.ref.id] = (teamMatchCounts[team.ref.id] || 0) + 1;
+                    }
+                });
+            });
+
+            // In a balanced scenario, all teams should have the same number of matches
+            const matchCounts = Object.values(teamMatchCounts);
+            const uniqueCounts = new Set(matchCounts);
+            expect(uniqueCounts.size).toBe(1);
         });
     });
 });

@@ -34,68 +34,27 @@ export const generateKnockoutBracket = (
 ): TournamentRound[] => {
     const rounds: TournamentRound[] = [];
     const knockoutTeamCount = phase.teamCount ?? tournament.teams.length;
-    const phaseI = tournament.phases.findIndex((p) => p.id === phase.id);
-    let lastGroupPhaseMatchDate = tournament.config.startTime;
-
-    if (phaseI > 0) {
-        lastGroupPhaseMatchDate = getLastMatchOf({
-            phase: tournament.phases[phaseI - 1],
-        })?.date;
-    }
-
     const roundDuration = tournament.config.matchDuration + tournament.config.knockoutBreakDuration;
+    const previous = previousPhase(tournament, phase);
+    const startTime = new Date(getPreviousPhaseEndDate(tournament, phase));
 
-    let progressingTeams = Array.from({ length: knockoutTeamCount }, (_, i) => `Place ${i + 1}`);
-
-    let teamsInRound = progressingTeams.length;
+    let teamsInRound = knockoutTeamCount;
     let roundNumber = 1;
 
-    const previous = previousPhase(tournament, phase);
-
-    const startTime = new Date(lastGroupPhaseMatchDate);
-
     while (teamsInRound > 1) {
-        const matches: Match[] = [];
-        let court = 1;
+        const firstRound = teamsInRound === knockoutTeamCount;
+        const teamFromPhase = firstRound ? (previous ?? phase) : phase;
 
         startTime.setMinutes(startTime.getMinutes() + roundDuration);
 
-        for (let i = 0; i < teamsInRound / 2; i++) {
-            const teamFromPhase = teamsInRound == knockoutTeamCount ? (previous ?? phase) : phase;
-
-            if (court > tournament.config.courts) {
-                court = 1;
-                startTime.setMinutes(startTime.getMinutes() + roundDuration);
-            }
-
-            const match: Match = {
-                id: generateId(),
-                court: court++,
-                teams: [
-                    {
-                        link: {
-                            placement: i,
-                            label: getPlacement(teamFromPhase, i),
-                            type: roundNumber == 1 ? "league" : "winner",
-                            fromRound: roundNumber - 2,
-                        },
-                        score: 0,
-                    },
-                    {
-                        link: {
-                            placement: progressingTeams.length - 1 - i,
-                            label: getPlacement(teamFromPhase, progressingTeams.length - 1 - i),
-                            type: roundNumber == 1 ? "league" : "winner",
-                            fromRound: roundNumber - 2,
-                        },
-                        score: 0,
-                    },
-                ],
-                date: new Date(startTime),
-                status: "scheduled",
-            };
-            matches.push(match);
-        }
+        const matches = createRoundMatches({
+            teamFromPhase,
+            teamsInRound,
+            roundNumber,
+            startTime,
+            roundDuration,
+            courts: tournament.config.courts,
+        });
 
         rounds.push({
             id: generateId(),
@@ -104,17 +63,129 @@ export const generateKnockoutBracket = (
         });
 
         teamsInRound /= 2;
-        // progressingTeams = winner 1 vs winner -1, winner 2 vs winner -2
-        progressingTeams = Array.from({ length: teamsInRound }, (_, i) => `Winner ${ALPHABET[i]}`);
-
         roundNumber++;
     }
 
-    const finalRound = rounds.pop()!;
+    return insertThirdPlacePlayoff(rounds, startTime, roundDuration);
+};
+
+const getPreviousPhaseEndDate = (tournament: Tournament, phase: TournamentPhase): Date => {
+    const phaseI = tournament.phases.findIndex((p) => p.id === phase.id);
+
+    if (phaseI > 0) {
+        return (
+            getLastMatchOf({
+                phase: tournament.phases[phaseI - 1],
+            })?.date ?? tournament.config.startTime
+        );
+    }
+
+    return tournament.config.startTime;
+};
+
+type RoundMatchConfig = {
+    teamFromPhase: TournamentPhase;
+    teamsInRound: number;
+    roundNumber: number;
+    startTime: Date;
+    roundDuration: number;
+    courts: number;
+};
+
+const createRoundMatches = ({
+    teamFromPhase,
+    teamsInRound,
+    roundNumber,
+    startTime,
+    roundDuration,
+    courts,
+}: RoundMatchConfig): Match[] => {
+    const matches: Match[] = [];
+    let court = 1;
+    const pairCount = teamsInRound / 2;
+
+    for (let i = 0; i < pairCount; i++) {
+        if (court > courts) {
+            court = 1;
+            startTime.setMinutes(startTime.getMinutes() + roundDuration);
+        }
+
+        matches.push(
+            createKnockoutMatch({
+                teamFromPhase,
+                placement: i,
+                oppositePlacement: teamsInRound - 1 - i,
+                roundNumber,
+                court: court++,
+                date: new Date(startTime),
+            }),
+        );
+    }
+
+    return matches;
+};
+
+type KnockoutMatchConfig = {
+    teamFromPhase: TournamentPhase;
+    placement: number;
+    oppositePlacement: number;
+    roundNumber: number;
+    court: number;
+    date: Date;
+};
+
+const createKnockoutMatch = ({
+    teamFromPhase,
+    placement,
+    oppositePlacement,
+    roundNumber,
+    court,
+    date,
+}: KnockoutMatchConfig): Match => {
+    const isFirstRound = roundNumber === 1;
+    const linkType = isFirstRound ? "league" : "winner";
+
+    return {
+        id: generateId(),
+        court,
+        teams: [
+            {
+                link: {
+                    placement,
+                    label: getPlacement(teamFromPhase, placement),
+                    type: linkType,
+                    fromRound: roundNumber - 2,
+                },
+                score: 0,
+            },
+            {
+                link: {
+                    placement: oppositePlacement,
+                    label: getPlacement(teamFromPhase, oppositePlacement),
+                    type: linkType,
+                    fromRound: roundNumber - 2,
+                },
+                score: 0,
+            },
+        ],
+        date,
+        status: "scheduled",
+    };
+};
+
+const insertThirdPlacePlayoff = (
+    rounds: TournamentRound[],
+    startTime: Date,
+    roundDuration: number,
+): TournamentRound[] => {
+    const finalRound = rounds.pop();
+
+    if (!finalRound) {
+        return rounds;
+    }
 
     startTime.setMinutes(startTime.getMinutes() + roundDuration);
 
-    // Add the final match
     const finalMatch: Match = {
         id: generateId(),
         court: 1,
@@ -139,6 +210,7 @@ export const generateKnockoutBracket = (
         date: finalRound.matches[0]!.date,
         status: "scheduled",
     };
+
     rounds.push(
         {
             id: generateId(),
@@ -147,6 +219,7 @@ export const generateKnockoutBracket = (
         },
         finalRound,
     );
+
     rounds.at(-1)!.matches[0]!.date = startTime;
 
     return rounds;
@@ -184,71 +257,98 @@ const updateKnockoutPhase = (phase: KnockoutTournamentPhase, tournament: Tournam
 
     if (!knockout) return;
 
-    let table: Ref[] = tournament.teams;
+    const table = resolveInitialTable(tournament, phase);
 
-    const previous = previousPhase(tournament, phase);
-
-    if (previous) {
-        table = rankedTeams(previous);
-
-        if (allMatches(previous).some((match) => match.status !== "completed")) {
-            return;
-        }
-    }
+    if (!table) return;
 
     const roundWinners: Ref[][] = [];
     const roundLosers: Ref[][] = [];
+
     for (let i = 0; i < knockout.length; i++) {
         const round = knockout[i]!;
+
+        if (!roundHasUnifiedStatus(round)) return;
+
         const winners: Ref[] = [];
         const losers: Ref[] = [];
         roundWinners.push(winners);
         roundLosers.push(losers);
 
-        // not all matches the same status
-        const firstState = round.matches[0]!.status;
-        if (round.matches.some((match) => match.status !== firstState)) return;
-
         const roundRefIndex = round.matches[0]!.teams[0].link?.fromRound ?? i - 1;
-        const prevRoundWinners = i === 0 ? [] : roundWinners[roundRefIndex];
-        const prevRoundLosers = i === 0 ? [] : roundLosers[roundRefIndex];
+        const prevRoundWinners = i === 0 ? [] : roundWinners[roundRefIndex]!;
+        const prevRoundLosers = i === 0 ? [] : roundLosers[roundRefIndex]!;
 
         for (const match of round.matches) {
-            if (match.status === "completed") {
-                const team1 = match.teams[0].ref!;
-                const team2 = match.teams[1].ref!;
+            updateRoundResults(match, winners, losers);
+            updateScheduledMatchTeams(match, table, prevRoundWinners, prevRoundLosers);
+        }
+    }
+};
 
-                if (match.teams[0].score > match.teams[1].score) {
-                    winners.push(team1);
-                    losers.push(team2);
-                } else if (match.teams[0].score < match.teams[1].score) {
-                    winners.push(team2);
-                    losers.push(team1);
-                }
-            }
+const resolveInitialTable = (
+    tournament: Tournament,
+    phase: KnockoutTournamentPhase,
+): Ref[] | null => {
+    const previous = previousPhase(tournament, phase);
 
-            if (match.status === "scheduled") {
-                for (let i = 0; i < match.teams.length; i++) {
-                    const link = match.teams[i]!.link!;
+    if (!previous) {
+        return tournament.teams;
+    }
 
-                    if (link.type === "winner") {
-                        match.teams[i] = {
-                            ...match.teams[i]!,
-                            ref: prevRoundWinners![link.placement],
-                        };
-                    } else if (link.type === "loser") {
-                        match.teams[i] = {
-                            ...match.teams[i]!,
-                            ref: prevRoundLosers![link.placement],
-                        };
-                    } else if (link.type === "league") {
-                        match.teams[i] = {
-                            ...match.teams[i]!,
-                            ref: table[link.placement],
-                        };
-                    }
-                }
-            }
+    if (allMatches(previous).some((match) => match.status !== "completed")) {
+        return null;
+    }
+
+    return rankedTeams(previous);
+};
+
+const roundHasUnifiedStatus = (round: TournamentRound): boolean => {
+    const firstState = round.matches[0]!.status;
+
+    return !round.matches.some((match) => match.status !== firstState);
+};
+
+const updateRoundResults = (match: Match, winners: Ref[], losers: Ref[]) => {
+    if (match.status !== "completed") return;
+
+    const team1 = match.teams[0].ref!;
+    const team2 = match.teams[1].ref!;
+
+    if (match.teams[0].score > match.teams[1].score) {
+        winners.push(team1);
+        losers.push(team2);
+    } else if (match.teams[0].score < match.teams[1].score) {
+        winners.push(team2);
+        losers.push(team1);
+    }
+};
+
+const updateScheduledMatchTeams = (
+    match: Match,
+    table: Ref[],
+    prevRoundWinners: Ref[],
+    prevRoundLosers: Ref[],
+) => {
+    if (match.status !== "scheduled") return;
+
+    for (let i = 0; i < match.teams.length; i++) {
+        const link = match.teams[i]!.link!;
+
+        if (link.type === "winner") {
+            match.teams[i] = {
+                ...match.teams[i]!,
+                ref: prevRoundWinners[link.placement],
+            };
+        } else if (link.type === "loser") {
+            match.teams[i] = {
+                ...match.teams[i]!,
+                ref: prevRoundLosers[link.placement],
+            };
+        } else if (link.type === "league") {
+            match.teams[i] = {
+                ...match.teams[i]!,
+                ref: table[link.placement],
+            };
         }
     }
 };

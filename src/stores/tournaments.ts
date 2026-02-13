@@ -126,33 +126,34 @@ export const useTournamentsStore = defineStore("tournaments", () => {
     };
 
     const uploadTournaments = () => {
+        const parseTournament = (raw: string) => {
+            try {
+                const tournament = tournamentFromJson(JSON.parse(raw));
+                return tournament;
+            } catch (error) {
+                throw new Error(`Error parsing file ${error}`);
+            }
+        };
+
+        const onUpload = async (files: FileList | null) => {
+            if (!files) {
+                throw new Error("No file selected");
+            }
+
+            const promises = [] as Promise<Tournament>[];
+            for (const file of Array.from(files)) {
+                promises.push(file.text().then(parseTournament));
+            }
+
+            return await Promise.all(promises);
+        };
+
         return new Promise<Tournament[]>((resolve, reject) => {
             const element = document.createElement("input");
             element.type = "file";
             element.accept = "application/json";
             element.multiple = true;
-            element.onchange = async () => {
-                if (!element.files) {
-                    reject(new Error("No file selected"));
-                    return;
-                }
-
-                const promises = [] as Promise<Tournament>[];
-                for (const file of Array.from(element.files)) {
-                    promises.push(
-                        file.text().then((text) => {
-                            try {
-                                const tournament = tournamentFromJson(JSON.parse(text));
-                                return tournament;
-                            } catch (error) {
-                                throw new Error(`Error parsing file ${file.name}: ${error}`);
-                            }
-                        }),
-                    );
-                }
-
-                resolve(await Promise.all(promises));
-            };
+            element.onchange = () => onUpload(element.files).then(resolve).catch(reject);
             element.click();
         });
     };

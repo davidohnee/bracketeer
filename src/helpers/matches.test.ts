@@ -469,15 +469,136 @@ describe("Matches Helper Functions", () => {
             );
         });
 
-        it("should return empty groups for unmatched filters", () => {
-            const grouped = groupMatches({
-                allMatches,
-                tournament,
-                selectedGroupOption: "team",
-                teamFilter: "non-existent-team",
+        describe("with filters", () => {
+            describe("team filter", () => {
+                /**
+                 * grouped can contain multiple teams,
+                 * but every match in the group must contain the filtered team to be included in the results
+                 */
+
+                it("should filter matches by team", () => {
+                    const grouped = groupMatches({
+                        allMatches,
+                        tournament,
+                        selectedGroupOption: "team",
+                        teamFilter: "team-1",
+                    });
+
+                    expect(grouped).toHaveProperty("Team 1");
+                    expect(grouped["Team 1"]).toHaveLength(3);
+                    expect(grouped["Team 1"]).toEqual(
+                        expect.arrayContaining([allMatches[0], allMatches[2], allMatches[3]]),
+                    );
+                    // other keys can exist, but will only contain matches that also have team-1
+                    for (const key in grouped) {
+                        if (key !== "Team 1") {
+                            grouped[key]!.forEach((richMatch) => {
+                                const teamIds = richMatch.match.teams.map((t) => t.ref!.id);
+                                expect(teamIds).toContain("team-1");
+                            });
+                        }
+                    }
+                });
+
+                it("should return empty groups for unmatched filters", () => {
+                    const grouped = groupMatches({
+                        allMatches,
+                        tournament,
+                        selectedGroupOption: "team",
+                        teamFilter: "non-existent-team",
+                    });
+
+                    expect(grouped).toEqual({});
+                });
             });
 
-            expect(grouped).toEqual({});
+            describe("court filter", () => {
+                it("should filter matches by court", () => {
+                    const grouped = groupMatches({
+                        allMatches,
+                        tournament,
+                        selectedGroupOption: "court",
+                        courtFilter: 1,
+                    });
+
+                    expect(grouped).toHaveProperty("Court 1");
+                    expect(grouped).not.toHaveProperty("Court 2");
+                    expect(grouped["Court 1"]).toHaveLength(2);
+                    expect(grouped["Court 1"]).toEqual(
+                        expect.arrayContaining([allMatches[0], allMatches[3]]),
+                    );
+                });
+
+                it("should return empty groups for unmatched filters", () => {
+                    const grouped = groupMatches({
+                        allMatches,
+                        tournament,
+                        selectedGroupOption: "court",
+                        courtFilter: 999,
+                    });
+
+                    expect(grouped).toEqual({});
+                });
+            });
+
+            describe("group filter", () => {
+                beforeEach(() => {
+                    tournament.phases = [
+                        {
+                            id: "phase-1",
+                            type: "group",
+                            name: "Group Phase",
+                            rounds: 1,
+                            groups: [
+                                {
+                                    id: "group-1",
+                                    name: "Group 1",
+                                    teams: [TEST_TEAMS[0]!, TEST_TEAMS[1]!], // Team 1 and Team 2
+                                },
+                                {
+                                    id: "group-2",
+                                    name: "Group 2",
+                                    teams: [TEST_TEAMS[2]!, TEST_TEAMS[3]!], // Team 3 and Team 4
+                                },
+                            ],
+                            matches: allMatches.map((richMatch) => richMatch.match),
+                        },
+                    ];
+                });
+
+                it("should filter matches by group", () => {
+                    // set up a group phase with groups and assign matches to those groups
+                    const grouped = groupMatches({
+                        allMatches,
+                        tournament,
+                        selectedGroupOption: "round",
+                        groupFilter: "phase-1.group-1",
+                    });
+
+                    expect(grouped).toHaveProperty("phase-1.Round 1");
+                    expect(grouped).not.toHaveProperty("phase-1.Round 2");
+                    expect(grouped).toHaveProperty("phase-1.Round 3");
+                    expect(grouped["phase-1.Round 1"]).toHaveLength(2);
+                    expect(grouped["phase-1.Round 3"]).toHaveLength(1);
+                    expect(grouped["phase-1.Round 1"]).toEqual(
+                        expect.arrayContaining([allMatches[0], allMatches[3]]),
+                    );
+                    expect(grouped["phase-1.Round 3"]).toEqual(
+                        expect.arrayContaining([allMatches[2]]),
+                    );
+                });
+
+                it("should return empty groups for unmatched filters", () => {
+                    const grouped = groupMatches({
+                        allMatches,
+                        tournament,
+                        selectedGroupOption: "round",
+                        groupFilter: "phase-1.non-existent-group",
+                    });
+
+                    expect(grouped).toEqual({});
+                });
+            });
         });
     });
 });

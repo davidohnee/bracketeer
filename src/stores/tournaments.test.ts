@@ -2,6 +2,8 @@ import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
 import { setActivePinia, createPinia } from "pinia";
 import { useTournamentsStore } from "./tournaments";
 import type { Tournament, TournamentConfig } from "../types/tournament";
+import { pull, push } from "@/share";
+import { Notifications } from "@/components/notifications/createNotification";
 
 // Mock external dependencies
 vi.mock("@/share", () => ({
@@ -37,7 +39,7 @@ vi.mock("@/helpers", () => ({
     tournamentFromJson: vi.fn((json) => json),
 }));
 
-const THROTTLE_DURATION = 100;
+const THROTTLE_DURATION = 200;
 const asyncThrottleDelay = () => new Promise((resolve) => setTimeout(resolve, THROTTLE_DURATION));
 
 describe("Tournaments Store", () => {
@@ -354,6 +356,194 @@ describe("Tournaments Store", () => {
             expect(document.createElement).toHaveBeenCalledWith("a");
             expect(mockElement.download).toBe("Download Me.bracketeer.json");
             expect(mockElement.click).toHaveBeenCalled();
+        });
+    });
+
+    describe("share method", () => {
+        it("should call push and add success notification", async () => {
+            const store = useTournamentsStore();
+            const tournament: Tournament = {
+                id: "share-me",
+                version: 3,
+                name: "Share Me",
+                teams: [],
+                phases: [],
+                config: mockConfig,
+            };
+            store.add(tournament);
+
+            const mockedPush = vi.mocked(push);
+            mockedPush.mockResolvedValue({
+                author: "test-author",
+                link: "https://example.com/share",
+                tournament: {
+                    ...tournament,
+                    remote: [{ identifier: "remote-1" }],
+                },
+                date: new Date(),
+            });
+
+            await store.share(tournament, true);
+
+            expect(mockedPush).toHaveBeenCalledWith(tournament, true);
+            expect(Notifications.addSuccess).toHaveBeenCalledWith(
+                "Tournament shared",
+                expect.objectContaining({
+                    details: "The tournament has been shared successfully.",
+                    timeout: 5000,
+                    redirect: "https://example.com/share",
+                }),
+            );
+        });
+
+        it("should call push and add error notification on failure", async () => {
+            const store = useTournamentsStore();
+            const tournament: Tournament = {
+                id: "share-fail",
+                version: 3,
+                name: "Share Fail",
+                teams: [],
+                phases: [],
+                config: mockConfig,
+            };
+            store.add(tournament);
+
+            const mockedPush = vi.mocked(push);
+            mockedPush.mockResolvedValue({ error: "not-found" });
+
+            await store.share(tournament);
+
+            expect(mockedPush).toHaveBeenCalledWith(tournament, false);
+            expect(Notifications.addError).toHaveBeenCalledWith(
+                "Sharing failed",
+                expect.objectContaining({
+                    details: "There was an error sharing the tournament. Please try again.",
+                    timeout: 5000,
+                }),
+            );
+        });
+    });
+
+    describe("addFromUpload method", () => {
+        it("should add uploaded tournaments to the store", async () => {
+            const store = useTournamentsStore();
+            const tournamentOne: Tournament = {
+                id: "upload-1",
+                version: 3,
+                name: "Upload One",
+                teams: [],
+                phases: [],
+                config: mockConfig,
+            };
+            const tournamentTwo: Tournament = {
+                id: "upload-2",
+                version: 3,
+                name: "Upload Two",
+                teams: [],
+                phases: [],
+                config: mockConfig,
+            };
+
+            const fileOne = new File([JSON.stringify(tournamentOne)], "t1.json", {
+                type: "application/json",
+            });
+            const fileTwo = new File([JSON.stringify(tournamentTwo)], "t2.json", {
+                type: "application/json",
+            });
+            const fileList = {
+                0: fileOne,
+                1: fileTwo,
+                length: 2,
+                item: (index: number) => {
+                    if (index === 0) return fileOne;
+                    if (index === 1) return fileTwo;
+                    return null;
+                },
+            } as unknown as FileList;
+
+            const mockInput = {
+                type: "",
+                accept: "",
+                multiple: false,
+                files: fileList,
+                onchange: null as null | (() => void),
+                click: vi.fn(),
+            } as unknown as HTMLInputElement;
+
+            vi.spyOn(document, "createElement").mockReturnValue(mockInput);
+
+            const uploadPromise = store.addFromUpload();
+            expect(mockInput.click).toHaveBeenCalled();
+
+            mockInput.onchange?.(new Event("change"));
+
+            await uploadPromise;
+
+            expect(store.all).toHaveLength(2);
+            expect(store.all[0]?.id).toBe("upload-1");
+            expect(store.all[1]?.id).toBe("upload-2");
+        });
+    });
+
+    describe("pullFromRemote method", () => {
+        it("should pull and update tournament fields when tournament is provided", async () => {
+            const store = useTournamentsStore();
+            const tournament: Tournament = {
+                id: "remote-1",
+                version: 3,
+                name: "Old Name",
+                teams: [],
+                phases: [{ id: "phase-1", type: "group", name: "Old", matches: [], rounds: 1 }],
+                config: mockConfig,
+                remote: [{ identifier: "remote-id" }],
+            };
+            store.add(tournament);
+
+            const mockedPull = vi.mocked(pull);
+            const updatedConfig = { ...mockConfig, courts: 3 };
+            mockedPull.mockResolvedValue({
+                author: "test-author",
+                tournament: {
+                    name: "New Name",
+                    config: updatedConfig,
+                    phases: [{ id: "phase-2", type: "knockout", name: "New", rounds: [] }],
+                } as unknown as Tournament,
+                link: "https://example.com/share",
+                date: new Date(),
+            });
+
+            const result = await store.pull({ tournament });
+
+            expect(mockedPull).toHaveBeenCalledWith("remote-id");
+            expect(result).toBe(tournament);
+            expect(tournament.name).toBe("New Name");
+            expect(tournament.config.courts).toBe(3);
+            expect(tournament.phases[0]?.type).toBe("knockout");
+        });
+
+        it("should throw when no remote source is provided", async () => {
+            const store = useTournamentsStore();
+
+            await expect(store.pull({})).rejects.toThrow("No remote source");
+        });
+
+        it("should throw when pull returns an error", async () => {
+            const store = useTournamentsStore();
+            const tournament: Tournament = {
+                id: "remote-2",
+                version: 3,
+                name: "Has Remote",
+                teams: [],
+                phases: [],
+                config: mockConfig,
+                remote: [{ identifier: "remote-error" }],
+            };
+            store.add(tournament);
+
+            const mockedPull = vi.mocked(pull);
+            mockedPull.mockResolvedValue({ error: "not-found" });
+
+            await expect(store.pull({ tournament })).rejects.toThrow("not-found");
         });
     });
 

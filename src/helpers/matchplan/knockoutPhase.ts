@@ -186,7 +186,7 @@ const insertThirdPlacePlayoff = (
 
     startTime.setMinutes(startTime.getMinutes() + roundDuration);
 
-    const finalMatch: Match = {
+    const thirdPlaceMatch: Match = {
         id: generateId(),
         court: 1,
         teams: [
@@ -215,7 +215,7 @@ const insertThirdPlacePlayoff = (
         {
             id: generateId(),
             name: "3rd Place Playoff",
-            matches: [finalMatch],
+            matches: [thirdPlaceMatch],
         },
         finalRound,
     );

@@ -17,50 +17,64 @@ export const allMatches = (phase?: TournamentPhase) => {
     return matches;
 };
 
-export const rankedTeams = (phase: TournamentPhase): Ref[] => {
+const rankGroupPhase = (phase: TournamentPhase): Ref[] => {
+    if (phase.type !== "group") return [];
+
     const rankedTeams: Ref[] = [];
 
-    if (phase.type === "group") {
-        const tables = generateTables(phase);
-        const teamsPerTable = tables[0]?.teams.length || 0;
+    const tables = generateTables(phase);
+    const teamsPerTable = tables[0]?.teams.length || 0;
 
-        for (let i = 0; i < teamsPerTable; i++) {
-            for (const table of tables) {
-                if (table.teams[i]) {
-                    rankedTeams.push(table.teams[i]!.team);
-                }
+    for (let i = 0; i < teamsPerTable; i++) {
+        for (const table of tables) {
+            if (table.teams[i]) {
+                rankedTeams.push(table.teams[i]!.team);
             }
         }
     }
+    return rankedTeams;
+};
 
-    if (phase.type === "knockout") {
-        for (let i = phase.rounds.length - 1; i >= 0; i--) {
-            const round = phase.rounds[i]!;
-            // for each match in round, 1st winner
-            // then for each match in round loser
-            const winners = [];
-            const losers = [];
-            for (const match of round.matches) {
-                if (match.status === "scheduled") {
-                    winners.push(match.teams[0].ref!);
-                } else {
-                    const team1 = match.teams[0].ref!;
-                    const team2 = match.teams[1].ref!;
+const rankKnockoutPhase = (phase: TournamentPhase): Ref[] => {
+    if (phase.type !== "knockout") return [];
 
-                    if (match.teams[0].score > match.teams[1].score) {
-                        winners.push(team1);
-                        losers.push(team2);
-                    } else if (match.teams[0].score < match.teams[1].score) {
-                        winners.push(team2);
-                        losers.push(team1);
-                    }
+    const rankedTeams: Ref[] = [];
+
+    for (let i = phase.rounds.length - 1; i >= 0; i--) {
+        const round = phase.rounds[i]!;
+        // for each match in round, 1st winner
+        // then for each match in round loser
+        const winners = [];
+        const losers = [];
+        for (const match of round.matches) {
+            if (match.status === "scheduled") {
+                winners.push(match.teams[0].ref!);
+            } else {
+                const team1 = match.teams[0].ref!;
+                const team2 = match.teams[1].ref!;
+
+                if (match.teams[0].score > match.teams[1].score) {
+                    winners.push(team1);
+                    losers.push(team2);
+                } else if (match.teams[0].score < match.teams[1].score) {
+                    winners.push(team2);
+                    losers.push(team1);
                 }
             }
-            rankedTeams.push(...winners, ...losers);
         }
+        rankedTeams.push(...winners, ...losers);
     }
 
     return rankedTeams;
+};
+
+export const rankedTeams = (phase: TournamentPhase): Ref[] => {
+    if (phase.type === "group") {
+        return rankGroupPhase(phase);
+    } else if (phase.type === "knockout") {
+        return rankKnockoutPhase(phase);
+    }
+    return [];
 };
 
 export const previousPhase = (

@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from "vitest";
-import { tournamentRichMatches } from "./matches";
+import { groupMatches, tournamentRichMatches } from "./matches";
 import type {
     Tournament,
     TournamentConfig,
@@ -7,6 +7,7 @@ import type {
     MatchTeam,
     MatchRound,
     GroupTournamentPhase,
+    RichMatch,
 } from "@/types/tournament";
 
 // Test helper constants
@@ -312,6 +313,171 @@ describe("Matches Helper Functions", () => {
             expect(richMatch?.roundName).toBe("Round 1");
             expect(richMatch?.phaseName).toBe("Group Phase");
             expect(richMatch?.phaseId).toBe("phase-1");
+        });
+    });
+
+    describe("groupMatches", () => {
+        let allMatches: RichMatch[] = [];
+        const date1 = new Date();
+        const date2 = new Date(date1.getTime() + 1000 * 60 * 30); // 30 minutes later
+
+        beforeEach(() => {
+            allMatches = [
+                {
+                    match: createMatch(
+                        "match-1",
+                        createMatchTeams("team-1", "team-2"),
+                        date1,
+                        "scheduled",
+                        1,
+                        createMatchRound("round-1", "Round 1"),
+                    ),
+                    roundName: "Round 1",
+                    phaseName: "Group Phase",
+                    phaseId: "phase-1",
+                },
+                {
+                    match: createMatch(
+                        "match-2",
+                        createMatchTeams("team-3", "team-4"),
+                        date2,
+                        "scheduled",
+                        2,
+                        createMatchRound("round-2", "Round 2"),
+                    ),
+                    roundName: "Round 2",
+                    phaseName: "Group Phase",
+                    phaseId: "phase-1",
+                },
+                {
+                    match: createMatch(
+                        "match-2-2",
+                        createMatchTeams("team-1", "team-2"),
+                        date2,
+                        "scheduled",
+                        2,
+                        createMatchRound("round-3", "Round 3"),
+                    ),
+                    roundName: "Round 3",
+                    phaseName: "Group Phase",
+                    phaseId: "phase-1",
+                },
+                {
+                    match: createMatch(
+                        "match-1-2",
+                        createMatchTeams("team-1", "team-2"),
+                        date1,
+                        "scheduled",
+                        1,
+                        createMatchRound("round-1", "Round 1"),
+                    ),
+                    roundName: "Round 1",
+                    phaseName: "Group Phase",
+                    phaseId: "phase-1",
+                },
+            ];
+        });
+
+        it("should group matches by round", () => {
+            const grouped = groupMatches({
+                allMatches,
+                tournament,
+                selectedGroupOption: "round",
+            });
+
+            expect(grouped).toHaveProperty("phase-1.Round 1");
+            expect(grouped).toHaveProperty("phase-1.Round 2");
+            expect(grouped).toHaveProperty("phase-1.Round 3");
+            expect(grouped["phase-1.Round 1"]).toHaveLength(2);
+            expect(grouped["phase-1.Round 2"]).toHaveLength(1);
+            expect(grouped["phase-1.Round 3"]).toHaveLength(1);
+            expect(grouped["phase-1.Round 1"]).toEqual(
+                expect.arrayContaining([allMatches[0], allMatches[3]]),
+            );
+            expect(grouped["phase-1.Round 2"]).toEqual(expect.arrayContaining([allMatches[1]]));
+            expect(grouped["phase-1.Round 3"]).toEqual(expect.arrayContaining([allMatches[2]]));
+        });
+
+        it("should group matches by time", () => {
+            const grouped = groupMatches({
+                allMatches,
+                tournament,
+                selectedGroupOption: "time",
+            });
+
+            // The time keys will be locale-specific, so we need to generate them using the same logic as the grouping function
+            // e.g. 06:23 PM
+            const localeDateTimeString = (date: Date) =>
+                date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+            const timeKey1 = localeDateTimeString(date1);
+            const timeKey2 = localeDateTimeString(date2);
+
+            expect(grouped).toHaveProperty(timeKey1);
+            expect(grouped).toHaveProperty(timeKey2);
+
+            expect(grouped[timeKey1]).toHaveLength(2);
+            expect(grouped[timeKey2]).toHaveLength(2);
+            expect(grouped[timeKey1]).toEqual(
+                expect.arrayContaining([allMatches[0], allMatches[3]]),
+            );
+            expect(grouped[timeKey2]).toEqual(
+                expect.arrayContaining([allMatches[1], allMatches[2]]),
+            );
+        });
+
+        it("should group matches by team", () => {
+            const grouped = groupMatches({
+                allMatches,
+                tournament,
+                selectedGroupOption: "team",
+            });
+
+            expect(grouped).toHaveProperty("Team 1");
+            expect(grouped).toHaveProperty("Team 2");
+            expect(grouped).toHaveProperty("Team 3");
+            expect(grouped).toHaveProperty("Team 4");
+            expect(grouped["Team 1"]).toHaveLength(3);
+            expect(grouped["Team 2"]).toHaveLength(3);
+            expect(grouped["Team 3"]).toHaveLength(1);
+            expect(grouped["Team 4"]).toHaveLength(1);
+            expect(grouped["Team 1"]).toEqual(
+                expect.arrayContaining([allMatches[0], allMatches[2], allMatches[3]]),
+            );
+            expect(grouped["Team 2"]).toEqual(
+                expect.arrayContaining([allMatches[0], allMatches[2], allMatches[3]]),
+            );
+            expect(grouped["Team 3"]).toEqual(expect.arrayContaining([allMatches[1]]));
+            expect(grouped["Team 4"]).toEqual(expect.arrayContaining([allMatches[1]]));
+        });
+
+        it("should group matches by court", () => {
+            const grouped = groupMatches({
+                allMatches,
+                tournament,
+                selectedGroupOption: "court",
+            });
+
+            expect(grouped).toHaveProperty("Court 1");
+            expect(grouped).toHaveProperty("Court 2");
+            expect(grouped["Court 1"]).toHaveLength(2);
+            expect(grouped["Court 2"]).toHaveLength(2);
+            expect(grouped["Court 1"]).toEqual(
+                expect.arrayContaining([allMatches[0], allMatches[3]]),
+            );
+            expect(grouped["Court 2"]).toEqual(
+                expect.arrayContaining([allMatches[1], allMatches[2]]),
+            );
+        });
+
+        it("should return empty groups for unmatched filters", () => {
+            const grouped = groupMatches({
+                allMatches,
+                tournament,
+                selectedGroupOption: "team",
+                teamFilter: "non-existent-team",
+            });
+
+            expect(grouped).toEqual({});
         });
     });
 });

@@ -62,22 +62,11 @@ const body = (files: Files, options: IOptions) => {
     return JSON.stringify(body);
 };
 
-const save = async (
-    files: Files,
-    options: IOptions = {
-        isPublic: false,
-    },
-) => {
+const save = async (files: Files, options: IOptions = {}) => {
     return await setGist(files, options);
 };
 
-const update = async (
-    files: Files,
-    id: string,
-    options: IOptions = {
-        isPublic: false,
-    },
-) => {
+const update = async (files: Files, id: string, options: IOptions = {}) => {
     return await setGist(files, options, id);
 };
 

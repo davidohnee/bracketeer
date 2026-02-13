@@ -74,10 +74,7 @@ export const ceilToNextMinute = (date: Date) => {
 
 export const localeDateTimeString = (
     date: Date,
-    hide: {
-        today?: boolean;
-        thisYear?: boolean;
-    } = { today: true, thisYear: true },
+    { hideDateIfToday = true, hideYearIfThisYear = true } = {},
 ): string => {
     // hide year if it's the current year
     const options: Intl.DateTimeFormatOptions = {
@@ -87,11 +84,12 @@ export const localeDateTimeString = (
         day: "2-digit",
         year: "numeric",
     };
-    if (hide.today && date.toDateString() === new Date().toDateString()) {
+    const now = new Date();
+    if (hideDateIfToday && date.toDateString() === now.toDateString()) {
         options.month = undefined;
         options.day = undefined;
     }
-    if (hide.thisYear && date.getFullYear() === new Date().getFullYear()) {
+    if (hideYearIfThisYear && date.getFullYear() === now.getFullYear()) {
         options.year = undefined;
     }
     return date.toLocaleString(undefined, options);

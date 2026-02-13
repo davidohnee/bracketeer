@@ -297,13 +297,17 @@ describe("Group Phase Generation", () => {
             tournament.phases = [phase];
             const matches = generateGroupPhase(phase, tournament);
 
-            console.log("Generated Matches with Balance Round:", matches);
-
             // Check if "Balance Round" exists
             expect(matches.some((m) => m.round?.name === "Balance Round")).toBe(true);
 
             // match count per team
-            const teamMatchCounts: Record<string, number> = {};
+            const teamMatchCounts = tournament.teams.reduce(
+                (acc, team) => {
+                    acc[team.id] = 0;
+                    return acc;
+                },
+                {} as Record<string, number>,
+            );
             matches.forEach((match) => {
                 match.teams.forEach((team) => {
                     if (team.ref?.id) {
@@ -316,6 +320,22 @@ describe("Group Phase Generation", () => {
             const matchCounts = Object.values(teamMatchCounts);
             const uniqueCounts = new Set(matchCounts);
             expect(uniqueCounts.size).toBe(1);
+        });
+
+        it("should NOT create balance rounds when all teams have equal match counts", () => {
+            const phase: GroupTournamentPhase = {
+                id: "phase-1",
+                name: "Group Phase",
+                type: "group",
+                rounds: 2,
+                matches: [],
+            };
+
+            tournament.phases = [phase];
+            const matches = generateGroupPhase(phase, tournament);
+
+            // Check that no "Balance Round" exists
+            expect(matches.some((m) => m.round?.name === "Balance Round")).toBe(false);
         });
     });
 });

@@ -178,11 +178,13 @@ const insertThirdPlacePlayoff = (
     startTime: Date,
     roundDuration: number,
 ): TournamentRound[] => {
-    const finalRound = rounds.pop();
-
-    if (!finalRound) {
+    // if there is no final round or there is only one round (i.e. two teams),
+    // we don't need a third place playoff
+    if (rounds.length <= 1) {
         return rounds;
     }
+
+    const finalRound = rounds.pop()!;
 
     startTime.setMinutes(startTime.getMinutes() + roundDuration);
 

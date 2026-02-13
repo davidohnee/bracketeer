@@ -1,12 +1,11 @@
 <script setup lang="ts">
 import { computed, onMounted, ref, watch } from "vue";
-import { getCourtName } from "@/helpers";
-import type { RichMatch, Tournament } from "@/types/tournament";
+import { getCourtName, getTeamName } from "@/helpers";
+import type { Tournament } from "@/types/tournament";
 import { useRoute, useRouter } from "vue-router";
 import GroupedTournamentList from "./GroupedTournamentList.vue";
-import { tournamentRichMatches } from "@/helpers/matches";
+import { GROUP_OPTIONS, groupMatches, tournamentRichMatches } from "@/helpers/matches";
 import TabSelector from "./TabSelector.vue";
-import { localeDateTimeString } from "@/helpers/common";
 import MatchFilter from "./filter/MatchFilter.vue";
 import type { Option } from "@/types/common";
 
@@ -81,15 +80,19 @@ const selectedGroupOption = computed<(typeof GROUP_OPTIONS)[number]>({
     },
 });
 
-const getTeamName = (teamId: string | undefined) => {
-    const team = props.modelValue.teams.find((team) => team.id === teamId);
-    return team ? team.name : null;
-};
-
 const allMatches = computed(() => tournamentRichMatches(tournament.value));
 const matchFilter = ref<typeof MatchFilter>();
 
-const GROUP_OPTIONS = ["round", "time", "team", "court"] as const;
+const grouped = computed(() =>
+    groupMatches({
+        allMatches: allMatches.value,
+        tournament: tournament.value,
+        selectedGroupOption: selectedGroupOption.value,
+        teamFilter: teamFilter.value,
+        courtFilter: courtFilter.value,
+        groupFilter: groupFilter.value,
+    }),
+);
 
 const groupLookup = computed<Record<string, Option>>(() => {
     const lookup: Record<string, Option> = {};
@@ -102,76 +105,6 @@ const groupLookup = computed<Record<string, Option>>(() => {
         };
     }
     return lookup;
-});
-const grouped = computed(() => {
-    // Group matches by the selected option
-    const groupedMatches: Record<string, RichMatch[]> = {};
-
-    for (const match of allMatches.value) {
-        // filter
-        if (
-            teamFilter.value &&
-            !match.match.teams.some((team) => team.ref?.id === teamFilter.value)
-        ) {
-            continue;
-        }
-        if (courtFilter.value && match.match.court !== courtFilter.value) {
-            continue;
-        }
-        if (groupFilter.value) {
-            // if any of the match's teams is linked to the group, include it
-            const [phaseId, groupId] = groupFilter.value.split(".") as [string, string];
-            const phase = tournament.value.phases.find((p) => p.id === phaseId);
-            if (
-                phase?.type === "group" &&
-                phase.groups &&
-                !match.match.teams.some((team) =>
-                    phase.groups
-                        ?.find((g) => g.id === groupId)
-                        ?.teams?.some((x) => x.id === team.ref?.id),
-                )
-            ) {
-                continue;
-            }
-        }
-
-        const keys: (string | null)[] = [];
-        if (selectedGroupOption.value === "round") {
-            keys.push(`${match.phaseId}.${match.roundName}`);
-        } else if (selectedGroupOption.value === "time") {
-            keys.push(localeDateTimeString(match.match.date));
-        } else if (selectedGroupOption.value === "team") {
-            keys.push(
-                getTeamName(match.match.teams[0].ref?.id),
-                getTeamName(match.match.teams[1].ref?.id),
-            );
-        } else if (selectedGroupOption.value === "court") {
-            keys.push(getCourtName(tournament.value.config.sport, match.match.court));
-        }
-
-        for (const key of keys) {
-            if (!key) continue;
-            if (!groupedMatches[key]) {
-                groupedMatches[key] = [];
-            }
-            groupedMatches[key].push(match);
-        }
-    }
-
-    // sort groups if 'team' or 'court' is selected
-    if (["team", "court"].includes(selectedGroupOption.value)) {
-        return Object.fromEntries(
-            Object.entries(groupedMatches).sort((a, b) => {
-                const aKey = a[0];
-                const bKey = b[0];
-                return aKey.localeCompare(bKey, undefined, {
-                    numeric: true,
-                });
-            }),
-        );
-    }
-
-    return groupedMatches;
 });
 
 const tabOptions = computed<Option[] | string[]>(() => {
@@ -224,7 +157,7 @@ const displaySettings: { [K in (typeof GROUP_OPTIONS)[number]]: DisplaySetting }
 const activeFilters = computed(() => {
     const filters = [];
     if (teamFilter.value) {
-        filters.push(getTeamName(teamFilter.value));
+        filters.push(getTeamName(tournament.value, teamFilter.value));
     }
     if (courtFilter.value) {
         filters.push(getCourtName(tournament.value.config.sport, courtFilter.value));

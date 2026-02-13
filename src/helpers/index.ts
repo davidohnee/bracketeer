@@ -37,3 +37,8 @@ export const randomiseGroupPhaseResults = (tournament: Tournament) => {
         }
     }
 };
+
+export const getTeamName = (tournament: Tournament, teamId: string | undefined) => {
+    const team = tournament.teams.find((team) => team.id === teamId);
+    return team ? team.name : null;
+};

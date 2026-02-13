@@ -23,43 +23,48 @@ const matches = computed({
     },
 });
 
-const groupings = computed(() => {
-    // Group matches by the selected option
-    const groupedMatches: Record<string, Match[]> = {};
-    for (const match of matches.value) {
-        let key = "";
+const buildHeaderKey = (match: RichMatch) => {
+    const parts: string[] = [];
 
-        if (props.showPhase) {
-            key += match.phaseName;
-        }
-        if (props.showRound) {
-            if (key) {
-                key += " - ";
-            }
-            key += match.roundName;
-        }
-
-        if (props.showGroup) {
-            const phase = props.tournament.phases.find((p) => p.id === match.phaseId)!;
-
-            if (phase.type == "group") {
-                const group = (phase as GroupTournamentPhase).groups?.find((g) =>
-                    match.match.teams.some((x) => g.teams.some((y) => y.id === x.ref?.id)),
-                );
-                if (group) {
-                    if (key) {
-                        key += ": ";
-                    }
-                    key += group.name;
-                }
-            }
-        }
-
-        if (!groupedMatches[key]) {
-            groupedMatches[key] = [];
-        }
-        groupedMatches[key]!.push(match.match);
+    if (props.showPhase) {
+        parts.push(match.phaseName);
     }
+    if (props.showRound) {
+        parts.push(match.roundName);
+    }
+
+    const base = parts.join(" - ");
+    const groupName = props.showGroup ? getGroupName(match) : "";
+
+    if (!groupName) {
+        return base;
+    }
+
+    return base ? `${base}: ${groupName}` : groupName;
+};
+
+const getGroupName = (match: RichMatch) => {
+    const phase = props.tournament.phases.find((p) => p.id === match.phaseId);
+    if (phase?.type !== "group") {
+        return "";
+    }
+
+    const group = (phase as GroupTournamentPhase).groups?.find((g) =>
+        match.match.teams.some((x) => g.teams.some((y) => y.id === x.ref?.id)),
+    );
+
+    return group?.name ?? "";
+};
+
+const groupings = computed(() => {
+    const groupedMatches: Record<string, Match[]> = {};
+
+    for (const match of matches.value) {
+        const key = buildHeaderKey(match);
+        groupedMatches[key] ??= [];
+        groupedMatches[key].push(match.match);
+    }
+
     return groupedMatches;
 });
 </script>

@@ -387,20 +387,29 @@ describe("Common Helper Functions", () => {
     describe("localeDateTimeString", () => {
         it("should format date with time", () => {
             const date = new Date("2026-01-01T12:30:00");
-            const result = localeDateTimeString(date, { today: false, thisYear: false });
+            const result = localeDateTimeString(date, {
+                hideDateIfToday: false,
+                hideYearIfThisYear: false,
+            });
             expect(result).toContain("12:30");
         });
 
         it("should hide date if today", () => {
             const now = new Date();
-            const result = localeDateTimeString(now, { today: true, thisYear: false });
+            const result = localeDateTimeString(now, {
+                hideDateIfToday: true,
+                hideYearIfThisYear: false,
+            });
             const month = now.toLocaleString(undefined, { month: "short" });
             expect(result).not.toContain(month);
         });
 
         it("should hide year if this year", () => {
             const date = new Date();
-            const result = localeDateTimeString(date, { today: false, thisYear: true });
+            const result = localeDateTimeString(date, {
+                hideDateIfToday: false,
+                hideYearIfThisYear: true,
+            });
             expect(result).not.toContain(date.getFullYear().toString());
         });
     });

@@ -122,6 +122,20 @@ const groupName = (id: string | null) => {
                 background-color: rgb(31, 202, 131);
             }
         }
+
+        &.play-in {
+            position: relative;
+
+            ::before {
+                content: "";
+                position: absolute;
+                top: 2px;
+                left: 0;
+                width: 2px;
+                height: calc(100% - 4px);
+                background-color: var(--color-brand-blue);
+            }
+        }
     }
 
     @media screen and (max-width: 600px) {

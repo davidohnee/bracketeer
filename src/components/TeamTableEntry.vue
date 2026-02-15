@@ -18,6 +18,7 @@ const teamName = computed(() => {
 
 const progress = computed(() => {
     let proceedingTeams = 0;
+    let byeTeams = 0;
     const phaseI = props.tournament.phases.findIndex((p) => p.id === props.phaseId);
 
     if (phaseI < props.tournament.phases.length - 1) {
@@ -25,7 +26,13 @@ const progress = computed(() => {
 
         if (nextPhase.teamCount) {
             const currentPhase = props.tournament.phases[phaseI] as GroupTournamentPhase;
-            proceedingTeams = nextPhase.teamCount / (currentPhase.groups?.length ?? 1);
+            const groupCount = currentPhase.groups?.length ?? 1;
+            proceedingTeams = nextPhase.teamCount / groupCount;
+
+            if (nextPhase.type === "knockout") {
+                const powerOfTwo = nextPowerOfTwo(nextPhase.teamCount);
+                byeTeams = (powerOfTwo - nextPhase.teamCount) / groupCount;
+            }
         } else {
             proceedingTeams = props.rank;
         }
@@ -33,15 +40,23 @@ const progress = computed(() => {
 
     const def = Math.floor(proceedingTeams);
     const maybe = Math.ceil(proceedingTeams);
+    const byeDef = Math.floor(byeTeams);
 
-    if (props.rank <= def) {
+    if (byeDef > 0 && props.rank <= byeDef) {
         return "progress";
+    } else if (props.rank <= def) {
+        return "play-in";
     } else if (props.rank === maybe) {
         return "maybe";
     }
 
     return null;
 });
+
+const nextPowerOfTwo = (value: number): number => {
+    if (value <= 1) return 1;
+    return 2 ** Math.ceil(Math.log2(value));
+};
 </script>
 
 <template>

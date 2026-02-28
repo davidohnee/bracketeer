@@ -31,9 +31,10 @@ const updateStartTime = () => {
         }
 
         const rawTournament = toRaw(editableTournament.value);
-        editableTournament.value.config.startTime = startTime.value;
+        rawTournament.config.startTime = startTime.value;
         rawTournament.phases = generateGroupPhases(rawTournament);
-        editableTournament.value.phases = generateKnockoutBrackets(rawTournament);
+        rawTournament.phases = generateKnockoutBrackets(rawTournament);
+        editableTournament.value = toRaw(editableTournament.value);
     }
 };
 

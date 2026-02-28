@@ -15,6 +15,7 @@ import { Notifications } from "@/components/notifications/createNotification";
 import { generateKnockoutBracket, updateKnockoutMatches } from "@/helpers/matchplan/knockoutPhase";
 import { agoString, getTournamentStatus } from "@/helpers/common";
 import { generateGroupPhase } from "@/helpers/matchplan/groupPhase";
+import { fromShare } from "@/share";
 
 const props = defineProps<{
     tournament: Tournament;
@@ -142,6 +143,13 @@ const lastPushedAgo = computed(() => {
     return agoString(lastPushedDate);
 });
 
+const remoteDescription = computed(() => {
+    if (!props.tournament.remote?.length) return "Not shared";
+    const identifier = props.tournament.remote[0]!.identifier;
+    const share = fromShare(identifier);
+    return share ? `${share.author} via ${share.mode}` : "Unknown source";
+});
+
 const hasStarted = ref(getTournamentStatus(tournament) !== "scheduled");
 </script>
 
@@ -192,12 +200,26 @@ const hasStarted = ref(getTournamentStatus(tournament) !== "scheduled");
                 class="row"
             >
                 <div class="field">
-                    <p>
+                    <p class="my-0">
                         Last pushed:
                         <strong>
                             {{ lastPushedAgo }}
                         </strong>
                     </p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="field">
+                    <p
+                        v-if="props.tournament.remote?.length"
+                        class="mt-0"
+                    >
+                        Remote source:
+                        <strong>
+                            {{ remoteDescription }}
+                        </strong>
+                    </p>
+                    <p v-else>This tournament is <strong>not</strong> linked to a remote source.</p>
                 </div>
             </div>
             <div class="row">
@@ -215,17 +237,20 @@ const hasStarted = ref(getTournamentStatus(tournament) !== "scheduled");
                 </div>
                 <div
                     class="field"
-                    :disabled="!canUpdate"
+                    v-if="canUpdate"
                 >
                     <button
                         class="secondary"
                         @click="tournaments.share(props.tournament)"
                     >
                         <ion-icon name="cloud-upload-outline" />
-                        Publish Update
+                        Push
                     </button>
                 </div>
-                <div class="field">
+                <div
+                    class="field"
+                    v-if="!tournament.remote?.length"
+                >
                     <button @click="shareModal?.open(props.tournament)">
                         <ion-icon name="share-outline" />
                         Share

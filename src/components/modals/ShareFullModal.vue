@@ -47,11 +47,6 @@ const save = async () => {
     shareUrl.value = (await tournaments.share(tournamentCopy, publicGist.value)) ?? "";
 };
 
-const download = () => {
-    tournaments.download(sharingItem.value!);
-    dialog.value?.close();
-};
-
 const share = () => {
     action.value = "gist";
     save();
@@ -72,23 +67,17 @@ defineExpose({ open });
                 <div class="options">
                     <div class="option">
                         <div class="info">
-                            <h3>New share</h3>
+                            <h3>New share link</h3>
                             <p>
-                                Share this tournament for the first time. This will create a new
-                                gist on GitHub.
+                                Share a link to this tournament. Others will be able to view the
+                                tournament or duplicate it.
+                                <br />
+                                <span class="text-muted">
+                                    This will create a new gist on GitHub.
+                                </span>
                             </p>
                         </div>
-                        <button @click="share">Share</button>
-                    </div>
-                    <div class="option">
-                        <div class="info">
-                            <h3>Download</h3>
-                            <p>
-                                Download the tournament as a JSON file. This can be used to import
-                                the course on another device.
-                            </p>
-                        </div>
-                        <button @click="download">Download</button>
+                        <button @click="share">Create link</button>
                     </div>
                 </div>
             </template>
@@ -137,6 +126,10 @@ defineExpose({ open });
         align-items: center;
         border: none;
         border-radius: 0;
+
+        :first-child {
+            max-width: 60ch;
+        }
 
         &:not(:last-child) {
             border-bottom: 2px solid var(--color-border);

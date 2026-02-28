@@ -1,12 +1,10 @@
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { computed } from "vue";
 import type { Tournament } from "@/types/tournament";
 import { useRoute } from "vue-router";
-import TrackModal from "@/components/modals/ShareViewerModal.vue";
-import gistClient from "@/gistClient";
+import TournamentContextMenu from "@/components/TournamentContextMenu.vue";
 
 const route = useRoute();
-const trackModal = ref<typeof TrackModal>();
 
 const TAB_LOOKUP = {
     table: "Table",
@@ -46,16 +44,9 @@ const baseRoute = computed(() => {
     const name = route.name as string;
     return name.split(".")[0];
 });
-
-const isMine = computed(() => {
-    if (!tournament.value?.remote?.length) return false;
-    const identifier = tournament.value?.remote[0]!.identifier;
-    return gistClient.isMine(identifier);
-});
 </script>
 
 <template>
-    <TrackModal ref="trackModal" />
     <div
         v-if="tournament"
         class="tournament"
@@ -63,12 +54,7 @@ const isMine = computed(() => {
         <section>
             <div class="title-component">
                 <h3>{{ tournament.name }}</h3>
-                <ion-icon
-                    v-if="isMine"
-                    @click="trackModal?.open(tournament)"
-                    class="clickable"
-                    name="share-outline"
-                />
+                <TournamentContextMenu :tournament="tournament" />
             </div>
             <span
                 v-if="subtitle"
@@ -146,6 +132,22 @@ section {
                 background-color: var(--color-text-primary);
                 margin-top: 0.5em;
             }
+        }
+    }
+}
+
+.filter-menu {
+    > div {
+        cursor: pointer;
+        padding: 0.5rem;
+        transition: all 0.2s ease-in-out;
+        display: grid;
+        grid-template-columns: 1fr 100px;
+        gap: 0.5rem;
+        align-items: center;
+
+        &:hover {
+            background: var(--color-surface-hover);
         }
     }
 }

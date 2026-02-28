@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted } from "vue";
+import { computed, onMounted, toRaw } from "vue";
 import type { Tournament } from "@/types/tournament";
 import NodeConnector from "./NodeConnector.vue";
 import EndNode from "./EndNode.vue";
@@ -26,8 +26,10 @@ const tournament = computed({
 });
 
 onMounted(() => {
-    tournament.value.phases = generateKnockoutBrackets(tournament.value);
-    tournament.value.phases = generateGroupPhases(tournament.value);
+    const rawTournament = toRaw(tournament.value);
+    rawTournament.phases = generateKnockoutBrackets(rawTournament);
+    rawTournament.phases = generateGroupPhases(rawTournament);
+    tournament.value = rawTournament;
 });
 </script>
 <template>

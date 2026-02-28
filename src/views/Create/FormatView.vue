@@ -23,7 +23,7 @@ const tournament = computed({
 const tournamentEndsAt = computed(() => {
     const p = tournament.value.phases;
     const lastMatch = getLastMatchOf({
-        phase: p[p.length - 1],
+        phase: p.at(-1),
     });
     if (!lastMatch) return null;
     const endTime = new Date(lastMatch.date);

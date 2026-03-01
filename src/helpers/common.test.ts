@@ -12,6 +12,7 @@ import {
     localeDateTimeString,
     formatPlacement,
     formatCurrentMatchTime,
+    copyToClipboard,
 } from "./common";
 import type {
     Tournament,
@@ -522,6 +523,22 @@ describe("Common Helper Functions", () => {
 
             const result = formatCurrentMatchTime(match, tournament);
             expect(result).toBe("FT");
+        });
+    });
+
+    describe("copy to clipboard", () => {
+        it("should copy the share URL to clipboard", async () => {
+            const mockClipboard = {
+                writeText: vi.fn(),
+            };
+            Object.defineProperty(navigator, "clipboard", {
+                value: mockClipboard,
+            });
+
+            const shareUrl = "https://example.com/share-link";
+            copyToClipboard(shareUrl);
+
+            expect(mockClipboard.writeText).toHaveBeenCalledWith(shareUrl);
         });
     });
 });

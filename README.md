@@ -2,7 +2,7 @@
 
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=davidohnee_bracketeer&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=davidohnee_bracketeer)
 
-bracketeer is a versatile and user-friendly tool designed to generate and manage tournaments for your social evenings. Whether you're organizing beer pong, foosball, or other games, bracketeer ensures your tournaments are structured and fun.
+bracketeer is a versatile and user-friendly tool designed to generate and manage tournaments for your social evenings. Whether you're organising beer pong, foosball, or other games, bracketeer ensures your tournaments are structured and fun.
 
 ## Features
 
@@ -16,7 +16,7 @@ bracketeer is a versatile and user-friendly tool designed to generate and manage
 
 ### Online
 
-You can use bracketeer online [here](https://bracketeer.davidohnee.com/). This version is hosted via GitHub Pages.
+You can use bracketeer online [here](https://bracketeer.davidohnee.com/). This version is hosted via Cloudflare Pages.
 
 ### Self-Hosted
 
@@ -40,7 +40,7 @@ npm i
 Run bracketeer
 
 ```bash
-node run dev
+npm run dev
 ```
 
 Open your browser and navigate to `http://localhost:5173` to access the application.
@@ -75,7 +75,7 @@ npm run test:ui
 npm run test:coverage
 ```
 
-#### Building
+#### Type Checking, Building, and Linting
 
 ```bash
 # Type check
@@ -94,4 +94,4 @@ This project is licensed under the GPL-3.0 License. See the [LICENSE](LICENSE) f
 
 ## Contact
 
-For questions or feedback, please reach out to [dxstiny.gh@gmail.com](mailto:dxstiny.gh@gmail.com).
+For questions or feedback, please create an issue.

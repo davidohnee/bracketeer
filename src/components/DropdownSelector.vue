@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from "vue";
-import IconContextMenu from "./IconContextMenu.vue";
-import type { Option } from "@/types/common";
+import IconComboContextMenu from "./IconComboContextMenu.vue";
+import type { Option, ActionOption } from "@/types/common";
 
 const props = defineProps<{
     modelValue: string;
@@ -49,23 +49,30 @@ const labels = computed(() => {
     return map;
 });
 
-const groups = computed(() => {
-    const groups: Record<string, (string | Option)[]> = {};
-    props.options.forEach((option) => {
-        let groupName = "";
-        if (typeof option !== "string") {
-            groupName = option.group;
+const actionOptions = computed<ActionOption[]>(() => {
+    return props.options.map((option) => {
+        if (typeof option === "string") {
+            return {
+                id: option,
+                label: option,
+                action: () => select(option),
+            };
+        } else {
+            return {
+                id: option.id,
+                label: option.label,
+                group: option.group,
+                action: () => select(option),
+            };
         }
-        if (!groups[groupName]) {
-            groups[groupName] = [];
-        }
-        groups[groupName]!.push(option);
     });
-    return groups;
 });
 </script>
 <template>
-    <IconContextMenu>
+    <IconComboContextMenu
+        :options="actionOptions"
+        :icon="selectedValueLabel || 'chevron-down'"
+    >
         <template #activator>
             <div class="dropdown__selected">
                 <div class="flex flex-row gap-2">
@@ -77,38 +84,18 @@ const groups = computed(() => {
                 ></ion-icon>
             </div>
         </template>
-        <template v-slot:context-menu="{ close }">
-            <div
-                v-for="(options, group) in groups"
-                :key="group"
-                class="group"
-            >
-                <div
-                    v-if="group"
-                    class="header"
-                >
-                    <span class="text-sm text-muted uppercase">{{ group }}</span>
-                </div>
-                <div
-                    v-for="option in options"
-                    :key="typeof option === 'string' ? option : option.id"
-                    class="dropdown__option"
-                    @click.stop="
-                        select(option);
-                        close();
-                    "
-                >
-                    <span :class="selectedValue == getId(option) ? 'selected' : ''">
-                        {{ typeof option === "string" ? option : option.label }}
-                    </span>
-                    <ion-icon
-                        v-if="selectedValue == getId(option)"
-                        name="checkmark"
-                    ></ion-icon>
-                </div>
+        <template v-slot:item="{ option }">
+            <div class="dropdown__option">
+                <span :class="selectedValue == getId(option) ? 'selected' : ''">
+                    {{ option.label }}
+                </span>
+                <ion-icon
+                    v-if="selectedValue == getId(option)"
+                    name="checkmark"
+                ></ion-icon>
             </div>
         </template>
-    </IconContextMenu>
+    </IconComboContextMenu>
 </template>
 
 <style scoped>
@@ -121,32 +108,13 @@ const groups = computed(() => {
     gap: 1em;
 }
 
-.group {
-    .header {
-        padding: 0.25rem 0.5rem;
-    }
-
-    &:not(:first-child) {
-        margin-top: 0.5rem;
-        border-top: 1px solid var(--color-border);
-    }
-}
-
 .dropdown__option {
-    cursor: pointer;
-    padding: 0.5rem;
-    transition: all 0.2s ease-in-out;
+    width: 100%;
     display: grid;
     grid-template-columns: 1fr 20px;
-    gap: 0.5rem;
-    align-items: center;
+}
 
-    &:hover {
-        background: var(--color-surface-hover);
-    }
-
-    .selected {
-        font-weight: var(--typography-fontWeight-bold);
-    }
+.selected {
+    font-weight: var(--typography-fontWeight-bold);
 }
 </style>

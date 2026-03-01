@@ -51,55 +51,51 @@ const migrateFromJson = (tournament: LatestTournament): LatestTournament => ({
     },
 });
 
-const migrateTournamentV1ToV2 = (tournament: TournamentV1): TournamentV2 => {
-    return {
-        ...tournament,
-        version: 2,
-        groupPhase: tournament.groupPhase.flatMap((round) => {
-            return round.matches.map((match) => {
-                return {
-                    ...match,
-                    round: {
-                        ...round,
-                        matches: undefined,
-                    },
-                };
-            });
-        }),
-    };
-};
+const migrateTournamentV1ToV2 = (tournament: TournamentV1): TournamentV2 => ({
+    ...tournament,
+    version: 2,
+    groupPhase: tournament.groupPhase.flatMap((round) => {
+        return round.matches.map((match) => {
+            return {
+                ...match,
+                round: {
+                    ...round,
+                    matches: undefined,
+                },
+            };
+        });
+    }),
+});
 
-const migrateTournamentV2ToV3 = (tournament: TournamentV2): TournamentV3 => {
-    return {
-        version: 3,
-        id: tournament.id,
-        name: tournament.name,
-        teams: tournament.teams,
-        config: {
-            courts: tournament.config.courts,
-            matchDuration: tournament.config.matchDuration,
-            breakDuration: tournament.config.breakDuration,
-            knockoutBreakDuration: tournament.config.knockoutBreakDuration,
-            startTime: tournament.config.startTime,
-            sport: "other",
+const migrateTournamentV2ToV3 = (tournament: TournamentV2): TournamentV3 => ({
+    version: 3,
+    id: tournament.id,
+    name: tournament.name,
+    teams: tournament.teams,
+    config: {
+        courts: tournament.config.courts,
+        matchDuration: tournament.config.matchDuration,
+        breakDuration: tournament.config.breakDuration,
+        knockoutBreakDuration: tournament.config.knockoutBreakDuration,
+        startTime: tournament.config.startTime,
+        sport: "other",
+    },
+    phases: [
+        {
+            id: generateId(),
+            type: "group",
+            name: "Group Phase",
+            matches: tournament.groupPhase,
+            groups: tournament.groups,
+            rounds: tournament.config.rounds,
         },
-        phases: [
-            {
-                id: generateId(),
-                type: "group",
-                name: "Group Phase",
-                matches: tournament.groupPhase,
-                groups: tournament.groups,
-                rounds: tournament.config.rounds,
-            },
-            {
-                id: generateId(),
-                type: "knockout",
-                name: "Knockout Phase",
-                rounds: tournament.knockoutPhase,
-                teamCount: tournament.config.knockoutTeams,
-            },
-        ],
-        remote: tournament.remote,
-    };
-};
+        {
+            id: generateId(),
+            type: "knockout",
+            name: "Knockout Phase",
+            rounds: tournament.knockoutPhase,
+            teamCount: tournament.config.knockoutTeams,
+        },
+    ],
+    remote: tournament.remote,
+});

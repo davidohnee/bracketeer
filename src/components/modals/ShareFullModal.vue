@@ -1,9 +1,11 @@
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import gistClient from "@/gistClient";
 import type { Tournament } from "@/types/tournament";
 import { useTournamentsStore } from "@/stores/tournaments";
-import { deepCopy } from "@/helpers/common";
+import { copyToClipboard, deepCopy } from "@/helpers/common";
+import { getShareLink } from "@/share";
+import AdvancedInput from "@/components/input/AdvancedInput.vue";
 
 const patSet = ref(false);
 const shareUrl = ref("");
@@ -30,7 +32,18 @@ const open = (course: Tournament) => {
         shareUrl.value = "";
     }
     sharingItem.value = course;
+
+    if (canPush.value) {
+        action.value = "gist";
+        shareUrl.value = getShareLink(sharingItem.value.remote![0]!.identifier);
+    }
 };
+
+const canPush = computed(() => {
+    if (!sharingItem.value?.remote?.length) return false;
+    const identifier = sharingItem.value.remote[0]!.identifier;
+    return gistClient.isMine(identifier);
+});
 
 const setPat = () => {
     gistClient.setPat(inputPat.value);
@@ -45,11 +58,6 @@ const save = async () => {
     delete tournamentCopy.remote;
 
     shareUrl.value = (await tournaments.share(tournamentCopy, publicGist.value)) ?? "";
-};
-
-const download = () => {
-    tournaments.download(sharingItem.value!);
-    dialog.value?.close();
 };
 
 const share = () => {
@@ -72,23 +80,17 @@ defineExpose({ open });
                 <div class="options">
                     <div class="option">
                         <div class="info">
-                            <h3>New share</h3>
+                            <h3>New share link</h3>
                             <p>
-                                Share this tournament for the first time. This will create a new
-                                gist on GitHub.
+                                Share a link to this tournament. Others will be able to view the
+                                tournament or duplicate it.
+                                <br />
+                                <span class="text-muted">
+                                    This will create a new gist on GitHub.
+                                </span>
                             </p>
                         </div>
-                        <button @click="share">Share</button>
-                    </div>
-                    <div class="option">
-                        <div class="info">
-                            <h3>Download</h3>
-                            <p>
-                                Download the tournament as a JSON file. This can be used to import
-                                the course on another device.
-                            </p>
-                        </div>
-                        <button @click="download">Download</button>
+                        <button @click="share">Create link</button>
                     </div>
                 </div>
             </template>
@@ -112,14 +114,15 @@ defineExpose({ open });
             </template>
             <template v-else-if="action == 'gist' && sharingItem">
                 <h2>Share "{{ sharingItem.name }}"</h2>
-                <template v-if="shareUrl">
-                    <p>Your share link:</p>
-                    <input
-                        type="text"
-                        readonly
-                        :value="shareUrl"
-                    />
-                </template>
+                <p class="my-0">Your share link:</p>
+                <AdvancedInput
+                    :model-value="shareUrl"
+                    type="text"
+                    copyable
+                    readonly
+                    :loading="!shareUrl"
+                    @copy="copyToClipboard(shareUrl)"
+                />
             </template>
         </div>
     </dialog>
@@ -138,9 +141,17 @@ defineExpose({ open });
         border: none;
         border-radius: 0;
 
+        :first-child {
+            max-width: 60ch;
+        }
+
         &:not(:last-child) {
             border-bottom: 2px solid var(--color-border);
         }
     }
+}
+
+h2 {
+    margin-right: 2em;
 }
 </style>

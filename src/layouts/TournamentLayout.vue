@@ -3,6 +3,7 @@ import { computed } from "vue";
 import type { Tournament } from "@/types/tournament";
 import { useRoute } from "vue-router";
 import TournamentContextMenu from "@/components/TournamentContextMenu.vue";
+import EditableText from "@/components/input/EditableText.vue";
 
 const route = useRoute();
 
@@ -53,7 +54,12 @@ const baseRoute = computed(() => {
     >
         <section>
             <div class="title-component">
-                <h3>{{ tournament.name }}</h3>
+                <h3>
+                    <EditableText
+                        v-model="tournament.name"
+                        :disabled="props.readonly"
+                    />
+                </h3>
                 <TournamentContextMenu :tournament="tournament" />
             </div>
             <span

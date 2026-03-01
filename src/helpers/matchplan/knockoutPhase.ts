@@ -8,7 +8,7 @@ import type {
 } from "@/types/tournament";
 import { getLastMatchOf } from "..";
 import { generateId } from "../id";
-import { ALPHABET, ROUND_NAME } from "../common";
+import { ALPHABET, nextPowerOfTwo, ROUND_NAME } from "../common";
 import { allMatches, previousPhase, rankedTeams } from "../phase";
 
 const getPlacement = (fromPhase: TournamentPhase, placement: number): string => {
@@ -28,6 +28,36 @@ const getPlacement = (fromPhase: TournamentPhase, placement: number): string => 
     return ALPHABET[placement]!;
 };
 
+export const hasByes = (nextPhase: KnockoutTournamentPhase, tournament: Tournament): boolean => {
+    const knockoutTeamCount = nextPhase.teamCount ?? tournament.teams.length;
+    const powerOfTwo = nextPowerOfTwo(knockoutTeamCount);
+
+    return powerOfTwo !== knockoutTeamCount;
+};
+
+/**
+ * determines, how many teams will progress in total; how many of them will have to play an additional play-in round and how many will get a bye in the first round
+ * bye will be 0 if the number of teams is already a power of two, otherwise it will be the difference between the next power of two and the actual team count
+ * play-in teams will be the number of teams that will have to play an additional play-in round; i.e. the difference between the actual team count and the next lower power of two, multiplied by 2 (since each match has two teams)
+ * total teams will be the number of teams that will progress to the next phase
+ */
+export const getProgression = (
+    nextPhase: KnockoutTournamentPhase,
+    tournament: Tournament,
+): { bye: number; playIn: number; total: number } => {
+    const progressTeams = nextPhase.teamCount ?? tournament.teams.length;
+    const powerOfTwo = nextPowerOfTwo(progressTeams);
+
+    const byes = powerOfTwo - progressTeams;
+    const playInTeams = (progressTeams - powerOfTwo / 2) * 2;
+
+    return {
+        bye: Math.max(byes, 0),
+        playIn: Math.max(playInTeams, 0),
+        total: Math.max(progressTeams, 0),
+    };
+};
+
 export const generateKnockoutBracket = (
     phase: KnockoutTournamentPhase,
     tournament: Tournament,
@@ -39,13 +69,12 @@ export const generateKnockoutBracket = (
     const startTime = new Date(getPreviousPhaseEndDate(tournament, phase));
 
     const powerOfTwo = nextPowerOfTwo(knockoutTeamCount);
-    const hasByes = powerOfTwo !== knockoutTeamCount;
     const byes = powerOfTwo - knockoutTeamCount;
     const teamFromPhase = previous ?? phase;
 
     let roundNumber = 1;
 
-    if (hasByes) {
+    if (hasByes(phase, tournament)) {
         const playInMatchCount = knockoutTeamCount - powerOfTwo / 2;
         const playInTeamCount = playInMatchCount * 2;
         const playInSlots = buildLeagueSlots(byes, playInTeamCount);
@@ -258,11 +287,6 @@ const buildRoundLink = (teamFromPhase: TournamentPhase, slot: RoundSlot, roundNu
         type: slot.type,
         fromRound: slot.type === "winner" ? roundNumber - 2 : undefined,
     };
-};
-
-const nextPowerOfTwo = (value: number): number => {
-    if (value <= 1) return 1;
-    return 2 ** Math.ceil(Math.log2(value));
 };
 
 const insertThirdPlacePlayoff = (

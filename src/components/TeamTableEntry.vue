@@ -1,6 +1,12 @@
 <script setup lang="ts">
+import { getProgression, hasByes } from "@/helpers/matchplan/knockoutPhase";
 import { calculateDifference, calculateTeamPoints } from "@/helpers/scoring";
-import { type GroupTournamentPhase, type TeamScore, type Tournament } from "@/types/tournament";
+import {
+    type GroupTournamentPhase,
+    type KnockoutTournamentPhase,
+    type TeamScore,
+    type Tournament,
+} from "@/types/tournament";
 import { computed } from "vue";
 
 const props = defineProps<{
@@ -17,46 +23,28 @@ const teamName = computed(() => {
 });
 
 const progress = computed(() => {
-    let proceedingTeams = 0;
-    let byeTeams = 0;
     const phaseI = props.tournament.phases.findIndex((p) => p.id === props.phaseId);
+    const currentPhase = props.tournament.phases[phaseI] as GroupTournamentPhase;
+    const nextPhase = props.tournament.phases[phaseI + 1] as KnockoutTournamentPhase;
+    const progression = getProgression(nextPhase, props.tournament);
 
-    if (phaseI < props.tournament.phases.length - 1) {
-        const nextPhase = props.tournament.phases[phaseI + 1]!;
+    const groupCount = currentPhase.groups?.length ?? 1;
 
-        if (nextPhase.teamCount) {
-            const currentPhase = props.tournament.phases[phaseI] as GroupTournamentPhase;
-            const groupCount = currentPhase.groups?.length ?? 1;
-            proceedingTeams = nextPhase.teamCount / groupCount;
+    const playInPerGroup = progression.playIn / groupCount;
+    const byePerGroup = progression.bye / groupCount;
+    const progressionPerGroup = progression.total / groupCount;
 
-            if (nextPhase.type === "knockout") {
-                const powerOfTwo = nextPowerOfTwo(nextPhase.teamCount);
-                byeTeams = (powerOfTwo - nextPhase.teamCount) / groupCount;
-            }
-        } else {
-            proceedingTeams = props.rank;
+    if (hasByes(nextPhase, props.tournament)) {
+        if (props.rank <= byePerGroup) {
+            return "progress";
+        } else if (props.rank <= byePerGroup + playInPerGroup) {
+            return "play-in";
         }
-    }
-
-    const def = Math.floor(proceedingTeams);
-    const maybe = Math.ceil(proceedingTeams);
-    const byeDef = Math.floor(byeTeams);
-
-    if (byeDef > 0 && props.rank <= byeDef) {
+    } else if (props.rank <= progressionPerGroup) {
         return "progress";
-    } else if (props.rank <= def) {
-        return "play-in";
-    } else if (props.rank === maybe) {
-        return "maybe";
     }
-
-    return null;
+    return "none";
 });
-
-const nextPowerOfTwo = (value: number): number => {
-    if (value <= 1) return 1;
-    return 2 ** Math.ceil(Math.log2(value));
-};
 </script>
 
 <template>

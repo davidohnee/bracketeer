@@ -62,6 +62,20 @@ const groupName = (id: string | null) => {
                 <div class="text-muted"><strong>+/-:</strong> Goals For - Goals Against</div>
                 <div class="text-muted"><strong>GD:</strong> Goal Difference</div>
                 <div class="text-muted"><strong>PTS:</strong> Points</div>
+                <div class="text-muted">
+                    <span
+                        class="swatch"
+                        :style="{ backgroundColor: 'var(--c-play-in)' }"
+                    ></span>
+                    Play In
+                </div>
+                <div class="text-muted">
+                    <span
+                        class="swatch"
+                        :style="{ backgroundColor: 'var(--c-progress)' }"
+                    ></span>
+                    Direct Progress
+                </div>
             </legend>
         </div>
     </div>
@@ -74,6 +88,17 @@ const groupName = (id: string | null) => {
 
 .team-table {
     width: 100%;
+    --c-play-in: var(--color-brand-blue);
+    --c-progress: var(--color-brand-green);
+
+    .swatch {
+        display: inline-block;
+        width: 0.75em;
+        height: 0.75em;
+        margin-right: 0.25em;
+        border-radius: 0.25em;
+        vertical-align: middle;
+    }
 
     & legend {
         margin-top: 1rem;
@@ -119,7 +144,21 @@ const groupName = (id: string | null) => {
                 left: 0;
                 width: 2px;
                 height: calc(100% - 4px);
-                background-color: rgb(31, 202, 131);
+                background-color: var(--c-progress);
+            }
+        }
+
+        &.play-in {
+            position: relative;
+
+            ::before {
+                content: "";
+                position: absolute;
+                top: 2px;
+                left: 0;
+                width: 2px;
+                height: calc(100% - 4px);
+                background-color: var(--c-play-in);
             }
         }
     }

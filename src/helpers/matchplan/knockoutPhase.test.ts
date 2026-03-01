@@ -313,6 +313,47 @@ describe("Knockout Phase Generation", () => {
             expect(thirdPlaceMatch!.teams[0].link?.type).toBe("loser");
             expect(thirdPlaceMatch!.teams[1].link?.type).toBe("loser");
         });
+
+        it("should create a play-in round when team count is not a power of two", () => {
+            tournament = generateTestTournament({ teamCount: 24 });
+            const phase: KnockoutTournamentPhase = {
+                id: "phase-knockout",
+                name: "Knockout Phase",
+                type: "knockout",
+                teamCount: 24,
+                rounds: [],
+            };
+
+            tournament.phases = [phase];
+            const rounds = generateKnockoutBracket(phase, tournament);
+
+            expect(rounds[0]!.name).toBe("Play-in");
+            expect(rounds[1]!.name).toBe("Round of 16");
+            expect(rounds.length).toBe(6);
+            expect(rounds[0]!.matches.length).toBe(8);
+        });
+
+        it("should mix league and winner links in the post-bye round", () => {
+            tournament = generateTestTournament({ teamCount: 24 });
+            const phase: KnockoutTournamentPhase = {
+                id: "phase-knockout",
+                name: "Knockout Phase",
+                type: "knockout",
+                teamCount: 24,
+                rounds: [],
+            };
+
+            tournament.phases = [phase];
+            const rounds = generateKnockoutBracket(phase, tournament);
+
+            const postByeRound = rounds[1]!;
+            const linkTypes = postByeRound.matches.flatMap((match) =>
+                match.teams.map((team) => team.link?.type),
+            );
+
+            expect(linkTypes).toContain("league");
+            expect(linkTypes).toContain("winner");
+        });
     });
 
     describe("generateKnockoutBrackets", () => {

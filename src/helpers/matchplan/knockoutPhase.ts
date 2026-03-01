@@ -8,7 +8,7 @@ import type {
 } from "@/types/tournament";
 import { getLastMatchOf } from "..";
 import { generateId } from "../id";
-import { ALPHABET, ROUND_NAME } from "../common";
+import { ALPHABET, nextPowerOfTwo, ROUND_NAME } from "../common";
 import { allMatches, previousPhase, rankedTeams } from "../phase";
 
 const getPlacement = (fromPhase: TournamentPhase, placement: number): string => {
@@ -28,6 +28,36 @@ const getPlacement = (fromPhase: TournamentPhase, placement: number): string => 
     return ALPHABET[placement]!;
 };
 
+export const hasByes = (nextPhase: KnockoutTournamentPhase, tournament: Tournament): boolean => {
+    const knockoutTeamCount = nextPhase.teamCount ?? tournament.teams.length;
+    const powerOfTwo = nextPowerOfTwo(knockoutTeamCount);
+
+    return powerOfTwo !== knockoutTeamCount;
+};
+
+/**
+ * determines, how many teams will progress in total; how many of them will have to play an additional play-in round and how many will get a bye in the first round
+ * bye will be 0 if the number of teams is already a power of two, otherwise it will be the difference between the next power of two and the actual team count
+ * play-in teams will be the number of teams that will have to play an additional play-in round; i.e. the difference between the actual team count and the next lower power of two, multiplied by 2 (since each match has two teams)
+ * total teams will be the number of teams that will progress to the next phase
+ */
+export const getProgression = (
+    nextPhase: KnockoutTournamentPhase,
+    tournament: Tournament,
+): { bye: number; playIn: number; total: number } => {
+    const progressTeams = nextPhase.teamCount ?? tournament.teams.length;
+    const powerOfTwo = nextPowerOfTwo(progressTeams);
+
+    const byes = powerOfTwo - progressTeams;
+    const playInTeams = (progressTeams - powerOfTwo / 2) * 2;
+
+    return {
+        bye: Math.max(byes, 0),
+        playIn: Math.max(playInTeams, 0),
+        total: Math.max(progressTeams, 0),
+    };
+};
+
 export const generateKnockoutBracket = (
     phase: KnockoutTournamentPhase,
     tournament: Tournament,
@@ -38,35 +68,174 @@ export const generateKnockoutBracket = (
     const previous = previousPhase(tournament, phase);
     const startTime = new Date(getPreviousPhaseEndDate(tournament, phase));
 
-    let teamsInRound = knockoutTeamCount;
+    const powerOfTwo = nextPowerOfTwo(knockoutTeamCount);
+    const byes = powerOfTwo - knockoutTeamCount;
+    const teamFromPhase = previous ?? phase;
+
     let roundNumber = 1;
 
-    while (teamsInRound > 1) {
-        const firstRound = teamsInRound === knockoutTeamCount;
-        const teamFromPhase = firstRound ? (previous ?? phase) : phase;
-
-        startTime.setMinutes(startTime.getMinutes() + roundDuration);
-
-        const matches = createRoundMatches({
+    if (hasByes(phase, tournament)) {
+        addPlayInAndFirstRound({
+            rounds,
+            phase,
+            tournament,
+            knockoutTeamCount,
+            powerOfTwo,
+            byes,
             teamFromPhase,
-            teamsInRound,
             roundNumber,
             startTime,
             roundDuration,
-            courts: tournament.config.courts,
         });
 
-        rounds.push({
-            id: generateId(),
-            name: ROUND_NAME[teamsInRound] || `Round ${roundNumber}`,
-            matches,
-        });
+        roundNumber = 3;
 
-        teamsInRound /= 2;
-        roundNumber++;
+        addRemainingRoundsWithByes({
+            rounds,
+            phase,
+            powerOfTwo,
+            startRoundNumber: roundNumber,
+            startTime,
+            roundDuration,
+            tournament,
+        });
+    } else {
+        addRoundsWithoutByes({
+            rounds,
+            teamFromPhase,
+            phase,
+            knockoutTeamCount,
+            startRoundNumber: roundNumber,
+            startTime,
+            roundDuration,
+            tournament,
+        });
     }
 
     return insertThirdPlacePlayoff(rounds, startTime, roundDuration);
+};
+
+type AddRoundConfig = {
+    rounds?: TournamentRound[];
+    phase: KnockoutTournamentPhase;
+    tournament: Tournament;
+    knockoutTeamCount?: number;
+    powerOfTwo?: number;
+    startRoundNumber?: number;
+    byes?: number;
+    teamFromPhase?: TournamentPhase;
+    roundNumber?: number;
+    startTime: Date;
+    roundDuration?: number;
+    name?: string;
+    slots?: RoundSlot[];
+};
+
+const addPlayInAndFirstRound = ({
+    rounds,
+    tournament,
+    knockoutTeamCount,
+    powerOfTwo,
+    byes,
+    teamFromPhase,
+    roundNumber,
+    startTime,
+    roundDuration,
+    phase,
+}: AddRoundConfig): void => {
+    const playInMatchCount = knockoutTeamCount! - powerOfTwo! / 2;
+    const playInTeamCount = playInMatchCount * 2;
+    const playInSlots = buildLeagueSlots(byes!, playInTeamCount);
+
+    addRound({
+        rounds,
+        name: "Play-in",
+        teamFromPhase,
+        slots: playInSlots,
+        roundNumber,
+        startTime,
+        roundDuration,
+        phase,
+        tournament,
+    });
+
+    const mixedSlots = [...buildLeagueSlots(0, byes!), ...buildWinnerSlots(playInMatchCount)];
+
+    addRound({
+        rounds,
+        name: ROUND_NAME[powerOfTwo! / 2] || `Round 2`,
+        teamFromPhase,
+        slots: mixedSlots,
+        roundNumber: roundNumber! + 1,
+        startTime,
+        roundDuration,
+        tournament,
+        phase,
+    });
+};
+
+const addRemainingRoundsWithByes = ({
+    rounds,
+    powerOfTwo,
+    startRoundNumber,
+    phase,
+    startTime,
+    roundDuration,
+    tournament,
+}: AddRoundConfig): void => {
+    let teamsInRound = powerOfTwo! / 4;
+    let roundNumber = startRoundNumber;
+
+    while (teamsInRound > 1) {
+        addRound({
+            rounds,
+            name: ROUND_NAME[teamsInRound] || `Round ${roundNumber}`,
+            phase,
+            slots: buildWinnerSlots(teamsInRound),
+            roundNumber,
+            startTime,
+            roundDuration,
+            tournament,
+        });
+
+        teamsInRound /= 2;
+        roundNumber!++;
+    }
+};
+
+const addRoundsWithoutByes = ({
+    knockoutTeamCount,
+    teamFromPhase,
+    phase,
+    startRoundNumber,
+    startTime,
+    roundDuration,
+    tournament,
+    rounds,
+}: AddRoundConfig): void => {
+    let teamsInRound = knockoutTeamCount;
+    let roundNumber = startRoundNumber;
+
+    while (teamsInRound! > 1) {
+        const isFirstRound = teamsInRound === knockoutTeamCount;
+
+        addRound({
+            rounds,
+            name: ROUND_NAME[teamsInRound!] || `Round ${roundNumber}`,
+            teamFromPhase: isFirstRound ? teamFromPhase : phase,
+            slots: isFirstRound
+                ? buildLeagueSlots(0, teamsInRound!)
+                : buildWinnerSlots(teamsInRound!),
+            roundNumber,
+            startTime,
+            roundDuration,
+            tournament,
+            phase,
+        });
+
+        teamsInRound! /= 2;
+        roundNumber!++;
+    }
 };
 
 const getPreviousPhaseEndDate = (tournament: Tournament, phase: TournamentPhase): Date => {
@@ -85,7 +254,7 @@ const getPreviousPhaseEndDate = (tournament: Tournament, phase: TournamentPhase)
 
 type RoundMatchConfig = {
     teamFromPhase: TournamentPhase;
-    teamsInRound: number;
+    slots: RoundSlot[];
     roundNumber: number;
     startTime: Date;
     roundDuration: number;
@@ -94,7 +263,7 @@ type RoundMatchConfig = {
 
 const createRoundMatches = ({
     teamFromPhase,
-    teamsInRound,
+    slots,
     roundNumber,
     startTime,
     roundDuration,
@@ -102,7 +271,7 @@ const createRoundMatches = ({
 }: RoundMatchConfig): Match[] => {
     const matches: Match[] = [];
     let court = 1;
-    const pairCount = teamsInRound / 2;
+    const pairCount = slots.length / 2;
 
     for (let i = 0; i < pairCount; i++) {
         if (court > courts) {
@@ -113,8 +282,8 @@ const createRoundMatches = ({
         matches.push(
             createKnockoutMatch({
                 teamFromPhase,
-                placement: i,
-                oppositePlacement: teamsInRound - 1 - i,
+                slot: slots[i]!,
+                oppositeSlot: slots[slots.length - 1 - i]!,
                 roundNumber,
                 court: court++,
                 date: new Date(startTime),
@@ -127,8 +296,8 @@ const createRoundMatches = ({
 
 type KnockoutMatchConfig = {
     teamFromPhase: TournamentPhase;
-    placement: number;
-    oppositePlacement: number;
+    slot: RoundSlot;
+    oppositeSlot: RoundSlot;
     roundNumber: number;
     court: number;
     date: Date;
@@ -136,40 +305,84 @@ type KnockoutMatchConfig = {
 
 const createKnockoutMatch = ({
     teamFromPhase,
-    placement,
-    oppositePlacement,
+    slot,
+    oppositeSlot,
     roundNumber,
     court,
     date,
 }: KnockoutMatchConfig): Match => {
-    const isFirstRound = roundNumber === 1;
-    const linkType = isFirstRound ? "league" : "winner";
-
     return {
         id: generateId(),
         court,
         teams: [
             {
-                link: {
-                    placement,
-                    label: getPlacement(teamFromPhase, placement),
-                    type: linkType,
-                    fromRound: roundNumber - 2,
-                },
+                link: buildRoundLink(teamFromPhase, slot, roundNumber),
                 score: 0,
             },
             {
-                link: {
-                    placement: oppositePlacement,
-                    label: getPlacement(teamFromPhase, oppositePlacement),
-                    type: linkType,
-                    fromRound: roundNumber - 2,
-                },
+                link: buildRoundLink(teamFromPhase, oppositeSlot, roundNumber),
                 score: 0,
             },
         ],
         date,
         status: "scheduled",
+    };
+};
+
+type RoundSlot = {
+    type: "league" | "winner";
+    placement: number;
+};
+
+const buildLeagueSlots = (start: number, count: number): RoundSlot[] =>
+    Array.from({ length: count }, (_, i) => ({
+        type: "league",
+        placement: start + i,
+    }));
+
+const buildWinnerSlots = (count: number): RoundSlot[] =>
+    Array.from({ length: count }, (_, i) => ({
+        type: "winner",
+        placement: i,
+    }));
+
+const addRound = ({
+    startTime,
+    roundDuration,
+    rounds,
+    teamFromPhase,
+    roundNumber,
+    tournament,
+    name,
+    slots,
+}: AddRoundConfig): void => {
+    startTime.setMinutes(startTime.getMinutes() + roundDuration!);
+
+    rounds!.push({
+        id: generateId(),
+        name: name!,
+        matches: createRoundMatches({
+            teamFromPhase: teamFromPhase!,
+            slots: slots!,
+            roundNumber: roundNumber!,
+            startTime,
+            roundDuration: roundDuration!,
+            courts: tournament.config.courts,
+        }),
+    });
+};
+
+const buildRoundLink = (teamFromPhase: TournamentPhase, slot: RoundSlot, roundNumber: number) => {
+    const label =
+        slot.type === "league"
+            ? getPlacement(teamFromPhase, slot.placement)
+            : ALPHABET[slot.placement]!;
+
+    return {
+        placement: slot.placement,
+        label,
+        type: slot.type,
+        fromRound: slot.type === "winner" ? roundNumber - 2 : undefined,
     };
 };
 

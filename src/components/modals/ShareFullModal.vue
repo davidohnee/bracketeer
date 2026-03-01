@@ -5,7 +5,7 @@ import type { Tournament } from "@/types/tournament";
 import { useTournamentsStore } from "@/stores/tournaments";
 import { copyToClipboard, deepCopy } from "@/helpers/common";
 import { getShareLink } from "@/share";
-import RichInput from "@/components/RichInput.vue";
+import AdvancedInput from "@/components/input/AdvancedInput.vue";
 
 const patSet = ref(false);
 const shareUrl = ref("");
@@ -115,7 +115,7 @@ defineExpose({ open });
             <template v-else-if="action == 'gist' && sharingItem">
                 <h2>Share "{{ sharingItem.name }}"</h2>
                 <p class="my-0">Your share link:</p>
-                <RichInput
+                <AdvancedInput
                     :model-value="shareUrl"
                     type="text"
                     copyable

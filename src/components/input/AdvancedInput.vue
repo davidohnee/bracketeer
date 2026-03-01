@@ -34,7 +34,7 @@ const copy = () => {
 </script>
 <template>
     <div
-        class="custom-input"
+        class="advanced-input"
         :disabled="disabled || loading"
     >
         <div
@@ -87,11 +87,11 @@ input {
     }
 }
 
-.custom-input:has(.copy) {
+.advanced-input:has(.copy) {
     padding-right: 1em;
 }
 
-.custom-input {
+.advanced-input {
     display: flex;
     align-items: center;
     gap: 0.5em;

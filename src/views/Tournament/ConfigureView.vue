@@ -101,7 +101,7 @@ const duplicateTournament = () => {
     router.push({ name: "tournament", params: { tournamentId: newTournament.id } });
 };
 
-const canUpdate = computed(() => {
+const canPush = computed(() => {
     if (!props.tournament.remote?.length) return false;
     const identifier = props.tournament.remote[0]!.identifier;
     return gistClient.isMine(identifier);
@@ -237,7 +237,7 @@ const hasStarted = ref(getTournamentStatus(tournament) !== "scheduled");
                 </div>
                 <div
                     class="field"
-                    v-if="canUpdate"
+                    v-if="canPush"
                 >
                     <button
                         class="secondary"

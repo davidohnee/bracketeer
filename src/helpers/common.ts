@@ -129,3 +129,7 @@ export const formatCurrentMatchTime = (match: Match, tournament: Tournament): st
 
     return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
 };
+
+export const copyToClipboard = (text: string) => {
+    navigator.clipboard.writeText(text);
+};

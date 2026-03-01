@@ -1,9 +1,11 @@
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import gistClient from "@/gistClient";
 import type { Tournament } from "@/types/tournament";
 import { useTournamentsStore } from "@/stores/tournaments";
-import { deepCopy } from "@/helpers/common";
+import { copyToClipboard, deepCopy } from "@/helpers/common";
+import { getShareLink } from "@/share";
+import RichInput from "@/components/RichInput.vue";
 
 const patSet = ref(false);
 const shareUrl = ref("");
@@ -30,7 +32,18 @@ const open = (course: Tournament) => {
         shareUrl.value = "";
     }
     sharingItem.value = course;
+
+    if (canPush.value) {
+        action.value = "gist";
+        shareUrl.value = getShareLink(sharingItem.value.remote![0]!.identifier);
+    }
 };
+
+const canPush = computed(() => {
+    if (!sharingItem.value?.remote?.length) return false;
+    const identifier = sharingItem.value.remote[0]!.identifier;
+    return gistClient.isMine(identifier);
+});
 
 const setPat = () => {
     gistClient.setPat(inputPat.value);
@@ -101,14 +114,15 @@ defineExpose({ open });
             </template>
             <template v-else-if="action == 'gist' && sharingItem">
                 <h2>Share "{{ sharingItem.name }}"</h2>
-                <template v-if="shareUrl">
-                    <p>Your share link:</p>
-                    <input
-                        type="text"
-                        readonly
-                        :value="shareUrl"
-                    />
-                </template>
+                <p class="my-0">Your share link:</p>
+                <RichInput
+                    :model-value="shareUrl"
+                    type="text"
+                    copyable
+                    readonly
+                    :loading="!shareUrl"
+                    @copy="copyToClipboard(shareUrl)"
+                />
             </template>
         </div>
     </dialog>
@@ -135,5 +149,9 @@ defineExpose({ open });
             border-bottom: 2px solid var(--color-border);
         }
     }
+}
+
+h2 {
+    margin-right: 2em;
 }
 </style>

@@ -137,7 +137,7 @@ const groupName = (id: string | null) => {
         &.progress {
             position: relative;
 
-            ::before {
+            &:before {
                 content: "";
                 position: absolute;
                 top: 2px;
@@ -151,7 +151,7 @@ const groupName = (id: string | null) => {
         &.play-in {
             position: relative;
 
-            ::before {
+            &:before {
                 content: "";
                 position: absolute;
                 top: 2px;

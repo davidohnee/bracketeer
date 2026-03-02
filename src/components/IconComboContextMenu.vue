@@ -53,7 +53,7 @@ const groups = computed(() => {
                 <div
                     v-for="option in options"
                     :key="typeof option === 'string' ? option : option.id"
-                    class="dropdown__option"
+                    class="combo__option"
                     :class="option.type"
                     @click.stop="
                         option.action();
@@ -101,7 +101,7 @@ const groups = computed(() => {
     }
 }
 
-.dropdown__option {
+.combo__option {
     cursor: pointer;
     padding: 0.5rem;
     transition: all 0.2s ease-in-out;

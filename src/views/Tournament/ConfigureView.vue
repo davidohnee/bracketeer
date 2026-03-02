@@ -146,8 +146,13 @@ const lastPushedAgo = computed(() => {
 const remoteDescription = computed(() => {
     if (!props.tournament.remote?.length) return "Not shared";
     const identifier = props.tournament.remote[0]!.identifier;
-    const share = fromShare(identifier);
-    return share ? `${share.author} via ${share.mode}` : "Unknown source";
+    try {
+        const share = fromShare(identifier);
+        return share ? `${share.author} via ${share.mode}` : "Unknown source";
+    } catch (error) {
+        console.error("Error parsing remote source:", error);
+        return "Unknown source";
+    }
 });
 
 const hasStarted = ref(getTournamentStatus(tournament) !== "scheduled");

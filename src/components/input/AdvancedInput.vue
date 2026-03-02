@@ -35,7 +35,7 @@ const copy = () => {
 <template>
     <div
         class="advanced-input"
-        :disabled="disabled || loading"
+        :aria-disabled="disabled || loading"
     >
         <div
             class="loader"
@@ -58,10 +58,7 @@ const copy = () => {
             :disabled="disabled || loading"
             @click="copy"
         >
-            <ion-icon
-                :name="justCopied ? 'checkmark' : 'copy-outline'"
-                @click="copy"
-            ></ion-icon>
+            <ion-icon :name="justCopied ? 'checkmark' : 'copy-outline'"></ion-icon>
         </div>
     </div>
 </template>

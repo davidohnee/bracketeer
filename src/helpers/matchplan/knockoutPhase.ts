@@ -194,10 +194,9 @@ const addRemainingRounds = (
     { initialTeamCount, sourcePhase, roundNumber, tournament }: RoundConfig,
 ): void => {
     let teamsInRound = initialTeamCount;
-    const startRoundNumber = roundNumber;
 
     while (teamsInRound > 1) {
-        const isFirstRound = roundNumber === startRoundNumber;
+        const isFirstRound = roundNumber === 1;
 
         const slots = isFirstRound
             ? buildLeagueSlots(0, teamsInRound)

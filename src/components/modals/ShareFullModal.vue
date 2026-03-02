@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from "vue";
+import { onMounted, ref } from "vue";
 import gistClient from "@/gistClient";
 import type { Tournament } from "@/types/tournament";
 import { useTournamentsStore } from "@/stores/tournaments";
@@ -11,6 +11,7 @@ const patSet = ref(false);
 const shareUrl = ref("");
 const publicGist = ref(false);
 const sharingItem = ref<Tournament>();
+const canPush = ref(false);
 
 const action = ref<null | "gist">(null);
 
@@ -33,17 +34,17 @@ const open = (course: Tournament) => {
     }
     sharingItem.value = course;
 
-    if (canPush.value) {
-        action.value = "gist";
-        shareUrl.value = getShareLink(sharingItem.value.remote![0]!.identifier);
-    }
-};
-
-const canPush = computed(() => {
     if (!sharingItem.value?.remote?.length) return false;
     const identifier = sharingItem.value.remote[0]!.identifier;
-    return gistClient.isMine(identifier);
-});
+    gistClient.isMine(identifier).then((isMine) => {
+        canPush.value = isMine;
+
+        if (canPush.value) {
+            action.value = "gist";
+            shareUrl.value = getShareLink(course.remote![0]!.identifier);
+        }
+    });
+};
 
 const setPat = () => {
     gistClient.setPat(inputPat.value);

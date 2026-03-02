@@ -77,13 +77,34 @@ export const rankedTeams = (phase: TournamentPhase): Ref[] => {
     return [];
 };
 
+const phaseAtOffset = (
+    tournament: Tournament,
+    phase: TournamentPhase,
+    offset: number,
+): TournamentPhase | null => {
+    const phaseI = tournament.phases.findIndex((p) => p.id === phase.id);
+    if (phaseI === -1) {
+        return null;
+    }
+
+    const targetIndex = phaseI + offset;
+    if (targetIndex < 0 || targetIndex >= tournament.phases.length) {
+        return null;
+    }
+
+    return tournament.phases[targetIndex]!;
+};
+
+export const nextPhase = (
+    tournament: Tournament,
+    phase: TournamentPhase,
+): TournamentPhase | null => {
+    return phaseAtOffset(tournament, phase, 1);
+};
+
 export const previousPhase = (
     tournament: Tournament,
     phase: TournamentPhase,
 ): TournamentPhase | null => {
-    const phaseI = tournament.phases.findIndex((p) => p.id === phase.id);
-    if (phaseI > 0) {
-        return tournament.phases[phaseI - 1]!;
-    }
-    return null;
+    return phaseAtOffset(tournament, phase, -1);
 };

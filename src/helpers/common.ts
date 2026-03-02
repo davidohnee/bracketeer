@@ -133,3 +133,8 @@ export const formatCurrentMatchTime = (match: Match, tournament: Tournament): st
 export const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text);
 };
+
+export const nextPowerOfTwo = (n: number): number => {
+    if (n <= 1) return 1;
+    return 2 ** Math.ceil(Math.log2(n));
+};

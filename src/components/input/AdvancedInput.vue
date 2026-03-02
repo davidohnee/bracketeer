@@ -51,15 +51,15 @@ const copy = () => {
             @input="checkScroll"
             @scroll="checkScroll"
         />
-        <div
-            class="copy"
+        <button
+            class="copy ghost"
             v-if="copyable && !loading"
             title="Copy to clipboard"
             :disabled="disabled || loading"
             @click="copy"
         >
             <ion-icon :name="justCopied ? 'checkmark' : 'copy-outline'"></ion-icon>
-        </div>
+        </button>
     </div>
 </template>
 
@@ -85,7 +85,8 @@ input {
 }
 
 .advanced-input:has(.copy) {
-    padding-right: 1em;
+    padding-right: 0;
+    min-width: 40ch;
 }
 
 .advanced-input {
@@ -93,11 +94,6 @@ input {
     align-items: center;
     gap: 0.5em;
     position: relative;
-
-    &:disabled {
-        background-color: var(--color-surface-hover);
-        color: var(--color-text-secondary);
-    }
 
     .loader {
         position: absolute;
@@ -122,12 +118,13 @@ input {
     }
 
     .copy {
-        cursor: pointer;
         display: flex;
         align-items: center;
+        border-radius: 0;
 
-        &:hover {
-            color: var(--color-primary);
+        &:disabled {
+            background: none;
+            border: none;
         }
     }
 }

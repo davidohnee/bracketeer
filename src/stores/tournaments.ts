@@ -168,6 +168,7 @@ export const useTournamentsStore = defineStore("tournaments", () => {
             return false;
         }
         share(tournament);
+        return true;
     };
 
     const pullFromRemote = async (options: { tournament?: Tournament; remote?: IRemote }) => {

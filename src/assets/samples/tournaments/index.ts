@@ -3,6 +3,7 @@ export interface TournamentTemplate {
     baseHref: string;
     logo: string;
     template: string;
+    background?: string;
 }
 
 export const logoHref = (tournament: TournamentTemplate) => tournament.baseHref + tournament.logo;
@@ -21,11 +22,13 @@ export default [
         baseHref: "/assets/samples/tournaments/champions-league-24-25",
         logo: "/logo.svg",
         template: "/template.json",
+        background: "white",
     },
     {
         name: "OneHSLU Fest Beerpong Tournament 2025",
         baseHref: "/assets/samples/tournaments/onehslu-fest-beerpong-25",
         logo: "/logo.svg",
         template: "/template.json",
+        background: "white",
     },
 ] as TournamentTemplate[];

@@ -257,10 +257,12 @@ const currentPhase = computed(() => {
             </template>
             <template v-else-if="latestResults.length">
                 <TabSelector
-                    class="tab-selector"
+                    v-if="nextStartTime && groupedByTime[nextStartTime]"
                     v-model="breakView"
                     :options="BREAK_VIEW_OPTIONS"
+                    selected-value-component="h3"
                 />
+                <h3 v-else>Latest results</h3>
                 <GroupedTournamentList
                     v-if="breakView == 'Results'"
                     v-model="latestResults"
@@ -297,11 +299,11 @@ const currentPhase = computed(() => {
             </template>
 
             <!--finish round, proceed to next round-->
-            <template v-if="!readonly && nextRoundCountdown">
+            <template v-if="!readonly && (nextRoundCountdown || currentStartTime)">
                 <div
                     class="actions"
                     :class="{ center: !previousStartTime && !currentStartTime }"
-                    v-if="nextRoundCountdown && !readonly"
+                    v-if="(nextRoundCountdown || currentStartTime) && !readonly"
                 >
                     <button
                         class="secondary"
@@ -345,10 +347,6 @@ const currentPhase = computed(() => {
     }
 }
 
-.tab-selector {
-    margin-bottom: 1em;
-}
-
 @media (max-width: 768px) {
     .live {
         grid-template-columns: 1fr !important;
@@ -376,7 +374,6 @@ const currentPhase = computed(() => {
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 1em;
     padding: 0.5em 1em;
     border-bottom: 1px solid var(--color-border);
 

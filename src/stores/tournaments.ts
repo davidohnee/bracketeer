@@ -167,7 +167,7 @@ export const useTournamentsStore = defineStore("tournaments", () => {
         if (!tournament.remote || tournament.remote.length === 0) {
             return false;
         }
-        share(tournament);
+        await share(tournament);
         return true;
     };
 

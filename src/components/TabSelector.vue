@@ -7,6 +7,7 @@ const props = defineProps<{
     modelValue: string;
     options: string[] | Option[];
     showNavigation?: boolean;
+    selectedValueComponent?: string;
 }>();
 
 const emit = defineEmits<(e: "update:modelValue", value: string) => void>();
@@ -57,6 +58,7 @@ const index = computed({
             <DropdownSelector
                 v-model="selectedValue"
                 :options="props.options"
+                :selected-value-component="selectedValueComponent"
             />
         </span>
         <span

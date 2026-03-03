@@ -6,6 +6,7 @@ import type { Option, ActionOption } from "@/types/common";
 const props = defineProps<{
     modelValue: string;
     options: string[] | Option[];
+    selectedValueComponent?: string;
 }>();
 
 const emit = defineEmits<(e: "update:modelValue", value: string) => void>();
@@ -76,7 +77,9 @@ const actionOptions = computed<ActionOption[]>(() => {
         <template #activator>
             <div class="dropdown__selected">
                 <div class="flex flex-row gap-2">
-                    <strong>{{ selectedValueLabel }}</strong>
+                    <component :is="selectedValueComponent || 'strong'">{{
+                        selectedValueLabel
+                    }}</component>
                 </div>
                 <ion-icon
                     name="chevron-down"

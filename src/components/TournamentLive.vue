@@ -8,6 +8,7 @@ import { updateKnockoutMatches } from "@/helpers/matchplan/knockoutPhase";
 import GroupedTournamentList from "./GroupedTournamentList.vue";
 import { tournamentRichMatches } from "@/helpers/matches";
 import { adjustStartTimes } from "@/helpers/matchplan/common";
+import TabSelector from "./TabSelector.vue";
 
 const props = defineProps<{
     tournament: Tournament;
@@ -141,6 +142,10 @@ onUnmounted(() => {
     clearInterval(updateCountdownTask);
 });
 
+const BREAK_VIEW_OPTIONS = ["Results", "Upcoming"];
+type BreakViewOption = (typeof BREAK_VIEW_OPTIONS)[number];
+const breakView = ref<BreakViewOption>("Results");
+
 const latestResults = computed<RichMatch[]>(() => {
     if (previousStartTime.value) {
         return groupedByTime.value[previousStartTime.value] || [];
@@ -154,6 +159,7 @@ const teamMatchesRouteName = computed(() => {
 });
 
 const adjustAndSkip = () => {
+    breakView.value = "Results";
     const veryNextRound = new Date(nextStartTime.value!);
     const rawTournament = toRaw(tournament.value);
     updateKnockoutMatches(rawTournament);
@@ -178,7 +184,7 @@ const proceed = () => {
     }
     groupedByTime.value[key] = matches;
     updateKnockoutMatches(tournament.value);
-    tournamentStore.share(tournament.value);
+    tournamentStore.push(tournament.value);
 };
 
 const adjustAndSkipText = computed(() => {
@@ -250,9 +256,24 @@ const currentPhase = computed(() => {
                 />
             </template>
             <template v-else-if="latestResults.length">
-                <h3>Results</h3>
+                <TabSelector
+                    class="tab-selector"
+                    v-model="breakView"
+                    :options="BREAK_VIEW_OPTIONS"
+                />
                 <GroupedTournamentList
+                    v-if="breakView == 'Results'"
                     v-model="latestResults"
+                    :tournament="tournament"
+                    :readonly="readonly"
+                    @update:model-value="onChanged"
+                    show-group
+                    show-phase
+                    show-round
+                />
+                <GroupedTournamentList
+                    v-else
+                    v-model="groupedByTime[nextStartTime!]!"
                     :tournament="tournament"
                     :readonly="readonly"
                     @update:model-value="onChanged"
@@ -322,6 +343,10 @@ const currentPhase = computed(() => {
     &:has(.table) {
         grid-template-columns: 1fr 1fr;
     }
+}
+
+.tab-selector {
+    margin-bottom: 1em;
 }
 
 @media (max-width: 768px) {

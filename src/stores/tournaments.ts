@@ -163,6 +163,14 @@ export const useTournamentsStore = defineStore("tournaments", () => {
         tournaments.forEach((x) => add(x));
     };
 
+    const pushToRemote = async (tournament: Tournament) => {
+        if (!tournament.remote || tournament.remote.length === 0) {
+            return false;
+        }
+        await share(tournament);
+        return true;
+    };
+
     const pullFromRemote = async (options: { tournament?: Tournament; remote?: IRemote }) => {
         const { tournament, remote } = options;
 
@@ -197,6 +205,7 @@ export const useTournamentsStore = defineStore("tournaments", () => {
         download,
         addFromUpload,
         pull: pullFromRemote,
+        push: pushToRemote,
         disableThrottling: () => {
             console.warn("Disabling throttling for tournaments store");
             throttlingEnabled.value = false;

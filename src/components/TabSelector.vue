@@ -6,6 +6,8 @@ import type { Option } from "@/types/common";
 const props = defineProps<{
     modelValue: string;
     options: string[] | Option[];
+    showNavigation?: boolean;
+    selectedValueComponent?: string;
 }>();
 
 const emit = defineEmits<(e: "update:modelValue", value: string) => void>();
@@ -40,7 +42,10 @@ const index = computed({
 </script>
 <template>
     <div class="tab-selector">
-        <span class="navigation-option">
+        <span
+            class="navigation-option"
+            v-if="props.showNavigation"
+        >
             <button
                 class="ghost"
                 @click="index--"
@@ -53,9 +58,13 @@ const index = computed({
             <DropdownSelector
                 v-model="selectedValue"
                 :options="props.options"
+                :selected-value-component="selectedValueComponent"
             />
         </span>
-        <span class="navigation-option">
+        <span
+            class="navigation-option"
+            v-if="props.showNavigation"
+        >
             <button
                 class="ghost"
                 @click="index++"
@@ -71,8 +80,12 @@ const index = computed({
 .tab-selector {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: center;
     margin: 0 1rem;
+
+    &:has(.navigation-option) {
+        justify-content: space-between;
+    }
 }
 
 .navigation-option button {

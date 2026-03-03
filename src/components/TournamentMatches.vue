@@ -248,6 +248,7 @@ onMounted(() => {
             <TabSelector
                 v-model="selectedGroup"
                 :options="tabOptions"
+                show-navigation
             />
             <div class="round">
                 <GroupedTournamentList

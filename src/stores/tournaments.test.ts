@@ -52,6 +52,9 @@ describe("Tournaments Store", () => {
         // Clear localStorage before each test
         localStorage.clear();
 
+        // Clear all mocks before each test
+        vi.clearAllMocks();
+
         // Mock crypto.randomUUID
         let counter = 0;
         vi.stubGlobal("crypto", {
@@ -421,6 +424,56 @@ describe("Tournaments Store", () => {
                     timeout: 5000,
                 }),
             );
+        });
+    });
+
+    describe("push method", () => {
+        it("should not push a tournament if no remote is set", async () => {
+            const store = useTournamentsStore();
+            const tournament: Tournament = {
+                id: "no-remote",
+                version: 3,
+                name: "No Remote",
+                teams: [],
+                phases: [],
+                config: mockConfig,
+            };
+            store.add(tournament);
+
+            const mockedPush = vi.mocked(push);
+
+            const result = await store.push(tournament);
+            expect(result).toBe(false);
+            expect(mockedPush).not.toHaveBeenCalled();
+        });
+
+        it("should push a tournament if remote is set", async () => {
+            const store = useTournamentsStore();
+            const tournament: Tournament = {
+                id: "has-remote",
+                version: 3,
+                name: "Has Remote",
+                teams: [],
+                phases: [],
+                config: mockConfig,
+                remote: [{ identifier: "remote-id" }],
+            };
+            store.add(tournament);
+
+            const mockedPush = vi.mocked(push);
+            mockedPush.mockResolvedValue({
+                author: "test-author",
+                link: "https://example.com/share",
+                tournament: {
+                    ...tournament,
+                    remote: [{ identifier: "remote-1" }],
+                },
+                date: new Date(),
+            });
+
+            const result = await store.push(tournament);
+            expect(result).toBe(true);
+            expect(mockedPush).toHaveBeenCalledWith(tournament, false);
         });
     });
 

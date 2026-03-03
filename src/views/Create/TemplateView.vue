@@ -66,6 +66,8 @@ const useTemplate = (template: TournamentTemplate | null) => {
                 :src="logoHref(template)"
                 :alt="`Logo for ${template.name}`"
                 class="logo"
+                :style="{ '--contrast': template.background }"
+                :class="{ withBackground: !!template.background }"
             />
             <span>{{ template.name }}</span>
         </div>
@@ -99,6 +101,13 @@ const useTemplate = (template: TournamentTemplate | null) => {
             object-fit: contain;
             margin: auto;
             font-size: 2rem;
+        }
+
+        & img {
+            background-color: var(--contrast);
+            aspect-ratio: 1 / 1;
+            border-radius: 0.5rem;
+            padding: 0.5rem;
         }
     }
 }

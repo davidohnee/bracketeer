@@ -60,7 +60,10 @@ const baseRoute = computed(() => {
                         :disabled="props.readonly"
                     />
                 </h3>
-                <TournamentContextMenu :tournament="tournament" />
+                <TournamentContextMenu
+                    v-if="!props.readonly"
+                    :tournament="tournament"
+                />
             </div>
             <span
                 v-if="subtitle"

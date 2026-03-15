@@ -44,7 +44,7 @@ const getHeaders = async (forcePat: string | null = null) => {
 };
 
 const body = (files: Files, options: IOptions) => {
-    const base = globalThis.location.origin + globalThis.location.pathname;
+    const base = globalThis.location.origin;
     const body = {
         public: options.isPublic ?? false,
         description: options.description,

@@ -9,6 +9,7 @@ import GroupNode from "./GroupNode.vue";
 import InvalidNode from "./InvalidNode.vue";
 import { generateKnockoutBrackets } from "@/helpers/matchplan/knockoutPhase";
 import { generateGroupPhases } from "@/helpers/matchplan/groupPhase";
+import { previousPhase } from "@/helpers/phase";
 
 const props = defineProps<{
     modelValue: Tournament;
@@ -46,6 +47,7 @@ onMounted(() => {
             <NodeConnector
                 :hideValue="phaseIndex == 0"
                 v-model="phase.teamCount"
+                :previous-phase="previousPhase(tournament, phase)"
             />
             <KnockoutNode
                 v-if="phase.type === 'knockout'"

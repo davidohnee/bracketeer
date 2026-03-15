@@ -26,11 +26,19 @@ const tournament = computed({
     },
 });
 
-onMounted(() => {
+const regenerate = () => {
     const rawTournament = toRaw(tournament.value);
-    rawTournament.phases = generateKnockoutBrackets(rawTournament);
     rawTournament.phases = generateGroupPhases(rawTournament);
+    rawTournament.phases = generateKnockoutBrackets(rawTournament);
     tournament.value = rawTournament;
+};
+
+defineExpose({
+    regenerate,
+});
+
+onMounted(() => {
+    regenerate();
 });
 </script>
 <template>

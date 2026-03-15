@@ -63,6 +63,7 @@ const baseRoute = computed(() => {
                 <TournamentContextMenu
                     v-if="!props.readonly"
                     :tournament="tournament"
+                    @deleted="$router.push({ name: 'home' })"
                 />
             </div>
             <span

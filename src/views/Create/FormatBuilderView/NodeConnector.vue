@@ -57,7 +57,20 @@ const groupPromotionPossible = computed((): GroupPromotionValidationResult => {
 
     if (props.modelValue % groupCount === 0) return { valid: true };
 
-    return { valid: false, suggestedTeamCount: groupCount };
+    const suggestedTeamCount = Math.round(props.modelValue / groupCount) * groupCount;
+
+    return { valid: false, suggestedTeamCount };
+});
+
+const maxValue = computed(() => {
+    if (!props.previousPhase) return undefined;
+    if (props.previousPhase.type !== "group") return undefined;
+
+    const groupPhase = props.previousPhase as GroupTournamentPhase;
+
+    return groupPhase.groups?.reduce((max, group) => {
+        return max + (group.teams?.length ?? 0);
+    }, 0);
 });
 </script>
 
@@ -73,6 +86,7 @@ const groupPromotionPossible = computed((): GroupPromotionValidationResult => {
                 :disabled="readonly"
                 title="# of teams to proceed"
                 :aria-invalid="!valueValid"
+                :max="maxValue"
             />
             <span
                 v-if="!props.hideValue && !valueValid"
@@ -85,14 +99,14 @@ const groupPromotionPossible = computed((): GroupPromotionValidationResult => {
                 class="error-description"
             >
                 Invalid team count. Must be a multiple of the number of groups in the previous phase
-                ({{ groupPromotionPossible.suggestedTeamCount }}).
+                (e.g., {{ groupPromotionPossible.suggestedTeamCount }}).
             </span>
         </div>
     </div>
 </template>
 <style scoped>
 .connector {
-    width: 20ch;
+    width: 24ch;
     height: 1px;
     z-index: 1;
     flex-shrink: 0;
@@ -114,8 +128,8 @@ const groupPromotionPossible = computed((): GroupPromotionValidationResult => {
     .error-description {
         position: fixed;
         top: 120%;
-        left: 0;
-        min-width: 12ch;
+        left: -100%;
+        width: 300%;
     }
 }
 </style>

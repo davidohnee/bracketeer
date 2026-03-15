@@ -2,14 +2,15 @@
 import { getLastMatchOf } from "@/helpers";
 import { allMatches } from "@/helpers/phase";
 import type { Tournament } from "@/types/tournament";
-import { computed } from "vue";
+import { computed, ref, watch } from "vue";
 import BuilderView from "./FormatBuilderView/BuilderView.vue";
+import { getCourtType } from "@/helpers/defaults";
 
 const props = defineProps<{
     modelValue: Tournament;
 }>();
-
 const emit = defineEmits<(e: "update:modelValue", value: Tournament) => void>();
+const builder = ref<InstanceType<typeof BuilderView>>();
 
 const tournament = computed({
     get() {
@@ -20,22 +21,33 @@ const tournament = computed({
     },
 });
 
-const tournamentEndsAt = computed(() => {
-    const p = tournament.value.phases;
-    const lastMatch = getLastMatchOf({
-        phase: p.at(-1),
-    });
-    if (!lastMatch) return null;
-    const endTime = new Date(lastMatch.date);
-    endTime.setMinutes(endTime.getMinutes() + tournament.value.config.matchDuration);
-    return endTime;
-});
+const tournamentEndsAt = ref<Date>();
+const totalMatchCount = ref(0);
 
-const totalMatchCount = computed(() => {
-    return tournament.value.phases.reduce((count, phase) => {
-        return count + allMatches(phase).length;
-    }, 0);
-});
+watch(
+    [
+        () => tournament.value.config.breakDuration,
+        () => tournament.value.config.matchDuration,
+        () => tournament.value.config.courts,
+        () => tournament.value.phases,
+    ],
+    () => {
+        builder.value?.regenerate();
+
+        const p = tournament.value.phases;
+        const lastMatch = getLastMatchOf({
+            phase: p.at(-1),
+        });
+        if (!lastMatch) return null;
+        const endTime = new Date(lastMatch.date);
+        endTime.setMinutes(endTime.getMinutes() + tournament.value.config.matchDuration);
+        tournamentEndsAt.value = endTime;
+        totalMatchCount.value = tournament.value.phases.reduce((count, phase) => {
+            return count + allMatches(phase).length;
+        }, 0);
+    },
+    { immediate: true },
+);
 
 const totalTournamentDurationFormatted = computed(() => {
     const start = tournament.value.config.startTime;
@@ -46,12 +58,53 @@ const totalTournamentDurationFormatted = computed(() => {
     const minutes = totalDuration % 60;
     return `${hours}h ${minutes}m`;
 });
+
+const breakDuration = computed({
+    get() {
+        return tournament.value.config.breakDuration;
+    },
+    set(value) {
+        tournament.value.config.knockoutBreakDuration = value;
+        tournament.value.config.breakDuration = value;
+    },
+});
 </script>
 <template>
     <BuilderView
         :model-value="tournament"
         @update:modelValue="tournament = $event"
+        ref="builder"
     />
+
+    <div class="row">
+        <div class="field">
+            <label for="match-duration">Match Duration [min]</label>
+            <input
+                type="number"
+                id="match-duration"
+                min="1"
+                v-model="tournament.config.matchDuration"
+            />
+        </div>
+        <div class="field">
+            <label for="break">Break Duration [min]</label>
+            <input
+                type="number"
+                id="break"
+                min="0"
+                v-model="breakDuration"
+            />
+        </div>
+    </div>
+    <div class="field">
+        <label for="courts"># of {{ getCourtType(tournament.config.sport, true, true) }}</label>
+        <input
+            type="number"
+            id="courts"
+            min="1"
+            v-model="tournament.config.courts"
+        />
+    </div>
 
     <div class="row">
         <p v-if="tournamentEndsAt">

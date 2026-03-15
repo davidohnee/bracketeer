@@ -1,10 +1,12 @@
 <script setup lang="ts">
+import type { GroupTournamentPhase, ITournamentPhase } from "@/types/tournament";
 import { computed } from "vue";
 
 const props = defineProps<{
     modelValue: number | undefined;
     hideValue?: boolean;
     readonly?: boolean;
+    previousPhase?: ITournamentPhase | null;
 }>();
 
 const emit = defineEmits<(e: "update:modelValue", value: number | undefined) => void>();
@@ -27,6 +29,36 @@ const valueValid = computed(() => {
 
     return false;
 });
+
+interface IGroupPromotionValidationResult {
+    valid: boolean;
+    suggestedTeamCount?: number;
+}
+interface GroupPromotionValidationResultValid extends IGroupPromotionValidationResult {
+    valid: true;
+}
+interface GroupPromotionValidationResultInvalid extends IGroupPromotionValidationResult {
+    valid: false;
+    suggestedTeamCount: number;
+}
+type GroupPromotionValidationResult =
+    | GroupPromotionValidationResultValid
+    | GroupPromotionValidationResultInvalid;
+
+const groupPromotionPossible = computed((): GroupPromotionValidationResult => {
+    if (!props.previousPhase) return { valid: true };
+    if (props.modelValue === undefined) return { valid: true };
+    if (props.previousPhase.type !== "group") return { valid: true };
+
+    const groupPhase = props.previousPhase as GroupTournamentPhase;
+
+    const groupCount = groupPhase.groups?.length ?? 1;
+    if (groupCount <= 1) return { valid: true };
+
+    if (props.modelValue % groupCount === 0) return { valid: true };
+
+    return { valid: false, suggestedTeamCount: groupCount };
+});
 </script>
 
 <template>
@@ -47,6 +79,13 @@ const valueValid = computed(() => {
                 class="error-description"
             >
                 Must be an even number or 1
+            </span>
+            <span
+                v-else-if="!props.hideValue && !groupPromotionPossible.valid"
+                class="error-description"
+            >
+                Invalid team count. Must be a multiple of the number of groups in the previous phase
+                ({{ groupPromotionPossible.suggestedTeamCount }}).
             </span>
         </div>
     </div>

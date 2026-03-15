@@ -3,6 +3,8 @@ import { ref } from "vue";
 import type { Tournament } from "@/types/tournament";
 import { getShareLink } from "@/share";
 import { QrcodeSvg } from "qrcode.vue";
+import AdvancedInput from "../input/AdvancedInput.vue";
+import { copyToClipboard } from "@/helpers/common";
 
 const shareUrl = ref("");
 
@@ -42,10 +44,12 @@ defineExpose({ open });
             />
             <div v-if="shareUrl">
                 <p>Your share link:</p>
-                <input
+                <advanced-input
                     type="text"
+                    copyable
                     readonly
-                    :value="shareUrl"
+                    @copy="copyToClipboard(shareUrl)"
+                    :model-value="shareUrl"
                 />
             </div>
         </template>

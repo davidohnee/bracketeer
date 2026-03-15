@@ -88,4 +88,8 @@ const updateGithub = async () => {
 .left {
     align-items: flex-start;
 }
+
+button.danger {
+    margin-top: 1em;
+}
 </style>

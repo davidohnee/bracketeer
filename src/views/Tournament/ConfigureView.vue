@@ -8,7 +8,7 @@ import type {
 } from "@/types/tournament";
 import { useTournamentsStore } from "@/stores/tournaments";
 import { useRouter } from "vue-router";
-import { computed, ref, toRaw } from "vue";
+import { computed, onMounted, ref, toRaw } from "vue";
 import ShareModal from "@/components/modals/ShareFullModal.vue";
 import gistClient from "@/gistClient";
 import { Notifications } from "@/components/notifications/createNotification";
@@ -24,6 +24,7 @@ const props = defineProps<{
 const tournaments = useTournamentsStore();
 const tournament = tournaments.getTournamentById(props.tournament.id)!;
 const router = useRouter();
+const canPush = ref(false);
 
 const shareModal = ref<typeof ShareModal>();
 
@@ -101,10 +102,10 @@ const duplicateTournament = () => {
     router.push({ name: "tournament", params: { tournamentId: newTournament.id } });
 };
 
-const canPush = computed(() => {
+onMounted(async () => {
     if (!props.tournament.remote?.length) return false;
     const identifier = props.tournament.remote[0]!.identifier;
-    return gistClient.isMine(identifier);
+    canPush.value = await gistClient.isMine(identifier);
 });
 
 const canPull = computed(() => {

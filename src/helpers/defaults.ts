@@ -80,11 +80,11 @@ export const DEFAULTS: Record<string, Default> = {
 
 const todayAt1800 = new Date();
 todayAt1800.setHours(18, 0, 0, 0);
-export const emptyTournament = () =>
+export const emptyTournament = (title: string = "") =>
     ({
         version: 3,
         id: generateId(),
-        name: "",
+        name: title,
         teams: [],
         phases: [
             {

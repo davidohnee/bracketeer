@@ -56,13 +56,13 @@ const getPlacement = (fromPhase: TournamentPhase, placement: number): string => 
             const groupRank = Math.floor(placement / groupCount);
             const inGroup = placement % groupCount;
 
-            return ALPHABET[inGroup]! + (groupRank + 1);
+            return ALPHABET[inGroup] + (groupRank + 1);
         }
 
         return String(placement + 1);
     }
 
-    return ALPHABET[placement]!;
+    return ALPHABET[placement];
 };
 
 export const hasByes = (nextPhase: KnockoutTournamentPhase, tournament: Tournament): boolean => {
@@ -250,8 +250,8 @@ const createRoundMatches = ({
         matches.push(
             createKnockoutMatch({
                 sourcePhase,
-                slot: slots[i]!,
-                oppositeSlot: slots[slots.length - 1 - i]!,
+                slot: slots[i],
+                oppositeSlot: slots[slots.length - 1 - i],
                 roundNumber,
                 court: court++,
                 startTime: new Date(startTime),
@@ -330,7 +330,7 @@ const buildRoundLink = (sourcePhase: TournamentPhase, slot: RoundSlot, roundNumb
     const label =
         slot.type === "league"
             ? getPlacement(sourcePhase, slot.placement)
-            : ALPHABET[slot.placement]!;
+            : ALPHABET[slot.placement];
 
     return {
         placement: slot.placement,
@@ -376,7 +376,7 @@ const insertThirdPlacePlayoff = (
                 score: 0,
             },
         ],
-        date: finalRound.matches[0]!.date,
+        date: finalRound.matches[0].date,
         status: "scheduled",
     };
 
@@ -389,7 +389,7 @@ const insertThirdPlacePlayoff = (
         finalRound,
     );
 
-    rounds.at(-1)!.matches[0]!.date = startTime;
+    rounds.at(-1)!.matches[0].date = startTime;
 
     return rounds;
 };
@@ -434,7 +434,7 @@ const updateKnockoutPhase = (phase: KnockoutTournamentPhase, tournament: Tournam
     const roundLosers: Ref[][] = [];
 
     for (let i = 0; i < knockout.length; i++) {
-        const round = knockout[i]!;
+        const round = knockout[i];
 
         if (!roundHasUnifiedStatus(round)) return;
 
@@ -443,9 +443,9 @@ const updateKnockoutPhase = (phase: KnockoutTournamentPhase, tournament: Tournam
         roundWinners.push(winners);
         roundLosers.push(losers);
 
-        const roundRefIndex = round.matches[0]!.teams[0].link?.fromRound ?? i - 1;
-        const prevRoundWinners = i === 0 ? [] : roundWinners[roundRefIndex]!;
-        const prevRoundLosers = i === 0 ? [] : roundLosers[roundRefIndex]!;
+        const roundRefIndex = round.matches[0].teams[0].link?.fromRound ?? i - 1;
+        const prevRoundWinners = i === 0 ? [] : roundWinners[roundRefIndex];
+        const prevRoundLosers = i === 0 ? [] : roundLosers[roundRefIndex];
 
         for (const match of round.matches) {
             updateRoundResults(match, winners, losers);
@@ -472,7 +472,7 @@ const resolveInitialTable = (
 };
 
 const roundHasUnifiedStatus = (round: TournamentRound): boolean => {
-    const firstState = round.matches[0]!.status;
+    const firstState = round.matches[0].status;
 
     return !round.matches.some((match) => match.status !== firstState);
 };
@@ -501,21 +501,21 @@ const updateScheduledMatchTeams = (
     if (match.status !== "scheduled") return;
 
     for (let i = 0; i < match.teams.length; i++) {
-        const link = match.teams[i]!.link!;
+        const link = match.teams[i].link!;
 
         if (link.type === "winner") {
             match.teams[i] = {
-                ...match.teams[i]!,
+                ...match.teams[i],
                 ref: prevRoundWinners[link.placement],
             };
         } else if (link.type === "loser") {
             match.teams[i] = {
-                ...match.teams[i]!,
+                ...match.teams[i],
                 ref: prevRoundLosers[link.placement],
             };
         } else if (link.type === "league") {
             match.teams[i] = {
-                ...match.teams[i]!,
+                ...match.teams[i],
                 ref: table[link.placement],
             };
         }

@@ -2,7 +2,6 @@
 import StepProgress from "@/components/StepProgress.vue";
 import TemplateView from "./Create/TemplateView.vue";
 import Basics from "./Create/BasicsView.vue";
-import Logistics from "./Create/LogisticsView.vue";
 import Format from "./Create/FormatView.vue";
 import type { Tournament } from "@/types/tournament";
 import { ref, watch } from "vue";
@@ -15,7 +14,7 @@ const tournament = ref<Tournament | null>(null);
 const tournaments = useTournamentsStore();
 const router = useRouter();
 
-const initTournament: Tournament = emptyTournament();
+const initTournament: Tournament = emptyTournament("My Tournament");
 
 const getTournament = () => {
     const sessionValue = sessionStorage.getItem("creator.tournament");
@@ -34,13 +33,8 @@ watch(
     },
     { deep: true },
 );
-const STEPS = ["Template", "Basics", "Logistics", "Format"];
-const TITLES = [
-    "Choose a template",
-    "Set Up Your Tournament",
-    "Define Match Logistics",
-    "Design the Competition",
-];
+const STEPS = ["Template", "Info", "Format"];
+const TITLES = ["Choose a template", "Set Up Your Tournament", "Design the Competition"];
 const currentStep = ref(Number.parseInt(sessionStorage.getItem("creator.step") ?? "0"));
 
 watch(currentStep, (newValue) => {
@@ -94,12 +88,8 @@ const create = () => {
             v-if="currentStep === 1"
             v-model="tournament"
         />
-        <Logistics
-            v-else-if="currentStep === 2"
-            v-model="tournament"
-        />
         <Format
-            v-else-if="currentStep === 3"
+            v-else-if="currentStep === 2"
             v-model="tournament"
         />
     </div>

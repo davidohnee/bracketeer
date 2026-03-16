@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { getDatetimeLocal } from "@/helpers/common";
 import { DEFAULTS } from "@/helpers/defaults";
 import type { Tournament } from "@/types/tournament";
 import { computed, ref, watch } from "vue";
@@ -17,13 +18,6 @@ const tournament = computed({
         emit("update:modelValue", value);
     },
 });
-
-const getDatetimeLocal = (date: Date) => {
-    const pad = (num: number) => String(num).padStart(2, "0");
-    return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(
-        date.getHours(),
-    )}:${pad(date.getMinutes())}`;
-};
 
 const startTime = ref<string>(getDatetimeLocal(tournament.value.config.startTime));
 watch(

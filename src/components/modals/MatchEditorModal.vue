@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { formatPlacement } from "@/helpers/common";
+import { formatPlacement, getDatetimeLocal } from "@/helpers/common";
 import type { Match, MatchTeam, Tournament, Ref, MatchStatus, SetScore } from "@/types/tournament";
 import { computed, ref } from "vue";
 import SegmentPicker from "../SegmentPicker.vue";
 import { calculateScoresFromSets } from "@/helpers/scoring";
+import { getCourtType } from "@/helpers/defaults";
 
 const props = defineProps<{
     modelValue: Match;
@@ -108,6 +109,16 @@ const winner = computed(() => {
     return "Draw";
 });
 
+const startTime = computed<string>({
+    get() {
+        return getDatetimeLocal(match.value.date);
+    },
+    set(value) {
+        match.value.date = new Date(value);
+        onChanged();
+    },
+});
+
 defineExpose({
     open: openMatchEditor,
     close: closeMatchEditor,
@@ -116,7 +127,7 @@ defineExpose({
 <template>
     <dialog ref="matcheditor">
         <div class="content">
-            <h2>Result</h2>
+            <h2>Edit Match</h2>
             <ion-icon
                 @click="closeMatchEditor"
                 class="close"
@@ -214,6 +225,27 @@ defineExpose({
                         ]"
                         @change="onStatusChanged"
                     />
+                </div>
+
+                <div class="row advanced">
+                    <div class="field">
+                        <label for="court">{{
+                            getCourtType(tournament.config.sport, false, true)
+                        }}</label>
+                        <input
+                            type="number"
+                            id="court"
+                            v-model.number="match.court"
+                        />
+                    </div>
+                    <div class="field">
+                        <label for="start">Start</label>
+                        <input
+                            type="datetime-local"
+                            id="start"
+                            v-model="startTime"
+                        />
+                    </div>
                 </div>
             </div>
         </div>
@@ -329,7 +361,8 @@ defineExpose({
     }
 }
 
-.match-status {
+.match-status,
+.advanced {
     width: max-content;
     margin-left: auto;
     margin-right: auto;

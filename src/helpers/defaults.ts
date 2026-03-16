@@ -19,7 +19,7 @@ interface Default {
 }
 
 export const getCourtType = (sport: string, plural: boolean, capitalised: boolean): string => {
-    const sportDefaults = DEFAULTS[sport] || DEFAULTS.other!;
+    const sportDefaults = DEFAULTS[sport] || DEFAULTS.other;
 
     const courtLabel = plural
         ? sportDefaults.courtLabel.plural || sportDefaults.courtLabel.singular + "s"

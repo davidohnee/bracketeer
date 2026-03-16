@@ -138,3 +138,10 @@ export const nextPowerOfTwo = (n: number): number => {
     if (n <= 1) return 1;
     return 2 ** Math.ceil(Math.log2(n));
 };
+
+export const getDatetimeLocal = (date: Date) => {
+    const pad = (num: number) => String(num).padStart(2, "0");
+    return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(
+        date.getHours(),
+    )}:${pad(date.getMinutes())}`;
+};

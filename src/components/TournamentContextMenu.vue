@@ -9,8 +9,9 @@ import { ref } from "vue";
 
 const props = defineProps<{
     tournament: Tournament;
-    onDeleted?: () => void;
 }>();
+
+const emit = defineEmits<(e: "deleted") => void>();
 
 const tournaments = useTournamentsStore();
 const shareModal = ref<typeof ShareModal>();
@@ -40,7 +41,7 @@ const deleteTournament = () => {
         details: "Are you sure you want to delete the tournament? This action cannot be undone.",
         onYes: () => {
             tournaments.deleteTournament(props.tournament.id);
-            props.onDeleted?.();
+            emit("deleted");
             Notifications.addSuccess("Tournament deleted", {
                 details: "The tournament has been deleted successfully.",
                 timeout: 3000,

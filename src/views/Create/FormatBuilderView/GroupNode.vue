@@ -3,7 +3,14 @@ import { shuffle } from "@/helpers/common";
 import { generateGroupPhase, generateGroupPhases } from "@/helpers/matchplan/groupPhase";
 import { generateKnockoutBrackets } from "@/helpers/matchplan/knockoutPhase";
 import { allMatches } from "@/helpers/phase";
-import type { Group, GroupTournamentPhase, Tournament } from "@/types/tournament";
+import GroupAdvancedModal from "@/components/modals/GroupAdvancedModal.vue";
+import {
+    COMPARATOR_KEYS,
+    type ComparatorOrder,
+    type Group,
+    type GroupTournamentPhase,
+    type Tournament,
+} from "@/types/tournament";
 import { computed, ref, watch } from "vue";
 
 const props = defineProps<{
@@ -106,6 +113,37 @@ const hasBalancingRound = computed(() => {
     ) as GroupTournamentPhase;
     return phase.matches.some((match) => match.round?.name === "Balance Round");
 });
+
+const advancedSettingsModal = ref<InstanceType<typeof GroupAdvancedModal> | null>(null);
+const tieBreakerOrder = ref<ComparatorOrder>(props.phase.tieBreakers ?? [...COMPARATOR_KEYS]);
+
+const openAdvancedSettings = () => {
+    advancedSettingsModal.value?.open();
+};
+
+const applyTieBreakerOrder = () => {
+    const phase = tournament.value.phases.find(
+        (p) => p.id === props.phase.id,
+    ) as GroupTournamentPhase;
+    const isDefaultOrder = tieBreakerOrder.value.every(
+        (value, index) => value === COMPARATOR_KEYS[index],
+    );
+    phase.tieBreakers = isDefaultOrder ? undefined : [...tieBreakerOrder.value];
+    tournament.value.phases = [...tournament.value.phases];
+};
+
+const onTieBreakerOrderUpdated = (newOrder: ComparatorOrder) => {
+    tieBreakerOrder.value = [...newOrder];
+    applyTieBreakerOrder();
+};
+
+watch(
+    [() => props.phase.id, () => props.phase.tieBreakers],
+    () => {
+        tieBreakerOrder.value = props.phase.tieBreakers ?? [...COMPARATOR_KEYS];
+    },
+    { immediate: true },
+);
 </script>
 <template>
     <div class="node group">
@@ -154,6 +192,16 @@ const hasBalancingRound = computed(() => {
         </div>
         <div class="footer text-sm">
             <span>{{ allMatches(phase).length }} matches</span>
+            <button
+                class="ghost text-sm mr-0"
+                @click="openAdvancedSettings"
+            >
+                <ion-icon
+                    name="settings-outline"
+                    class="mr-1"
+                />
+                Advanced
+            </button>
             <ion-icon
                 v-if="hasBalancingRound"
                 title="Matches were added so that all teams play the same number of matches."
@@ -162,6 +210,12 @@ const hasBalancingRound = computed(() => {
             />
         </div>
     </div>
+
+    <GroupAdvancedModal
+        ref="advancedSettingsModal"
+        v-model="tieBreakerOrder"
+        @change="onTieBreakerOrderUpdated"
+    />
 </template>
 <style scoped>
 .node.group {
@@ -173,6 +227,7 @@ const hasBalancingRound = computed(() => {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    gap: 0.5em;
 
     & ion-icon {
         cursor: pointer;

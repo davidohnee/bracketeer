@@ -110,6 +110,7 @@ const click = () => {
         align-items: center;
         justify-content: center;
         color: var(--color-primary-inverse);
+        padding: 0.25em;
 
         &.yes {
             background-color: var(--color-brand-green);

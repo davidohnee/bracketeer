@@ -1,3 +1,14 @@
+export const COMPARATOR_KEYS = [
+    "points",
+    "directEncounter",
+    "difference",
+    "pointsFor",
+    "pointsAgainst",
+    "draws",
+] as const;
+export type ComparatorKey = (typeof COMPARATOR_KEYS)[number];
+export type ComparatorOrder = ComparatorKey[];
+
 export interface Player {
     id: string;
     name: string;
@@ -142,6 +153,7 @@ export interface GroupTournamentPhase extends ITournamentPhase {
     groups?: Group[];
     matches: Match[];
     rounds: number;
+    tieBreakers?: ComparatorOrder;
 }
 
 export interface KnockoutTournamentPhase extends ITournamentPhase {

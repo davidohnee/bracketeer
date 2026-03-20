@@ -1,5 +1,11 @@
-import type { GroupTournamentPhase, Table, TeamScore } from "@/types/tournament";
-import { COMPARATOR_KEYS, COMPARATORS, type ComparatorOrder } from "./comparators";
+import {
+    COMPARATOR_KEYS,
+    type ComparatorOrder,
+    type GroupTournamentPhase,
+    type Table,
+    type TeamScore,
+} from "@/types/tournament";
+import { COMPARATORS } from "./comparators";
 
 export const generateTables = (forPhase: GroupTournamentPhase): Table[] => {
     const table: { [key: string]: TeamScore } = {};
@@ -33,8 +39,7 @@ export const generateTables = (forPhase: GroupTournamentPhase): Table[] => {
         }
     }
 
-    // allow customisation
-    const comparatorOrder: ComparatorOrder = [...COMPARATOR_KEYS];
+    const comparatorOrder: ComparatorOrder = forPhase.tieBreakers || [...COMPARATOR_KEYS];
 
     const teamScores = Object.values(table);
     teamScores.sort((a, b) => {

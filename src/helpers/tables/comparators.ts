@@ -1,4 +1,4 @@
-import type { Match, TeamScore } from "@/types/tournament";
+import type { ComparatorKey, Match, TeamScore } from "@/types/tournament";
 import { calculateTeamPoints } from "../scoring";
 
 type ComparatorOptions = {
@@ -7,16 +7,6 @@ type ComparatorOptions = {
     matches: Match[];
 };
 type Comparator = (options: ComparatorOptions) => number;
-export const COMPARATOR_KEYS = [
-    "points",
-    "directEncounter",
-    "difference",
-    "pointsFor",
-    "pointsAgainst",
-    "draws",
-] as const;
-export type ComparatorKey = (typeof COMPARATOR_KEYS)[number];
-export type ComparatorOrder = ComparatorKey[];
 
 export const COMPARATORS: Record<ComparatorKey, Comparator> = {
     points: ({ a, b }: ComparatorOptions) => calculateTeamPoints(b) - calculateTeamPoints(a),

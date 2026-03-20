@@ -5,6 +5,8 @@ import type { Tournament } from "@/types/tournament";
 import { computed, ref, watch } from "vue";
 import BuilderView from "./FormatBuilderView/BuilderView.vue";
 import { getCourtType } from "@/helpers/defaults";
+import { debounce } from "lodash";
+import SkeletonTextLoader from "@/components/SkeletonTextLoader.vue";
 
 const props = defineProps<{
     modelValue: Tournament;
@@ -24,30 +26,42 @@ const tournament = computed({
 const tournamentEndsAt = ref<Date>();
 const totalMatchCount = ref(0);
 
+const regenerating = ref(false);
+const regenerate = debounce(() => {
+    builder.value?.regenerate();
+    regenerating.value = false;
+}, 250);
 watch(
     [
         () => tournament.value.config.breakDuration,
         () => tournament.value.config.matchDuration,
         () => tournament.value.config.courts,
-        () => tournament.value.phases,
     ],
     () => {
-        builder.value?.regenerate();
-
-        const p = tournament.value.phases;
-        const lastMatch = getLastMatchOf({
-            phase: p.at(-1),
-        });
-        if (!lastMatch) return null;
-        const endTime = new Date(lastMatch.date);
-        endTime.setMinutes(endTime.getMinutes() + tournament.value.config.matchDuration);
-        tournamentEndsAt.value = endTime;
-        totalMatchCount.value = tournament.value.phases.reduce((count, phase) => {
-            return count + allMatches(phase).length;
-        }, 0);
+        regenerating.value = true;
+        regenerate();
     },
-    { immediate: true },
 );
+
+const regenerateTimes = () => {
+    const p = tournament.value.phases;
+    const lastMatch = getLastMatchOf({
+        phase: p.at(-1),
+    });
+    if (!lastMatch) {
+        tournamentEndsAt.value = undefined;
+        totalMatchCount.value = 0;
+        return;
+    }
+    const endTime = new Date(lastMatch.date);
+    endTime.setMinutes(endTime.getMinutes() + tournament.value.config.matchDuration);
+    tournamentEndsAt.value = endTime;
+    totalMatchCount.value = tournament.value.phases.reduce((count, phase) => {
+        return count + allMatches(phase).length;
+    }, 0);
+};
+
+watch(() => tournament.value.phases, regenerateTimes, { immediate: true });
 
 const totalTournamentDurationFormatted = computed(() => {
     const start = tournament.value.config.startTime;
@@ -73,6 +87,7 @@ const breakDuration = computed({
     <BuilderView
         v-model="tournament"
         ref="builder"
+        @regenerated="regenerateTimes()"
     />
 
     <div class="row">
@@ -108,13 +123,24 @@ const breakDuration = computed({
     <div class="row">
         <p v-if="tournamentEndsAt">
             Tournament ends approximately at
-            <strong>
-                {{ tournamentEndsAt.toLocaleString() }}
-            </strong>
-            ({{ totalTournamentDurationFormatted }})
+            <SkeletonTextLoader
+                :loading="regenerating"
+                :characters="30"
+            >
+                <strong>
+                    {{ tournamentEndsAt.toLocaleString() }}
+                </strong>
+                ({{ totalTournamentDurationFormatted }})
+            </SkeletonTextLoader>
         </p>
         <p v-if="totalMatchCount">
-            Total matches: <strong>{{ totalMatchCount }}</strong>
+            Total matches:
+            <SkeletonTextLoader
+                :loading="regenerating"
+                :characters="2"
+            >
+                <strong>{{ totalMatchCount }}</strong>
+            </SkeletonTextLoader>
         </p>
     </div>
 </template>

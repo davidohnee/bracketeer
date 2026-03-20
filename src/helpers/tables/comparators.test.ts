@@ -109,7 +109,7 @@ describe("Table Comparators", () => {
 
             const result = COMPARATORS.directEncounter({ a, b, matches });
 
-            expect(result).toBe(1);
+            expect(result).toBe(-1);
         });
 
         it("should return 0 when there are no head-to-head matches", () => {

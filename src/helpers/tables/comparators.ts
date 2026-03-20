@@ -34,7 +34,8 @@ export const COMPARATORS: Record<ComparatorKey, Comparator> = {
             }
         }, 0);
 
-        return aHeadToHeadPoints;
+        // A negative value indicates that a should come before b.
+        return -aHeadToHeadPoints;
     },
     difference: ({ a, b }: ComparatorOptions) =>
         b.points.for - b.points.against - (a.points.for - a.points.against),

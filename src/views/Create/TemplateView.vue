@@ -6,7 +6,7 @@ import templates, {
     templateHref,
     type TournamentTemplate,
 } from "@/assets/samples/tournaments";
-import { emptyTournament } from "@/helpers/defaults";
+import { DEFAULT_TITLE, emptyTournament } from "@/helpers/defaults";
 import { tournamentFromJson } from "@/helpers";
 import { generateId } from "@/helpers/id";
 
@@ -29,7 +29,7 @@ const tournament = computed({
 
 const useTemplate = (template: TournamentTemplate | null) => {
     if (!template) {
-        tournament.value = emptyTournament();
+        tournament.value = emptyTournament(DEFAULT_TITLE);
         emit("continue");
         return;
     }

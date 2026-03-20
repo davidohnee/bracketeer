@@ -15,7 +15,7 @@ const props = defineProps<{
     modelValue: Tournament;
 }>();
 
-const emit = defineEmits<(e: "update:modelValue", value: Tournament) => void>();
+const emit = defineEmits<(e: "update:modelValue" | "regenerated", value: Tournament) => void>();
 
 const tournament = computed({
     get() {
@@ -31,6 +31,7 @@ const regenerate = () => {
     rawTournament.phases = generateGroupPhases(rawTournament);
     rawTournament.phases = generateKnockoutBrackets(rawTournament);
     tournament.value = rawTournament;
+    emit("regenerated", tournament.value);
 };
 
 defineExpose({

@@ -71,8 +71,7 @@ const breakDuration = computed({
 </script>
 <template>
     <BuilderView
-        :model-value="tournament"
-        @update:modelValue="tournament = $event"
+        v-model="tournament"
         ref="builder"
     />
 

@@ -16,6 +16,8 @@ onMounted(() => {
         return;
     }
 
+    console.log(`bracketeer v${APP_VERSION}`);
+
     theme.init();
 });
 </script>

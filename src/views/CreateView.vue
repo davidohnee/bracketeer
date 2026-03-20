@@ -8,13 +8,13 @@ import { ref, watch } from "vue";
 import { tournamentFromJson } from "@/helpers";
 import { useTournamentsStore } from "@/stores/tournaments";
 import { useRouter } from "vue-router";
-import { emptyTournament } from "@/helpers/defaults";
+import { DEFAULT_TITLE, emptyTournament } from "@/helpers/defaults";
 
 const tournament = ref<Tournament | null>(null);
 const tournaments = useTournamentsStore();
 const router = useRouter();
 
-const initTournament: Tournament = emptyTournament("My Tournament");
+const initTournament: Tournament = emptyTournament(DEFAULT_TITLE);
 
 const getTournament = () => {
     const sessionValue = sessionStorage.getItem("creator.tournament");

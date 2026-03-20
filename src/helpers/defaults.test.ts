@@ -6,40 +6,40 @@ describe("Defaults Helper Functions", () => {
         it("should contain beerpong defaults", () => {
             const beerpong = DEFAULTS.beerpong;
             expect(beerpong).toBeDefined();
-            expect(beerpong!.name).toBe("Beer Pong");
-            expect(beerpong!.icon).toBe("beer-outline");
-            expect(beerpong!.courtLabel.singular).toBe("table");
-            expect(beerpong!.courtLabel.plural).toBe("tables");
-            expect(beerpong!.matchDuration).toBe(10);
-            expect(beerpong!.breakDuration).toBe(5);
-            expect(beerpong!.sets.supported).toBe(false);
-            expect(beerpong!.sets.default).toBe(false);
+            expect(beerpong.name).toBe("Beer Pong");
+            expect(beerpong.icon).toBe("beer-outline");
+            expect(beerpong.courtLabel.singular).toBe("table");
+            expect(beerpong.courtLabel.plural).toBe("tables");
+            expect(beerpong.matchDuration).toBe(10);
+            expect(beerpong.breakDuration).toBe(5);
+            expect(beerpong.sets.supported).toBe(false);
+            expect(beerpong.sets.default).toBe(false);
         });
 
         it("should contain foosball defaults", () => {
             const foosball = DEFAULTS.foosball;
             expect(foosball).toBeDefined();
-            expect(foosball!.name).toBe("Foosball");
-            expect(foosball!.icon).toBe("football-outline");
-            expect(foosball!.courtLabel.singular).toBe("table");
-            expect(foosball!.courtLabel.plural).toBe("tables");
-            expect(foosball!.matchDuration).toBe(15);
-            expect(foosball!.breakDuration).toBe(5);
-            expect(foosball!.sets.supported).toBe(true);
-            expect(foosball!.sets.default).toBe(true);
+            expect(foosball.name).toBe("Foosball");
+            expect(foosball.icon).toBe("football-outline");
+            expect(foosball.courtLabel.singular).toBe("table");
+            expect(foosball.courtLabel.plural).toBe("tables");
+            expect(foosball.matchDuration).toBe(15);
+            expect(foosball.breakDuration).toBe(5);
+            expect(foosball.sets.supported).toBe(true);
+            expect(foosball.sets.default).toBe(true);
         });
 
         it("should contain other defaults", () => {
             const other = DEFAULTS.other;
             expect(other).toBeDefined();
-            expect(other!.name).toBe("Other");
-            expect(other!.icon).toBe("help-outline");
-            expect(other!.courtLabel.singular).toBe("court");
-            expect(other!.courtLabel.plural).toBe("courts");
-            expect(other!.matchDuration).toBe(15);
-            expect(other!.breakDuration).toBe(5);
-            expect(other!.sets.supported).toBe(true);
-            expect(other!.sets.default).toBe(false);
+            expect(other.name).toBe("Other");
+            expect(other.icon).toBe("help-outline");
+            expect(other.courtLabel.singular).toBe("court");
+            expect(other.courtLabel.plural).toBe("courts");
+            expect(other.matchDuration).toBe(15);
+            expect(other.breakDuration).toBe(5);
+            expect(other.sets.supported).toBe(true);
+            expect(other.sets.default).toBe(false);
         });
     });
 
@@ -153,13 +153,13 @@ describe("Defaults Helper Functions", () => {
 
         it("should create unique phase ids", () => {
             const tournament = emptyTournament();
-            const ids = tournament.phases.map(p => p.id);
+            const ids = tournament.phases.map((p) => p.id);
             expect(ids[0]).not.toBe(ids[1]);
         });
 
         it("should create phases with ids", () => {
             const tournament = emptyTournament();
-            tournament.phases.forEach(phase => {
+            tournament.phases.forEach((phase) => {
                 expect(phase.id).toBeTruthy();
                 expect(typeof phase.id).toBe("string");
             });

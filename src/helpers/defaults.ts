@@ -78,6 +78,8 @@ export const DEFAULTS: Record<string, Default> = {
     },
 };
 
+export const DEFAULT_TITLE = "My Tournament";
+
 const todayAt1800 = new Date();
 todayAt1800.setHours(18, 0, 0, 0);
 export const emptyTournament = (title: string = "") =>

@@ -57,7 +57,10 @@ const groupPromotionPossible = computed((): GroupPromotionValidationResult => {
 
     if (props.modelValue % groupCount === 0) return { valid: true };
 
-    const suggestedTeamCount = Math.round(props.modelValue / groupCount) * groupCount;
+    const suggestedTeamCount = Math.max(
+        groupCount,
+        Math.ceil(props.modelValue / groupCount) * groupCount,
+    );
 
     return { valid: false, suggestedTeamCount };
 });
@@ -85,7 +88,7 @@ const maxValue = computed(() => {
                 :class="{ 'hidden-value': props.hideValue }"
                 :disabled="readonly"
                 title="# of teams to proceed"
-                :aria-invalid="!valueValid"
+                :aria-invalid="!valueValid || !groupPromotionPossible.valid"
                 :max="maxValue"
             />
             <span

@@ -31,12 +31,12 @@ const website = "https://davidohnee.com";
         </section>
         <section>
             <div class="col">
-                <h1>Run tournaments like a pro — in seconds.</h1>
+                <h1>Run tournaments like a pro &mdash; in seconds.</h1>
                 <p>
                     Instantly generate match plans, update scores live, and keep your tournament
                     running smooth with a clean, modern interface built for speed. bracketeer
-                    doesn’t just look good — it works everywhere, from mobile to desktop, with a
-                    premium, responsive design that feels as good as it looks.
+                    doesn't just look good &mdash; it works everywhere, from mobile to desktop, with
+                    a premium, responsive design that feels as good as it looks.
                 </p>
             </div>
             <div class="col">
@@ -59,7 +59,7 @@ const website = "https://davidohnee.com";
             <div class="col">
                 <h1>Built for you and your friends</h1>
                 <p>
-                    bracketeer is designed for you and your friends. Whether you’re a casual gamer
+                    bracketeer is designed for you and your friends. Whether you're a casual gamer
                     or a competitive player, bracketeer offers you the platform to create and manage
                     tournaments with ease.
                 </p>
@@ -75,8 +75,8 @@ const website = "https://davidohnee.com";
             <div class="col">
                 <h1>No fees.<br />No sign-ups. <br />No nonsense.</h1>
                 <p>
-                    bracketeer is 100% free, fully open-source, and respects your privacy — your
-                    data stays on your device unless you decide to share it.
+                    bracketeer is 100% free, fully open-source, and respects your privacy &mdash;
+                    your data stays on your device unless you decide to share it.
                 </p>
             </div>
         </section>
@@ -84,7 +84,9 @@ const website = "https://davidohnee.com";
     <div class="footer">
         <div class="row text-muted">
             <p class="left">
-                <span> <strong>bracketeer</strong> © 2025 </span>
+                <span>
+                    <strong>bracketeer</strong> © 2025&ndash;{{ new Date().getFullYear() }}
+                </span>
                 <span
                     >made with ❤️ by
                     <a

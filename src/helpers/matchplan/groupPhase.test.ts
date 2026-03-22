@@ -183,7 +183,7 @@ describe("Group Phase Generation", () => {
 
             // Verify matches are scheduled with proper time gaps
             for (let i = 1; i < times.length; i++) {
-                const timeDiff = times[i]! - times[i - 1]!;
+                const timeDiff = times[i] - times[i - 1];
                 // Time difference should be a multiple of (matchDuration + breakDuration)
                 // or 0 for simultaneous matches on different courts
                 expect(timeDiff).toBeGreaterThanOrEqual(0);
@@ -209,7 +209,7 @@ describe("Group Phase Generation", () => {
 
             // Check time differences between consecutive time slots
             for (let i = 1; i < uniqueTimes.length; i++) {
-                const diff = uniqueTimes[i]! - uniqueTimes[i - 1]!;
+                const diff = uniqueTimes[i] - uniqueTimes[i - 1];
                 const diffInMinutes = diff / (1000 * 60);
 
                 // Should be a multiple of round duration
@@ -234,9 +234,9 @@ describe("Group Phase Generation", () => {
             const phases = generateGroupPhases(tournament);
 
             expect(phases.length).toBe(1);
-            expect(phases[0]!.type).toBe("group");
-            if (phases[0]!.type === "group") {
-                expect(phases[0]!.matches.length).toBeGreaterThan(0);
+            expect(phases[0].type).toBe("group");
+            if (phases[0].type === "group") {
+                expect(phases[0].matches.length).toBeGreaterThan(0);
             }
         });
 
@@ -275,8 +275,8 @@ describe("Group Phase Generation", () => {
             const phases = generateGroupPhases(tournament);
 
             expect(phases.length).toBe(2);
-            expect(phases[0]!.type).toBe("group");
-            expect(phases[1]!.type).toBe("knockout");
+            expect(phases[0].type).toBe("group");
+            expect(phases[1].type).toBe("knockout");
         });
     });
 

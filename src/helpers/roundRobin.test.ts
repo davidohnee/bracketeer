@@ -47,7 +47,7 @@ describe("roundRobin", () => {
 
         const allPairs = schedule.flat();
         const pairStrings = allPairs.map(([a, b]) =>
-            [a, b].sort((x, y) => x!.localeCompare(y!)).join("-"),
+            [a, b].sort((x, y) => x.localeCompare(y)).join("-"),
         );
 
         // Check uniqueness - no duplicate pairings
@@ -65,7 +65,7 @@ describe("roundRobin", () => {
         ];
 
         expectedPairs.forEach(([team1, team2]) => {
-            const pairStr = [team1, team2].sort((x, y) => x!.localeCompare(y!)).join("-");
+            const pairStr = [team1, team2].sort((x, y) => x.localeCompare(y)).join("-");
             expect(uniquePairs.has(pairStr)).toBe(true);
         });
     });

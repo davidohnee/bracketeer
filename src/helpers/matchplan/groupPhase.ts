@@ -63,7 +63,7 @@ const createBalanceRound = (
             [...allMatches, ...round.matches],
             tournament.config.startTime,
             tournament.config.matchDuration + tournament.config.breakDuration,
-            [team1!, team2!],
+            [team1, team2],
             tournament.config.courts,
         );
 
@@ -117,7 +117,7 @@ const generateForGroup = (group: Group, rounds: number, tournament: Tournament):
 
     for (let i = 0; i < rounds; i++) {
         const matchI = i % draw.length;
-        const matchPairs = draw[matchI]!;
+        const matchPairs = draw[matchI];
         const roundId = generateId();
 
         for (const matchPair of matchPairs) {
@@ -129,11 +129,11 @@ const generateForGroup = (group: Group, rounds: number, tournament: Tournament):
                 court: UNSCHEDULED.COURT,
                 teams: [
                     {
-                        ref: team1 as Ref,
+                        ref: team1,
                         score: 0,
                     },
                     {
-                        ref: team2 as Ref,
+                        ref: team2,
                         score: 0,
                     },
                 ],
@@ -165,7 +165,7 @@ export const generateGroupPhase = (
     let table: Ref[] = tournament.teams;
 
     if (phaseI > 0) {
-        table = rankedTeams(tournament.phases[phaseI - 1]!);
+        table = rankedTeams(tournament.phases[phaseI - 1]);
     }
 
     const shuffledTeams = shuffle(table);

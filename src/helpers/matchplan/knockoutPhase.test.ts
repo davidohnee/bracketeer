@@ -69,11 +69,11 @@ describe("Knockout Phase Generation", () => {
             tournament.phases = [phase];
             const rounds = generateKnockoutBracket(phase, tournament);
 
-            expect(rounds[0]!.name).toBe("Round of 16");
-            expect(rounds[1]!.name).toBe("Quarter-finals");
-            expect(rounds[2]!.name).toBe("Semi-finals");
-            expect(rounds[3]!.name).toBe("3rd Place Playoff");
-            expect(rounds[4]!.name).toBe("Final");
+            expect(rounds[0].name).toBe("Round of 16");
+            expect(rounds[1].name).toBe("Quarter-finals");
+            expect(rounds[2].name).toBe("Semi-finals");
+            expect(rounds[3].name).toBe("3rd Place Playoff");
+            expect(rounds[4].name).toBe("Final");
         });
 
         it("should have correct number of matches per round", () => {
@@ -88,11 +88,11 @@ describe("Knockout Phase Generation", () => {
             tournament.phases = [phase];
             const rounds = generateKnockoutBracket(phase, tournament);
 
-            expect(rounds[0]!.matches.length).toBe(8); // Round of 16
-            expect(rounds[1]!.matches.length).toBe(4); // Quarter-finals
-            expect(rounds[2]!.matches.length).toBe(2); // Semi-finals
-            expect(rounds[3]!.matches.length).toBe(1); // 3rd Place
-            expect(rounds[4]!.matches.length).toBe(1); // Final
+            expect(rounds[0].matches.length).toBe(8); // Round of 16
+            expect(rounds[1].matches.length).toBe(4); // Quarter-finals
+            expect(rounds[2].matches.length).toBe(2); // Semi-finals
+            expect(rounds[3].matches.length).toBe(1); // 3rd Place
+            expect(rounds[4].matches.length).toBe(1); // Final
         });
 
         it("should ensure final cannot occur before semi-finals", () => {
@@ -114,8 +114,8 @@ describe("Knockout Phase Generation", () => {
             expect(semiFinalRound).toBeDefined();
             expect(finalRound).toBeDefined();
 
-            const semiFinalTime = semiFinalRound!.matches[0]!.date.getTime();
-            const finalTime = finalRound!.matches[0]!.date.getTime();
+            const semiFinalTime = semiFinalRound!.matches[0].date.getTime();
+            const finalTime = finalRound!.matches[0].date.getTime();
 
             // Final should be after semi-finals
             expect(finalTime).toBeGreaterThan(semiFinalTime);
@@ -139,8 +139,8 @@ describe("Knockout Phase Generation", () => {
             expect(thirdPlaceRound).toBeDefined();
             expect(finalRound).toBeDefined();
 
-            const thirdPlaceTime = thirdPlaceRound!.matches[0]!.date.getTime();
-            const finalTime = finalRound!.matches[0]!.date.getTime();
+            const thirdPlaceTime = thirdPlaceRound!.matches[0].date.getTime();
+            const finalTime = finalRound!.matches[0].date.getTime();
 
             // 3rd place should not be after final
             expect(thirdPlaceTime).toBeLessThanOrEqual(finalTime);
@@ -181,12 +181,11 @@ describe("Knockout Phase Generation", () => {
 
             // Each subsequent round should start after the previous round
             for (let i = 1; i < rounds.length; i++) {
-                const prevRoundLastMatch =
-                    rounds[i - 1]!.matches[rounds[i - 1]!.matches.length - 1];
-                const currentRoundFirstMatch = rounds[i]!.matches[0];
+                const prevRoundLastMatch = rounds[i - 1].matches[rounds[i - 1].matches.length - 1];
+                const currentRoundFirstMatch = rounds[i].matches[0];
 
-                const prevTime = prevRoundLastMatch!.date.getTime();
-                const currentTime = currentRoundFirstMatch!.date.getTime();
+                const prevTime = prevRoundLastMatch.date.getTime();
+                const currentTime = currentRoundFirstMatch.date.getTime();
 
                 // Current round should start after previous round
                 expect(currentTime).toBeGreaterThanOrEqual(prevTime);
@@ -262,7 +261,7 @@ describe("Knockout Phase Generation", () => {
             const firstRound = rounds[0];
             expect(firstRound).toBeDefined();
 
-            firstRound!.matches.forEach((match) => {
+            firstRound.matches.forEach((match) => {
                 // First round should have "league" type links
                 expect(match.teams[0].link?.type).toBe("league");
                 expect(match.teams[1].link?.type).toBe("league");
@@ -287,7 +286,7 @@ describe("Knockout Phase Generation", () => {
             const secondRound = rounds[1];
             expect(secondRound).toBeDefined();
 
-            secondRound!.matches.forEach((match) => {
+            secondRound.matches.forEach((match) => {
                 // Second and subsequent rounds should have "winner" type links
                 expect(match.teams[0].link?.type).toBe("winner");
                 expect(match.teams[1].link?.type).toBe("winner");
@@ -310,8 +309,8 @@ describe("Knockout Phase Generation", () => {
             expect(thirdPlaceRound).toBeDefined();
 
             const thirdPlaceMatch = thirdPlaceRound!.matches[0];
-            expect(thirdPlaceMatch!.teams[0].link?.type).toBe("loser");
-            expect(thirdPlaceMatch!.teams[1].link?.type).toBe("loser");
+            expect(thirdPlaceMatch.teams[0].link?.type).toBe("loser");
+            expect(thirdPlaceMatch.teams[1].link?.type).toBe("loser");
         });
 
         it("should create a play-in round when team count is not a power of two", () => {
@@ -327,10 +326,10 @@ describe("Knockout Phase Generation", () => {
             tournament.phases = [phase];
             const rounds = generateKnockoutBracket(phase, tournament);
 
-            expect(rounds[0]!.name).toBe("Play-in");
-            expect(rounds[1]!.name).toBe("Round of 16");
+            expect(rounds[0].name).toBe("Play-in");
+            expect(rounds[1].name).toBe("Round of 16");
             expect(rounds.length).toBe(6);
-            expect(rounds[0]!.matches.length).toBe(8);
+            expect(rounds[0].matches.length).toBe(8);
         });
 
         it("should mix league and winner links in the post-bye round", () => {
@@ -346,7 +345,7 @@ describe("Knockout Phase Generation", () => {
             tournament.phases = [phase];
             const rounds = generateKnockoutBracket(phase, tournament);
 
-            const postByeRound = rounds[1]!;
+            const postByeRound = rounds[1];
             const linkTypes = postByeRound.matches.flatMap((match) =>
                 match.teams.map((team) => team.link?.type),
             );
@@ -370,9 +369,9 @@ describe("Knockout Phase Generation", () => {
             const phases = generateKnockoutBrackets(tournament);
 
             expect(phases.length).toBe(1);
-            expect(phases[0]!.type).toBe("knockout");
-            if (phases[0]!.type === "knockout") {
-                expect(phases[0]!.rounds.length).toBeGreaterThan(0);
+            expect(phases[0].type).toBe("knockout");
+            if (phases[0].type === "knockout") {
+                expect(phases[0].rounds.length).toBeGreaterThan(0);
             }
         });
 
@@ -413,8 +412,8 @@ describe("Knockout Phase Generation", () => {
             const phases = generateKnockoutBrackets(tournament);
 
             expect(phases.length).toBe(2);
-            expect(phases[0]!.type).toBe("group");
-            expect(phases[1]!.type).toBe("knockout");
+            expect(phases[0].type).toBe("group");
+            expect(phases[1].type).toBe("knockout");
         });
 
         it("should handle mixed phase with multiple groups", () => {
@@ -452,8 +451,8 @@ describe("Knockout Phase Generation", () => {
             const phases = generateKnockoutBrackets(tournament);
 
             expect(phases.length).toBe(2);
-            expect(phases[0]!.type).toBe("group");
-            expect(phases[1]!.type).toBe("knockout");
+            expect(phases[0].type).toBe("group");
+            expect(phases[1].type).toBe("knockout");
         });
     });
 
@@ -476,8 +475,8 @@ describe("Knockout Phase Generation", () => {
             expect(quarterFinals).toBeDefined();
             expect(semiFinals).toBeDefined();
 
-            const quarterTime = quarterFinals!.matches[0]!.date.getTime();
-            const semiTime = semiFinals!.matches[0]!.date.getTime();
+            const quarterTime = quarterFinals!.matches[0].date.getTime();
+            const semiTime = semiFinals!.matches[0].date.getTime();
 
             expect(semiTime).toBeGreaterThan(quarterTime);
         });
@@ -500,8 +499,8 @@ describe("Knockout Phase Generation", () => {
             expect(roundOf16).toBeDefined();
             expect(quarterFinals).toBeDefined();
 
-            const r16Time = roundOf16!.matches[0]!.date.getTime();
-            const quarterTime = quarterFinals!.matches[0]!.date.getTime();
+            const r16Time = roundOf16!.matches[0].date.getTime();
+            const quarterTime = quarterFinals!.matches[0].date.getTime();
 
             expect(quarterTime).toBeGreaterThan(r16Time);
         });
@@ -542,7 +541,7 @@ describe("Knockout Phase Update", () => {
             const knockout = updatedTournament.find((p) => p.type === "knockout");
             expect(knockout).toBeDefined();
             if (knockout?.type === "knockout") {
-                const firstRound = knockout.rounds[0]!;
+                const firstRound = knockout.rounds[0];
                 firstRound.matches.forEach((match) => {
                     expect(match.teams[0].link?.type).toBe("league");
                     expect(match.teams[1].link?.type).toBe("league");
@@ -563,7 +562,7 @@ describe("Knockout Phase Update", () => {
             const updatedKnockout = tournament.phases.find((p) => p.type === "knockout");
             expect(updatedKnockout).toBeDefined();
             if (updatedKnockout?.type === "knockout") {
-                const firstRound = updatedKnockout.rounds[0]!;
+                const firstRound = updatedKnockout.rounds[0];
                 firstRound.matches.forEach((match) => {
                     expect(match.teams[0].link?.type).toBe("league");
                     expect(match.teams[1].link?.type).toBe("league");

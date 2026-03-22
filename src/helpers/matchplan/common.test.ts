@@ -145,7 +145,7 @@ describe("Matchplan Common Functions", () => {
                 },
             ];
 
-            const slot = earliestFreeSlot(existingMatches, baseDate, 35, [teams[4]!, teams[5]!], 2);
+            const slot = earliestFreeSlot(existingMatches, baseDate, 35, [teams[4], teams[5]], 2);
 
             // All courts occupied, should move to next slot
             const expectedTime = new Date(baseDate);
@@ -224,17 +224,17 @@ describe("Matchplan Common Functions", () => {
         it("should preserve relative time differences between matches (approximately)", () => {
             const oldPhase = tournament.phases[0] as GroupTournamentPhase;
             const oldTimes = oldPhase.matches.map((m) => m.date.getTime());
-            const oldDiffs = [oldTimes[1]! - oldTimes[0]!, oldTimes[2]! - oldTimes[1]!];
+            const oldDiffs = [oldTimes[1] - oldTimes[0], oldTimes[2] - oldTimes[1]];
 
             const result = adjustStartTimes(tournament);
 
             const newPhase = result.phases[0] as GroupTournamentPhase;
             const newTimes = newPhase.matches.map((m) => m.date.getTime());
-            const newDiffs = [newTimes[1]! - newTimes[0]!, newTimes[2]! - newTimes[1]!];
+            const newDiffs = [newTimes[1] - newTimes[0], newTimes[2] - newTimes[1]];
 
             // Time differences should be approximately preserved (within 1 minute due to ceiling)
-            expect(Math.abs(newDiffs[0]! - oldDiffs[0]!)).toBeLessThanOrEqual(60000);
-            expect(Math.abs(newDiffs[1]! - oldDiffs[1]!)).toBeLessThanOrEqual(60000);
+            expect(Math.abs(newDiffs[0] - oldDiffs[0])).toBeLessThanOrEqual(60000);
+            expect(Math.abs(newDiffs[1] - oldDiffs[1])).toBeLessThanOrEqual(60000);
         });
 
         it("should start matches when startMatches option is true", () => {
@@ -242,7 +242,7 @@ describe("Matchplan Common Functions", () => {
 
             // Set first match to start exactly at the reference time
             const refTime = tournament.config.startTime;
-            phase.matches[0]!.date = new Date(refTime);
+            phase.matches[0].date = new Date(refTime);
 
             const result = adjustStartTimes(tournament, { startMatches: true });
 
@@ -255,7 +255,7 @@ describe("Matchplan Common Functions", () => {
 
         it("should not adjust completed matches", () => {
             const phase = tournament.phases[0] as GroupTournamentPhase;
-            const completedMatch = phase.matches[0]!;
+            const completedMatch = phase.matches[0];
             completedMatch.status = "completed";
 
             adjustStartTimes(tournament);
@@ -266,7 +266,7 @@ describe("Matchplan Common Functions", () => {
 
         it("should not adjust in-progress matches", () => {
             const phase = tournament.phases[0] as GroupTournamentPhase;
-            const inProgressMatch = phase.matches[1]!;
+            const inProgressMatch = phase.matches[1];
             inProgressMatch.status = "in-progress";
 
             adjustStartTimes(tournament);
@@ -324,9 +324,9 @@ describe("Matchplan Common Functions", () => {
             const result = adjustStartTimes(tournament);
 
             const koPhase = result.phases[1];
-            expect(koPhase!.type).toBe("knockout");
+            expect(koPhase.type).toBe("knockout");
             if (koPhase?.type === "knockout") {
-                expect(koPhase.rounds[0]!.matches[0]!.status).toBe("scheduled");
+                expect(koPhase.rounds[0].matches[0].status).toBe("scheduled");
             }
         });
     });

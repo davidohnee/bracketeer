@@ -92,8 +92,8 @@ describe("Migrations", () => {
 
         it("should have correct phase types", () => {
             expect(tournament.phases.length).toBe(2);
-            expect(tournament.phases[0]!.type).toBe("group");
-            expect(tournament.phases[1]!.type).toBe("knockout");
+            expect(tournament.phases[0].type).toBe("group");
+            expect(tournament.phases[1].type).toBe("knockout");
         });
 
         it("should convert dates to Date objects", () => {

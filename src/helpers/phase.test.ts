@@ -48,8 +48,8 @@ describe("Phase Helper Functions", () => {
 
             const matches = allMatches(phase);
             expect(matches.length).toBe(2);
-            expect(matches[0]!.id).toBe("match-1");
-            expect(matches[1]!.id).toBe("match-2");
+            expect(matches[0].id).toBe("match-1");
+            expect(matches[1].id).toBe("match-2");
         });
 
         it("should return all matches from a knockout phase", () => {
@@ -105,9 +105,9 @@ describe("Phase Helper Functions", () => {
 
             const matches = allMatches(phase);
             expect(matches.length).toBe(3);
-            expect(matches[0]!.id).toBe("match-1");
-            expect(matches[1]!.id).toBe("match-2");
-            expect(matches[2]!.id).toBe("match-3");
+            expect(matches[0].id).toBe("match-1");
+            expect(matches[1].id).toBe("match-2");
+            expect(matches[2].id).toBe("match-3");
         });
 
         it("should flatten all matches from multiple rounds in knockout phase", () => {
@@ -221,9 +221,9 @@ describe("Phase Helper Functions", () => {
 
             expect(ranked.length).toBe(2);
             // Winner should be first
-            expect(ranked[0]!.id).toBe("team-1");
+            expect(ranked[0].id).toBe("team-1");
             // Loser should be second
-            expect(ranked[1]!.id).toBe("team-2");
+            expect(ranked[1].id).toBe("team-2");
         });
 
         it("should handle scheduled knockout matches by using first team in match", () => {
@@ -254,7 +254,7 @@ describe("Phase Helper Functions", () => {
             const ranked = rankedTeams(phase);
 
             expect(ranked.length).toBeGreaterThan(0);
-            expect(ranked[0]!.id).toBe("team-1");
+            expect(ranked[0].id).toBe("team-1");
         });
 
         it("should rank winners before losers in knockout phase", () => {
@@ -311,9 +311,9 @@ describe("Phase Helper Functions", () => {
             const ranked = rankedTeams(phase);
 
             // Final winner should be first
-            expect(ranked[0]!.id).toBe("team-1");
+            expect(ranked[0].id).toBe("team-1");
             // Final loser should be second
-            expect(ranked[1]!.id).toBe("team-3");
+            expect(ranked[1].id).toBe("team-3");
             // Then semi-final winners (already in final)
             // Then semi-final losers
             expect(ranked).toContain(ranked.find((t) => t.id === "team-2"));

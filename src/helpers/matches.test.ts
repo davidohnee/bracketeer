@@ -492,7 +492,7 @@ describe("Matches Helper Functions", () => {
                     // other keys can exist, but will only contain matches that also have team-1
                     for (const key in grouped) {
                         if (key !== "Team 1") {
-                            grouped[key]!.forEach((richMatch) => {
+                            grouped[key].forEach((richMatch) => {
                                 const teamIds = richMatch.match.teams.map((t) => t.ref!.id);
                                 expect(teamIds).toContain("team-1");
                             });
@@ -553,12 +553,12 @@ describe("Matches Helper Functions", () => {
                                 {
                                     id: "group-1",
                                     name: "Group 1",
-                                    teams: [TEST_TEAMS[0]!, TEST_TEAMS[1]!], // Team 1 and Team 2
+                                    teams: [TEST_TEAMS[0], TEST_TEAMS[1]], // Team 1 and Team 2
                                 },
                                 {
                                     id: "group-2",
                                     name: "Group 2",
-                                    teams: [TEST_TEAMS[2]!, TEST_TEAMS[3]!], // Team 3 and Team 4
+                                    teams: [TEST_TEAMS[2], TEST_TEAMS[3]], // Team 3 and Team 4
                                 },
                             ],
                             matches: allMatches.map((richMatch) => richMatch.match),

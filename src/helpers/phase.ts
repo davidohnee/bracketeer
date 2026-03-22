@@ -28,7 +28,7 @@ const rankGroupPhase = (phase: TournamentPhase): Ref[] => {
     for (let i = 0; i < teamsPerTable; i++) {
         for (const table of tables) {
             if (table.teams[i]) {
-                rankedTeams.push(table.teams[i]!.team);
+                rankedTeams.push(table.teams[i].team);
             }
         }
     }
@@ -41,7 +41,7 @@ const rankKnockoutPhase = (phase: TournamentPhase): Ref[] => {
     const rankedTeams: Ref[] = [];
 
     for (let i = phase.rounds.length - 1; i >= 0; i--) {
-        const round = phase.rounds[i]!;
+        const round = phase.rounds[i];
         // for each match in round, 1st winner
         // then for each match in round loser
         const winners = [];
@@ -92,7 +92,7 @@ const phaseAtOffset = (
         return null;
     }
 
-    return tournament.phases[targetIndex]!;
+    return tournament.phases[targetIndex];
 };
 
 export const nextPhase = (

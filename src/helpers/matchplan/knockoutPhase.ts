@@ -424,6 +424,8 @@ export const updateKnockoutMatches = (tournament: Tournament) => {
 const resetKnockoutPhase = (phase: KnockoutTournamentPhase) => {
     for (const round of phase.rounds) {
         for (const match of round.matches) {
+            if (match.status !== "scheduled") continue;
+
             for (const team of match.teams) {
                 team.ref = undefined;
             }

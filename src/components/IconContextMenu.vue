@@ -10,9 +10,6 @@ const expanded = ref(false);
 const trueDropdown = ref<HTMLElement | null>(null);
 const container = ref<HTMLElement | null>(null);
 
-let trueDropdownRect: DOMRect | null = null;
-let containerRect: DOMRect | null = null;
-
 const close = () => {
     expanded.value = false;
 };
@@ -32,34 +29,41 @@ defineExpose({
     isOpen: expanded,
 });
 
+const updatePosition = () => {
+    if (!expanded.value || !trueDropdown.value || !container.value) {
+        return;
+    }
+
+    const trueDropdownRect = trueDropdown.value.getBoundingClientRect();
+    const containerRect = container.value.getBoundingClientRect();
+
+    const top = containerRect.top;
+    const bottom = containerRect.bottom;
+    const spaceBelow = globalThis.innerHeight - bottom;
+
+    trueDropdown.value.style.left = containerRect.left + "px";
+    trueDropdown.value.style.right = "auto";
+
+    if (props.alignment === "right") {
+        trueDropdown.value.style.left = "auto";
+        trueDropdown.value.style.right = globalThis.innerWidth - containerRect.right + "px";
+    }
+
+    const enoughSpaceBelow = spaceBelow > trueDropdownRect.height;
+
+    if (enoughSpaceBelow) {
+        trueDropdown.value.style.top = bottom + "px";
+        trueDropdown.value.style.bottom = "auto";
+    } else {
+        trueDropdown.value.style.top = "auto";
+        trueDropdown.value.style.bottom = globalThis.innerHeight - top + "px";
+    }
+};
+
 watch(expanded, (value) => {
     nextTick(() => {
-        if (value && trueDropdown.value && container.value) {
-            if (!trueDropdownRect || !containerRect) {
-                trueDropdownRect = trueDropdown.value.getBoundingClientRect();
-                containerRect = container.value.getBoundingClientRect();
-            }
-
-            const top = containerRect.top;
-            const bottom = containerRect.bottom;
-
-            const spaceBelow = globalThis.innerHeight - bottom;
-
-            trueDropdown.value.style.left = containerRect.left + "px";
-            if (props.alignment === "right") {
-                trueDropdown.value.style.left = "auto";
-                trueDropdown.value.style.right = globalThis.innerWidth - containerRect.right + "px";
-            }
-
-            const enoughSpaceBelow = spaceBelow > trueDropdownRect.height;
-
-            if (enoughSpaceBelow) {
-                trueDropdown.value.style.top = bottom + "px";
-                trueDropdown.value.style.bottom = "auto";
-            } else {
-                trueDropdown.value.style.top = "auto";
-                trueDropdown.value.style.bottom = globalThis.innerHeight - top + "px";
-            }
+        if (value) {
+            updatePosition();
         }
     });
 });
@@ -68,16 +72,20 @@ const handleWindowClick = () => {
     expanded.value = false;
 };
 const handleResize = () => {
-    trueDropdownRect = null;
-    containerRect = null;
+    updatePosition();
+};
+const handleScroll = () => {
+    updatePosition();
 };
 onMounted(() => {
     globalThis.addEventListener("click", handleWindowClick);
     globalThis.addEventListener("resize", handleResize);
+    globalThis.addEventListener("scroll", handleScroll, true);
 });
 onBeforeUnmount(() => {
     globalThis.removeEventListener("click", handleWindowClick);
     globalThis.removeEventListener("resize", handleResize);
+    globalThis.removeEventListener("scroll", handleScroll, true);
 });
 </script>
 <template>
@@ -122,7 +130,7 @@ onBeforeUnmount(() => {
 }
 
 .context-menu {
-    position: absolute;
+    position: fixed;
     left: 0;
     z-index: 100;
     max-width: 20rem;

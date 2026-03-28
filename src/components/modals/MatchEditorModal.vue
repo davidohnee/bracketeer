@@ -19,10 +19,10 @@ const emit = defineEmits<{
 
 const onChanged = () => {
     emit("update:modelValue", match.value);
+    updateKnockoutMatches(props.tournament);
 };
 const onStatusChanged = () => {
     emit("statusChanged", match.value.status);
-    updateKnockoutMatches(props.tournament);
     onChanged();
 };
 const scores = ref(match.value.teams.map((team) => team.score) ?? []);

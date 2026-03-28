@@ -9,6 +9,8 @@ const expanded = ref(false);
 
 const trueDropdown = ref<HTMLElement | null>(null);
 const container = ref<HTMLElement | null>(null);
+let positionUpdateFrame: number | null = null;
+let hasScrollListener = false;
 
 const close = () => {
     expanded.value = false;
@@ -60,10 +62,45 @@ const updatePosition = () => {
     }
 };
 
+const schedulePositionUpdate = () => {
+    if (positionUpdateFrame !== null) {
+        return;
+    }
+
+    positionUpdateFrame = globalThis.requestAnimationFrame(() => {
+        positionUpdateFrame = null;
+        updatePosition();
+    });
+};
+
+const registerScrollListener = () => {
+    if (hasScrollListener) {
+        return;
+    }
+
+    globalThis.addEventListener("scroll", handleScroll, true);
+    hasScrollListener = true;
+};
+
+const unregisterScrollListener = () => {
+    if (!hasScrollListener) {
+        return;
+    }
+
+    globalThis.removeEventListener("scroll", handleScroll, true);
+    hasScrollListener = false;
+};
+
 watch(expanded, (value) => {
+    if (value) {
+        registerScrollListener();
+    } else {
+        unregisterScrollListener();
+    }
+
     nextTick(() => {
         if (value) {
-            updatePosition();
+            schedulePositionUpdate();
         }
     });
 });
@@ -72,20 +109,25 @@ const handleWindowClick = () => {
     expanded.value = false;
 };
 const handleResize = () => {
-    updatePosition();
+    schedulePositionUpdate();
 };
 const handleScroll = () => {
-    updatePosition();
+    schedulePositionUpdate();
 };
 onMounted(() => {
     globalThis.addEventListener("click", handleWindowClick);
     globalThis.addEventListener("resize", handleResize);
-    globalThis.addEventListener("scroll", handleScroll, true);
 });
 onBeforeUnmount(() => {
+    unregisterScrollListener();
+
+    if (positionUpdateFrame !== null) {
+        globalThis.cancelAnimationFrame(positionUpdateFrame);
+        positionUpdateFrame = null;
+    }
+
     globalThis.removeEventListener("click", handleWindowClick);
     globalThis.removeEventListener("resize", handleResize);
-    globalThis.removeEventListener("scroll", handleScroll, true);
 });
 </script>
 <template>

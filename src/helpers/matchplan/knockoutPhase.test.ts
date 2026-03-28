@@ -571,5 +571,50 @@ describe("Knockout Phase Update", () => {
                 });
             }
         });
+
+        it("should reset scheduled knockout team refs when previous phase is not finished", () => {
+            const groupPhase: GroupTournamentPhase = {
+                id: "phase-group",
+                name: "Group Phase",
+                type: "group",
+                rounds: 2,
+                matches: [],
+            };
+
+            groupPhase.matches = generateGroupPhase(groupPhase, tournament);
+
+            const knockoutPhase: KnockoutTournamentPhase = {
+                id: "phase-knockout",
+                name: "Knockout Phase",
+                type: "knockout",
+                teamCount: 8,
+                rounds: [],
+            };
+
+            tournament.phases = [groupPhase, knockoutPhase];
+            knockoutPhase.rounds = generateKnockoutBracket(knockoutPhase, tournament);
+
+            // First update: completed group phase assigns refs in scheduled knockout matches.
+            randomiseGroupPhaseResults(tournament);
+            updateKnockoutMatches(tournament);
+
+            const beforeResetRound = knockoutPhase.rounds[0];
+            beforeResetRound.matches.forEach((match) => {
+                expect(match.teams[0].ref).toBeDefined();
+                expect(match.teams[1].ref).toBeDefined();
+            });
+
+            // Mark one previous match as unfinished to force the reset path.
+            groupPhase.matches[0].status = "scheduled";
+
+            updateKnockoutMatches(tournament);
+
+            const afterResetRound = knockoutPhase.rounds[0];
+            afterResetRound.matches.forEach((match) => {
+                expect(match.status).toBe("scheduled");
+                expect(match.teams[0].ref).toBeUndefined();
+                expect(match.teams[1].ref).toBeUndefined();
+            });
+        });
     });
 });

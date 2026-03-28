@@ -5,6 +5,7 @@ import { computed, ref } from "vue";
 import SegmentPicker from "../SegmentPicker.vue";
 import { calculateScoresFromSets } from "@/helpers/scoring";
 import { getCourtType } from "@/helpers/defaults";
+import { updateKnockoutMatches } from "@/helpers/matchplan/knockoutPhase";
 
 const props = defineProps<{
     modelValue: Match;
@@ -21,6 +22,7 @@ const onChanged = () => {
 };
 const onStatusChanged = () => {
     emit("statusChanged", match.value.status);
+    updateKnockoutMatches(props.tournament);
     onChanged();
 };
 const scores = ref(match.value.teams.map((team) => team.score) ?? []);

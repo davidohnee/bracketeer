@@ -421,6 +421,16 @@ export const updateKnockoutMatches = (tournament: Tournament) => {
     }
 };
 
+const resetKnockoutPhase = (phase: KnockoutTournamentPhase) => {
+    for (const round of phase.rounds) {
+        for (const match of round.matches) {
+            for (const team of match.teams) {
+                team.ref = undefined;
+            }
+        }
+    }
+};
+
 const updateKnockoutPhase = (phase: KnockoutTournamentPhase, tournament: Tournament) => {
     const knockout = phase.rounds;
 
@@ -428,7 +438,10 @@ const updateKnockoutPhase = (phase: KnockoutTournamentPhase, tournament: Tournam
 
     const table = resolveInitialTable(tournament, phase);
 
-    if (!table) return;
+    if (!table) {
+        resetKnockoutPhase(phase);
+        return;
+    }
 
     const roundWinners: Ref[][] = [];
     const roundLosers: Ref[][] = [];

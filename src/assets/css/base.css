@@ -95,8 +95,11 @@ section {
 .status {
     padding: 0.25em;
     border-radius: 0.5em;
-    text-align: center;
     width: calc(100% - 0.5em);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5em;
 
     --c: black;
     color: var(--c);

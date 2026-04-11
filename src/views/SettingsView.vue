@@ -28,18 +28,11 @@ const structure = [
         ],
     },
 ];
-
-const sectionTitle = computed(() => {
-    const section = structure
-        .flatMap((section) => section.children)
-        .find((child) => child.route === route.name);
-    return section ? section.title : "";
-});
 </script>
 
 <template>
     <div class="settings">
-        <h1>{{ sectionTitle }}</h1>
+        <h1>Settings</h1>
 
         <div class="split">
             <aside class="sidebar">
@@ -69,21 +62,21 @@ const sectionTitle = computed(() => {
 <style scoped>
 .split {
     display: grid;
-    grid-template-columns: 30ch 1fr;
-    gap: 1em;
+    grid-template-columns: 25ch 1fr;
+    gap: 5em;
+    align-items: start;
 
     & aside {
         display: flex;
         flex-direction: column;
         gap: 1em;
-        background: var(--color-surface);
-        border-radius: 0.5em;
-        padding: 1em;
     }
 
     & h5 {
         margin: 0;
+        margin-left: 0.5em;
         text-transform: uppercase;
+        color: var(--color-text-secondary);
     }
 
     & h2 {
@@ -99,7 +92,7 @@ const sectionTitle = computed(() => {
         border-radius: 0.5em;
 
         &.router-link-active {
-            background: var(--color-background);
+            background: var(--color-surface);
             border-color: var(--color-border);
         }
     }

@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import StepProgress from "@/components/StepProgress.vue";
-import TemplateView from "./Create/TemplateView.vue";
-import Basics from "./Create/BasicsView.vue";
-import Format from "./Create/FormatView.vue";
+import TemplateView from "@/views/create/TemplateView.vue";
+import Basics from "@/views/create/BasicsView.vue";
+import Format from "@/views/create/FormatView.vue";
 import type { Tournament } from "@/types/tournament";
 import { ref, watch } from "vue";
 import { tournamentFromJson } from "@/helpers";
@@ -45,7 +45,10 @@ const create = () => {
     tournaments.add(tournament.value!);
     sessionStorage.removeItem("creator.tournament");
     sessionStorage.removeItem("creator.step");
-    router.push({ name: "tournament", params: { tournamentId: tournament.value!.id } });
+    router.push({
+        name: "/tournament/[tournamentId]",
+        params: { tournamentId: tournament.value!.id },
+    });
 };
 </script>
 <template>

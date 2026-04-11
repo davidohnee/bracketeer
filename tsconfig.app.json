@@ -17,5 +17,11 @@
       "es2023"
     ]
   },
+  "vueCompilerOptions": {
+    "plugins": [
+      "vue-router/volar/sfc-typed-router", 
+      "vue-router/volar/sfc-route-blocks", 
+    ]
+  },
   "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue"]
 }

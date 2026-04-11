@@ -5,11 +5,11 @@ const structure = [
         children: [
             {
                 title: "About",
-                route: "settings.general.about",
+                route: "/settings/general/about",
             },
             {
                 title: "Appearance",
-                route: "settings.general.appearance",
+                route: "/settings/general/appearance",
             },
         ],
     },
@@ -18,11 +18,15 @@ const structure = [
         children: [
             {
                 title: "GitHub Gists",
-                route: "settings.share.gists",
+                route: "/settings/share/gists",
             },
         ],
     },
 ];
+
+definePage({
+    redirect: "/settings/general/about",
+});
 </script>
 
 <template>
@@ -41,7 +45,7 @@ const structure = [
                         v-for="child in section.children"
                         :key="child.route"
                         class="sidebar-item"
-                        :to="{ name: child.route }"
+                        :to="{ name: child.route as any }"
                     >
                         {{ child.title }}
                     </router-link>

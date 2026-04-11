@@ -50,7 +50,7 @@ const progress = computed(() => {
 <template>
     <router-link
         :to="{
-            name: teamMatchesRouteName,
+            name: teamMatchesRouteName as any,
             query: { team: score.team.id },
         }"
         class="team ghost"

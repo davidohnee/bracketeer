@@ -43,7 +43,7 @@ const baseRoute = computed(() => {
         return null;
     }
     const name = route.name as string;
-    return name.split(".")[0];
+    return name.split("/").slice(0, 3).join("/");
 });
 </script>
 
@@ -63,19 +63,23 @@ const baseRoute = computed(() => {
                 <TournamentContextMenu
                     v-if="!props.readonly"
                     :tournament="tournament"
-                    @deleted="$router.push({ name: 'home' })"
+                    @deleted="$router.push({ name: '/' })"
                 />
             </div>
             <span
                 v-if="subtitle"
                 class="source text-muted"
-                >{{ subtitle }}</span
+            >
+                {{ subtitle }}</span
             >
             <div class="tabs">
                 <router-link
                     v-for="key in tabs"
                     :key="key"
-                    :to="{ name: baseRoute + '.' + key, params: { tournamentId: tournament.id } }"
+                    :to="{
+                        name: (baseRoute + '/' + key) as any,
+                        params: { tournamentId: tournament.id },
+                    }"
                 >
                     {{ TAB_LOOKUP[key as Tab] }}
                 </router-link>

@@ -11,7 +11,7 @@ defineProps<{
 const route = useRoute();
 
 const teamMatchesRouteName = computed(
-    () => (route.name as string | undefined)?.replace(".table", ".matches") ?? "",
+    () => (route.name as string | undefined)?.replace("/table", "/matches") ?? "",
 );
 </script>
 

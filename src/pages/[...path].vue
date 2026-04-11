@@ -6,7 +6,7 @@
             new tournament.
         </p>
         <div class="row">
-            <router-link :to="{ name: 'home' }">
+            <router-link :to="{ name: '/' }">
                 <button>Return home</button>
             </router-link>
         </div>

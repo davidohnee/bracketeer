@@ -22,7 +22,7 @@ const what = ref<Tournament[]>([]);
 const error = ref<Error>(null);
 
 onMounted(async () => {
-    const base64 = route.params.id as string;
+    const base64 = "id" in route.params ? (route.params.id as string) : "";
     const importObject = await pull(base64);
 
     if (importObject?.error) {
@@ -39,12 +39,12 @@ const confirm = async () => {
     if (!tournament) return;
     tournament.remote ??= [];
     tournament.remote.push({
-        identifier: route.params.id as string,
+        identifier: "id" in route.params ? (route.params.id as string) : "",
     });
 
     await tournaments.add(tournament);
     router.push({
-        name: "tournament",
+        name: "/tournament/[tournamentId]",
         params: { tournamentId: tournament.id },
     });
 };
@@ -52,7 +52,8 @@ const confirm = async () => {
 const viewOnly = () => {
     if (!what.value.length) return;
     router.push({
-        name: "viewer.table",
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        name: "viewer.table" as any,
         params: { tournamentId: what.value[0]!.id },
     });
 };

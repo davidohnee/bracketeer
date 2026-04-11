@@ -26,6 +26,7 @@ export default defineConfigWithVueTs(
     {
         rules: {
             "unicorn/no-invalid-fetch-options": "off",
+            "vue/multi-word-component-names": "off",
         },
     },
 );

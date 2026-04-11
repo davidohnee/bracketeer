@@ -51,7 +51,7 @@ const deleteTournament = () => {
         details: "Are you sure you want to delete the tournament? This action cannot be undone.",
         onYes: () => {
             tournaments.deleteTournament(props.tournament.id);
-            router.push({ name: "home" });
+            router.push({ name: "/" });
             Notifications.addSuccess("Tournament deleted", {
                 details: "The tournament has been deleted successfully.",
                 timeout: 3000,
@@ -99,7 +99,7 @@ const resetTournament = () => {
 const duplicateTournament = () => {
     const newTournament = { ...tournament, id: crypto.randomUUID() };
     tournaments.add(newTournament);
-    router.push({ name: "tournament", params: { tournamentId: newTournament.id } });
+    router.push({ name: "/tournament/[tournamentId]", params: { tournamentId: newTournament.id } });
 };
 
 onMounted(async () => {
@@ -169,7 +169,7 @@ const hasStarted = ref(getTournamentStatus(tournament) !== "scheduled");
                     <router-link
                         class="secondary"
                         :to="{
-                            name: 'tournament.config.teams',
+                            name: '/tournament/[tournamentId]/teams',
                             params: { tournamentId: props.tournament.id },
                         }"
                     >
@@ -179,7 +179,7 @@ const hasStarted = ref(getTournamentStatus(tournament) !== "scheduled");
                 <div class="field">
                     <router-link
                         :to="{
-                            name: 'tournament.config.plan',
+                            name: '/tournament/[tournamentId]/plan',
                             params: { tournamentId: props.tournament.id },
                         }"
                         :disabled="hasStarted"

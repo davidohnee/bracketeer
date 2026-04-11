@@ -2,7 +2,7 @@
 import type { Tournament } from "@/types/tournament";
 import { useTournamentsStore } from "@/stores/tournaments";
 import { computed, ref, toRaw } from "vue";
-import FormatView from "@/views/Create/FormatView.vue";
+import FormatView from "@/views/create/FormatView.vue";
 import { tournamentFromJson } from "@/helpers";
 import { useRouter } from "vue-router";
 import { generateGroupPhases } from "@/helpers/matchplan/groupPhase";
@@ -48,7 +48,7 @@ const save = () => {
     tournament.config = editableTournament.value.config;
 
     router.push({
-        name: "tournament",
+        name: "/tournament/[tournamentId]",
         params: { tournamentId: tournament.id },
     });
 };
@@ -71,7 +71,10 @@ const save = () => {
         <div class="row end">
             <router-link
                 class="button"
-                :to="{ name: 'tournament', params: { tournamentId: tournament.id } }"
+                :to="{
+                    name: '/tournament/[tournamentId]',
+                    params: { tournamentId: tournament.id },
+                }"
             >
                 <button class="secondary danger">Cancel</button>
             </router-link>

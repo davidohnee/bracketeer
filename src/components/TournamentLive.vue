@@ -155,7 +155,7 @@ const latestResults = computed<RichMatch[]>(() => {
 
 const route = useRoute();
 const teamMatchesRouteName = computed(() => {
-    return String(route.name).split(".")[0] + ".table";
+    return String(route.name).split("/").slice(0, 3).join("/") + "/table";
 });
 
 const adjustAndSkip = () => {

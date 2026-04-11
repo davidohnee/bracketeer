@@ -14,7 +14,9 @@ const who = ref("");
 const tournament = ref<Tournament | null>(null);
 const error = ref<Error>(null);
 
-const sessionStorageItem = sessionStorage.getItem(route.params.id as string);
+const routeId = "id" in route.params ? (route.params.id as string) : "";
+
+const sessionStorageItem = sessionStorage.getItem(routeId);
 const updated = ref<Date | null>(sessionStorageItem ? new Date(sessionStorageItem) : null);
 
 const subtitle = ref<string>("");
@@ -23,7 +25,7 @@ let updateTimer = 0;
 let updateSubtitleTimer = 0;
 
 const updateTask = async () => {
-    const base64 = route.params.id as string;
+    const base64 = routeId;
     const importObject = await pull(base64);
 
     if (updated.value) {
@@ -89,10 +91,10 @@ onUnmounted(() => {
             or the link may be incorrect.
         </p>
         <div class="flex gap-2">
-            <router-link :to="{ name: 'create' }">
+            <router-link :to="{ name: '/create' }">
                 <button>Create new tournament</button>
             </router-link>
-            <router-link :to="{ name: 'home' }">
+            <router-link :to="{ name: '/' }">
                 <button>Home</button>
             </router-link>
         </div>
@@ -103,7 +105,7 @@ onUnmounted(() => {
     >
         <h1>Not Allowed</h1>
         <p>You don't have permission to view this tournament.</p>
-        <router-link :to="{ name: 'home' }">
+        <router-link :to="{ name: '/' }">
             <button class="danger">Close</button>
         </router-link>
     </div>

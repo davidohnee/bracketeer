@@ -56,7 +56,10 @@ const STATUS_COLOR: Record<MatchStatus, string> = {
                 v-for="tournament in tournamentList"
                 :key="tournament.id"
                 class="tournament-item ghost"
-                :to="{ name: 'tournament', params: { tournamentId: tournament.id } }"
+                :to="{
+                    name: '/tournament/[tournamentId]',
+                    params: { tournamentId: tournament.id },
+                }"
             >
                 <span class="name">{{ tournament.name }}</span>
                 <span

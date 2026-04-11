@@ -1,12 +1,15 @@
 import { defineConfig } from "vitest/config";
 import { fileURLToPath, URL } from "node:url";
 import vue from "@vitejs/plugin-vue";
+import VueRouter from "vue-router/vite";
 import vueDevTools from "vite-plugin-vue-devtools";
 
 // https://vite.dev/config/
 export default defineConfig({
     plugins: [
-        vueDevTools(),
+        VueRouter({
+            dts: "src/route-map.d.ts",
+        }),
         vue({
             template: {
                 compilerOptions: {
@@ -16,6 +19,7 @@ export default defineConfig({
                 },
             },
         }),
+        vueDevTools(),
     ],
     base: process.env.BASE ?? "/",
     resolve: {

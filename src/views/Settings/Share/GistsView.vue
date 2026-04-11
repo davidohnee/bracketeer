@@ -37,7 +37,38 @@ const updateGithub = async () => {
                     <strong>{{ me.login }}</strong></a
                 >.
             </p>
-            <p v-else>You are not logged in yet.</p>
+            <div
+                class="help-container"
+                v-else
+            >
+                <p class="text-muted">
+                    Share your tournament's live state (brackets, scores, schedules) as a GitHub
+                    Gist. With a Personal Access Token (PAT), you can push updates and edit the
+                    state across devices. Viewers without your PAT see a live, read-only version.
+                </p>
+                <h4>Get started</h4>
+                <ol>
+                    <li>
+                        Create a Personal Access Token (PAT)
+                        <ol>
+                            <li>
+                                Go to
+                                <a href="https://github.com/settings/personal-access-tokens/new">
+                                    GitHub Settings > Developer Settings > Personal Access Tokens.
+                                </a>
+                            </li>
+                            <li>Enter a name</li>
+                            <li>Select a validity</li>
+                            <li>Click 'Add permissions' and select 'Gists'</li>
+                            <li>Click 'Generate token'</li>
+                        </ol>
+                    </li>
+                    <li>Paste your PAT below and click 'Save'</li>
+                    <li>Navigate to your tournament</li>
+                    <li>Click the three dots to the right of the name</li>
+                    <li>Select 'Share'</li>
+                </ol>
+            </div>
             <div class="row center">
                 <div class="field left">
                     <label for="pat">Personal Access Token</label>

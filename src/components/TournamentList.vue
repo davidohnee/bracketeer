@@ -147,5 +147,14 @@ const STATUS_COLOR: Record<MatchStatus, string> = {
     .desktop-only {
         display: none;
     }
+
+    .buttons {
+        width: 100%;
+
+        & button {
+            flex: 1;
+            justify-content: center;
+        }
+    }
 }
 </style>

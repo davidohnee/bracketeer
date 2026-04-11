@@ -15,7 +15,7 @@ const website = "https://davidohnee.com";
             <p class="lead">
                 The sidekick that levels up your game nights from casual to championship.
             </p>
-            <div class="row">
+            <div class="row mobile-stack">
                 <button
                     class="secondary"
                     @click="router.push('/tournaments')"
@@ -213,6 +213,10 @@ section {
         > span:last-child:before {
             content: unset;
         }
+    }
+
+    .row.mobile-stack {
+        flex-direction: column;
     }
 }
 </style>

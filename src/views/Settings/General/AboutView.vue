@@ -1,9 +1,18 @@
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import ReleaseNotes from "@/components/ReleaseNotes.vue";
+import { ref } from "vue";
 
 const isDev = ref(import.meta.env.MODE === "development");
-const version = computed(() => APP_VERSION + (isDev.value ? " (dev)" : ""));
 </script>
 <template>
-    <div>v{{ version }}</div>
+    <div>
+        <div
+            class="status green items-center"
+            v-if="isDev"
+        >
+            <ion-icon name="bug-outline"></ion-icon>
+            DEV MODE
+        </div>
+        <ReleaseNotes />
+    </div>
 </template>

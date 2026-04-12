@@ -20,6 +20,7 @@ const tournaments = useTournamentsStore();
 const who = ref("");
 const what = ref<Tournament[]>([]);
 const error = ref<Error>(null);
+const routeId = "id" in route.params ? (route.params.id as string) : "";
 
 onMounted(async () => {
     const base64 = "id" in route.params ? (route.params.id as string) : "";
@@ -39,7 +40,7 @@ const confirm = async () => {
     if (!tournament) return;
     tournament.remote ??= [];
     tournament.remote.push({
-        identifier: "id" in route.params ? (route.params.id as string) : "",
+        identifier: routeId,
     });
 
     await tournaments.add(tournament);
@@ -53,8 +54,7 @@ const viewOnly = () => {
     if (!what.value.length) return;
     router.push({
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        name: "viewer.table" as any,
-        params: { id: what.value[0]!.id },
+        name: "/v/[id]/table" as any,
     });
 };
 </script>

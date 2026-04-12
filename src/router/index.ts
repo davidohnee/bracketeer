@@ -7,56 +7,56 @@ const router = createRouter({
         ...autoRoutes,
         {
             path: "/s/:id",
-            name: "import",
+            name: "/s/[id]",
             component: () => import("@/views/ImportView.vue"),
-            redirect: { name: "import.table" },
+            redirect: { name: "/s/[id]/table" },
             children: [
                 {
                     path: "matches",
-                    name: "import.matches",
+                    name: "/s/[id]/matches",
                     component: () => import("@/pages/tournament/[tournamentId]/matches.vue"),
                 },
                 {
                     path: "knockout",
-                    name: "import.knockout",
+                    name: "/s/[id]/knockout",
                     component: () => import("@/pages/tournament/[tournamentId]/knockout.vue"),
                 },
                 {
                     path: "table",
-                    name: "import.table",
+                    name: "/s/[id]/table",
                     component: () => import("@/pages/tournament/[tournamentId]/table.vue"),
                 },
                 {
                     path: "live",
-                    name: "import.live",
+                    name: "/s/[id]/live",
                     component: () => import("@/pages/tournament/[tournamentId]/live.vue"),
                 },
             ],
         },
         {
             path: "/v/:id",
-            name: "view",
+            name: "/v/[id]",
             component: () => import("@/views/ViewerView.vue"),
-            redirect: { name: "viewer.table" },
+            redirect: { name: "/v/[id]/table" },
             children: [
                 {
                     path: "matches",
-                    name: "viewer.matches",
+                    name: "/v/[id]/matches",
                     component: () => import("@/pages/tournament/[tournamentId]/matches.vue"),
                 },
                 {
                     path: "knockout",
-                    name: "viewer.knockout",
+                    name: "/v/[id]/knockout",
                     component: () => import("@/pages/tournament/[tournamentId]/knockout.vue"),
                 },
                 {
                     path: "table",
-                    name: "viewer.table",
+                    name: "/v/[id]/table",
                     component: () => import("@/pages/tournament/[tournamentId]/table.vue"),
                 },
                 {
                     path: "live",
-                    name: "viewer.live",
+                    name: "/v/[id]/live",
                     component: () => import("@/pages/tournament/[tournamentId]/live.vue"),
                 },
             ],

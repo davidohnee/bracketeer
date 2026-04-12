@@ -4,7 +4,7 @@
   -->
 
 <script lang="ts" setup>
-import { onMounted, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import type { Tournament } from "@/types/tournament";
 import { pull } from "@/share";
@@ -20,10 +20,11 @@ const tournaments = useTournamentsStore();
 const who = ref("");
 const what = ref<Tournament[]>([]);
 const error = ref<Error>(null);
-const routeId = "id" in route.params ? (route.params.id as string) : "";
+
+const routeId = computed(() => ("id" in route.params ? (route.params.id as string) : ""));
 
 onMounted(async () => {
-    const base64 = "id" in route.params ? (route.params.id as string) : "";
+    const base64 = routeId.value;
     const importObject = await pull(base64);
 
     if (importObject?.error) {
@@ -40,7 +41,7 @@ const confirm = async () => {
     if (!tournament) return;
     tournament.remote ??= [];
     tournament.remote.push({
-        identifier: routeId,
+        identifier: routeId.value,
     });
 
     await tournaments.add(tournament);
@@ -55,6 +56,7 @@ const viewOnly = () => {
     router.push({
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         name: "/v/[id]/table" as any,
+        params: { id: routeId.value },
     });
 };
 </script>

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { onMounted, onUnmounted, ref } from "vue";
+import { computed, onMounted, onUnmounted, ref } from "vue";
 import { useRoute } from "vue-router";
 import type { Tournament } from "@/types/tournament";
 import TournamentLayout from "@/layouts/TournamentLayout.vue";
@@ -14,10 +14,12 @@ const who = ref("");
 const tournament = ref<Tournament | null>(null);
 const error = ref<Error>(null);
 
-const routeId = "id" in route.params ? (route.params.id as string) : "";
+const routeId = computed(() => ("id" in route.params ? (route.params.id as string) : ""));
 
-const sessionStorageItem = sessionStorage.getItem(routeId);
-const updated = ref<Date | null>(sessionStorageItem ? new Date(sessionStorageItem) : null);
+const sessionStorageItem = computed(() => sessionStorage.getItem(routeId.value));
+const updated = ref<Date | null>(
+    sessionStorageItem.value ? new Date(sessionStorageItem.value) : null,
+);
 
 const subtitle = ref<string>("");
 
@@ -25,7 +27,7 @@ let updateTimer = 0;
 let updateSubtitleTimer = 0;
 
 const updateTask = async () => {
-    const base64 = routeId;
+    const base64 = routeId.value;
     const importObject = await pull(base64);
 
     if (updated.value) {

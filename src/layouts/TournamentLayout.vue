@@ -78,7 +78,7 @@ const baseRoute = computed(() => {
                     :key="key"
                     :to="{
                         name: (baseRoute + '/' + key) as any,
-                        params: { tournamentId: tournament.id },
+                        params: route.params,
                     }"
                 >
                     {{ TAB_LOOKUP[key as Tab] }}

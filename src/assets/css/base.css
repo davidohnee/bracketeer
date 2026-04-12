@@ -126,3 +126,11 @@ section {
         --c: var(--color-brand-grey);
     }
 }
+
+.body-container {
+    margin: 1em 0;
+
+    @media (max-width: 768px) {
+        margin: 1em;
+    }
+}

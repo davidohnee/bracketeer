@@ -1,13 +1,19 @@
 <template>
-    <div class="home">
+    <div class="body-container">
         <h1>Page not found</h1>
-        <p>
-            The page you are looking for does not exist. You can return to the home page or create a
-            new tournament.
-        </p>
+        <p>The page you are looking for does not exist.</p>
         <div class="row">
             <router-link :to="{ name: '/' }">
-                <button>Return home</button>
+                <button>
+                    <ion-icon name="home-outline"></ion-icon>
+                    Return Home
+                </button>
+            </router-link>
+            <router-link :to="{ name: '/create' }">
+                <button>
+                    <ion-icon name="add-outline"></ion-icon>
+                    Create Tournament
+                </button>
             </router-link>
         </div>
     </div>
@@ -21,8 +27,12 @@
 }
 
 @media (max-width: 768px) {
-    .home {
-        padding: 1em;
+    .row {
+        flex-direction: column;
+
+        & button {
+            width: 100%;
+        }
     }
 }
 </style>

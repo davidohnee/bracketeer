@@ -28,7 +28,7 @@ const STATUS_COLOR: Record<MatchStatus, string> = {
 };
 </script>
 <template>
-    <div class="tournament-list-container">
+    <div class="tournament-list-container body-container">
         <div class="buttons">
             <button
                 @click="tournaments.addFromUpload()"
@@ -90,7 +90,6 @@ const STATUS_COLOR: Record<MatchStatus, string> = {
     display: flex;
     flex-direction: column;
     gap: 1em;
-    margin: 1em 0;
 }
 
 .buttons {
@@ -139,10 +138,6 @@ const STATUS_COLOR: Record<MatchStatus, string> = {
 }
 
 @media (max-width: 768px) {
-    .tournament-list-container {
-        margin: 1em;
-    }
-
     .tournament-item {
         grid-template-columns: 1fr 54px;
     }

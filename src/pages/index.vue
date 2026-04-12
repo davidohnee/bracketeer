@@ -1,32 +1,29 @@
 <script setup lang="ts">
-import { useRouter } from "vue-router";
-
-const router = useRouter();
-
 const githubLink = "https://github.com/davidohnee/bracketeer";
 const githubUser = "davidohnee";
 const website = "https://davidohnee.com";
 </script>
 
 <template>
-    <div class="home">
+    <div class="body-container">
         <section>
             <h1>bracketeer</h1>
             <p class="lead">
                 The sidekick that levels up your game nights from casual to championship.
             </p>
             <div class="row mobile-stack">
-                <button
-                    class="secondary"
-                    @click="router.push('/tournaments')"
-                >
-                    <ion-icon name="search-outline"></ion-icon>
-                    Browse My Tournaments
-                </button>
-                <button @click="router.push('/create')">
-                    <ion-icon name="add-outline"></ion-icon>
-                    Create Tournament
-                </button>
+                <router-link :to="{ name: '/tournaments' }">
+                    <button class="secondary">
+                        <ion-icon name="search-outline"></ion-icon>
+                        Browse My Tournaments
+                    </button>
+                </router-link>
+                <router-link :to="{ name: '/create' }">
+                    <button>
+                        <ion-icon name="add-outline"></ion-icon>
+                        Create Tournament
+                    </button>
+                </router-link>
             </div>
         </section>
         <section>
@@ -190,10 +187,6 @@ section {
 }
 
 @media (max-width: 768px) {
-    .home {
-        padding: 1em;
-    }
-
     .footer {
         padding: 1em;
     }
@@ -217,6 +210,10 @@ section {
 
     .row.mobile-stack {
         flex-direction: column;
+
+        & button {
+            width: 100%;
+        }
     }
 }
 </style>

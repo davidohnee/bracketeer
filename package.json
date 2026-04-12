@@ -20,6 +20,7 @@
     "test:webkit": "npx playwright open --browser webkit http://localhost:5173"
   },
   "dependencies": {
+    "dompurify": "^3.3.3",
     "lodash": "^4.18.1",
     "lodash-es": "^4.18.1",
     "markdown-it": "^14.1.1",

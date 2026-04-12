@@ -54,7 +54,7 @@ const viewOnly = () => {
     router.push({
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         name: "viewer.table" as any,
-        params: { tournamentId: what.value[0]!.id },
+        params: { id: what.value[0]!.id },
     });
 };
 </script>

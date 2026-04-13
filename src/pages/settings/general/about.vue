@@ -15,7 +15,7 @@ const buildId =
     `-${String(buildDate.getUTCHours()).padStart(2, "0")}${String(buildDate.getUTCMinutes()).padStart(2, "0")}`;
 </script>
 <template>
-    <div>
+    <div class="about">
         <div
             class="status yellow items-center"
             v-if="isDev"
@@ -33,3 +33,10 @@ const buildId =
         <ReleaseNotes />
     </div>
 </template>
+<style scoped>
+.about {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+}
+</style>

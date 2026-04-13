@@ -15,7 +15,10 @@ const props = defineProps<{
     modelValue: Tournament;
 }>();
 
-const emit = defineEmits<(e: "update:modelValue" | "regenerated", value: Tournament) => void>();
+const emit = defineEmits<{
+    (e: "regenerate"): void;
+    (e: "update:modelValue" | "regenerated", value: Tournament): void;
+}>();
 
 const tournament = computed({
     get() {
@@ -27,6 +30,7 @@ const tournament = computed({
 });
 
 const regenerate = () => {
+    emit("regenerate");
     const rawTournament = toRaw(tournament.value);
     rawTournament.phases = generateGroupPhases(rawTournament);
     rawTournament.phases = generateKnockoutBrackets(rawTournament);

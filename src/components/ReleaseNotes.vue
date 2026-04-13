@@ -1,7 +1,8 @@
 <script lang="ts" setup>
-import { onMounted, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import MarkdownRender from "./MarkdownRender.vue";
 import { GITHUB_LINK, REPOSITORY_ID } from "@/helpers/common";
+import SkeletonTextLoader from "./SkeletonTextLoader.vue";
 
 const FALLBACK = `## bracketeer v${APP_VERSION}\n\nRelease notes are currently unavailable. Please refer to https://github.com/${REPOSITORY_ID}/releases/tag/v${APP_VERSION} instead`;
 
@@ -27,6 +28,9 @@ const loadReleaseNotes = async () => {
     releaseNotes.value = release.body.replaceAll(regex, `[#$1](${GITHUB_LINK}/issues/$1)`);
 };
 
+const title = `bracketeer v${APP_VERSION}`;
+const loading = computed(() => !releaseNotes.value.length);
+
 onMounted(() => {
     if (!releaseNotes.value) {
         loadReleaseNotes();
@@ -34,5 +38,13 @@ onMounted(() => {
 });
 </script>
 <template>
-    <MarkdownRender :source="releaseNotes" />
+    <div>
+        <h2 v-if="loading">{{ title }}</h2>
+        <SkeletonTextLoader
+            :loading="loading"
+            :lines="10"
+        >
+            <MarkdownRender :source="releaseNotes" />
+        </SkeletonTextLoader>
+    </div>
 </template>

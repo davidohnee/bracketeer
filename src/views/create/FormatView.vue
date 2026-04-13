@@ -59,6 +59,7 @@ const regenerateTimes = () => {
     totalMatchCount.value = tournament.value.phases.reduce((count, phase) => {
         return count + allMatches(phase).length;
     }, 0);
+    regenerating.value = false;
 };
 
 watch(() => tournament.value.phases, regenerateTimes, { immediate: true });
@@ -87,6 +88,7 @@ const breakDuration = computed({
     <BuilderView
         v-model="tournament"
         ref="builder"
+        @regenerate="regenerating = true"
         @regenerated="regenerateTimes()"
     />
 
@@ -135,12 +137,14 @@ const breakDuration = computed({
         </p>
         <p v-if="totalMatchCount">
             Total matches:
-            <SkeletonTextLoader
-                :loading="regenerating"
-                :characters="2"
-            >
-                <strong>{{ totalMatchCount }}</strong>
-            </SkeletonTextLoader>
+            <strong>
+                <SkeletonTextLoader
+                    :loading="regenerating"
+                    :characters="2"
+                >
+                    {{ totalMatchCount }}
+                </SkeletonTextLoader>
+            </strong>
         </p>
     </div>
 </template>

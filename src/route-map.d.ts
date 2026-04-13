@@ -92,12 +92,16 @@ declare module 'vue-router/auto-routes' {
       { tournamentId: ParamValue<false> },
       | '/tournament/[tournamentId]/'
       | '/tournament/[tournamentId]/config'
+      | '/tournament/[tournamentId]/config/danger'
+      | '/tournament/[tournamentId]/config/debug'
+      | '/tournament/[tournamentId]/config/edit'
+      | '/tournament/[tournamentId]/config/gists'
+      | '/tournament/[tournamentId]/config/plan'
+      | '/tournament/[tournamentId]/config/teams'
       | '/tournament/[tournamentId]/knockout'
       | '/tournament/[tournamentId]/live'
       | '/tournament/[tournamentId]/matches'
-      | '/tournament/[tournamentId]/plan'
       | '/tournament/[tournamentId]/table'
-      | '/tournament/[tournamentId]/teams'
     >,
     '/tournament/[tournamentId]/': RouteRecordInfo<
       '/tournament/[tournamentId]/',
@@ -109,6 +113,53 @@ declare module 'vue-router/auto-routes' {
     '/tournament/[tournamentId]/config': RouteRecordInfo<
       '/tournament/[tournamentId]/config',
       '/tournament/:tournamentId/config',
+      { tournamentId: ParamValue<true> },
+      { tournamentId: ParamValue<false> },
+      | '/tournament/[tournamentId]/config/danger'
+      | '/tournament/[tournamentId]/config/debug'
+      | '/tournament/[tournamentId]/config/edit'
+      | '/tournament/[tournamentId]/config/gists'
+      | '/tournament/[tournamentId]/config/plan'
+      | '/tournament/[tournamentId]/config/teams'
+    >,
+    '/tournament/[tournamentId]/config/danger': RouteRecordInfo<
+      '/tournament/[tournamentId]/config/danger',
+      '/tournament/:tournamentId/config/danger',
+      { tournamentId: ParamValue<true> },
+      { tournamentId: ParamValue<false> },
+      | never
+    >,
+    '/tournament/[tournamentId]/config/debug': RouteRecordInfo<
+      '/tournament/[tournamentId]/config/debug',
+      '/tournament/:tournamentId/config/debug',
+      { tournamentId: ParamValue<true> },
+      { tournamentId: ParamValue<false> },
+      | never
+    >,
+    '/tournament/[tournamentId]/config/edit': RouteRecordInfo<
+      '/tournament/[tournamentId]/config/edit',
+      '/tournament/:tournamentId/config/edit',
+      { tournamentId: ParamValue<true> },
+      { tournamentId: ParamValue<false> },
+      | never
+    >,
+    '/tournament/[tournamentId]/config/gists': RouteRecordInfo<
+      '/tournament/[tournamentId]/config/gists',
+      '/tournament/:tournamentId/config/gists',
+      { tournamentId: ParamValue<true> },
+      { tournamentId: ParamValue<false> },
+      | never
+    >,
+    '/tournament/[tournamentId]/config/plan': RouteRecordInfo<
+      '/tournament/[tournamentId]/config/plan',
+      '/tournament/:tournamentId/config/plan',
+      { tournamentId: ParamValue<true> },
+      { tournamentId: ParamValue<false> },
+      | never
+    >,
+    '/tournament/[tournamentId]/config/teams': RouteRecordInfo<
+      '/tournament/[tournamentId]/config/teams',
+      '/tournament/:tournamentId/config/teams',
       { tournamentId: ParamValue<true> },
       { tournamentId: ParamValue<false> },
       | never
@@ -134,23 +185,9 @@ declare module 'vue-router/auto-routes' {
       { tournamentId: ParamValue<false> },
       | never
     >,
-    '/tournament/[tournamentId]/plan': RouteRecordInfo<
-      '/tournament/[tournamentId]/plan',
-      '/tournament/:tournamentId/plan',
-      { tournamentId: ParamValue<true> },
-      { tournamentId: ParamValue<false> },
-      | never
-    >,
     '/tournament/[tournamentId]/table': RouteRecordInfo<
       '/tournament/[tournamentId]/table',
       '/tournament/:tournamentId/table',
-      { tournamentId: ParamValue<true> },
-      { tournamentId: ParamValue<false> },
-      | never
-    >,
-    '/tournament/[tournamentId]/teams': RouteRecordInfo<
-      '/tournament/[tournamentId]/teams',
-      '/tournament/:tournamentId/teams',
       { tournamentId: ParamValue<true> },
       { tournamentId: ParamValue<false> },
       | never
@@ -231,12 +268,16 @@ declare module 'vue-router/auto-routes' {
         | '/tournament/[tournamentId]'
         | '/tournament/[tournamentId]/'
         | '/tournament/[tournamentId]/config'
+        | '/tournament/[tournamentId]/config/danger'
+        | '/tournament/[tournamentId]/config/debug'
+        | '/tournament/[tournamentId]/config/edit'
+        | '/tournament/[tournamentId]/config/gists'
+        | '/tournament/[tournamentId]/config/plan'
+        | '/tournament/[tournamentId]/config/teams'
         | '/tournament/[tournamentId]/knockout'
         | '/tournament/[tournamentId]/live'
         | '/tournament/[tournamentId]/matches'
-        | '/tournament/[tournamentId]/plan'
         | '/tournament/[tournamentId]/table'
-        | '/tournament/[tournamentId]/teams'
       views:
         | 'default'
     }
@@ -249,6 +290,48 @@ declare module 'vue-router/auto-routes' {
     'src/pages/tournament/[tournamentId]/config.vue': {
       routes:
         | '/tournament/[tournamentId]/config'
+        | '/tournament/[tournamentId]/config/danger'
+        | '/tournament/[tournamentId]/config/debug'
+        | '/tournament/[tournamentId]/config/edit'
+        | '/tournament/[tournamentId]/config/gists'
+        | '/tournament/[tournamentId]/config/plan'
+        | '/tournament/[tournamentId]/config/teams'
+      views:
+        | 'default'
+    }
+    'src/pages/tournament/[tournamentId]/config/danger.vue': {
+      routes:
+        | '/tournament/[tournamentId]/config/danger'
+      views:
+        | never
+    }
+    'src/pages/tournament/[tournamentId]/config/debug.vue': {
+      routes:
+        | '/tournament/[tournamentId]/config/debug'
+      views:
+        | never
+    }
+    'src/pages/tournament/[tournamentId]/config/edit.vue': {
+      routes:
+        | '/tournament/[tournamentId]/config/edit'
+      views:
+        | never
+    }
+    'src/pages/tournament/[tournamentId]/config/gists.vue': {
+      routes:
+        | '/tournament/[tournamentId]/config/gists'
+      views:
+        | never
+    }
+    'src/pages/tournament/[tournamentId]/config/plan.vue': {
+      routes:
+        | '/tournament/[tournamentId]/config/plan'
+      views:
+        | never
+    }
+    'src/pages/tournament/[tournamentId]/config/teams.vue': {
+      routes:
+        | '/tournament/[tournamentId]/config/teams'
       views:
         | never
     }
@@ -270,21 +353,9 @@ declare module 'vue-router/auto-routes' {
       views:
         | never
     }
-    'src/pages/tournament/[tournamentId]/plan.vue': {
-      routes:
-        | '/tournament/[tournamentId]/plan'
-      views:
-        | never
-    }
     'src/pages/tournament/[tournamentId]/table.vue': {
       routes:
         | '/tournament/[tournamentId]/table'
-      views:
-        | never
-    }
-    'src/pages/tournament/[tournamentId]/teams.vue': {
-      routes:
-        | '/tournament/[tournamentId]/teams'
       views:
         | never
     }

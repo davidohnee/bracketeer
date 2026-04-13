@@ -1,14 +1,14 @@
 <script lang="ts" setup>
 import { onMounted, ref } from "vue";
 import MarkdownRender from "./MarkdownRender.vue";
+import { GITHUB_LINK, REPOSITORY_ID } from "@/helpers/common";
 
-const REPOSITORY = "davidohnee/bracketeer";
-const FALLBACK = `## bracketeer v${APP_VERSION}\n\nRelease notes are currently unavailable. Please refer to https://github.com/${REPOSITORY}/releases/tag/v${APP_VERSION} instead`;
+const FALLBACK = `## bracketeer v${APP_VERSION}\n\nRelease notes are currently unavailable. Please refer to https://github.com/${REPOSITORY_ID}/releases/tag/v${APP_VERSION} instead`;
 
 const releaseNotes = ref("");
 
 const loadReleaseNotes = async () => {
-    const url = `https://api.github.com/repos/${REPOSITORY}/releases/tags/v${APP_VERSION}`;
+    const url = `https://api.github.com/repos/${REPOSITORY_ID}/releases/tags/v${APP_VERSION}`;
     const res = await fetch(url);
 
     if (!res.ok) {
@@ -24,10 +24,7 @@ const loadReleaseNotes = async () => {
     }
 
     const regex = /#(\d+)/gm;
-    releaseNotes.value = release.body.replaceAll(
-        regex,
-        `[#$1](https://github.com/${REPOSITORY}/issues/$1)`,
-    );
+    releaseNotes.value = release.body.replaceAll(regex, `[#$1](${GITHUB_LINK}/issues/$1)`);
 };
 
 onMounted(() => {

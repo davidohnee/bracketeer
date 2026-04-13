@@ -125,6 +125,10 @@ section {
     &.gray {
         --c: var(--color-brand-grey);
     }
+
+    & a {
+        text-decoration: underline;
+    }
 }
 
 .body-container {

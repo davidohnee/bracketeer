@@ -1,6 +1,10 @@
 import type { DynamicTeamRef, Match, MatchStatus, Tournament } from "@/types/tournament";
 import { toRaw } from "vue";
 
+export const GITHUB_USER = "davidohnee";
+export const REPOSITORY_ID = `${GITHUB_USER}/bracketeer`;
+export const GITHUB_LINK = `https://github.com/${REPOSITORY_ID}`;
+
 export const chunks = <T>(a: T[], size: number) =>
     Array.from(Array.from({ length: Math.ceil(a.length / size) }), (_, i) =>
         a.slice(i * size, i * size + size),

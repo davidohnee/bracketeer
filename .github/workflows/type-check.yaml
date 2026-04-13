@@ -2,6 +2,9 @@ name: Type Check
 
 on:
     push:
+        branches:
+            - main
+            - release
     pull_request:
     workflow_dispatch:
 

@@ -1,6 +1,6 @@
 <script setup lang="ts">
-const githubLink = "https://github.com/davidohnee/bracketeer";
-const githubUser = "davidohnee";
+import { GITHUB_LINK, GITHUB_USER } from "@/helpers/common";
+
 const website = "https://davidohnee.com";
 </script>
 
@@ -89,13 +89,14 @@ const website = "https://davidohnee.com";
                     <a
                         :href="website"
                         target="_blank"
-                        >{{ githubUser }}</a
                     >
+                        {{ GITHUB_USER }}
+                    </a>
                 </span>
             </p>
             <div class="end row">
                 <a
-                    :href="githubLink"
+                    :href="GITHUB_LINK"
                     target="_blank"
                 >
                     <ion-icon name="logo-github"></ion-icon>

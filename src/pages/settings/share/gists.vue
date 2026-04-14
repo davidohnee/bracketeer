@@ -32,6 +32,7 @@ const updateGithub = async () => {
             <a
                 :href="me.html_url"
                 target="_blank"
+                rel="noopener noreferrer"
             >
                 <strong>{{ me.login }}</strong></a
             >.

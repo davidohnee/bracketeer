@@ -18,8 +18,11 @@ const props = defineProps<{
     base?: string;
     on?: "surface" | "background";
     layout?: "spacious" | "compact";
+    params?: Record<string, unknown>;
 }>();
 
+const params = computed(() => props.params || {});
+const base = computed(() => props.base || "");
 const layout = computed(() => props.layout || "spacious");
 </script>
 
@@ -43,7 +46,10 @@ const layout = computed(() => props.layout || "spacious");
                         v-for="child in section.children"
                         :key="child.route"
                         class="sidebar-item"
-                        :to="{ name: (base + child.route) as any }"
+                        :to="{
+                            name: (base + child.route) as any,
+                            params: { ...params, ...$route.params },
+                        }"
                     >
                         {{ child.title }}
                     </router-link>

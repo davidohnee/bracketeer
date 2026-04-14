@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { Tournament } from "@/types/tournament";
 import { useTournamentsStore } from "@/stores/tournaments";
-import { computed, onMounted, ref } from "vue";
+import { computed, ref, watch } from "vue";
 import ShareModal from "@/components/modals/ShareFullModal.vue";
 import gistClient from "@/gistClient";
 import { Notifications } from "@/components/notifications/createNotification";
@@ -18,11 +18,15 @@ const canPush = ref(false);
 
 const shareModal = ref<typeof ShareModal>();
 
-onMounted(async () => {
-    if (!props.tournament.remote?.length) return false;
-    const identifier = props.tournament.remote[0]!.identifier;
-    canPush.value = await gistClient.isMine(identifier);
-});
+watch(
+    [() => props.tournament.remote?.length, () => props.tournament.remote?.[0]?.identifier],
+    async () => {
+        if (!props.tournament.remote?.length) return false;
+        const identifier = props.tournament.remote[0]!.identifier;
+        canPush.value = await gistClient.isMine(identifier);
+    },
+    { immediate: true },
+);
 
 const canPull = computed(() => {
     if (!props.tournament.remote?.length) return false;

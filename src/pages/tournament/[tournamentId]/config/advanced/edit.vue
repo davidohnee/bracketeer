@@ -3,6 +3,7 @@ import type { Tournament } from "@/types/tournament";
 import { useTournamentsStore } from "@/stores/tournaments";
 import { ref, watch } from "vue";
 import { migrateTournament } from "@/helpers/migration";
+import { Notifications } from "@/components/notifications/createNotification";
 
 const props = defineProps<{
     tournament: Tournament;
@@ -24,12 +25,15 @@ watch(
 );
 
 const save = () => {
-    const newTournament = migrateTournament(JSON.parse(editableTournament.value));
-    for (const k in tournament) {
-        // @ts-expect-error typescript is stupid
-        tournament[k] = newTournament[k];
+    try {
+        const newTournament = migrateTournament(JSON.parse(editableTournament.value));
+        Object.assign(tournament, newTournament);
+        changed.value = false;
+    } catch (error) {
+        Notifications.addError("Invalid format", {
+            details: String(error),
+        });
     }
-    changed.value = false;
 };
 </script>
 

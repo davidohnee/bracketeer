@@ -6,7 +6,8 @@ import { useRouter } from "vue-router";
 import { ref, toRaw } from "vue";
 import { Notifications } from "@/components/notifications/createNotification";
 import { updateKnockoutMatches } from "@/helpers/matchplan/knockoutPhase";
-import { getTournamentStatus } from "@/helpers/common";
+import { deepCopy, getTournamentStatus } from "@/helpers/common";
+import { generateId } from "@/helpers/id";
 
 const props = defineProps<{
     tournament: Tournament;
@@ -35,7 +36,8 @@ const update = () => {
 };
 
 const duplicateTournament = () => {
-    const newTournament = { ...tournament, id: crypto.randomUUID() };
+    const newTournament = deepCopy(tournament);
+    newTournament.id = generateId();
     tournaments.add(newTournament);
     router.push({ name: "/tournament/[tournamentId]", params: { tournamentId: newTournament.id } });
 };

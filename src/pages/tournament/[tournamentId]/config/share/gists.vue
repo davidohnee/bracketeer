@@ -79,7 +79,7 @@ const remoteDescription = computed(() => {
         <h3>Sharing & Sync</h3>
         <div
             v-if="lastPushed"
-            class="row"
+            class="row start"
         >
             <div class="field">
                 <p class="my-0">
@@ -90,7 +90,7 @@ const remoteDescription = computed(() => {
                 </p>
             </div>
         </div>
-        <div class="row">
+        <div class="row start">
             <div class="field">
                 <p
                     v-if="props.tournament.remote?.length"
@@ -104,7 +104,7 @@ const remoteDescription = computed(() => {
                 <p v-else>This tournament is <strong>not</strong> linked to a remote source.</p>
             </div>
         </div>
-        <div class="row">
+        <div class="row start">
             <div
                 class="field"
                 v-if="canPull"

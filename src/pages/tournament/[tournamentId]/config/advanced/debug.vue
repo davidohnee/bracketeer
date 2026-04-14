@@ -45,7 +45,7 @@ const hasStarted = ref(getTournamentStatus(tournament) !== "scheduled");
 
 <template>
     <div class="form">
-        <div class="row">
+        <div class="row start">
             <button
                 class="secondary"
                 @click="randomGroupPhase"

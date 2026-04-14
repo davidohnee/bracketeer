@@ -101,7 +101,7 @@ const updateGithub = async () => {
 
 <style scoped>
 .row {
-    justify-content: space-between;
+    align-items: center;
 }
 
 .actions {

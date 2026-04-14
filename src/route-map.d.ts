@@ -92,12 +92,12 @@ declare module 'vue-router/auto-routes' {
       { tournamentId: ParamValue<false> },
       | '/tournament/[tournamentId]/'
       | '/tournament/[tournamentId]/config'
-      | '/tournament/[tournamentId]/config/danger'
-      | '/tournament/[tournamentId]/config/debug'
-      | '/tournament/[tournamentId]/config/edit'
-      | '/tournament/[tournamentId]/config/gists'
-      | '/tournament/[tournamentId]/config/plan'
-      | '/tournament/[tournamentId]/config/teams'
+      | '/tournament/[tournamentId]/config/advanced/debug'
+      | '/tournament/[tournamentId]/config/advanced/edit'
+      | '/tournament/[tournamentId]/config/edit/danger'
+      | '/tournament/[tournamentId]/config/edit/plan'
+      | '/tournament/[tournamentId]/config/edit/teams'
+      | '/tournament/[tournamentId]/config/share/gists'
       | '/tournament/[tournamentId]/knockout'
       | '/tournament/[tournamentId]/live'
       | '/tournament/[tournamentId]/matches'
@@ -115,51 +115,51 @@ declare module 'vue-router/auto-routes' {
       '/tournament/:tournamentId/config',
       { tournamentId: ParamValue<true> },
       { tournamentId: ParamValue<false> },
-      | '/tournament/[tournamentId]/config/danger'
-      | '/tournament/[tournamentId]/config/debug'
-      | '/tournament/[tournamentId]/config/edit'
-      | '/tournament/[tournamentId]/config/gists'
-      | '/tournament/[tournamentId]/config/plan'
-      | '/tournament/[tournamentId]/config/teams'
+      | '/tournament/[tournamentId]/config/advanced/debug'
+      | '/tournament/[tournamentId]/config/advanced/edit'
+      | '/tournament/[tournamentId]/config/edit/danger'
+      | '/tournament/[tournamentId]/config/edit/plan'
+      | '/tournament/[tournamentId]/config/edit/teams'
+      | '/tournament/[tournamentId]/config/share/gists'
     >,
-    '/tournament/[tournamentId]/config/danger': RouteRecordInfo<
-      '/tournament/[tournamentId]/config/danger',
-      '/tournament/:tournamentId/config/danger',
+    '/tournament/[tournamentId]/config/advanced/debug': RouteRecordInfo<
+      '/tournament/[tournamentId]/config/advanced/debug',
+      '/tournament/:tournamentId/config/advanced/debug',
       { tournamentId: ParamValue<true> },
       { tournamentId: ParamValue<false> },
       | never
     >,
-    '/tournament/[tournamentId]/config/debug': RouteRecordInfo<
-      '/tournament/[tournamentId]/config/debug',
-      '/tournament/:tournamentId/config/debug',
+    '/tournament/[tournamentId]/config/advanced/edit': RouteRecordInfo<
+      '/tournament/[tournamentId]/config/advanced/edit',
+      '/tournament/:tournamentId/config/advanced/edit',
       { tournamentId: ParamValue<true> },
       { tournamentId: ParamValue<false> },
       | never
     >,
-    '/tournament/[tournamentId]/config/edit': RouteRecordInfo<
-      '/tournament/[tournamentId]/config/edit',
-      '/tournament/:tournamentId/config/edit',
+    '/tournament/[tournamentId]/config/edit/danger': RouteRecordInfo<
+      '/tournament/[tournamentId]/config/edit/danger',
+      '/tournament/:tournamentId/config/edit/danger',
       { tournamentId: ParamValue<true> },
       { tournamentId: ParamValue<false> },
       | never
     >,
-    '/tournament/[tournamentId]/config/gists': RouteRecordInfo<
-      '/tournament/[tournamentId]/config/gists',
-      '/tournament/:tournamentId/config/gists',
+    '/tournament/[tournamentId]/config/edit/plan': RouteRecordInfo<
+      '/tournament/[tournamentId]/config/edit/plan',
+      '/tournament/:tournamentId/config/edit/plan',
       { tournamentId: ParamValue<true> },
       { tournamentId: ParamValue<false> },
       | never
     >,
-    '/tournament/[tournamentId]/config/plan': RouteRecordInfo<
-      '/tournament/[tournamentId]/config/plan',
-      '/tournament/:tournamentId/config/plan',
+    '/tournament/[tournamentId]/config/edit/teams': RouteRecordInfo<
+      '/tournament/[tournamentId]/config/edit/teams',
+      '/tournament/:tournamentId/config/edit/teams',
       { tournamentId: ParamValue<true> },
       { tournamentId: ParamValue<false> },
       | never
     >,
-    '/tournament/[tournamentId]/config/teams': RouteRecordInfo<
-      '/tournament/[tournamentId]/config/teams',
-      '/tournament/:tournamentId/config/teams',
+    '/tournament/[tournamentId]/config/share/gists': RouteRecordInfo<
+      '/tournament/[tournamentId]/config/share/gists',
+      '/tournament/:tournamentId/config/share/gists',
       { tournamentId: ParamValue<true> },
       { tournamentId: ParamValue<false> },
       | never
@@ -268,12 +268,12 @@ declare module 'vue-router/auto-routes' {
         | '/tournament/[tournamentId]'
         | '/tournament/[tournamentId]/'
         | '/tournament/[tournamentId]/config'
-        | '/tournament/[tournamentId]/config/danger'
-        | '/tournament/[tournamentId]/config/debug'
-        | '/tournament/[tournamentId]/config/edit'
-        | '/tournament/[tournamentId]/config/gists'
-        | '/tournament/[tournamentId]/config/plan'
-        | '/tournament/[tournamentId]/config/teams'
+        | '/tournament/[tournamentId]/config/advanced/debug'
+        | '/tournament/[tournamentId]/config/advanced/edit'
+        | '/tournament/[tournamentId]/config/edit/danger'
+        | '/tournament/[tournamentId]/config/edit/plan'
+        | '/tournament/[tournamentId]/config/edit/teams'
+        | '/tournament/[tournamentId]/config/share/gists'
         | '/tournament/[tournamentId]/knockout'
         | '/tournament/[tournamentId]/live'
         | '/tournament/[tournamentId]/matches'
@@ -290,48 +290,48 @@ declare module 'vue-router/auto-routes' {
     'src/pages/tournament/[tournamentId]/config.vue': {
       routes:
         | '/tournament/[tournamentId]/config'
-        | '/tournament/[tournamentId]/config/danger'
-        | '/tournament/[tournamentId]/config/debug'
-        | '/tournament/[tournamentId]/config/edit'
-        | '/tournament/[tournamentId]/config/gists'
-        | '/tournament/[tournamentId]/config/plan'
-        | '/tournament/[tournamentId]/config/teams'
+        | '/tournament/[tournamentId]/config/advanced/debug'
+        | '/tournament/[tournamentId]/config/advanced/edit'
+        | '/tournament/[tournamentId]/config/edit/danger'
+        | '/tournament/[tournamentId]/config/edit/plan'
+        | '/tournament/[tournamentId]/config/edit/teams'
+        | '/tournament/[tournamentId]/config/share/gists'
       views:
         | 'default'
     }
-    'src/pages/tournament/[tournamentId]/config/danger.vue': {
+    'src/pages/tournament/[tournamentId]/config/advanced/debug.vue': {
       routes:
-        | '/tournament/[tournamentId]/config/danger'
+        | '/tournament/[tournamentId]/config/advanced/debug'
       views:
         | never
     }
-    'src/pages/tournament/[tournamentId]/config/debug.vue': {
+    'src/pages/tournament/[tournamentId]/config/advanced/edit.vue': {
       routes:
-        | '/tournament/[tournamentId]/config/debug'
+        | '/tournament/[tournamentId]/config/advanced/edit'
       views:
         | never
     }
-    'src/pages/tournament/[tournamentId]/config/edit.vue': {
+    'src/pages/tournament/[tournamentId]/config/edit/danger.vue': {
       routes:
-        | '/tournament/[tournamentId]/config/edit'
+        | '/tournament/[tournamentId]/config/edit/danger'
       views:
         | never
     }
-    'src/pages/tournament/[tournamentId]/config/gists.vue': {
+    'src/pages/tournament/[tournamentId]/config/edit/plan.vue': {
       routes:
-        | '/tournament/[tournamentId]/config/gists'
+        | '/tournament/[tournamentId]/config/edit/plan'
       views:
         | never
     }
-    'src/pages/tournament/[tournamentId]/config/plan.vue': {
+    'src/pages/tournament/[tournamentId]/config/edit/teams.vue': {
       routes:
-        | '/tournament/[tournamentId]/config/plan'
+        | '/tournament/[tournamentId]/config/edit/teams'
       views:
         | never
     }
-    'src/pages/tournament/[tournamentId]/config/teams.vue': {
+    'src/pages/tournament/[tournamentId]/config/share/gists.vue': {
       routes:
-        | '/tournament/[tournamentId]/config/teams'
+        | '/tournament/[tournamentId]/config/share/gists'
       views:
         | never
     }

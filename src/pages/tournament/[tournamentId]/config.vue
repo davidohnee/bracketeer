@@ -4,7 +4,7 @@ import SettingsView from "@/views/SettingsView.vue";
 
 definePage({
     redirect: (from) => ({
-        name: "/tournament/[tournamentId]/config/plan",
+        name: "/tournament/[tournamentId]/config/edit/plan",
         params: {
             // @ts-expect-error missing typing
             tournamentId: from.params.tournamentId,
@@ -19,15 +19,15 @@ const structure = [
         children: [
             {
                 title: "Match Plan",
-                route: "/plan",
+                route: "/edit/plan",
             },
             {
                 title: "Teams",
-                route: "/teams",
+                route: "/edit/teams",
             },
             {
                 title: "Danger Zone",
-                route: "/danger",
+                route: "/edit/danger",
             },
         ],
     },
@@ -36,7 +36,7 @@ const structure = [
         children: [
             {
                 title: "GitHub Gists",
-                route: "/gists",
+                route: "/share/gists",
             },
         ],
     },
@@ -45,11 +45,11 @@ const structure = [
         children: [
             {
                 title: "Edit as JSON",
-                route: "/edit",
+                route: "/advanced/edit",
             },
             {
                 title: "Debug",
-                route: "/debug",
+                route: "/advanced/debug",
             },
         ],
     },

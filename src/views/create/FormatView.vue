@@ -92,7 +92,7 @@ const breakDuration = computed({
         @regenerated="regenerateTimes()"
     />
 
-    <div class="row">
+    <div class="row start">
         <div class="field">
             <label for="match-duration">Match Duration [min]</label>
             <input
@@ -122,7 +122,7 @@ const breakDuration = computed({
         />
     </div>
 
-    <div class="row">
+    <div class="row start">
         <p v-if="tournamentEndsAt">
             Tournament ends approximately at
             <SkeletonTextLoader

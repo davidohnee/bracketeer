@@ -48,7 +48,12 @@ export const useTournamentsStore = defineStore("tournaments", () => {
     function update(updatedTournament: Tournament) {
         const index = tournaments.value.findIndex((t) => t.id === updatedTournament.id);
         if (index !== -1) {
-            tournaments.value[index] = updatedTournament;
+            tournaments.value[index].config = updatedTournament.config;
+            tournaments.value[index].name = updatedTournament.name;
+            tournaments.value[index].phases = updatedTournament.phases;
+            tournaments.value[index].remote = updatedTournament.remote;
+            tournaments.value[index].teams = updatedTournament.teams;
+            tournaments.value[index].version = updatedTournament.version;
         }
     }
 

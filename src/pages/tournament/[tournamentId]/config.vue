@@ -66,6 +66,7 @@ defineProps<{
             :navigation="structure"
             :base="base"
             on="surface"
+            layout="compact"
         >
             <template #content>
                 <RouterView :tournament="tournament" />

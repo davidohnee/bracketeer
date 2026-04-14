@@ -45,59 +45,25 @@ const hasStarted = ref(getTournamentStatus(tournament) !== "scheduled");
 
 <template>
     <div class="form">
-        <section>
-            <div class="row">
-                <button
-                    class="secondary"
-                    @click="randomGroupPhase"
-                >
-                    Randomise Group Phase
-                </button>
-                <button
-                    class="secondary"
-                    @click="update"
-                >
-                    Update Knockout Matches
-                </button>
-                <button
-                    class="secondary"
-                    @click="duplicateTournament"
-                >
-                    Duplicate Tournament
-                </button>
-            </div>
-        </section>
+        <div class="row">
+            <button
+                class="secondary"
+                @click="randomGroupPhase"
+            >
+                Randomise Group Phase
+            </button>
+            <button
+                class="secondary"
+                @click="update"
+            >
+                Update Knockout Matches
+            </button>
+            <button
+                class="secondary"
+                @click="duplicateTournament"
+            >
+                Duplicate Tournament
+            </button>
+        </div>
     </div>
 </template>
-
-<style scoped>
-.form {
-    padding: 1em;
-    width: calc(100% - 2em);
-}
-
-.row {
-    justify-content: flex-start;
-    align-items: flex-end;
-    flex-wrap: wrap;
-
-    & select {
-        margin: 0;
-    }
-}
-
-@media (max-width: 600px) {
-    .row {
-        flex-direction: column;
-        align-items: stretch;
-
-        & button {
-            width: 100%;
-        }
-    }
-}
-
-section {
-    width: 100%;
-}
-</style>

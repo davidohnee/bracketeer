@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { computed } from "vue";
+
 type NavigationTarget = {
     title: string;
     route: string;
@@ -11,11 +13,14 @@ type NavigationGroup = {
 
 type Navigation = NavigationGroup[];
 
-defineProps<{
+const props = defineProps<{
     navigation: Navigation;
     base?: string;
     on?: "surface" | "background";
+    layout?: "spacious" | "compact";
 }>();
+
+const layout = computed(() => props.layout || "spacious");
 </script>
 
 <template>
@@ -23,7 +28,10 @@ defineProps<{
         class="settings"
         :class="{ invert: on === 'surface' }"
     >
-        <div class="split">
+        <div
+            class="split"
+            :class="layout"
+        >
             <aside class="sidebar">
                 <div
                     v-for="section in navigation"
@@ -56,13 +64,22 @@ defineProps<{
 .split {
     display: grid;
     grid-template-columns: 25ch 1fr;
-    gap: 5em;
     align-items: start;
+
+    &.spacious {
+        gap: 5em;
+    }
+
+    &.compact {
+        gap: 2em;
+    }
 
     & aside {
         display: flex;
         flex-direction: column;
         gap: 1em;
+        border-right: 1px solid var(--color-border);
+        padding-right: 1em;
     }
 
     & h5 {
@@ -99,8 +116,7 @@ defineProps<{
 .settings.invert {
     @media (min-width: 768px) {
         .split aside {
-            border-right: 1px solid var(--color-border);
-            padding-right: 1em;
+            height: 100%;
         }
     }
 
@@ -115,6 +131,8 @@ defineProps<{
         gap: 1em;
 
         & aside {
+            padding-right: 0;
+            border-right: none;
             border-bottom: 1px solid var(--color-border);
             padding-bottom: 1em;
         }

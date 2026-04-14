@@ -76,102 +76,68 @@ const remoteDescription = computed(() => {
 <template>
     <ShareModal ref="shareModal" />
     <div class="form">
-        <section>
-            <h3>Sharing & Sync</h3>
+        <h3>Sharing & Sync</h3>
+        <div
+            v-if="lastPushed"
+            class="row"
+        >
+            <div class="field">
+                <p class="my-0">
+                    Last pushed:
+                    <strong>
+                        {{ lastPushedAgo }}
+                    </strong>
+                </p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="field">
+                <p
+                    v-if="props.tournament.remote?.length"
+                    class="mt-0"
+                >
+                    Remote source:
+                    <strong>
+                        {{ remoteDescription }}
+                    </strong>
+                </p>
+                <p v-else>This tournament is <strong>not</strong> linked to a remote source.</p>
+            </div>
+        </div>
+        <div class="row">
             <div
-                v-if="lastPushed"
-                class="row"
+                class="field"
+                v-if="canPull"
             >
-                <div class="field">
-                    <p class="my-0">
-                        Last pushed:
-                        <strong>
-                            {{ lastPushedAgo }}
-                        </strong>
-                    </p>
-                </div>
-            </div>
-            <div class="row">
-                <div class="field">
-                    <p
-                        v-if="props.tournament.remote?.length"
-                        class="mt-0"
-                    >
-                        Remote source:
-                        <strong>
-                            {{ remoteDescription }}
-                        </strong>
-                    </p>
-                    <p v-else>This tournament is <strong>not</strong> linked to a remote source.</p>
-                </div>
-            </div>
-            <div class="row">
-                <div
-                    class="field"
-                    v-if="canPull"
+                <button
+                    class="secondary"
+                    @click="pull"
                 >
-                    <button
-                        class="secondary"
-                        @click="pull"
-                    >
-                        <ion-icon name="cloud-download-outline" />
-                        Pull
-                    </button>
-                </div>
-                <div
-                    class="field"
-                    v-if="canPush"
-                >
-                    <button
-                        class="secondary"
-                        @click="tournaments.share(props.tournament)"
-                    >
-                        <ion-icon name="cloud-upload-outline" />
-                        Push
-                    </button>
-                </div>
-                <div
-                    class="field"
-                    v-if="!tournament.remote?.length"
-                >
-                    <button @click="shareModal?.open(props.tournament)">
-                        <ion-icon name="share-outline" />
-                        Share
-                    </button>
-                </div>
+                    <ion-icon name="cloud-download-outline" />
+                    Pull
+                </button>
             </div>
-        </section>
+            <div
+                class="field"
+                v-if="canPush"
+            >
+                <button
+                    class="secondary"
+                    @click="tournaments.share(props.tournament)"
+                >
+                    <ion-icon name="cloud-upload-outline" />
+                    Push
+                </button>
+            </div>
+            <div
+                class="field"
+                v-if="!tournament.remote?.length"
+            >
+                <button @click="shareModal?.open(props.tournament)">
+                    <ion-icon name="share-outline" />
+                    Share
+                </button>
+            </div>
+        </div>
     </div>
 </template>
-
-<style scoped>
-.form {
-    padding: 1em;
-    width: calc(100% - 2em);
-}
-
-.row {
-    justify-content: flex-start;
-    align-items: flex-end;
-    flex-wrap: wrap;
-
-    & select {
-        margin: 0;
-    }
-}
-
-@media (max-width: 600px) {
-    .row {
-        flex-direction: column;
-        align-items: stretch;
-
-        & button {
-            width: 100%;
-        }
-    }
-}
-
-section {
-    width: 100%;
-}
-</style>

@@ -36,9 +36,7 @@ const save = () => {
 <template>
     <div class="form">
         <textarea
-            id="teams-paste"
             rows="25"
-            placeholder="Paste your teams here"
             v-model="editableTournament"
             @change="changed = true"
         ></textarea>
@@ -52,33 +50,9 @@ const save = () => {
 </template>
 
 <style scoped>
-.form {
-    padding: 1em;
-    width: calc(100% - 2em);
-}
-
-.row {
-    justify-content: flex-start;
-    align-items: flex-end;
-    flex-wrap: wrap;
-
-    & select {
-        margin: 0;
-    }
-}
-
-@media (max-width: 600px) {
-    .row {
-        flex-direction: column;
-        align-items: stretch;
-
-        & button {
-            width: 100%;
-        }
-    }
-}
-
-section {
-    width: 100%;
+textarea {
+    font-family: "Consolas", "Courier New", Courier, monospace;
+    font-size: 1rem;
+    resize: none;
 }
 </style>

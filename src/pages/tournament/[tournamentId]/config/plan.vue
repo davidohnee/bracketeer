@@ -87,10 +87,3 @@ const save = () => {
         </div>
     </div>
 </template>
-
-<style scoped>
-.plan-editor {
-    padding: 1em;
-    width: calc(100% - 2em);
-}
-</style>

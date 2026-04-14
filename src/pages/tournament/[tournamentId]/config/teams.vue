@@ -87,10 +87,3 @@ const duplicates = computed(() => {
         </div>
     </div>
 </template>
-
-<style scoped>
-.team-editor {
-    padding: 1em;
-    width: calc(100% - 2em);
-}
-</style>

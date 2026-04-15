@@ -13,6 +13,7 @@ import {
     formatPlacement,
     formatCurrentMatchTime,
     copyToClipboard,
+    makeOrdinal,
 } from "./common";
 import type {
     Tournament,
@@ -539,6 +540,56 @@ describe("Common Helper Functions", () => {
             copyToClipboard(shareUrl);
 
             expect(mockClipboard.writeText).toHaveBeenCalledWith(shareUrl);
+        });
+    });
+
+    describe("make ordinal", () => {
+        it("should convert 1 to '1st'", () => {
+            expect(makeOrdinal(1)).toBe("1st");
+        });
+
+        it("should convert 2 to '2nd'", () => {
+            expect(makeOrdinal(2)).toBe("2nd");
+        });
+
+        it("should convert 3 to '3rd'", () => {
+            expect(makeOrdinal(3)).toBe("3rd");
+        });
+
+        it("should convert 4 to '4th'", () => {
+            expect(makeOrdinal(4)).toBe("4th");
+        });
+
+        it("should convert 11 to '11th'", () => {
+            expect(makeOrdinal(11)).toBe("11th");
+        });
+
+        it("should convert 12 to '12th'", () => {
+            expect(makeOrdinal(12)).toBe("12th");
+        });
+
+        it("should convert 13 to '13th'", () => {
+            expect(makeOrdinal(13)).toBe("13th");
+        });
+
+        it("should convert 21 to '21st'", () => {
+            expect(makeOrdinal(21)).toBe("21st");
+        });
+
+        it("should convert 22 to '22nd'", () => {
+            expect(makeOrdinal(22)).toBe("22nd");
+        });
+
+        it("should convert 23 to '23rd'", () => {
+            expect(makeOrdinal(23)).toBe("23rd");
+        });
+
+        it("should convert 101 to '101st'", () => {
+            expect(makeOrdinal(101)).toBe("101st");
+        });
+
+        it("should handle 0", () => {
+            expect(makeOrdinal(0)).toBe("0th");
         });
     });
 });

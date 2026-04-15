@@ -9,6 +9,15 @@ export const COMPARATOR_KEYS = [
 export type ComparatorKey = (typeof COMPARATOR_KEYS)[number];
 export type ComparatorOrder = ComparatorKey[];
 
+export const TIE_BREAKER_LABELS: Record<ComparatorKey, string> = {
+    points: "Points",
+    directEncounter: "Direct Encounter",
+    difference: "Point Difference",
+    pointsFor: "Points For",
+    pointsAgainst: "Points Against",
+    draws: "Draws",
+};
+
 export interface Player {
     id: string;
     name: string;

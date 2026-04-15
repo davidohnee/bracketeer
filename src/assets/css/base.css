@@ -1,22 +1,33 @@
-h1 {
+h1,
+.heading,
+.heading-xl {
     font-family: var(--typography-heading-font-xl);
     font-weight: var(--typography-heading-fontWeight-xl);
     font-size: var(--typography-heading-fontSize-xl);
     line-height: var(--typography-heading-lineHeight-xl);
 }
 
-h2 {
+h2,
+.heading-l {
     font-family: var(--typography-heading-font-l);
     font-weight: var(--typography-heading-fontWeight-l);
     font-size: var(--typography-heading-fontSize-l);
     line-height: var(--typography-heading-lineHeight-l);
+    margin-block-end: 0.5em;
 }
 
-h3 {
+h3,
+.heading-m {
     font-family: var(--typography-heading-font-m);
     font-weight: var(--typography-heading-fontWeight-m);
     font-size: var(--typography-heading-fontSize-m);
     line-height: var(--typography-heading-lineHeight-m);
+    margin-block-end: 0.5em;
+}
+
+h4,
+.heading-s {
+    margin-block-end: 0.5em;
 }
 
 strong {

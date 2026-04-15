@@ -79,7 +79,7 @@ onUnmounted(() => {
         v-if="tournament && error == null"
         class="tournament"
         v-model="tournament"
-        :tabs="['table', 'knockout', 'matches', 'live']"
+        :tabs="['table', 'knockout', 'matches', 'live', 'about']"
         :subtitle="subtitle"
         readonly
     />

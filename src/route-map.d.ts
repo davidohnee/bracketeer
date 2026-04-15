@@ -91,6 +91,7 @@ declare module 'vue-router/auto-routes' {
       { tournamentId: ParamValue<true> },
       { tournamentId: ParamValue<false> },
       | '/tournament/[tournamentId]/'
+      | '/tournament/[tournamentId]/about'
       | '/tournament/[tournamentId]/config'
       | '/tournament/[tournamentId]/config/advanced/debug'
       | '/tournament/[tournamentId]/config/advanced/edit'
@@ -106,6 +107,13 @@ declare module 'vue-router/auto-routes' {
     '/tournament/[tournamentId]/': RouteRecordInfo<
       '/tournament/[tournamentId]/',
       '/tournament/:tournamentId',
+      { tournamentId: ParamValue<true> },
+      { tournamentId: ParamValue<false> },
+      | never
+    >,
+    '/tournament/[tournamentId]/about': RouteRecordInfo<
+      '/tournament/[tournamentId]/about',
+      '/tournament/:tournamentId/about',
       { tournamentId: ParamValue<true> },
       { tournamentId: ParamValue<false> },
       | never
@@ -267,6 +275,7 @@ declare module 'vue-router/auto-routes' {
       routes:
         | '/tournament/[tournamentId]'
         | '/tournament/[tournamentId]/'
+        | '/tournament/[tournamentId]/about'
         | '/tournament/[tournamentId]/config'
         | '/tournament/[tournamentId]/config/advanced/debug'
         | '/tournament/[tournamentId]/config/advanced/edit'
@@ -284,6 +293,12 @@ declare module 'vue-router/auto-routes' {
     'src/pages/tournament/[tournamentId]/index.vue': {
       routes:
         | '/tournament/[tournamentId]/'
+      views:
+        | never
+    }
+    'src/pages/tournament/[tournamentId]/about.vue': {
+      routes:
+        | '/tournament/[tournamentId]/about'
       views:
         | never
     }

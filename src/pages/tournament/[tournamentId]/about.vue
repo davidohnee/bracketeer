@@ -4,7 +4,7 @@ import { makeOrdinal } from "@/helpers/common";
 import { getProgression, hasByes } from "@/helpers/matchplan/knockoutPhase";
 import {
     COMPARATOR_KEYS,
-    TIE_BRAKER_LABELS,
+    TIE_BREAKER_LABELS,
     type GroupTournamentPhase,
     type KnockoutTournamentPhase,
     type Tournament,
@@ -69,7 +69,7 @@ const groupPhaseFacts = (phase: GroupTournamentPhase, nextPhase?: KnockoutTourna
 
         facts.progression = {
             facts: [],
-            tieBreakers: (phase.tieBreakers ?? COMPARATOR_KEYS).map((x) => TIE_BRAKER_LABELS[x]),
+            tieBreakers: (phase.tieBreakers ?? COMPARATOR_KEYS).map((x) => TIE_BREAKER_LABELS[x]),
         };
 
         const perGroup = phase.groups?.length ? " in each group" : "";

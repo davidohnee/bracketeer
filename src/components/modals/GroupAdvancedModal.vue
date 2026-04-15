@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import DraggableList from "@/components/DraggableList.vue";
-import { TIE_BRAKER_LABELS, COMPARATOR_KEYS, type ComparatorOrder } from "@/types/tournament";
+import { TIE_BREAKER_LABELS, COMPARATOR_KEYS, type ComparatorOrder } from "@/types/tournament";
 import { ref, watch } from "vue";
 
 const props = defineProps<{
@@ -57,7 +57,7 @@ defineExpose({
             <DraggableList
                 v-model="tieBreakerOrder"
                 @change="updateTieBreakerOrder"
-                :get-label="(item) => TIE_BRAKER_LABELS[item]"
+                :get-label="(item) => TIE_BREAKER_LABELS[item]"
             />
             <button
                 class="ghost text-sm self-end"

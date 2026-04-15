@@ -12,6 +12,7 @@ const TAB_LOOKUP = {
     knockout: "Knockout",
     matches: "Matches",
     live: "Live",
+    about: "About",
     config: "Settings",
 };
 type Tab = keyof typeof TAB_LOOKUP;

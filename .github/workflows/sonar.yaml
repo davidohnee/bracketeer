@@ -26,6 +26,7 @@ jobs:
             - name: Run tests
               run: npm run test:coverage
             - name: SonarQube Scan
+              if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.fork == false
               uses: SonarSource/sonarqube-scan-action@v6
               env:
                   SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}

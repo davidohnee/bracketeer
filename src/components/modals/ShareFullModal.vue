@@ -18,13 +18,13 @@ const inputPat = ref("");
 const selectedAccount = ref(accounts.all[0]?.id);
 const dialog = ref<HTMLDialogElement>();
 
-const open = (course: Tournament) => {
+const open = (tournament: Tournament) => {
     action.value = null;
     dialog.value?.showModal();
-    if (course.id !== sharingItem.value?.id) {
+    if (tournament.id !== sharingItem.value?.id) {
         shareUrl.value = "";
     }
-    sharingItem.value = course;
+    sharingItem.value = tournament;
 
     if (!sharingItem.value?.remote?.length) return false;
     const identifier = sharingItem.value.remote[0]!.identifier;
@@ -33,7 +33,7 @@ const open = (course: Tournament) => {
 
         if (canPush.value) {
             action.value = "gist";
-            shareUrl.value = ShareClient.getShareLink(course.remote![0]!.identifier);
+            shareUrl.value = ShareClient.getShareLink(tournament.remote![0]!.identifier);
         }
     });
 };
@@ -76,7 +76,7 @@ defineExpose({ open });
                 <h2>GitHub Gists PAT</h2>
                 <p>
                     To use this feature, you need to provide a GitHub Gists PAT. This is used to
-                    create gists for sharing courses.
+                    create gists for sharing tournaments.
                 </p>
                 <input
                     type="text"

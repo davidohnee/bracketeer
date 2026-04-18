@@ -159,6 +159,7 @@ describe("Accounts Store", () => {
         it("should sync accounts to localStorage when adding", async () => {
             const store = useAccountsStore();
 
+            store.disableThrottling();
             store.add(mockAccount);
             await nextTick();
 
@@ -172,6 +173,7 @@ describe("Accounts Store", () => {
         it("should encode accessToken in localStorage", async () => {
             const store = useAccountsStore();
 
+            store.disableThrottling();
             store.add(mockAccount);
             await nextTick();
 
@@ -193,9 +195,9 @@ describe("Accounts Store", () => {
                 accessToken: "test-token-456",
             };
 
+            store.disableThrottling();
             store.add(mockAccount);
             store.add(account2);
-
             await nextTick();
 
             const stored = localStorage.getItem("accounts");
@@ -212,7 +214,9 @@ describe("Accounts Store", () => {
 
             vi.mocked(gistShare.isMine).mockResolvedValue(mockAccount);
 
+            store.disableThrottling();
             store.add(mockAccount);
+            await nextTick();
 
             const result = await store.findShareAccount("remote-id-123");
 
@@ -231,8 +235,10 @@ describe("Accounts Store", () => {
 
             vi.mocked(gistShare.isMine).mockResolvedValue(mockAccount);
 
+            store.disableThrottling();
             store.add(mockAccount);
             store.add(account2);
+            await nextTick();
 
             await store.findShareAccount("remote-id-123");
 

@@ -7,11 +7,11 @@
 import { computed, onMounted, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import type { Tournament } from "@/types/tournament";
-import { pull } from "@/share";
+import { pull } from "@/helpers/share";
 import { useTournamentsStore } from "@/stores/tournaments";
 import ViewerView from "./ViewerView.vue";
 
-type Error = null | "not-found" | "not-allowed";
+type Error = null | "not-found" | "not-allowed" | "not-supported";
 
 const route = useRoute();
 const router = useRouter();

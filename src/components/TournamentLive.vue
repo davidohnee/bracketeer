@@ -3,19 +3,21 @@ import { computed, onMounted, onUnmounted, ref, toRaw } from "vue";
 import type { Match, RichMatch, Tournament } from "@/types/tournament";
 import TeamTable from "@/components/TeamTable.vue";
 import { useRoute } from "vue-router";
-import { useTournamentsStore } from "@/stores/tournaments";
 import { updateKnockoutMatches } from "@/helpers/matchplan/knockoutPhase";
 import GroupedTournamentList from "./GroupedTournamentList.vue";
 import { tournamentRichMatches } from "@/helpers/matches";
 import { adjustStartTimes } from "@/helpers/matchplan/common";
 import TabSelector from "./TabSelector.vue";
+import ShareClient from "@/helpers/share";
+import { useAccountsStore } from "@/stores/accounts";
 
 const props = defineProps<{
     tournament: Tournament;
     readonly?: boolean;
 }>();
 const tournament = ref(props.tournament);
-const tournamentStore = useTournamentsStore();
+
+const accounts = useAccountsStore();
 
 const emit = defineEmits<(e: "update:modelValue", value: Tournament) => void>();
 const onChanged = () => {
@@ -184,7 +186,10 @@ const proceed = () => {
     }
     groupedByTime.value[key] = matches;
     updateKnockoutMatches(tournament.value);
-    tournamentStore.push(tournament.value);
+    ShareClient.share(tournament.value, {
+        updateOnly: true,
+        accountResolver: (remote) => accounts.findShareAccount(remote.identifier),
+    });
 };
 
 const adjustAndSkipText = computed(() => {

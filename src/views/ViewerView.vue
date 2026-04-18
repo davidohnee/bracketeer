@@ -3,10 +3,10 @@ import { computed, onMounted, onUnmounted, ref } from "vue";
 import { useRoute } from "vue-router";
 import type { Tournament } from "@/types/tournament";
 import TournamentLayout from "@/layouts/TournamentLayout.vue";
-import { pull } from "@/share";
+import { pull } from "@/helpers/share";
 import { agoString } from "@/helpers/common";
 
-type Error = null | "not-found" | "not-allowed";
+type Error = null | "not-found" | "not-allowed" | "not-supported";
 
 const route = useRoute();
 
@@ -84,7 +84,7 @@ onUnmounted(() => {
         readonly
     />
     <div
-        v-else-if="error == 'not-found'"
+        v-else-if="error && ['not-found', 'not-supported'].includes(error)"
         class="error flex-col p-4"
     >
         <h1>Guess you'll have to create it yourself...</h1>

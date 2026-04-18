@@ -1,64 +1,64 @@
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
-import gistClient from "@/gistClient";
+import { ref } from "vue";
 import type { Tournament } from "@/types/tournament";
-import { useTournamentsStore } from "@/stores/tournaments";
-import { copyToClipboard, deepCopy } from "@/helpers/common";
-import { getShareLink } from "@/share";
+import { copyToClipboard } from "@/helpers/common";
+import ShareClient from "@/helpers/share";
 import AdvancedInput from "@/components/input/AdvancedInput.vue";
+import { useAccountsStore } from "@/stores/accounts";
 
-const patSet = ref(false);
 const shareUrl = ref("");
-const publicGist = ref(false);
 const sharingItem = ref<Tournament>();
 const canPush = ref(false);
 
 const action = ref<null | "gist">(null);
 
-const tournaments = useTournamentsStore();
+const accounts = useAccountsStore();
 
 const inputPat = ref("");
+const selectedAccount = ref(accounts.all[0]?.id);
 const dialog = ref<HTMLDialogElement>();
 
-onMounted(() => {
-    const pat = gistClient.pat();
-    patSet.value = !!pat;
-});
-
-const open = (course: Tournament) => {
+const open = (tournament: Tournament) => {
     action.value = null;
     dialog.value?.showModal();
-    if (course.id !== sharingItem.value?.id) {
-        publicGist.value = false;
+    if (tournament.id !== sharingItem.value?.id) {
         shareUrl.value = "";
     }
-    sharingItem.value = course;
+    sharingItem.value = tournament;
 
     if (!sharingItem.value?.remote?.length) return false;
     const identifier = sharingItem.value.remote[0]!.identifier;
-    gistClient.isMine(identifier).then((isMine) => {
-        canPush.value = isMine;
+    accounts.findShareAccount(identifier).then((account) => {
+        canPush.value = !!account;
 
         if (canPush.value) {
             action.value = "gist";
-            shareUrl.value = getShareLink(course.remote![0]!.identifier);
+            shareUrl.value = ShareClient.getShareLink(tournament.remote![0]!.identifier);
         }
     });
 };
 
-const setPat = () => {
-    gistClient.setPat(inputPat.value);
-    patSet.value = true;
+const setPat = async () => {
+    const account = await ShareClient.accessTokenToAccount(inputPat.value, "gist");
+    if (account) {
+        accounts.add(account);
+
+        if (!selectedAccount.value) {
+            selectedAccount.value = account.id;
+        }
+    }
 };
 
 const save = async () => {
     const tournament = sharingItem.value;
     if (!tournament) return;
 
-    const tournamentCopy = deepCopy(tournament);
-    delete tournamentCopy.remote;
-
-    shareUrl.value = (await tournaments.share(tournamentCopy, publicGist.value)) ?? "";
+    const share = await ShareClient.share(tournament, {
+        account: accounts.all.find((x) => x.id === selectedAccount.value) ?? null,
+    });
+    if (share) {
+        shareUrl.value = share.link ?? "";
+    }
 };
 
 const share = () => {
@@ -76,30 +76,11 @@ defineExpose({ open });
                 class="close"
                 name="close"
             ></ion-icon>
-            <template v-if="!action && sharingItem">
-                <h2>Share "{{ sharingItem.name }}"</h2>
-                <div class="options">
-                    <div class="option">
-                        <div class="info">
-                            <h3>New share link</h3>
-                            <p>
-                                Share a link to this tournament. Others will be able to view the
-                                tournament or duplicate it.
-                                <br />
-                                <span class="text-muted">
-                                    This will create a new gist on GitHub.
-                                </span>
-                            </p>
-                        </div>
-                        <button @click="share">Create link</button>
-                    </div>
-                </div>
-            </template>
-            <template v-else-if="!patSet && action">
+            <template v-if="!accounts.all.length">
                 <h2>GitHub Gists PAT</h2>
                 <p>
                     To use this feature, you need to provide a GitHub Gists PAT. This is used to
-                    create gists for sharing courses.
+                    create gists for sharing tournaments.
                 </p>
                 <input
                     type="text"
@@ -113,6 +94,33 @@ defineExpose({ open });
                     Save
                 </button>
             </template>
+            <template v-else-if="!action && sharingItem">
+                <h2>Share "{{ sharingItem.name }}"</h2>
+                <div class="options">
+                    <div class="info">
+                        <h3>New share link</h3>
+                        <p>
+                            Share a link to this tournament. Others will be able to view the
+                            tournament or duplicate it.
+                            <br />
+                            <span class="text-muted"> This will create a new gist on GitHub. </span>
+                        </p>
+                    </div>
+                    <div class="account-and-create">
+                        <select v-model="selectedAccount">
+                            <option
+                                v-for="account in accounts.all"
+                                :key="account.id"
+                                :value="account.id"
+                            >
+                                {{ account.displayName }}
+                            </option>
+                        </select>
+                        <button @click="share">Create link</button>
+                    </div>
+                </div>
+            </template>
+
             <template v-else-if="action == 'gist' && sharingItem">
                 <h2>Share "{{ sharingItem.name }}"</h2>
                 <p class="my-0">Your share link:</p>
@@ -149,6 +157,21 @@ defineExpose({ open });
         &:not(:last-child) {
             border-bottom: 2px solid var(--color-border);
         }
+    }
+}
+
+.account-and-create {
+    display: flex;
+    align-items: center;
+    gap: 1em;
+
+    & button {
+        flex: 1;
+    }
+
+    & select {
+        width: 20ch;
+        margin: 0;
     }
 }
 

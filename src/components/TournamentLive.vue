@@ -9,12 +9,15 @@ import { tournamentRichMatches } from "@/helpers/matches";
 import { adjustStartTimes } from "@/helpers/matchplan/common";
 import TabSelector from "./TabSelector.vue";
 import ShareClient from "@/helpers/share";
+import { useAccountsStore } from "@/stores/accounts";
 
 const props = defineProps<{
     tournament: Tournament;
     readonly?: boolean;
 }>();
 const tournament = ref(props.tournament);
+
+const accounts = useAccountsStore();
 
 const emit = defineEmits<(e: "update:modelValue", value: Tournament) => void>();
 const onChanged = () => {
@@ -185,6 +188,7 @@ const proceed = () => {
     updateKnockoutMatches(tournament.value);
     ShareClient.share(tournament.value, {
         updateOnly: true,
+        accountResolver: (remote) => accounts.findShareAccount(remote.identifier),
     });
 };
 

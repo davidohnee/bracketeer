@@ -118,13 +118,21 @@ const accessTokenToAccount = async (accessToken: string) => {
 };
 
 const isMine = async (identifier: string, accounts: Account[]) => {
-    const { author } = fromShare(identifier);
-    return accounts.find((x) => x.displayName === author) ?? null;
+    try {
+        const { author } = fromShare(identifier);
+        return accounts.find((x) => x.displayName === author) ?? null;
+    } catch {
+        return null;
+    }
 };
 
 const isSharedWithAccount = (remoteIdentifier: string, account: Account) => {
-    const { author } = fromShare(remoteIdentifier);
-    return author === account.displayName;
+    try {
+        const { author } = fromShare(remoteIdentifier);
+        return author === account.displayName;
+    } catch {
+        return false;
+    }
 };
 
 const migrate = (): Account | null => {
@@ -184,7 +192,7 @@ const push = async (
 
     const file = jdata.files[name];
     const rawUrl = file.raw_url;
-    // "https://gist.githubusercontent.com/{user}/{gist}/raw/{file}/{filename}"
+    // "https://gist.githubusercontent.com/{user}/{gist}/raw/{file}/{revision}"
     // gist:{user}:{gist}:{filename}
     const gistId = jdata.id;
     const user = jdata.owner.login;

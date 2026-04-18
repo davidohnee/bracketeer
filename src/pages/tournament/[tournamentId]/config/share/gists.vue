@@ -129,7 +129,12 @@ const remoteDescription = computed(() => {
             >
                 <button
                     class="secondary"
-                    @click="ShareClient.share(props.tournament)"
+                    @click="
+                        ShareClient.share(tournament, {
+                            updateOnly: true,
+                            account: canPush,
+                        })
+                    "
                 >
                     <ion-icon name="cloud-upload-outline" />
                     Push

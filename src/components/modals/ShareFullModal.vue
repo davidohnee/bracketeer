@@ -54,7 +54,7 @@ const save = async () => {
     if (!tournament) return;
 
     const share = await ShareClient.share(tournament, {
-        account: accounts.all.find((x) => x.id === selectedAccount.value),
+        account: accounts.all.find((x) => x.id === selectedAccount.value) ?? null,
     });
     if (share) {
         shareUrl.value = share.link ?? "";

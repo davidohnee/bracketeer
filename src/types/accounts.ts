@@ -1,5 +1,8 @@
+export const ACCOUNT_TYPES = ["gist"] as const;
+export type AccountType = (typeof ACCOUNT_TYPES)[number];
+
 export interface IAccount {
-    type: "gist";
+    type: AccountType;
     id: string;
     displayName: string;
 }

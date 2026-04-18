@@ -199,7 +199,11 @@ describe("share", () => {
         const store = { findShareAccount: vi.fn().mockResolvedValue(null) };
         vi.spyOn(accountsStoreModule, "useAccountsStore").mockReturnValue(store as never);
 
-        const result = await share(tournament);
+        const result = await share(tournament, {
+            accountResolver(remote) {
+                return store.findShareAccount(remote.identifier);
+            },
+        });
 
         expect(store.findShareAccount).not.toHaveBeenCalled();
         expect(result).toBe(false);
@@ -238,7 +242,11 @@ describe("share", () => {
         const pushSpy = vi.spyOn(gistShare, "push").mockResolvedValue(resultPayload);
         vi.spyOn(accountsStoreModule, "useAccountsStore").mockReturnValue(store as never);
 
-        const result = await share(tournament);
+        const result = await share(tournament, {
+            accountResolver(remote) {
+                return store.findShareAccount(remote.identifier);
+            },
+        });
 
         expect(store.findShareAccount).toHaveBeenCalledWith(remoteIdentifier);
         expect(pushSpy).toHaveBeenCalledTimes(1);

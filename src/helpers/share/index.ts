@@ -2,7 +2,6 @@ import type { IRemote, Tournament } from "@/types/tournament";
 import { gistShare } from "./gist/gist";
 import type { Account } from "@/types/accounts";
 import { Notifications } from "@/components/notifications/createNotification";
-import { useAccountsStore } from "@/stores/accounts";
 import { deepCopy } from "../common";
 
 interface IImportResult {
@@ -36,7 +35,7 @@ export const getShareLink = (identifier: string) => {
 
 export const toShare = (mode: "gist", author: string, tag: string) => {
     const gistUrl = `${mode}:${author}:${tag}`;
-    const base64 = btoa(gistUrl);
+    const base64 = encodeURIComponent(btoa(gistUrl));
     const link = getShareLink(base64);
 
     return {
@@ -46,7 +45,7 @@ export const toShare = (mode: "gist", author: string, tag: string) => {
 };
 
 export const fromShare = (identifier: string) => {
-    const str = atob(identifier);
+    const str = atob(decodeURIComponent(identifier));
     const [mode, author, ...data] = str.split(":");
 
     return {
@@ -94,12 +93,32 @@ export const accessTokenToAccount = async (
     throw new Error("NotSupported");
 };
 
-type ShareOptions = {
+type AccountResolver = (remote: IRemote) => Promise<Account | null>;
+
+interface IShareOptions {
     updateOnly?: boolean;
     account?: Account | null;
-};
+    accountResolver?: AccountResolver;
+}
 
-export const share = async (tournament: Tournament, { updateOnly, account }: ShareOptions = {}) => {
+interface UpdateOptions extends IShareOptions {
+    updateOnly?: boolean;
+    account?: Account | null;
+    accountResolver: AccountResolver;
+}
+
+interface PublishOptions extends IShareOptions {
+    updateOnly?: boolean;
+    account: Account | null;
+    accountResolver?: AccountResolver;
+}
+
+type ShareOptions = UpdateOptions | PublishOptions;
+
+export const share = async (
+    tournament: Tournament,
+    { updateOnly, account, accountResolver }: ShareOptions,
+) => {
     if (updateOnly) {
         if (!tournament.remote?.length) {
             return false;
@@ -107,8 +126,8 @@ export const share = async (tournament: Tournament, { updateOnly, account }: Sha
     }
 
     if (!account) {
-        if (tournament.remote?.length) {
-            account = await useAccountsStore().findShareAccount(tournament.remote[0].identifier);
+        if (tournament.remote?.length && accountResolver) {
+            account = await accountResolver(tournament.remote[0]);
         }
 
         if (!account) {

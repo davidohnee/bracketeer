@@ -3,18 +3,20 @@ import type { Tournament } from "@/types/tournament";
 import { useTournamentsStore } from "@/stores/tournaments";
 import { computed, ref, watch } from "vue";
 import ShareModal from "@/components/modals/ShareFullModal.vue";
-import gistClient from "@/gistClient";
 import { Notifications } from "@/components/notifications/createNotification";
 import { agoString } from "@/helpers/common";
-import { fromShare } from "@/share";
+import ShareClient from "@/helpers/share";
+import { useAccountsStore } from "@/stores/accounts";
+import type { Account } from "@/types/accounts";
 
 const props = defineProps<{
     tournament: Tournament;
 }>();
 
 const tournaments = useTournamentsStore();
+const accounts = useAccountsStore();
 const tournament = tournaments.getTournamentById(props.tournament.id)!;
-const canPush = ref(false);
+const canPush = ref<Account | null>(null);
 
 const shareModal = ref<typeof ShareModal>();
 
@@ -23,7 +25,7 @@ watch(
     async () => {
         if (!props.tournament.remote?.length) return false;
         const identifier = props.tournament.remote[0]!.identifier;
-        canPush.value = await gistClient.isMine(identifier);
+        canPush.value = await accounts.findShareAccount(identifier);
     },
     { immediate: true },
 );
@@ -35,7 +37,7 @@ const canPull = computed(() => {
 
 const pull = async () => {
     try {
-        await tournaments.pull({
+        await ShareClient.pull({
             tournament,
         });
         Notifications.addSuccess("Tournament updated", {
@@ -68,7 +70,7 @@ const remoteDescription = computed(() => {
     if (!props.tournament.remote?.length) return "Not shared";
     const identifier = props.tournament.remote[0]!.identifier;
     try {
-        const share = fromShare(identifier);
+        const share = ShareClient.fromShare(identifier);
         return share ? `${share.author} via ${share.mode}` : "Unknown source";
     } catch (error) {
         console.error("Error parsing remote source:", error);
@@ -127,7 +129,7 @@ const remoteDescription = computed(() => {
             >
                 <button
                     class="secondary"
-                    @click="tournaments.share(props.tournament)"
+                    @click="ShareClient.share(props.tournament)"
                 >
                     <ion-icon name="cloud-upload-outline" />
                     Push

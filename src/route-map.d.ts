@@ -62,7 +62,7 @@ declare module 'vue-router/auto-routes' {
       Record<never, never>,
       | '/settings/general/about'
       | '/settings/general/appearance'
-      | '/settings/share/gists'
+      | '/settings/share/accounts'
     >,
     '/settings/general/about': RouteRecordInfo<
       '/settings/general/about',
@@ -78,9 +78,9 @@ declare module 'vue-router/auto-routes' {
       Record<never, never>,
       | never
     >,
-    '/settings/share/gists': RouteRecordInfo<
-      '/settings/share/gists',
-      '/settings/share/gists',
+    '/settings/share/accounts': RouteRecordInfo<
+      '/settings/share/accounts',
+      '/settings/share/accounts',
       Record<never, never>,
       Record<never, never>,
       | never
@@ -249,7 +249,7 @@ declare module 'vue-router/auto-routes' {
         | '/settings'
         | '/settings/general/about'
         | '/settings/general/appearance'
-        | '/settings/share/gists'
+        | '/settings/share/accounts'
       views:
         | 'default'
     }
@@ -265,9 +265,9 @@ declare module 'vue-router/auto-routes' {
       views:
         | never
     }
-    'src/pages/settings/share/gists.vue': {
+    'src/pages/settings/share/accounts.vue': {
       routes:
-        | '/settings/share/gists'
+        | '/settings/share/accounts'
       views:
         | never
     }

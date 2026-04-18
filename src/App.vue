@@ -4,6 +4,7 @@ import { onMounted } from "vue";
 import { useRouter } from "vue-router";
 import NotificationHandler from "./components/notifications/NotificationHandler.vue";
 import { useThemeStore } from "./stores/theme";
+import { useAccountsStore } from "./stores/accounts";
 
 const router = useRouter();
 const theme = useThemeStore();
@@ -19,6 +20,7 @@ onMounted(() => {
     console.log(`bracketeer v${APP_VERSION}`);
 
     theme.init();
+    useAccountsStore().migrate();
 });
 </script>
 

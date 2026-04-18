@@ -1,6 +1,7 @@
 import { test, vi, expect, afterEach, describe, it, beforeEach } from "vitest";
 import { pull, toShare, push } from ".";
 import { generateTestTournament } from "@/helpers/test";
+import type { GistAccount } from "@/types/accounts";
 
 test("pull", async () => {
     const tournament = generateTestTournament();
@@ -40,6 +41,12 @@ describe("push", () => {
     const fileName = `${tournament.name}.bra`;
     const author = "user";
     const gistId = "new-gist-id";
+    const account: GistAccount = {
+        type: "gist",
+        id: "1234",
+        accessToken: "pat-123",
+        displayName: author,
+    };
     const remote = [
         {
             identifier: toShare("gist", author, `${gistId}:${fileName}`).identifier,
@@ -74,11 +81,10 @@ describe("push", () => {
                     }),
             }),
         );
-        localStorage.setItem("github.pat", "test-pat");
     });
 
     it("should push new tournament", async () => {
-        const result = await push(tournament);
+        const result = await push(tournament, { account });
         expect(result.author).toBe(author);
         expect(result.tournament).toEqual({
             ...tournament,
@@ -99,7 +105,7 @@ describe("push", () => {
             remote,
         };
 
-        const result = await push(tournamentWithRemote);
+        const result = await push(tournamentWithRemote, { remote: remote[0], account });
         expect(result.author).toBe(author);
         expect(result.tournament).toEqual({
             ...tournamentWithRemote,

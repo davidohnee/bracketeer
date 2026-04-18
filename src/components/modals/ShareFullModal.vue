@@ -1,13 +1,11 @@
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
-import gistClient from "@/gistClient";
+import { ref } from "vue";
 import type { Tournament } from "@/types/tournament";
-import { useTournamentsStore } from "@/stores/tournaments";
-import { copyToClipboard, deepCopy } from "@/helpers/common";
-import { getShareLink } from "@/share";
+import { copyToClipboard } from "@/helpers/common";
+import ShareClient from "@/helpers/share";
 import AdvancedInput from "@/components/input/AdvancedInput.vue";
+import { useAccountsStore } from "@/stores/accounts";
 
-const patSet = ref(false);
 const shareUrl = ref("");
 const publicGist = ref(false);
 const sharingItem = ref<Tournament>();
@@ -15,15 +13,10 @@ const canPush = ref(false);
 
 const action = ref<null | "gist">(null);
 
-const tournaments = useTournamentsStore();
+const accounts = useAccountsStore();
 
 const inputPat = ref("");
 const dialog = ref<HTMLDialogElement>();
-
-onMounted(() => {
-    const pat = gistClient.pat();
-    patSet.value = !!pat;
-});
 
 const open = (course: Tournament) => {
     action.value = null;
@@ -36,29 +29,33 @@ const open = (course: Tournament) => {
 
     if (!sharingItem.value?.remote?.length) return false;
     const identifier = sharingItem.value.remote[0]!.identifier;
-    gistClient.isMine(identifier).then((isMine) => {
-        canPush.value = isMine;
+    accounts.findShareAccount(identifier).then((account) => {
+        canPush.value = !!account;
 
         if (canPush.value) {
             action.value = "gist";
-            shareUrl.value = getShareLink(course.remote![0]!.identifier);
+            shareUrl.value = ShareClient.getShareLink(course.remote![0]!.identifier);
         }
     });
 };
 
-const setPat = () => {
-    gistClient.setPat(inputPat.value);
-    patSet.value = true;
+const setPat = async () => {
+    const account = await ShareClient.accessTokenToAccount(inputPat.value, "gist");
+    if (account) {
+        accounts.add(account);
+    }
 };
 
 const save = async () => {
     const tournament = sharingItem.value;
     if (!tournament) return;
 
-    const tournamentCopy = deepCopy(tournament);
-    delete tournamentCopy.remote;
-
-    shareUrl.value = (await tournaments.share(tournamentCopy, publicGist.value)) ?? "";
+    const share = await ShareClient.share(tournament, {
+        account: accounts.all[0],
+    });
+    if (share) {
+        shareUrl.value = share.link ?? "";
+    }
 };
 
 const share = () => {
@@ -95,7 +92,7 @@ defineExpose({ open });
                     </div>
                 </div>
             </template>
-            <template v-else-if="!patSet && action">
+            <template v-else-if="!accounts.all.length && action">
                 <h2>GitHub Gists PAT</h2>
                 <p>
                     To use this feature, you need to provide a GitHub Gists PAT. This is used to

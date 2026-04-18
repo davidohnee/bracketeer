@@ -1,25 +1,20 @@
 import { defineStore } from "pinia";
-import type { IRemote, Tournament, TournamentConfig } from "../types/tournament";
+import type { Tournament, TournamentConfig } from "../types/tournament";
 import { computed, ref, watch } from "vue";
 import { tournamentFromJson } from "@/helpers";
-
-import { pull, push } from "@/share";
-import { Notifications } from "@/components/notifications/createNotification";
 import { generateKnockoutBrackets } from "@/helpers/matchplan/knockoutPhase";
 import { generateGroupPhases } from "@/helpers/matchplan/groupPhase";
 import { generateNTeams } from "@/helpers/teamGenerator";
 import { throttle } from "lodash";
 
-// You can name the return value of `defineStore()` anything you want,
-// but it's best to use the name of the store and surround it with `use`
-// and `Store` (e.g. `useUserStore`, `useCartStore`, `useProductStore`)
-// the first argument is a unique id of the store across your application
-export const useTournamentsStore = defineStore("tournaments", () => {
+const LOCAL_STORAGE_KEY = "tournaments";
+
+export const useTournamentsStore = defineStore(LOCAL_STORAGE_KEY, () => {
     const tournaments = ref<Tournament[]>([]);
 
     const throttlingEnabled = ref(true);
     const _syncToLocalStorage = () =>
-        localStorage.setItem("tournaments", JSON.stringify(tournaments.value));
+        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(tournaments.value));
     const _throttledSyncToLocalStorage = throttle(() => {
         _syncToLocalStorage();
     }, 300);
@@ -32,7 +27,7 @@ export const useTournamentsStore = defineStore("tournaments", () => {
 
     watch(tournaments, () => syncToLocalStorage.value(), { deep: true });
     // Load tournaments from local storage on initial load
-    const storedTournaments = localStorage.getItem("tournaments");
+    const storedTournaments = localStorage.getItem(LOCAL_STORAGE_KEY);
     if (storedTournaments) {
         tournaments.value = JSON.parse(storedTournaments).map(tournamentFromJson);
     }
@@ -95,31 +90,6 @@ export const useTournamentsStore = defineStore("tournaments", () => {
         return tournaments.value.find((t) => t.id === id);
     };
 
-    const share = async (tournament: Tournament, asPublic: boolean = false) => {
-        const result = await push(tournament, asPublic);
-        if (result.tournament) {
-            getTournamentById(tournament.id)!.remote = result.tournament.remote;
-        } else if (result.error) {
-            console.error("Error sharing tournament:", result.error);
-            Notifications.addError("Sharing failed", {
-                details: "There was an error sharing the tournament. Please try again.",
-                timeout: 5000,
-            });
-            return;
-        }
-
-        Notifications.addSuccess("Tournament shared", {
-            details: "The tournament has been shared successfully.",
-            timeout: 5000,
-            onClick: () => {
-                globalThis.open(result.link, "_blank");
-            },
-            redirect: result.link,
-        });
-
-        return result.link;
-    };
-
     const download = (tournament: Tournament) => {
         const element = document.createElement("a");
         const file = new Blob([JSON.stringify(tournament, null, 4)], {
@@ -168,36 +138,6 @@ export const useTournamentsStore = defineStore("tournaments", () => {
         tournaments.forEach((x) => add(x));
     };
 
-    const pushToRemote = async (tournament: Tournament) => {
-        if (!tournament.remote || tournament.remote.length === 0) {
-            return false;
-        }
-        await share(tournament);
-        return true;
-    };
-
-    const pullFromRemote = async (options: { tournament?: Tournament; remote?: IRemote }) => {
-        const { tournament, remote } = options;
-
-        const pullSource = remote?.identifier ?? tournament?.remote?.[0]?.identifier;
-
-        if (!pullSource) {
-            throw new Error("No remote source");
-        }
-
-        const newTournament = await pull(pullSource);
-        if (newTournament?.error) {
-            throw new Error(newTournament.error);
-        }
-
-        if (tournament) {
-            tournament.name = newTournament!.tournament.name;
-            tournament.config = newTournament!.tournament.config;
-            tournament.phases = newTournament!.tournament.phases;
-            return tournament;
-        }
-    };
-
     return {
         all: tournaments,
         create,
@@ -206,11 +146,8 @@ export const useTournamentsStore = defineStore("tournaments", () => {
         update,
         deleteTournament,
         getTournamentById,
-        share,
         download,
         addFromUpload,
-        pull: pullFromRemote,
-        push: pushToRemote,
         disableThrottling: () => {
             console.warn("Disabling throttling for tournaments store");
             throttlingEnabled.value = false;

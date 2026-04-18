@@ -24,8 +24,8 @@ const structure = [
         title: "Share",
         children: [
             {
-                title: "GitHub Gists",
-                route: "/share/gists",
+                title: "Accounts",
+                route: "/share/accounts",
             },
         ],
     },

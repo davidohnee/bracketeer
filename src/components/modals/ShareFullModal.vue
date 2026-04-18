@@ -42,6 +42,10 @@ const setPat = async () => {
     const account = await ShareClient.accessTokenToAccount(inputPat.value, "gist");
     if (account) {
         accounts.add(account);
+
+        if (!selectedAccount.value) {
+            selectedAccount.value = account.id;
+        }
     }
 };
 

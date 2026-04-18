@@ -73,9 +73,13 @@ export const push = async (
 };
 
 export const pull = async (identifier: string): Promise<Import> => {
-    const { mode } = fromShare(identifier);
-    if (mode === "gist") {
-        return await gistShare.pull(identifier);
+    try {
+        const { mode } = fromShare(identifier);
+        if (mode === "gist") {
+            return await gistShare.pull(identifier);
+        }
+    } catch (error) {
+        console.error(error);
     }
     return { type: "error", error: "not-supported" };
 };
@@ -97,7 +101,7 @@ type ShareOptions = {
 
 export const share = async (tournament: Tournament, { updateOnly, account }: ShareOptions = {}) => {
     if (updateOnly) {
-        if (tournament.remote?.length) {
+        if (!tournament.remote?.length) {
             return false;
         }
     }

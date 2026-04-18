@@ -28,9 +28,18 @@ interface IImportError extends IImportResult {
 
 export type Import = IImportSuccess | IImportError;
 
+const normaliseShareIdentifier = (identifier: string) => {
+    try {
+        return encodeURIComponent(decodeURIComponent(identifier));
+    } catch {
+        return encodeURIComponent(identifier);
+    }
+};
+
 export const getShareLink = (identifier: string) => {
     const base = globalThis.location.origin;
-    return `${base}/s/${identifier}`;
+    const normalisedIdentifier = normaliseShareIdentifier(identifier);
+    return `${base}/s/${normalisedIdentifier}`;
 };
 
 export const toShare = (mode: "gist", author: string, tag: string) => {

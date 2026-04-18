@@ -17,7 +17,7 @@ export const useAccountsStore = defineStore(LOCAL_STORAGE_KEY, () => {
             JSON.stringify(
                 accounts.value.map((x) => ({
                     ...x,
-                    accessToken: btoa(x.accessToken),
+                    accessToken: btoa(x.accessToken), // obfuscation only!
                 })),
             ),
         );
@@ -32,13 +32,20 @@ export const useAccountsStore = defineStore(LOCAL_STORAGE_KEY, () => {
     });
 
     watch(accounts, () => syncToLocalStorage.value(), { deep: true });
-    // Load tournaments from local storage on initial load
     const storedAccounts = localStorage.getItem(LOCAL_STORAGE_KEY);
     if (storedAccounts) {
-        accounts.value = JSON.parse(storedAccounts).map((x: Account) => ({
-            ...x,
-            accessToken: atob(x.accessToken),
-        }));
+        accounts.value = JSON.parse(storedAccounts)
+            .map((x: Account) => {
+                try {
+                    return {
+                        ...x,
+                        accessToken: atob(x.accessToken),
+                    };
+                } catch {
+                    return null;
+                }
+            })
+            .filter(Boolean);
     }
 
     const add = (account: Account) => {
@@ -66,11 +73,11 @@ export const useAccountsStore = defineStore(LOCAL_STORAGE_KEY, () => {
             );
         },
         disableThrottling: () => {
-            console.warn("Disabling throttling for tournaments store");
+            console.warn("Disabling throttling for accounts store");
             throttlingEnabled.value = false;
         },
         enableThrottling: () => {
-            console.info("Enabling throttling for tournaments store");
+            console.info("Enabling throttling for accounts store");
             throttlingEnabled.value = true;
         },
     };

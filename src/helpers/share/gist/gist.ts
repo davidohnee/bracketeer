@@ -94,22 +94,27 @@ const setGist = async (options: GistOptions) => {
 };
 
 const accessTokenToAccount = async (accessToken: string) => {
-    const res = await fetch("https://api.github.com/user", {
-        headers: getHeaders(accessToken),
-    });
+    try {
+        const res = await fetch("https://api.github.com/user", {
+            headers: getHeaders(accessToken),
+        });
 
-    if (!res.ok) {
+        if (!res.ok) {
+            return null;
+        }
+
+        const data = (await res.json()) as GitHubUser;
+
+        return {
+            type: "gist",
+            accessToken,
+            displayName: data.login,
+            id: generateId(),
+        } as GistAccount;
+    } catch (error) {
+        console.error(error);
         return null;
     }
-
-    const data = (await res.json()) as GitHubUser;
-
-    return {
-        type: "gist",
-        accessToken,
-        displayName: data.login,
-        id: generateId(),
-    } as GistAccount;
 };
 
 const isMine = async (identifier: string, accounts: Account[]) => {
@@ -153,7 +158,7 @@ const push = async (
         remote?: IRemote;
         account: GistAccount;
     },
-) => {
+): Promise<Import> => {
     const name = `${tournament.name}.bra`;
 
     const copy = deepCopy(tournament);
@@ -174,7 +179,7 @@ const push = async (
     const jdata = await setGist(options);
 
     if (!jdata) {
-        return { error: "not-allowed" } as Import;
+        return { type: "error", error: "not-allowed" };
     }
 
     const file = jdata.files[name];
@@ -183,9 +188,9 @@ const push = async (
     // gist:{user}:{gist}:{filename}
     const gistId = jdata.id;
     const user = jdata.owner.login;
-    const fileName = rawUrl.split("/raw/")[1].split("/")[0];
+    const revision = rawUrl.split("/raw/")[1].split("/")[0];
 
-    const { identifier, link } = toShare("gist", user, `${gistId}:${fileName}`);
+    const { identifier, link } = toShare("gist", user, `${gistId}:${revision}`);
 
     if (tournament.remote?.length) {
         tournament.remote[0].pushDate = new Date();
@@ -198,12 +203,17 @@ const push = async (
         ];
     }
 
-    return { author: jdata.owner.login, tournament, link } as Import;
+    return { type: "success", author: jdata.owner.login, tournament, link, date: new Date() };
 };
 
-const pull = async (identifier: string) => {
+const pull = async (identifier: string): Promise<Import> => {
     const { mode, author, tag } = fromShare(identifier);
-    if (!author || !tag) return;
+    if (!author || !tag) {
+        return {
+            type: "error",
+            error: "not-supported",
+        };
+    }
 
     if (mode === "gist") {
         const [gist] = tag.split(":");
@@ -212,20 +222,22 @@ const pull = async (identifier: string) => {
         const res = await fetch(url);
 
         if (res.status == 404) {
-            return { error: "not-found" } as Import;
+            return { type: "error", error: "not-found" };
         } else if (res.status == 403) {
-            return { error: "not-allowed" } as Import;
+            return { type: "error", error: "not-allowed" };
         }
 
         const jdata = await res.json();
 
         return {
+            type: "success",
             author,
             tournament: tournamentFromJson(jdata),
             link: toShare(mode, author, tag).link,
-        } as Import;
+            date: new Date(),
+        };
     }
-    return { error: "not-found" } as Import;
+    return { type: "error", error: "not-supported" };
 };
 
 export const gistShare = {

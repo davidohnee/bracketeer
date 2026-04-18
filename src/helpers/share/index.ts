@@ -67,16 +67,17 @@ export const push = async (
         return await gistShare.push(tournament, options);
     }
     return {
+        type: "error",
         error: "not-supported",
-    } as IImportError;
+    };
 };
 
-export const pull = async (identifier: string) => {
+export const pull = async (identifier: string): Promise<Import> => {
     const { mode } = fromShare(identifier);
     if (mode === "gist") {
         return await gistShare.pull(identifier);
     }
-    return { error: "not-found" } as Import;
+    return { type: "error", error: "not-supported" };
 };
 
 export const accessTokenToAccount = async (
@@ -96,7 +97,7 @@ type ShareOptions = {
 
 export const share = async (tournament: Tournament, { updateOnly, account }: ShareOptions = {}) => {
     if (updateOnly) {
-        if (tournament.remote?.length === 0) {
+        if (tournament.remote?.length) {
             return false;
         }
     }

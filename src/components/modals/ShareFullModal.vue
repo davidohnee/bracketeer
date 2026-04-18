@@ -7,7 +7,6 @@ import AdvancedInput from "@/components/input/AdvancedInput.vue";
 import { useAccountsStore } from "@/stores/accounts";
 
 const shareUrl = ref("");
-const publicGist = ref(false);
 const sharingItem = ref<Tournament>();
 const canPush = ref(false);
 
@@ -16,13 +15,13 @@ const action = ref<null | "gist">(null);
 const accounts = useAccountsStore();
 
 const inputPat = ref("");
+const selectedAccount = ref(accounts.all[0]?.id);
 const dialog = ref<HTMLDialogElement>();
 
 const open = (course: Tournament) => {
     action.value = null;
     dialog.value?.showModal();
     if (course.id !== sharingItem.value?.id) {
-        publicGist.value = false;
         shareUrl.value = "";
     }
     sharingItem.value = course;
@@ -51,7 +50,7 @@ const save = async () => {
     if (!tournament) return;
 
     const share = await ShareClient.share(tournament, {
-        account: accounts.all[0],
+        account: accounts.all.find((x) => x.id === selectedAccount.value),
     });
     if (share) {
         shareUrl.value = share.link ?? "";
@@ -73,26 +72,7 @@ defineExpose({ open });
                 class="close"
                 name="close"
             ></ion-icon>
-            <template v-if="!action && sharingItem">
-                <h2>Share "{{ sharingItem.name }}"</h2>
-                <div class="options">
-                    <div class="option">
-                        <div class="info">
-                            <h3>New share link</h3>
-                            <p>
-                                Share a link to this tournament. Others will be able to view the
-                                tournament or duplicate it.
-                                <br />
-                                <span class="text-muted">
-                                    This will create a new gist on GitHub.
-                                </span>
-                            </p>
-                        </div>
-                        <button @click="share">Create link</button>
-                    </div>
-                </div>
-            </template>
-            <template v-else-if="!accounts.all.length && action">
+            <template v-if="!accounts.all.length">
                 <h2>GitHub Gists PAT</h2>
                 <p>
                     To use this feature, you need to provide a GitHub Gists PAT. This is used to
@@ -110,6 +90,33 @@ defineExpose({ open });
                     Save
                 </button>
             </template>
+            <template v-else-if="!action && sharingItem">
+                <h2>Share "{{ sharingItem.name }}"</h2>
+                <div class="options">
+                    <div class="info">
+                        <h3>New share link</h3>
+                        <p>
+                            Share a link to this tournament. Others will be able to view the
+                            tournament or duplicate it.
+                            <br />
+                            <span class="text-muted"> This will create a new gist on GitHub. </span>
+                        </p>
+                    </div>
+                    <div class="account-and-create">
+                        <select v-model="selectedAccount">
+                            <option
+                                v-for="account in accounts.all"
+                                :key="account.id"
+                                :value="account.id"
+                            >
+                                {{ account.displayName }}
+                            </option>
+                        </select>
+                        <button @click="share">Create link</button>
+                    </div>
+                </div>
+            </template>
+
             <template v-else-if="action == 'gist' && sharingItem">
                 <h2>Share "{{ sharingItem.name }}"</h2>
                 <p class="my-0">Your share link:</p>
@@ -146,6 +153,21 @@ defineExpose({ open });
         &:not(:last-child) {
             border-bottom: 2px solid var(--color-border);
         }
+    }
+}
+
+.account-and-create {
+    display: flex;
+    align-items: center;
+    gap: 1em;
+
+    & button {
+        flex: 1;
+    }
+
+    & select {
+        width: 20ch;
+        margin: 0;
     }
 }
 

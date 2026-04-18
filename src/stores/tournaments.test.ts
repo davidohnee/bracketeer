@@ -2,6 +2,7 @@ import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
 import { setActivePinia, createPinia } from "pinia";
 import { useTournamentsStore } from "./tournaments";
 import type { Tournament, TournamentConfig } from "../types/tournament";
+import { nextTick } from "vue";
 
 vi.mock("@/helpers/matchplan/knockoutPhase", () => ({
     generateKnockoutBrackets: vi.fn((tournament) => tournament.phases),
@@ -23,9 +24,6 @@ vi.mock("@/helpers/teamGenerator", () => ({
 vi.mock("@/helpers", () => ({
     tournamentFromJson: vi.fn((json) => json),
 }));
-
-const THROTTLE_DURATION = 200;
-const asyncThrottleDelay = () => new Promise((resolve) => setTimeout(resolve, THROTTLE_DURATION));
 
 describe("Tournaments Store", () => {
     let mockConfig: TournamentConfig;
@@ -423,8 +421,7 @@ describe("Tournaments Store", () => {
             store.disableThrottling();
             store.add(tournament);
 
-            // Wait for throttled sync
-            await asyncThrottleDelay();
+            await nextTick();
 
             const stored = localStorage.getItem("tournaments");
             expect(stored).not.toBeNull();
@@ -447,12 +444,13 @@ describe("Tournaments Store", () => {
             store.disableThrottling();
 
             store.add(tournament);
-            await asyncThrottleDelay();
+            await nextTick();
 
             store.update({ ...tournament, name: "Updated" });
-            await asyncThrottleDelay();
+            await nextTick();
 
             const stored = localStorage.getItem("tournaments");
+            expect(stored).not.toBeNull();
             const parsed = JSON.parse(stored!);
             expect(parsed[0].name).toBe("Updated");
         });

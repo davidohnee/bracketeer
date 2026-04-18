@@ -23,9 +23,11 @@ test("pull", async () => {
     const data = await pull(identifier);
 
     expect(data).toEqual({
+        type: "success",
         author,
         tournament,
         link,
+        date: expect.any(Date),
     });
 
     expect(fetch).toHaveBeenCalledTimes(1);

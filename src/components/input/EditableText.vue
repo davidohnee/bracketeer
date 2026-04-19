@@ -63,7 +63,6 @@ const onChange = () => {
 };
 
 const clear = () => {
-    stopEditing();
     emit("update:modelValue", "");
 };
 

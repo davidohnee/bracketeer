@@ -106,7 +106,7 @@ section {
 .status {
     padding: var(--spacing-xxs);
     border-radius: var(--radius-m);
-    width: calc(100% - var(--spacing-xs));
+    width: calc(100% - 2 * var(--spacing-xxs));
     display: flex;
     justify-content: center;
     align-items: center;

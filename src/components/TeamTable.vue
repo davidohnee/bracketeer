@@ -143,7 +143,7 @@ const groupName = (id: string | null) => {
                 top: var(--spacing-xxs);
                 left: 0;
                 width: 2px;
-                height: calc(100% - calc(var(--spacing-xxs) * 2));
+                height: calc(100% - 2 * var(--spacing-xxs));
                 background-color: var(--c-progress);
             }
         }
@@ -157,7 +157,7 @@ const groupName = (id: string | null) => {
                 top: var(--spacing-xxs);
                 left: 0;
                 width: 2px;
-                height: calc(100% - calc(var(--spacing-xxs) * 2));
+                height: calc(100% - 2 * var(--spacing-xxs) * 2);
                 background-color: var(--c-play-in);
             }
         }

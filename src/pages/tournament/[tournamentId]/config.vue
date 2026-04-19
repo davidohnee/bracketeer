@@ -78,6 +78,6 @@ defineProps<{
 <style scoped>
 .config {
     padding: var(--spacing-m);
-    width: calc(100% - var(--spacing-gutter));
+    width: calc(100% - 2 * var(--spacing-m));
 }
 </style>

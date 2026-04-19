@@ -72,6 +72,10 @@ button {
         align-items: center;
         gap: 0.5em;
 
+        &.center {
+            justify-content: center;
+        }
+
         ion-icon {
             font-size: 1.2em;
             color: inherit;

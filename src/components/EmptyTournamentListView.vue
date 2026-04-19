@@ -14,7 +14,7 @@ const create = () => {
 };
 </script>
 <template>
-    <div class="body-container">
+    <div>
         <h3>Create your first tournament</h3>
         <TemplateView
             v-model="tournament"

@@ -110,6 +110,18 @@ const add = async () => {
     }
 }
 
+@media screen and (max-width: 768px) {
+    .account .inputs {
+        flex-direction: column;
+    }
+
+    .account:has(.inputs) {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.5em;
+    }
+}
+
 .account-editor {
     border-radius: 0.5em;
     overflow: hidden;

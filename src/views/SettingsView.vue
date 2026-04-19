@@ -117,6 +117,7 @@ const layout = computed(() => props.layout || "spacious");
 .settings,
 .settings-content {
     width: 100%;
+    overflow: auto;
 }
 
 .settings.invert {

@@ -29,7 +29,7 @@ type Facts = {
 };
 
 const tournaments = useTournamentsStore();
-const tournament = tournaments.getTournamentById(props.tournament.id)!;
+const tournament = tournaments.getTournamentById(props.tournament.id);
 
 const knockoutPhaseFacts = (phase: KnockoutTournamentPhase) => {
     const facts: Facts = {

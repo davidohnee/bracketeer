@@ -44,7 +44,15 @@ onMounted(() => {
             :loading="loading"
             :lines="10"
         >
-            <MarkdownRender :source="releaseNotes" />
+            <div class="release-notes">
+                <MarkdownRender :source="releaseNotes" />
+            </div>
         </SkeletonTextLoader>
     </div>
 </template>
+
+<style scoped>
+.release-notes {
+    overflow-x: auto;
+}
+</style>

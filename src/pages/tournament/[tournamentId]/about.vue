@@ -155,7 +155,7 @@ const rules = computed({
 </script>
 <template>
     <div class="about">
-        <p>All you need to know about {{ tournament.name }}.</p>
+        <p>All you need to know about {{ props.tournament.name }}.</p>
         <template v-if="rules">
             <h2>Rules</h2>
             <EditableText
@@ -180,11 +180,13 @@ const rules = computed({
         </button>
         <div
             class="phase"
-            v-for="(phase, index) in tournament.phases"
+            v-for="(phase, index) in props.tournament.phases"
             :key="phase.id"
         >
             <h2>{{ phase.name }}</h2>
-            <MarkdownRender :source="generateDescription(phase, tournament.phases[index + 1])" />
+            <MarkdownRender
+                :source="generateDescription(phase, props.tournament.phases[index + 1])"
+            />
         </div>
     </div>
 </template>

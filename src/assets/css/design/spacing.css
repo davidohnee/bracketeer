@@ -1,0 +1,22 @@
+:root {
+    --spacing-xxs: 0.25rem;
+    --spacing-xs: 0.5rem;
+    --spacing-s: 0.75rem;
+    --spacing-m: 1rem;
+    --spacing-l: 2rem;
+    --spacing-xl: 4rem;
+
+    --spacing-prose: var(--spacing-l);
+    --spacing-gutter: var(--spacing-xl);
+    --spacing-stack: var(--spacing-xl);
+    --spacing-sticky: var(--spacing-xl);
+    --spacing-hero: var(--spacing-xl);
+}
+
+@media screen and (max-width: 768px) {
+    :root {
+        --spacing-s: 0.9rem;
+        --spacing-m: 1.2rem;
+        --spacing-l: 1.6rem;
+    }
+}

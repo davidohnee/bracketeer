@@ -355,7 +355,7 @@ const currentPhase = computed(() => {
 @media (max-width: 768px) {
     .live {
         grid-template-columns: 1fr !important;
-        gap: 3em;
+        gap: var(--spacing-stack);
 
         .round {
             position: unset;
@@ -370,7 +370,7 @@ const currentPhase = computed(() => {
 
 .round {
     position: sticky;
-    top: 5em;
+    top: var(--spacing-sticky);
     height: max-content;
 }
 
@@ -379,7 +379,7 @@ const currentPhase = computed(() => {
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    padding: 0.5em 1em;
+    padding: var(--spacing-xs) var(--spacing-m);
     border-bottom: 1px solid var(--color-border);
 
     p {
@@ -388,13 +388,13 @@ const currentPhase = computed(() => {
 
     .countdown {
         flex: 0;
-        padding: 0.5em 1em;
+        padding: var(--spacing-xs) var(--spacing-m);
         border: 1px solid var(--color-border);
         border-radius: 100vmax;
         display: flex;
         align-items: center;
-        gap: 0.5em;
-        padding-left: 0.5em;
+        gap: var(--spacing-xs);
+        padding-left: var(--spacing-m);
         min-width: max-content;
     }
 }
@@ -402,8 +402,8 @@ const currentPhase = computed(() => {
 .actions {
     display: flex;
     flex-direction: row;
-    gap: 1em;
-    padding: 1em;
+    gap: var(--spacing-m);
+    padding: var(--spacing-m);
     justify-content: flex-end;
     border-top: 1px solid var(--color-border);
 
@@ -426,15 +426,15 @@ const currentPhase = computed(() => {
     display: flex;
     flex-direction: row;
     align-items: center;
-    gap: 0.5em;
-    padding: 1em;
+    gap: var(--spacing-xs);
+    padding: var(--spacing-m);
 
     .group-option {
         border: 1px solid var(--color-border);
-        border-radius: 100vmax;
+        border-radius: var(--radius-full);
         font-size: 0.9rem;
-        padding: 0.25em 1em;
-        font-weight: bold;
+        padding: var(--spacing-xs) var(--spacing-m);
+        font-weight: var(--typography-fontWeight-bold);
 
         &.selected {
             background-color: var(--color-text-primary);
@@ -454,13 +454,13 @@ h3 {
 .action {
     display: flex;
     justify-content: flex-end;
-    margin-bottom: 1em;
-    margin-right: 1em;
+    margin-bottom: var(--spacing-m);
+    margin-right: var(--spacing-m);
 
     & button {
         display: flex;
         align-items: center;
-        gap: 0.5em;
+        gap: var(--spacing-xs);
     }
 }
 </style>

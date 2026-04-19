@@ -7,12 +7,12 @@ div.advanced-input {
     line-height: inherit;
     color: inherit;
     background-color: var(--color-surface);
-    border-radius: 8px;
+    border-radius: var(--radius-m);
     border: 1px solid var(--color-border);
-    padding: 0.6em 1.2em;
+    padding: var(--spacing-s) var(--spacing-m);
 
     &:not(:last-child) {
-        margin-bottom: 1em;
+        margin-bottom: var(--spacing-m);
     }
 
     &:disabled {
@@ -24,7 +24,7 @@ div.advanced-input {
         border-color: var(--color-brand-red);
 
         &:has(+ .error-description) {
-            margin-bottom: 0.25em;
+            margin-bottom: var(--spacing-xxs);
         }
     }
 }
@@ -33,7 +33,7 @@ div.checkbox {
     display: flex;
     flex-direction: row;
     align-items: center;
-    gap: 0.5em;
+    gap: var(--spacing-xs);
 
     & input {
         width: 1.4rem;
@@ -47,11 +47,11 @@ div.checkbox {
 .error-description {
     color: var(--color-brand-red);
     font-size: 0.9em;
-    margin-bottom: 1em;
+    margin-bottom: var(--spacing-m);
     display: flex;
     flex-direction: row;
     align-items: baseline;
-    gap: 0.5em;
+    gap: var(--spacing-xs);
 
     & ion-icon {
         flex-shrink: 0;
@@ -63,15 +63,15 @@ div.chip-group {
     display: flex;
     flex-direction: row;
     align-items: center;
-    gap: 0.5em;
+    gap: var(--spacing-xs);
     overflow-x: auto;
-    margin-bottom: 1em;
+    margin-bottom: var(--spacing-m);
 
     .chip-option {
         border: 1px solid var(--color-border);
-        border-radius: 100vmax;
+        border-radius: var(--radius-full);
         font-size: 0.9rem;
-        padding: 0.25em 1em;
+        padding: var(--spacing-xxs) var(--spacing-m);
         font-weight: bold;
         cursor: pointer;
         white-space: nowrap;
@@ -84,8 +84,8 @@ div.chip-group {
         &:has(ion-icon) {
             display: flex;
             align-items: center;
-            gap: 0.5em;
-            padding-left: 0.5em;
+            gap: var(--spacing-xs);
+            padding-left: var(--spacing-xs);
 
             ion-icon {
                 font-size: 1rem;

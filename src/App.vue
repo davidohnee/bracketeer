@@ -66,9 +66,9 @@ onMounted(() => {
 
 <style>
 header {
-    padding: 1em;
+    padding: var(--spacing-m);
     background-color: var(--color-surface);
-    margin-bottom: 4em;
+    margin-bottom: var(--spacing-xl);
     position: sticky;
     top: 0;
     z-index: 10;
@@ -86,18 +86,18 @@ header {
     & h3 {
         display: flex;
         align-items: center;
-        gap: 0.5em;
-        margin: 0.5em 0;
+        gap: var(--spacing-xs);
+        margin: var(--spacing-xs) 0;
     }
 
     & nav {
         display: flex;
-        gap: 1em;
+        gap: var(--spacing-m);
 
         & a {
             display: flex;
             align-items: center;
-            gap: 0.5em;
+            gap: var(--spacing-xs);
             color: var(--color-text-primary);
         }
     }
@@ -118,14 +118,14 @@ header {
 .matches:has(.match.card) {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(30ch, 1fr));
-    gap: 1em;
-    padding: 1em;
+    gap: var(--spacing-m);
+    padding: var(--spacing-m);
 }
 
 .matches:has(.match.row) {
     display: grid;
     grid-template-columns: 1fr;
-    gap: 0em;
-    padding: 1em;
+    gap: 0;
+    padding: var(--spacing-m);
 }
 </style>

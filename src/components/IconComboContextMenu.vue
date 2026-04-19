@@ -87,12 +87,12 @@ const groups = computed(() => {
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    gap: 1em;
+    gap: var(--spacing-m);
 }
 
 .group {
     .header {
-        padding: 0.25rem 0.5rem;
+        padding: var(--spacing-xxs) var(--spacing-xs);
     }
 
     &:not(:first-child) {
@@ -103,7 +103,7 @@ const groups = computed(() => {
 
 .combo__option {
     cursor: pointer;
-    padding: 0.5rem;
+    padding: var(--spacing-xs);
     transition: all 0.2s ease-in-out;
     display: grid;
     gap: 0.5rem;

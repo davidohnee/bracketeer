@@ -151,9 +151,9 @@ const teamLost = (team: MatchTeam) => {
 <style>
 .match.card {
     border: 1px solid var(--color-border);
-    border-radius: 1em;
+    border-radius: var(--radius-l);
     overflow: clip;
-    padding: 2em 1em;
+    padding: var(--spacing-l) var(--spacing-m);
     flex: 1;
     font-size: 13px;
     display: grid;
@@ -177,7 +177,7 @@ const teamLost = (team: MatchTeam) => {
         display: grid;
         grid-template-columns: 3ch 1ch 3ch;
         align-items: center;
-        gap: 0.5em;
+        gap: var(--spacing-xs);
     }
 
     .details {
@@ -194,7 +194,7 @@ const teamLost = (team: MatchTeam) => {
     .score,
     .time {
         font-size: 19px;
-        font-weight: 500;
+        font-weight: var(--typography-fontWeight-medium);
 
         &.progress {
             color: var(--color-primary);

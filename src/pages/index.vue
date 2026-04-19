@@ -110,7 +110,7 @@ const website = "https://davidohnee.com";
 .row {
     display: flex;
     flex-direction: row;
-    gap: 1em;
+    gap: var(--spacing-m);
 
     .end {
         margin-left: auto;
@@ -122,7 +122,7 @@ section:first-child {
 }
 
 section {
-    margin: 10em 0;
+    margin: var(--spacing-hero) 0;
     background: unset;
 
     &:nth-child(even) {
@@ -132,11 +132,11 @@ section {
             color-mix(in srgb, var(--color-primary) 70%, black)
         );
         color: var(--color-primary-inverse);
-        padding: 4em;
-        border-radius: 1em;
+        padding: var(--spacing-xl);
+        border-radius: var(--radius-l);
 
         @media (max-width: 768px) {
-            padding: 1em;
+            padding: var(--spacing-m);
         }
     }
 
@@ -166,7 +166,7 @@ section {
 
 .lead {
     font-size: 1.2rem;
-    margin-bottom: 2em;
+    margin-bottom: var(--spacing-l);
 }
 
 .footer .row {
@@ -182,18 +182,18 @@ section {
 
         > span:last-child:before {
             content: "|";
-            margin: 0 0.5em;
+            margin: 0 var(--spacing-xs);
         }
     }
 }
 
 @media (max-width: 768px) {
     .footer {
-        padding: 1em;
+        padding: var(--spacing-m);
     }
 
     section {
-        margin: 5em 0;
+        margin: var(--spacing-sticky) 0;
     }
 
     .footer .row .left {

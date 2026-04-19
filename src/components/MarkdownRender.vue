@@ -34,18 +34,18 @@ div.md {
     & h3,
     & h4,
     & h5 {
-        margin-top: 1.5em;
+        margin-top: var(--spacing-prose);
         margin-bottom: 0;
     }
 
     & p {
-        margin-top: 0.5em;
+        margin-top: var(--spacing-xs);
         margin-bottom: 0;
     }
 
     & ul,
     & ol {
-        margin-top: 0.25em;
+        margin-top: var(--spacing-xxs);
     }
 }
 </style>

@@ -25,7 +25,7 @@
 
         &.duplicate {
             background: color-mix(in srgb, var(--color-brand-red) 10%, transparent);
-            border-radius: 0.5rem;
+            border-radius: var(--radius-m);
             border: 1px solid var(--color-brand-red);
         }
 

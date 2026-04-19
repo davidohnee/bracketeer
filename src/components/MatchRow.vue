@@ -141,13 +141,13 @@ watch(
 <style scoped>
 .match.row {
     overflow: clip;
-    padding: 1em;
+    padding: var(--spacing-m);
     flex: 1;
     font-size: 13px;
     display: grid;
     grid-template-columns: 10ch 1fr 15ch 1fr 10ch;
     align-items: center;
-    gap: 1em;
+    gap: var(--spacing-m);
     transition: border-color 0.2s ease-in-out;
 
     &:not(.readonly) {
@@ -170,7 +170,7 @@ watch(
         display: grid;
         grid-template-columns: 3ch 1ch 3ch;
         align-items: center;
-        gap: 0.5em;
+        gap: var(--spacing-xs);
     }
 
     .details {
@@ -189,7 +189,7 @@ watch(
     .score,
     .match-time {
         font-size: 19px;
-        font-weight: 500;
+        font-weight: var(--typography-fontWeight-medium);
     }
 
     .match-time {
@@ -197,9 +197,9 @@ watch(
     }
 
     .time {
-        font-weight: 500;
-        border-radius: 100vmax;
-        padding: 0.5em 1em;
+        font-weight: var(--typography-fontWeight-medium);
+        border-radius: var(--radius-full);
+        padding: var(--spacing-xs) var(--spacing-m);
         font-size: 0.9rem;
         background-color: var(--color-border);
         color: var(--color-text-secondary);
@@ -233,14 +233,14 @@ watch(
 
     .score {
         font-size: 0.9rem !important;
-        gap: 0.25em !important;
+        gap: var(--spacing-xxs) !important;
     }
 
     .match.row {
         grid-template-columns: 6ch 1fr 9ch 1fr 6ch;
-        gap: 0.25em;
+        gap: var(--spacing-xxs);
         font-size: 0.9rem !important;
-        padding: 1em 0;
+        padding: var(--spacing-m) 0;
     }
 
     .team {

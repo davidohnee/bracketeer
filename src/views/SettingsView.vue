@@ -73,39 +73,39 @@ const layout = computed(() => props.layout || "spacious");
     align-items: start;
 
     &.spacious {
-        gap: 5em;
+        gap: var(--spacing-stack);
     }
 
     &.compact {
-        gap: 2em;
+        gap: var(--spacing-l);
     }
 
     & aside {
         display: flex;
         flex-direction: column;
-        gap: 1em;
+        gap: var(--spacing-m);
         border-right: 1px solid var(--color-border);
-        padding-right: 1em;
+        padding-right: var(--spacing-m);
     }
 
     & h5 {
         margin: 0;
-        margin-left: 0.5em;
+        margin-left: var(--spacing-xs);
         text-transform: uppercase;
         color: var(--color-text-secondary);
     }
 
     & h2 {
         margin: 0;
-        margin-bottom: 0.5em;
+        margin-bottom: var(--spacing-xs);
     }
 
     & a {
         color: inherit;
         border: 1px solid transparent;
         display: block;
-        padding: 0.5em;
-        border-radius: 0.5em;
+        padding: var(--spacing-xs);
+        border-radius: var(--radius-m);
 
         &.router-link-active {
             background: var(--color-surface);
@@ -134,13 +134,13 @@ const layout = computed(() => props.layout || "spacious");
 @media (max-width: 768px) {
     .split {
         grid-template-columns: 1fr;
-        gap: 1em;
+        gap: var(--spacing-m);
 
         & aside {
             padding-right: 0;
             border-right: none;
             border-bottom: 1px solid var(--color-border);
-            padding-bottom: 1em;
+            padding-bottom: var(--spacing-m);
         }
     }
 }

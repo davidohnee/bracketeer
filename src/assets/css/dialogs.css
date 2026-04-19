@@ -1,5 +1,5 @@
 dialog[open] {
-    border-radius: 1em;
+    border-radius: var(--radius-l);
     border: 1px solid var(--color-border);
     max-height: 80vh;
 
@@ -13,7 +13,7 @@ dialog[open] {
         flex-direction: column;
         width: 100%;
         overflow: hidden;
-        gap: 1em;
+        gap: var(--spacing-m);
         position: relative;
 
         :first-child {
@@ -23,8 +23,8 @@ dialog[open] {
 
     .close {
         position: absolute;
-        top: 0.5em;
-        right: 0.5em;
+        top: var(--spacing-xs);
+        right: var(--spacing-xs);
         cursor: pointer;
         font-size: 1.5em;
     }
@@ -38,6 +38,6 @@ dialog[open] {
 
     .options .option:not(:has(input[type="checkbox"])) {
         grid-template-columns: 1fr;
-        gap: 0.5em;
+        gap: var(--spacing-xs);
     }
 }

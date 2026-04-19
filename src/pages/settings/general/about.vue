@@ -37,6 +37,6 @@ const buildId =
 .about {
     display: flex;
     flex-direction: column;
-    gap: 1em;
+    gap: var(--spacing-m);
 }
 </style>

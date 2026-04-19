@@ -100,7 +100,7 @@ const create = () => {
 
 <style scoped>
 h2 {
-    margin-top: 2rem;
+    margin-top: var(--spacing-l);
 }
 
 .row.baseline {
@@ -109,7 +109,7 @@ h2 {
 
 @media (max-width: 768px) {
     .form {
-        margin: 1em;
+        margin: var(--spacing-m);
     }
 
     .desktop-only {

@@ -93,7 +93,7 @@ const add = async () => {
     justify-content: space-between;
     align-items: center;
     background: var(--color-surface);
-    padding: 1em;
+    padding: var(--spacing-m);
 
     &:not(:last-child) {
         border-bottom: 1px solid var(--color-border);
@@ -106,7 +106,7 @@ const add = async () => {
 
     .inputs {
         display: flex;
-        gap: 0.5em;
+        gap: var(--spacing-xs);
     }
 }
 
@@ -118,12 +118,12 @@ const add = async () => {
     .account:has(.inputs) {
         flex-direction: column;
         align-items: stretch;
-        gap: 0.5em;
+        gap: var(--spacing-xs);
     }
 }
 
 .account-editor {
-    border-radius: 0.5em;
+    border-radius: var(--radius-l);
     overflow: hidden;
     border: 1px solid var(--color-border);
 }
@@ -131,6 +131,6 @@ const add = async () => {
 .actions {
     display: flex;
     flex-direction: row;
-    gap: 1em;
+    gap: var(--spacing-m);
 }
 </style>

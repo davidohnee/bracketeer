@@ -140,12 +140,12 @@ defineExpose({ open });
 .options {
     display: flex;
     flex-direction: column;
-    gap: 1em;
+    gap: var(--spacing-m);
 
     .option {
         display: grid;
         grid-template-columns: 1fr 20ch;
-        gap: 1em;
+        gap: var(--spacing-m);
         align-items: center;
         border: none;
         border-radius: 0;
@@ -163,7 +163,7 @@ defineExpose({ open });
 .account-and-create {
     display: flex;
     align-items: center;
-    gap: 1em;
+    gap: var(--spacing-m);
 
     & button {
         flex: 1;
@@ -176,6 +176,6 @@ defineExpose({ open });
 }
 
 h2 {
-    margin-right: 2em;
+    margin-right: var(--spacing-l);
 }
 </style>

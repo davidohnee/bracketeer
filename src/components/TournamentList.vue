@@ -89,30 +89,30 @@ const STATUS_COLOR: Record<MatchStatus, string> = {
 .tournament-list-container {
     display: flex;
     flex-direction: column;
-    gap: 1em;
+    gap: var(--spacing-m);
 }
 
 .buttons {
     margin-left: auto;
     display: flex;
     flex-direction: row;
-    gap: 1em;
+    gap: var(--spacing-m);
 }
 
 .tournament-list {
     overflow: clip;
     border: 1px solid var(--color-border);
-    border-radius: 1em;
+    border-radius: var(--radius-l);
     background: var(--color-surface);
 }
 
 .tournament-item {
     align-items: center;
     position: relative;
-    padding: 0.5em 1em;
+    padding: var(--spacing-xs) var(--spacing-m);
     display: grid;
     grid-template-columns: 1fr 12ch 18ch calc(1.2em + 2 * 1.2em);
-    gap: 1em;
+    gap: var(--spacing-m);
     color: inherit;
 
     :not(:first-child) {

@@ -122,7 +122,7 @@ onUnmounted(() => {
 }
 
 .mt-4 {
-    margin-top: 1em;
+    margin-top: var(--spacing-m);
 }
 
 .w-max {
@@ -143,11 +143,11 @@ onUnmounted(() => {
 }
 
 .gap-4 {
-    gap: 1rem;
+    gap: var(--spacing-m);
 }
 
 .gap-2 {
-    gap: 0.5rem;
+    gap: var(--spacing-xs);
 }
 
 .items-center {

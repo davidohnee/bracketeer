@@ -71,16 +71,16 @@ globalThis.addEventListener("notification.clear", () => {
     position: fixed;
     inset: auto auto 0 0;
     z-index: 10;
-    margin: 2em;
+    margin: var(--spacing-l);
     display: flex;
     flex-direction: column;
-    gap: 1em;
+    gap: var(--spacing-m);
     align-items: flex-start;
 
     .notification {
         min-width: 200px;
         max-width: 400px;
-        border-radius: 1em;
+        border-radius: var(--radius-l);
         filter: drop-shadow(0 0 0.5em rgba(0, 0, 0, 0.2));
     }
 }

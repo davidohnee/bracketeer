@@ -23,7 +23,7 @@
 .row {
     display: flex;
     flex-direction: row;
-    gap: 1em;
+    gap: var(--spacing-m);
 }
 
 @media (max-width: 768px) {

@@ -77,7 +77,7 @@ defineProps<{
 
 <style scoped>
 .config {
-    padding: 1em;
-    width: calc(100% - 2em);
+    padding: var(--spacing-m);
+    width: calc(100% - 2 * var(--spacing-m));
 }
 </style>

@@ -116,12 +116,12 @@
 <style scoped>
 .design-system {
     display: grid;
-    gap: 1em;
+    gap: var(--spacing-m);
 }
 
 .card-header {
     display: flex;
-    gap: 1em;
+    gap: var(--spacing-m);
     align-items: last baseline;
     color: var(--color-primary);
     border-bottom: 3px solid var(--color-primary);
@@ -138,7 +138,7 @@
 .font {
     display: grid;
     grid-template-columns: 20ch 1fr;
-    gap: 1em;
+    gap: var(--spacing-m);
 
     border-bottom: 1px solid var(--color-border);
 }
@@ -146,7 +146,7 @@
 .color {
     display: grid;
     grid-template-columns: 20ch 1fr;
-    gap: 1em;
+    gap: var(--spacing-m);
     align-items: center;
 
     border-bottom: 1px solid var(--color-border);
@@ -157,9 +157,9 @@
 }
 
 .swatch {
-    width: 2em;
-    height: 2em;
-    border-radius: 1000vmax;
+    width: var(--spacing-l);
+    height: var(--spacing-l);
+    border-radius: var(--radius-full);
     background-color: var(--c);
     border: 2px solid var(--color-border);
 }

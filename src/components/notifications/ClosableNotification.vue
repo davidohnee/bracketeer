@@ -63,10 +63,10 @@ const click = () => {
 
 <style scoped>
 .notification {
-    padding: 0.5em 1em;
+    padding: var(--spacing-xs) var(--spacing-m);
     display: flex;
     flex-direction: row;
-    gap: 2em;
+    gap: var(--spacing-l);
     align-items: center;
     justify-content: space-between;
     color: var(--color-primary-inverse);

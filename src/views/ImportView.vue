@@ -84,24 +84,24 @@ const viewOnly = () => {
 .import {
     display: flex;
     flex-direction: column;
-    gap: 1em;
+    gap: var(--spacing-m);
 }
 
 .import-notice {
     background: var(--color-surface);
     border: 1px solid var(--color-border);
-    border-radius: 1em;
-    padding: 1em;
+    border-radius: var(--radius-l);
+    padding: var(--spacing-m);
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    gap: 1em;
+    gap: var(--spacing-m);
 }
 
 .actions {
     display: flex;
-    gap: 1em;
+    gap: var(--spacing-m);
 }
 
 @media (max-width: 768px) {

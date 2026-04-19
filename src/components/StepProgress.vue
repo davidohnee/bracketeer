@@ -60,8 +60,8 @@ const jumpTo = (index: number) => {
 }
 
 .circle {
-    height: 36px;
-    border-radius: 50%;
+    height: 2.25rem;
+    border-radius: var(--radius-full);
     border: 2px solid var(--color-primary);
     display: block;
     aspect-ratio: 1/1;
@@ -126,7 +126,7 @@ const jumpTo = (index: number) => {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 0.5em;
+    gap: var(--spacing-xs);
     font-size: var(--typography-body-fontSize-sm);
     position: relative;
 
@@ -143,13 +143,13 @@ const jumpTo = (index: number) => {
     flex-direction: row;
     align-items: center;
     counter-reset: section;
-    gap: 1em;
-    margin-bottom: 0.5em;
+    gap: var(--spacing-m);
+    margin-bottom: var(--spacing-xs);
 }
 
 .wrapper {
     overflow-x: auto;
-    padding-top: 2em;
+    padding-top: var(--spacing-l);
     padding-left: 2ch;
     padding-right: 2ch;
 }

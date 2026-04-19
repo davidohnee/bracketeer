@@ -97,7 +97,7 @@ const groupings = computed(() => {
 <style scoped>
 .header {
     background-color: var(--color-background);
-    padding: 0.5em 1em;
+    padding: var(--spacing-xs) var(--spacing-m);
 
     .title {
         margin: 0;

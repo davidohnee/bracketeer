@@ -114,16 +114,16 @@ watch(
     padding: 0;
     display: flex;
     flex-direction: column;
-    gap: 0.5em;
+    gap: var(--spacing-xs);
 }
 
 .draggable-list-item {
     display: flex;
     align-items: center;
-    gap: 0.5em;
-    padding: 0.5em 0.75em;
+    gap: var(--spacing-xs);
+    padding: var(--spacing-xs) var(--spacing-m);
     border: 1px solid var(--color-border);
-    border-radius: 0.5em;
+    border-radius: var(--radius-m);
     background: var(--color-background-soft);
     cursor: grab;
     user-select: none;

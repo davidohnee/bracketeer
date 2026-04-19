@@ -74,7 +74,7 @@ defineExpose({
     min-width: min(40ch, 90vw);
 
     & h2 {
-        margin-right: 3em;
+        margin-right: var(--spacing-stack);
     }
 }
 </style>

@@ -144,10 +144,10 @@ const generateDescription = (phase: TournamentPhase, nextTournamentPhase?: Tourn
 </template>
 <style scoped>
 .about {
-    padding: 1em;
+    padding: var(--spacing-m);
 
     & h2 {
-        margin-top: 1.5em;
+        margin-top: var(--spacing-prose);
     }
 }
 </style>

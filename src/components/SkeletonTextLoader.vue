@@ -47,15 +47,15 @@ const skeletonLines = computed(() =>
 .skeleton-text-loader--lines {
     display: flex;
     flex-direction: column;
-    gap: 0.5em;
+    gap: var(--spacing-xs);
     width: 100%;
     height: auto;
 }
 
 .skeleton-text-loader__line {
     display: block;
-    height: 1em;
-    border-radius: 0.25em;
+    height: var(--spacing-m);
+    border-radius: var(--radius-xs);
     background: linear-gradient(
         90deg,
         var(--color-surface) 0%,

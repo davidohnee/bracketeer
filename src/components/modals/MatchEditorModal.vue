@@ -256,7 +256,7 @@ defineExpose({
 
 <style scoped>
 .row:has(.teamScore) {
-    gap: 2em;
+    gap: var(--spacing-l);
     justify-content: center;
 }
 
@@ -277,11 +277,11 @@ defineExpose({
     position: relative;
 
     & input {
-        margin-bottom: 0.25em;
+        margin-bottom: var(--spacing-xxs);
         font-size: var(--typography-heading-fontSize-xl);
         width: 3ch;
         text-align: center;
-        padding: 0.25em;
+        padding: var(--spacing-xxs);
     }
 
     & label {
@@ -293,7 +293,7 @@ defineExpose({
         font-size: var(--typography-heading-fontSize-m);
         position: absolute;
         display: block;
-        right: -1em;
+        right: calc(var(--spacing-m) * -1);
         translate: -50% 0;
         top: 30%;
     }
@@ -304,11 +304,11 @@ defineExpose({
 }
 
 .sets-section {
-    margin-top: 2em;
-    padding-top: 1em;
+    margin-top: var(--spacing-l);
+    padding-top: var(--spacing-m);
 
     h3 {
-        margin-bottom: 1em;
+        margin-bottom: var(--spacing-m);
         font-size: var(--typography-heading-fontSize-m);
     }
 
@@ -327,15 +327,15 @@ defineExpose({
 .sets-list {
     display: flex;
     flex-direction: column;
-    gap: 0.75em;
-    margin-bottom: 1em;
+    gap: var(--spacing-s);
+    margin-bottom: var(--spacing-m);
 }
 
 .set-row {
     display: grid;
     grid-template-columns: 4rem 1fr auto;
     align-items: center;
-    gap: 1em;
+    gap: var(--spacing-m);
 
     .set-label {
         font-size: 0.9em;
@@ -345,13 +345,13 @@ defineExpose({
     .set-scores {
         display: flex;
         align-items: center;
-        gap: 0.5em;
+        gap: var(--spacing-xs);
         justify-content: center;
 
         .set-score-input {
             width: 5ch;
             text-align: center;
-            padding: 0.25em;
+            padding: var(--spacing-xxs);
             font-size: 1.1em;
             margin-bottom: 0;
         }
@@ -368,6 +368,6 @@ defineExpose({
     width: max-content;
     margin-left: auto;
     margin-right: auto;
-    margin-top: 2em;
+    margin-top: var(--spacing-l);
 }
 </style>

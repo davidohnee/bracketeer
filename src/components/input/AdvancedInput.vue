@@ -92,7 +92,7 @@ input {
 .advanced-input {
     display: flex;
     align-items: center;
-    gap: 0.5em;
+    gap: var(--spacing-xs);
     position: relative;
 
     .loader {
@@ -112,7 +112,7 @@ input {
             height: 1em;
             border: 2px solid var(--color-text-secondary);
             border-top-color: transparent;
-            border-radius: 50%;
+            border-radius: var(--radius-full);
             animation: spin 1s linear infinite;
         }
     }

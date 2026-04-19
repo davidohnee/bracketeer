@@ -25,7 +25,7 @@ const theme = useThemeStore();
 .themes {
     display: flex;
     flex-wrap: wrap;
-    gap: 1rem;
+    gap: var(--spacing-m);
 }
 
 .theme {
@@ -46,7 +46,7 @@ const theme = useThemeStore();
 .theme-preview {
     width: 50px;
     height: 50px;
-    border-radius: 0.5em;
+    border-radius: var(--radius-m);
     border: 2px solid var(--color-border);
 
     &.light {

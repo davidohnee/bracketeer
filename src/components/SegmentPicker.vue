@@ -53,12 +53,12 @@ const allOptions = computed(() => {
 .segment-picker {
     display: flex;
     border: 1px solid var(--color-border);
-    border-radius: 0.5em;
+    border-radius: var(--radius-m);
     overflow: hidden;
 }
 
 .segment {
-    padding: 0.5em 1em;
+    padding: var(--spacing-xs) var(--spacing-m);
     cursor: pointer;
     position: relative;
 
@@ -75,7 +75,7 @@ const allOptions = computed(() => {
 
 @media screen and (max-width: 768px) {
     .segment {
-        padding: 0.75em;
+        padding: var(--spacing-s);
     }
 }
 

@@ -193,10 +193,10 @@ const allGroups = computed(() => {
 }
 
 .filter-menu {
-    padding: 1em;
+    padding: var(--spacing-m);
     display: flex;
     flex-direction: column;
-    gap: 1em;
+    gap: var(--spacing-m);
 }
 
 select {
@@ -206,6 +206,6 @@ select {
 .field {
     display: flex;
     flex-direction: column;
-    gap: 0.5em;
+    gap: var(--spacing-xs);
 }
 </style>

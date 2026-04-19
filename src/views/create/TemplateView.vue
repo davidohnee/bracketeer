@@ -78,16 +78,16 @@ const useTemplate = (template: TournamentTemplate | null) => {
 .template-list {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(40ch, 1fr));
-    gap: 1rem;
+    gap: var(--spacing-m);
 
     .template {
         display: flex;
         flex-direction: column;
         background: var(--color-surface);
         border: 1px solid var(--color-border);
-        border-radius: 1rem;
-        padding: 1em;
-        gap: 1em;
+        border-radius: var(--radius-l);
+        padding: var(--spacing-m);
+        gap: var(--spacing-m);
         cursor: pointer;
 
         &:hover {
@@ -106,8 +106,8 @@ const useTemplate = (template: TournamentTemplate | null) => {
         & img {
             background-color: var(--contrast);
             aspect-ratio: 1 / 1;
-            border-radius: 0.5rem;
-            padding: 0.5rem;
+            border-radius: var(--radius-m);
+            padding: var(--spacing-xs);
         }
     }
 }

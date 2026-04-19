@@ -89,8 +89,8 @@ const index = computed({
 }
 
 .navigation-option button {
-    border-radius: 50%;
-    padding: 0.25em;
+    border-radius: var(--radius-full);
+    padding: var(--spacing-xxs);
     border: 1px solid var(--color-border);
 }
 </style>

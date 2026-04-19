@@ -35,9 +35,9 @@ body {
 
     > .content {
         max-width: 1280px;
-        width: calc(100% - 4rem);
+        width: calc(100% - 2 * var(--spacing-l));
         margin: 0 auto;
-        padding: 2rem;
+        padding: var(--spacing-l);
     }
 }
 

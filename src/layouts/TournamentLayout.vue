@@ -12,6 +12,7 @@ const TAB_LOOKUP = {
     knockout: "Knockout",
     matches: "Matches",
     live: "Live",
+    about: "About",
     config: "Settings",
 };
 type Tab = keyof typeof TAB_LOOKUP;
@@ -43,7 +44,7 @@ const baseRoute = computed(() => {
         return null;
     }
     const name = route.name as string;
-    return name.split(".")[0];
+    return name.split("/").slice(0, 3).join("/");
 });
 </script>
 
@@ -63,19 +64,23 @@ const baseRoute = computed(() => {
                 <TournamentContextMenu
                     v-if="!props.readonly"
                     :tournament="tournament"
-                    @deleted="$router.push({ name: 'home' })"
+                    @deleted="$router.push({ name: '/' })"
                 />
             </div>
             <span
                 v-if="subtitle"
                 class="source text-muted"
-                >{{ subtitle }}</span
+            >
+                {{ subtitle }}</span
             >
             <div class="tabs">
                 <router-link
                     v-for="key in tabs"
                     :key="key"
-                    :to="{ name: baseRoute + '.' + key, params: { tournamentId: tournament.id } }"
+                    :to="{
+                        name: (baseRoute + '/' + key) as any,
+                        params: route.params,
+                    }"
                 >
                     {{ TAB_LOOKUP[key as Tab] }}
                 </router-link>
@@ -92,7 +97,7 @@ const baseRoute = computed(() => {
 <style scoped>
 section {
     border: 1px solid var(--color-border);
-    border-radius: 1em;
+    border-radius: var(--radius-l);
     overflow: clip;
     display: flex;
     flex-direction: column;
@@ -108,24 +113,24 @@ section {
     }
 
     & span.source {
-        margin-bottom: 1rem;
-        margin-left: 1rem;
+        margin-bottom: var(--spacing-m);
+        margin-left: var(--spacing-m);
     }
 
     .tabs {
         color: var(--color-text-primary);
         display: flex;
-        gap: 1em;
-        padding: 0 1em;
+        gap: var(--spacing-m);
+        padding: 0 var(--spacing-m);
         border-bottom: 1px solid var(--color-border);
-        width: calc(100% - 2em);
+        width: calc(100% - 2 * var(--spacing-m));
         overflow: auto;
 
         & a {
             color: var(--color-text-primary);
             text-decoration: none;
-            padding: 0.5em 1em;
-            border-radius: 1em;
+            padding: var(--spacing-xs) var(--spacing-m);
+            border-radius: var(--radius-l);
             position: relative;
 
             &:hover {
@@ -136,11 +141,11 @@ section {
                 content: "";
                 position: absolute;
                 bottom: 0;
-                left: 1em;
-                right: 1em;
+                left: var(--spacing-m);
+                right: var(--spacing-m);
                 height: 2px;
                 background-color: var(--color-text-primary);
-                margin-top: 0.5em;
+                margin-top: var(--spacing-xs);
             }
         }
     }
@@ -149,11 +154,11 @@ section {
 .filter-menu {
     > div {
         cursor: pointer;
-        padding: 0.5rem;
+        padding: var(--spacing-xs);
         transition: all 0.2s ease-in-out;
         display: grid;
         grid-template-columns: 1fr 100px;
-        gap: 0.5rem;
+        gap: var(--spacing-xs);
         align-items: center;
 
         &:hover {
@@ -166,8 +171,8 @@ section {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1em;
-    width: calc(100% - 2em);
+    padding: var(--spacing-m);
+    width: calc(100% - 2 * var(--spacing-m));
 
     .clickable {
         font-size: 1.5em;

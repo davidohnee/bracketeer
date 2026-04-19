@@ -3,19 +3,21 @@ import { computed, onMounted, onUnmounted, ref, toRaw } from "vue";
 import type { Match, RichMatch, Tournament } from "@/types/tournament";
 import TeamTable from "@/components/TeamTable.vue";
 import { useRoute } from "vue-router";
-import { useTournamentsStore } from "@/stores/tournaments";
 import { updateKnockoutMatches } from "@/helpers/matchplan/knockoutPhase";
 import GroupedTournamentList from "./GroupedTournamentList.vue";
 import { tournamentRichMatches } from "@/helpers/matches";
 import { adjustStartTimes } from "@/helpers/matchplan/common";
 import TabSelector from "./TabSelector.vue";
+import ShareClient from "@/helpers/share";
+import { useAccountsStore } from "@/stores/accounts";
 
 const props = defineProps<{
     tournament: Tournament;
     readonly?: boolean;
 }>();
 const tournament = ref(props.tournament);
-const tournamentStore = useTournamentsStore();
+
+const accounts = useAccountsStore();
 
 const emit = defineEmits<(e: "update:modelValue", value: Tournament) => void>();
 const onChanged = () => {
@@ -155,7 +157,7 @@ const latestResults = computed<RichMatch[]>(() => {
 
 const route = useRoute();
 const teamMatchesRouteName = computed(() => {
-    return String(route.name).split(".")[0] + ".table";
+    return String(route.name).split("/").slice(0, 3).join("/") + "/table";
 });
 
 const adjustAndSkip = () => {
@@ -184,7 +186,10 @@ const proceed = () => {
     }
     groupedByTime.value[key] = matches;
     updateKnockoutMatches(tournament.value);
-    tournamentStore.push(tournament.value);
+    ShareClient.share(tournament.value, {
+        updateOnly: true,
+        accountResolver: (remote) => accounts.findShareAccount(remote.identifier),
+    });
 };
 
 const adjustAndSkipText = computed(() => {
@@ -350,7 +355,7 @@ const currentPhase = computed(() => {
 @media (max-width: 768px) {
     .live {
         grid-template-columns: 1fr !important;
-        gap: 3em;
+        gap: var(--spacing-stack);
 
         .round {
             position: unset;
@@ -365,7 +370,7 @@ const currentPhase = computed(() => {
 
 .round {
     position: sticky;
-    top: 5em;
+    top: var(--spacing-sticky);
     height: max-content;
 }
 
@@ -374,7 +379,7 @@ const currentPhase = computed(() => {
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    padding: 0.5em 1em;
+    padding: var(--spacing-xs) var(--spacing-m);
     border-bottom: 1px solid var(--color-border);
 
     p {
@@ -383,13 +388,13 @@ const currentPhase = computed(() => {
 
     .countdown {
         flex: 0;
-        padding: 0.5em 1em;
+        padding: var(--spacing-xs) var(--spacing-m);
         border: 1px solid var(--color-border);
         border-radius: 100vmax;
         display: flex;
         align-items: center;
-        gap: 0.5em;
-        padding-left: 0.5em;
+        gap: var(--spacing-xs);
+        padding-left: var(--spacing-m);
         min-width: max-content;
     }
 }
@@ -397,8 +402,8 @@ const currentPhase = computed(() => {
 .actions {
     display: flex;
     flex-direction: row;
-    gap: 1em;
-    padding: 1em;
+    gap: var(--spacing-m);
+    padding: var(--spacing-m);
     justify-content: flex-end;
     border-top: 1px solid var(--color-border);
 
@@ -421,15 +426,15 @@ const currentPhase = computed(() => {
     display: flex;
     flex-direction: row;
     align-items: center;
-    gap: 0.5em;
-    padding: 1em;
+    gap: var(--spacing-xs);
+    padding: var(--spacing-m);
 
     .group-option {
         border: 1px solid var(--color-border);
-        border-radius: 100vmax;
+        border-radius: var(--radius-full);
         font-size: 0.9rem;
-        padding: 0.25em 1em;
-        font-weight: bold;
+        padding: var(--spacing-xs) var(--spacing-m);
+        font-weight: var(--typography-fontWeight-bold);
 
         &.selected {
             background-color: var(--color-text-primary);
@@ -449,13 +454,13 @@ h3 {
 .action {
     display: flex;
     justify-content: flex-end;
-    margin-bottom: 1em;
-    margin-right: 1em;
+    margin-bottom: var(--spacing-m);
+    margin-right: var(--spacing-m);
 
     & button {
         display: flex;
         align-items: center;
-        gap: 0.5em;
+        gap: var(--spacing-xs);
     }
 }
 </style>

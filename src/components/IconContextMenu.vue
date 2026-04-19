@@ -179,7 +179,7 @@ onBeforeUnmount(() => {
     max-height: 20rem;
     overflow-y: auto;
     background: var(--color-background);
-    border-radius: 1em;
+    border-radius: var(--radius-l);
     border: 1px solid var(--color-border);
     box-shadow: var(--fx-box-shadow);
 }

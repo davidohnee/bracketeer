@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import type { Tournament } from "@/types/tournament";
-import { getShareLink } from "@/share";
+import ShareClient from "@/helpers/share";
 import { QrcodeSvg } from "qrcode.vue";
 import AdvancedInput from "../input/AdvancedInput.vue";
 import { copyToClipboard } from "@/helpers/common";
@@ -23,7 +23,10 @@ const open = (newTournament: Tournament) => {
     action.value = null;
     dialog.value?.showModal();
 
-    shareUrl.value = getShareLink(newTournament.remote[0].identifier).replace("/s/", "/v/");
+    shareUrl.value = ShareClient.getShareLink(newTournament.remote[0].identifier).replace(
+        "/s/",
+        "/v/",
+    );
 };
 
 defineExpose({ open });
@@ -75,18 +78,18 @@ dialog[open] > div {
     height: 20vw;
     aspect-ratio: 1;
     margin: 0 auto;
-    margin-bottom: 1em;
+    margin-bottom: var(--spacing-m);
 }
 
 .options {
     display: flex;
     flex-direction: row;
-    gap: 1em;
+    gap: var(--spacing-m);
 
     .option {
         display: grid;
         grid-template-columns: 1fr 20ch;
-        gap: 1em;
+        gap: var(--spacing-m);
         align-items: center;
         border: none;
         border-radius: 0;

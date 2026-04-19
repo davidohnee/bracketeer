@@ -1,6 +1,10 @@
 import type { DynamicTeamRef, Match, MatchStatus, Tournament } from "@/types/tournament";
 import { toRaw } from "vue";
 
+export const GITHUB_USER = "davidohnee";
+export const REPOSITORY_ID = `${GITHUB_USER}/bracketeer`;
+export const GITHUB_LINK = `https://github.com/${REPOSITORY_ID}`;
+
 export const chunks = <T>(a: T[], size: number) =>
     Array.from(Array.from({ length: Math.ceil(a.length / size) }), (_, i) =>
         a.slice(i * size, i * size + size),
@@ -144,4 +148,20 @@ export const getDatetimeLocal = (date: Date) => {
     return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(
         date.getHours(),
     )}:${pad(date.getMinutes())}`;
+};
+
+export const makeOrdinal = (i: number) => {
+    const j = i % 10;
+    const k = i % 100;
+
+    if (j === 1 && k !== 11) {
+        return i + "st";
+    }
+    if (j === 2 && k !== 12) {
+        return i + "nd";
+    }
+    if (j === 3 && k !== 13) {
+        return i + "rd";
+    }
+    return i + "th";
 };

@@ -4,14 +4,14 @@
   -->
 
 <script lang="ts" setup>
-import { onMounted, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import type { Tournament } from "@/types/tournament";
-import { pull } from "@/share";
+import { pull } from "@/helpers/share";
 import { useTournamentsStore } from "@/stores/tournaments";
 import ViewerView from "./ViewerView.vue";
 
-type Error = null | "not-found" | "not-allowed";
+type Error = null | "not-found" | "not-allowed" | "not-supported";
 
 const route = useRoute();
 const router = useRouter();
@@ -21,8 +21,10 @@ const who = ref("");
 const what = ref<Tournament[]>([]);
 const error = ref<Error>(null);
 
+const routeId = computed(() => ("id" in route.params ? (route.params.id as string) : ""));
+
 onMounted(async () => {
-    const base64 = route.params.id as string;
+    const base64 = routeId.value;
     const importObject = await pull(base64);
 
     if (importObject?.error) {
@@ -39,12 +41,12 @@ const confirm = async () => {
     if (!tournament) return;
     tournament.remote ??= [];
     tournament.remote.push({
-        identifier: route.params.id as string,
+        identifier: routeId.value,
     });
 
     await tournaments.add(tournament);
     router.push({
-        name: "tournament",
+        name: "/tournament/[tournamentId]",
         params: { tournamentId: tournament.id },
     });
 };
@@ -52,8 +54,9 @@ const confirm = async () => {
 const viewOnly = () => {
     if (!what.value.length) return;
     router.push({
-        name: "viewer.table",
-        params: { tournamentId: what.value[0]!.id },
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        name: "/v/[id]/table" as any,
+        params: { id: routeId.value },
     });
 };
 </script>
@@ -81,24 +84,24 @@ const viewOnly = () => {
 .import {
     display: flex;
     flex-direction: column;
-    gap: 1em;
+    gap: var(--spacing-m);
 }
 
 .import-notice {
     background: var(--color-surface);
     border: 1px solid var(--color-border);
-    border-radius: 1em;
-    padding: 1em;
+    border-radius: var(--radius-l);
+    padding: var(--spacing-m);
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    gap: 1em;
+    gap: var(--spacing-m);
 }
 
 .actions {
     display: flex;
-    gap: 1em;
+    gap: var(--spacing-m);
 }
 
 @media (max-width: 768px) {

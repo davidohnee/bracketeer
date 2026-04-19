@@ -95,15 +95,15 @@ const groupName = (id: string | null) => {
         display: inline-block;
         width: 0.75em;
         height: 0.75em;
-        margin-right: 0.25em;
-        border-radius: 0.25em;
+        margin-right: var(--spacing-xxs);
+        border-radius: var(--radius-xs);
         vertical-align: middle;
     }
 
     & legend {
-        margin-top: 1rem;
+        margin-top: var(--spacing-m);
         border-top: 1px solid var(--color-border);
-        padding: 1rem;
+        padding: var(--spacing-m);
         font-size: 0.9rem;
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -117,10 +117,10 @@ const groupName = (id: string | null) => {
     .entry {
         display: grid;
         grid-template-columns: 2ch 1fr repeat(4, 3ch) 9ch 4ch 4ch;
-        gap: 0.5em;
+        gap: var(--spacing-xs);
         cursor: pointer;
-        padding: 0.25em 1em;
-        border-radius: 0.35em;
+        padding: var(--spacing-xxs) var(--spacing-m);
+        border-radius: var(--radius-s);
 
         &:hover {
             background-color: var(--color-surface-hover);
@@ -134,32 +134,26 @@ const groupName = (id: string | null) => {
             text-align: left;
         }
 
-        &.progress {
+        &.progress,
+        &.play-in {
             position: relative;
-
             &:before {
                 content: "";
                 position: absolute;
-                top: 2px;
+                top: calc(var(--spacing-xxs) / 2);
+                bottom: calc(var(--spacing-xxs) / 2);
                 left: 0;
                 width: 2px;
-                height: calc(100% - 4px);
-                background-color: var(--c-progress);
+                background-color: var(--c-highlight);
             }
         }
 
-        &.play-in {
-            position: relative;
+        &.progress {
+            --c-highlight: var(--c-progress);
+        }
 
-            &:before {
-                content: "";
-                position: absolute;
-                top: 2px;
-                left: 0;
-                width: 2px;
-                height: calc(100% - 4px);
-                background-color: var(--c-play-in);
-            }
+        &.play-in {
+            --c-highlight: var(--c-play-in);
         }
     }
 
@@ -187,13 +181,13 @@ const groupName = (id: string | null) => {
 
     & h5 {
         margin: 0;
-        padding-left: 1em;
-        padding-top: 1em;
+        padding-left: var(--spacing-m);
+        padding-top: var(--spacing-m);
     }
 }
 
 .team-table:not(:first-child) {
-    margin-top: 1em;
+    margin-top: var(--spacing-m);
     border-top: 1px solid var(--color-border);
 }
 </style>

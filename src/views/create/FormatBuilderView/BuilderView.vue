@@ -1,0 +1,91 @@
+<script setup lang="ts">
+import { computed, onMounted, toRaw } from "vue";
+import type { Tournament } from "@/types/tournament";
+import NodeConnector from "./NodeConnector.vue";
+import EndNode from "./EndNode.vue";
+import StartNode from "./StartNode.vue";
+import KnockoutNode from "./KnockoutNode.vue";
+import GroupNode from "./GroupNode.vue";
+import InvalidNode from "./InvalidNode.vue";
+import { generateKnockoutBrackets } from "@/helpers/matchplan/knockoutPhase";
+import { generateGroupPhases } from "@/helpers/matchplan/groupPhase";
+import { previousPhase } from "@/helpers/phase";
+
+const props = defineProps<{
+    modelValue: Tournament;
+}>();
+
+const emit = defineEmits<{
+    (e: "regenerate"): void;
+    (e: "update:modelValue" | "regenerated", value: Tournament): void;
+}>();
+
+const tournament = computed({
+    get() {
+        return props.modelValue;
+    },
+    set(value) {
+        emit("update:modelValue", value);
+    },
+});
+
+const regenerate = () => {
+    emit("regenerate");
+    const rawTournament = toRaw(tournament.value);
+    rawTournament.phases = generateGroupPhases(rawTournament);
+    rawTournament.phases = generateKnockoutBrackets(rawTournament);
+    tournament.value = rawTournament;
+    emit("regenerated", tournament.value);
+};
+
+defineExpose({
+    regenerate,
+});
+
+onMounted(() => {
+    regenerate();
+});
+</script>
+<template>
+    <div class="format-builder card">
+        <StartNode
+            v-model="tournament"
+            @update:modelValue="tournament = $event"
+        />
+
+        <template
+            v-for="(phase, phaseIndex) in tournament.phases"
+            :key="phase.id"
+        >
+            <NodeConnector
+                :hideValue="phaseIndex == 0"
+                v-model="phase.teamCount"
+                :previous-phase="previousPhase(tournament, phase)"
+            />
+            <KnockoutNode
+                v-if="phase.type === 'knockout'"
+                :phase="phase"
+                v-model="tournament"
+                @update:modelValue="tournament = $event"
+            />
+            <GroupNode
+                v-else-if="phase.type === 'group'"
+                :phase="phase"
+                v-model="tournament"
+                @update:modelValue="tournament = $event"
+            />
+            <InvalidNode
+                v-else
+                :phase="phase"
+                v-model="tournament"
+                @update:modelValue="tournament = $event"
+            />
+        </template>
+
+        <NodeConnector
+            :modelValue="1"
+            readonly
+        />
+        <EndNode />
+    </div>
+</template>

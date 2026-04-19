@@ -277,18 +277,18 @@ onMounted(() => {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 1em;
-    margin-bottom: 1em;
-    gap: 1em;
+    padding: var(--spacing-m);
+    margin-bottom: var(--spacing-m);
+    gap: var(--spacing-m);
 
     .filters {
         display: flex;
         align-items: center;
-        gap: 0.5em;
+        gap: var(--spacing-xs);
     }
 
     & .filter {
-        border-radius: 100vmax;
+        border-radius: var(--radius-full);
         width: 2em;
         height: 2em;
         border: 1px solid var(--color-border);
@@ -316,7 +316,7 @@ onMounted(() => {
 
         &.active {
             width: fit-content;
-            padding: 0 0.25em 0 0.5em;
+            padding: 0 var(--spacing-xxs) 0 var(--spacing-xs);
 
             & span {
                 max-width: 25ch;
@@ -346,6 +346,6 @@ h3 {
 }
 
 .round {
-    margin-top: 1em;
+    margin-top: var(--spacing-m);
 }
 </style>

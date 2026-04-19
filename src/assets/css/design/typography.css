@@ -45,3 +45,10 @@
     --typography-body-fontSize-sm: 0.8rem;
     --typography-body-lineHeight-sm: 1.5;
 }
+
+@media screen and (max-width: 768px) {
+    :root {
+        --typography-heading-fontSize-xl: 2rem;
+        --typography-heading-fontSize-l: 1.75rem;
+    }
+}

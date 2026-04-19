@@ -56,7 +56,10 @@ const STATUS_COLOR: Record<MatchStatus, string> = {
                 v-for="tournament in tournamentList"
                 :key="tournament.id"
                 class="tournament-item ghost"
-                :to="{ name: 'tournament', params: { tournamentId: tournament.id } }"
+                :to="{
+                    name: '/tournament/[tournamentId]',
+                    params: { tournamentId: tournament.id },
+                }"
             >
                 <span class="name">{{ tournament.name }}</span>
                 <span
@@ -69,7 +72,7 @@ const STATUS_COLOR: Record<MatchStatus, string> = {
                     tournament.config.startTime.toLocaleString()
                 }}</span>
                 <button
-                    class="ghost"
+                    class="ghost center"
                     @click.stop.prevent="tournaments.deleteTournament(tournament.id)"
                 >
                     <ion-icon
@@ -86,31 +89,30 @@ const STATUS_COLOR: Record<MatchStatus, string> = {
 .tournament-list-container {
     display: flex;
     flex-direction: column;
-    gap: 1em;
-    margin: 1em 0;
+    gap: var(--spacing-m);
 }
 
 .buttons {
     margin-left: auto;
     display: flex;
     flex-direction: row;
-    gap: 1em;
+    gap: var(--spacing-m);
 }
 
 .tournament-list {
     overflow: clip;
     border: 1px solid var(--color-border);
-    border-radius: 1em;
+    border-radius: var(--radius-l);
     background: var(--color-surface);
 }
 
 .tournament-item {
     align-items: center;
     position: relative;
-    padding: 0.5em 1em;
+    padding: var(--spacing-xs) var(--spacing-m);
     display: grid;
-    grid-template-columns: 1fr 12ch 18ch 54px;
-    gap: 1em;
+    grid-template-columns: 1fr 12ch 18ch calc(1.2em + 2 * 1.2em);
+    gap: var(--spacing-m);
     color: inherit;
 
     :not(:first-child) {
@@ -136,16 +138,21 @@ const STATUS_COLOR: Record<MatchStatus, string> = {
 }
 
 @media (max-width: 768px) {
-    .tournament-list-container {
-        margin: 1em;
-    }
-
     .tournament-item {
-        grid-template-columns: 1fr 54px;
+        grid-template-columns: 1fr calc(1.2 * 0.9em + 2 * 1.6em);
     }
 
     .desktop-only {
         display: none;
+    }
+
+    .buttons {
+        width: 100%;
+
+        & button {
+            flex: 1;
+            justify-content: center;
+        }
     }
 }
 </style>

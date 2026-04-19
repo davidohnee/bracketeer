@@ -78,14 +78,15 @@ const click = () => {
 
 <style scoped>
 .notification {
-    gap: 2em;
+    gap: var(--spacing-l);
     align-items: center;
     overflow: hidden;
     background: var(--color-surface);
     cursor: pointer;
 
     .message {
-        padding: 1em 0 1em 1em;
+        padding: var(--spacing-m);
+        padding-right: 0;
 
         h4 {
             margin: 0;
@@ -101,7 +102,7 @@ const click = () => {
     display: flex;
     flex-direction: row;
     font-size: 1.5rem;
-    font-weight: bold;
+    font-weight: var(--typography-fontWeight-bold);
 
     .option {
         flex: 1;
@@ -110,7 +111,7 @@ const click = () => {
         align-items: center;
         justify-content: center;
         color: var(--color-primary-inverse);
-        padding: 0.25em;
+        padding: var(--spacing-xxs);
 
         &.yes {
             background-color: var(--color-brand-green);

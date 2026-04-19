@@ -1,12 +1,12 @@
 <script lang="ts" setup>
-import { onMounted, onUnmounted, ref } from "vue";
+import { computed, onMounted, onUnmounted, ref } from "vue";
 import { useRoute } from "vue-router";
 import type { Tournament } from "@/types/tournament";
 import TournamentLayout from "@/layouts/TournamentLayout.vue";
-import { pull } from "@/share";
+import { pull } from "@/helpers/share";
 import { agoString } from "@/helpers/common";
 
-type Error = null | "not-found" | "not-allowed";
+type Error = null | "not-found" | "not-allowed" | "not-supported";
 
 const route = useRoute();
 
@@ -14,8 +14,12 @@ const who = ref("");
 const tournament = ref<Tournament | null>(null);
 const error = ref<Error>(null);
 
-const sessionStorageItem = sessionStorage.getItem(route.params.id as string);
-const updated = ref<Date | null>(sessionStorageItem ? new Date(sessionStorageItem) : null);
+const routeId = computed(() => ("id" in route.params ? (route.params.id as string) : ""));
+
+const sessionStorageItem = computed(() => sessionStorage.getItem(routeId.value));
+const updated = ref<Date | null>(
+    sessionStorageItem.value ? new Date(sessionStorageItem.value) : null,
+);
 
 const subtitle = ref<string>("");
 
@@ -23,7 +27,7 @@ let updateTimer = 0;
 let updateSubtitleTimer = 0;
 
 const updateTask = async () => {
-    const base64 = route.params.id as string;
+    const base64 = routeId.value;
     const importObject = await pull(base64);
 
     if (updated.value) {
@@ -75,12 +79,12 @@ onUnmounted(() => {
         v-if="tournament && error == null"
         class="tournament"
         v-model="tournament"
-        :tabs="['table', 'knockout', 'matches', 'live']"
+        :tabs="['table', 'knockout', 'matches', 'live', 'about']"
         :subtitle="subtitle"
         readonly
     />
     <div
-        v-else-if="error == 'not-found'"
+        v-else-if="error && ['not-found', 'not-supported'].includes(error)"
         class="error flex-col p-4"
     >
         <h1>Guess you'll have to create it yourself...</h1>
@@ -89,10 +93,10 @@ onUnmounted(() => {
             or the link may be incorrect.
         </p>
         <div class="flex gap-2">
-            <router-link :to="{ name: 'create' }">
+            <router-link :to="{ name: '/create' }">
                 <button>Create new tournament</button>
             </router-link>
-            <router-link :to="{ name: 'home' }">
+            <router-link :to="{ name: '/' }">
                 <button>Home</button>
             </router-link>
         </div>
@@ -103,7 +107,7 @@ onUnmounted(() => {
     >
         <h1>Not Allowed</h1>
         <p>You don't have permission to view this tournament.</p>
-        <router-link :to="{ name: 'home' }">
+        <router-link :to="{ name: '/' }">
             <button class="danger">Close</button>
         </router-link>
     </div>
@@ -118,7 +122,7 @@ onUnmounted(() => {
 }
 
 .mt-4 {
-    margin-top: 1em;
+    margin-top: var(--spacing-m);
 }
 
 .w-max {
@@ -139,11 +143,11 @@ onUnmounted(() => {
 }
 
 .gap-4 {
-    gap: 1rem;
+    gap: var(--spacing-m);
 }
 
 .gap-2 {
-    gap: 0.5rem;
+    gap: var(--spacing-xs);
 }
 
 .items-center {

@@ -1,50 +1,43 @@
 <script setup lang="ts">
 import { computed } from "vue";
-import { useRoute } from "vue-router";
 
-const route = useRoute();
+type NavigationTarget = {
+    title: string;
+    route: string;
+};
 
-const structure = [
-    {
-        title: "General",
-        children: [
-            {
-                title: "About",
-                route: "settings.general.about",
-            },
-            {
-                title: "Appearance",
-                route: "settings.general.appearance",
-            },
-        ],
-    },
-    {
-        title: "Share",
-        children: [
-            {
-                title: "GitHub Gists",
-                route: "settings.share.gists",
-            },
-        ],
-    },
-];
+type NavigationGroup = {
+    title: string;
+    children: NavigationTarget[];
+};
 
-const sectionTitle = computed(() => {
-    const section = structure
-        .flatMap((section) => section.children)
-        .find((child) => child.route === route.name);
-    return section ? section.title : "";
-});
+type Navigation = NavigationGroup[];
+
+const props = defineProps<{
+    navigation: Navigation;
+    base?: string;
+    on?: "surface" | "background";
+    layout?: "spacious" | "compact";
+    params?: Record<string, unknown>;
+}>();
+
+const params = computed(() => props.params || {});
+const base = computed(() => props.base || "");
+const layout = computed(() => props.layout || "spacious");
 </script>
 
 <template>
-    <div class="settings">
-        <h1>{{ sectionTitle }}</h1>
-
-        <div class="split">
+    <div
+        class="settings"
+        :class="{ invert: on === 'surface' }"
+    >
+        <div
+            class="split"
+            :class="layout"
+        >
             <aside class="sidebar">
                 <div
-                    v-for="section in structure"
+                    v-for="section in navigation"
                     :key="section.title"
                     class="sidebar-section"
                 >
@@ -53,14 +46,21 @@ const sectionTitle = computed(() => {
                         v-for="child in section.children"
                         :key="child.route"
                         class="sidebar-item"
-                        :to="{ name: child.route }"
+                        :to="{
+                            name: (base + child.route) as any,
+                            params: { ...params, ...$route.params },
+                        }"
                     >
                         {{ child.title }}
                     </router-link>
                 </div>
             </aside>
             <div class="settings-content">
-                <router-view />
+                <slot
+                    v-if="$slots.content"
+                    name="content"
+                />
+                <router-view v-else />
             </div>
         </div>
     </div>
@@ -69,54 +69,78 @@ const sectionTitle = computed(() => {
 <style scoped>
 .split {
     display: grid;
-    grid-template-columns: 30ch 1fr;
-    gap: 1em;
+    grid-template-columns: 25ch 1fr;
+    align-items: start;
+
+    &.spacious {
+        gap: var(--spacing-stack);
+    }
+
+    &.compact {
+        gap: var(--spacing-l);
+    }
 
     & aside {
         display: flex;
         flex-direction: column;
-        gap: 1em;
-        background: var(--color-surface);
-        border-radius: 0.5em;
-        padding: 1em;
+        gap: var(--spacing-m);
+        border-right: 1px solid var(--color-border);
+        padding-right: var(--spacing-m);
     }
 
     & h5 {
         margin: 0;
+        margin-left: var(--spacing-xs);
         text-transform: uppercase;
+        color: var(--color-text-secondary);
     }
 
     & h2 {
         margin: 0;
-        margin-bottom: 0.5em;
+        margin-bottom: var(--spacing-xs);
     }
 
     & a {
         color: inherit;
         border: 1px solid transparent;
         display: block;
-        padding: 0.5em;
-        border-radius: 0.5em;
+        padding: var(--spacing-xs);
+        border-radius: var(--radius-m);
 
         &.router-link-active {
-            background: var(--color-background);
+            background: var(--color-surface);
             border-color: var(--color-border);
         }
     }
 }
 
-@media (max-width: 768px) {
-    .settings {
-        padding: 1em;
+.settings,
+.settings-content {
+    width: 100%;
+}
+
+.settings.invert {
+    @media (min-width: 768px) {
+        .split aside {
+            height: 100%;
+        }
     }
 
+    .split a.router-link-active {
+        background: var(--color-background);
+    }
+}
+
+@media (max-width: 768px) {
     .split {
         grid-template-columns: 1fr;
-        gap: 1em;
+        gap: var(--spacing-m);
 
         & aside {
+            padding-right: 0;
+            border-right: none;
             border-bottom: 1px solid var(--color-border);
-            padding-bottom: 1em;
+            padding-bottom: var(--spacing-m);
         }
     }
 }

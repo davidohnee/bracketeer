@@ -141,6 +141,8 @@ const rules = computed({
         return props.tournament.content?.about?.rules?.content ?? "";
     },
     set(value: string) {
+        if (!tournament) return;
+
         tournament.content ??= {};
         tournament.content.about ??= {};
         tournament.content.about.rules ??= {
@@ -171,7 +173,7 @@ const rules = computed({
         <button
             v-else-if="!props.readonly"
             class="secondary"
-            @click="rules = '**Dobule click** to edit in Markdown'"
+            @click="rules = '**Double click** to edit in Markdown'"
         >
             <ion-icon name="add-outline"></ion-icon>
             Add rules

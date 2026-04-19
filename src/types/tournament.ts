@@ -121,6 +121,22 @@ export interface IRemote {
     pushDate?: Date;
 }
 
+export type TournamentContentFormat = "markdown";
+
+export interface TournamentContentBlock {
+    format: TournamentContentFormat;
+    content: string;
+}
+
+export type TournamentContentSections = Record<string, TournamentContentBlock | undefined>;
+
+export interface TournamentContent {
+    about?: TournamentContentSections & {
+        rules?: TournamentContentBlock;
+    };
+    [page: string]: TournamentContentSections | undefined;
+}
+
 export interface TournamentV1 {
     id: string;
     name: string;
@@ -182,6 +198,7 @@ export interface TournamentV3 {
 
     config: TournamentConfigV2;
     remote?: IRemote[];
+    content?: TournamentContent;
 }
 
 export type TournamentConfig = TournamentConfigV2;

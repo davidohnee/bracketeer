@@ -1,7 +1,9 @@
 <script setup lang="ts">
+import EditableText from "@/components/input/EditableText.vue";
 import MarkdownRender from "@/components/MarkdownRender.vue";
 import { makeOrdinal } from "@/helpers/common";
 import { getProgression, hasByes } from "@/helpers/matchplan/knockoutPhase";
+import { useTournamentsStore } from "@/stores/tournaments";
 import {
     COMPARATOR_KEYS,
     TIE_BREAKER_LABELS,
@@ -10,9 +12,11 @@ import {
     type Tournament,
     type TournamentPhase,
 } from "@/types/tournament";
+import { computed } from "vue";
 
 const props = defineProps<{
     tournament: Tournament;
+    readonly?: boolean;
 }>();
 
 type Facts = {
@@ -23,6 +27,9 @@ type Facts = {
     };
     rounds?: string[];
 };
+
+const tournaments = useTournamentsStore();
+const tournament = tournaments.getTournamentById(props.tournament.id)!;
 
 const knockoutPhaseFacts = (phase: KnockoutTournamentPhase) => {
     const facts: Facts = {
@@ -108,12 +115,12 @@ const generateDescription = (phase: TournamentPhase, nextTournamentPhase?: Tourn
         output += unorderedList(facts.facts);
 
         if (facts.progression) {
-            output += "\n### How are teams ranked?";
+            output += "\n### Who progresses?";
+            output += "\n" + unorderedList(facts.progression.facts);
+            output += "\n#### How are teams ranked?";
             output +=
                 "\nThe following criteria are applied, in this order, to determine the rankings:";
             output += "\n" + orderedList(facts.progression.tieBreakers);
-            output += "\n#### Who progresses?";
-            output += "\n" + unorderedList(facts.progression.facts);
         }
     } else if (phase.type === "knockout") {
         const facts = knockoutPhaseFacts(phase);
@@ -128,10 +135,47 @@ const generateDescription = (phase: TournamentPhase, nextTournamentPhase?: Tourn
 
     return output;
 };
+
+const rules = computed({
+    get() {
+        return props.tournament.content?.about?.rules?.content ?? "";
+    },
+    set(value: string) {
+        tournament.content ??= {};
+        tournament.content.about ??= {};
+        tournament.content.about.rules ??= {
+            format: "markdown",
+            content: "",
+        };
+        tournament.content.about.rules.content = value.trim();
+    },
+});
 </script>
 <template>
     <div class="about">
         <p>All you need to know about {{ tournament.name }}.</p>
+        <template v-if="rules">
+            <h2>Rules</h2>
+            <EditableText
+                v-model="rules"
+                :disabled="props.readonly"
+                multiline
+                clearable
+            >
+                <MarkdownRender
+                    v-if="rules"
+                    :source="rules"
+                />
+            </EditableText>
+        </template>
+        <button
+            v-else-if="!props.readonly"
+            class="secondary"
+            @click="rules = '**Dobule click** to edit in Markdown'"
+        >
+            <ion-icon name="add-outline"></ion-icon>
+            Add rules
+        </button>
         <div
             class="phase"
             v-for="(phase, index) in tournament.phases"
@@ -145,6 +189,7 @@ const generateDescription = (phase: TournamentPhase, nextTournamentPhase?: Tourn
 <style scoped>
 .about {
     padding: var(--spacing-m);
+    width: calc(100% - 2 * var(--spacing-m));
 
     & h2 {
         margin-top: var(--spacing-prose);

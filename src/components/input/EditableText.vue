@@ -1,9 +1,11 @@
 <script lang="ts" setup>
-import { nextTick, ref } from "vue";
+import { nextTick, ref, watch } from "vue";
 
 const props = defineProps<{
     modelValue: string;
     disabled?: boolean;
+    multiline?: boolean;
+    clearable?: boolean;
 }>();
 
 const emit = defineEmits<{
@@ -11,6 +13,7 @@ const emit = defineEmits<{
     (e: "blur"): void;
 }>();
 
+const showClearOption = ref(false);
 const editable = ref(false);
 const el = ref<HTMLDivElement | null>(null);
 
@@ -41,8 +44,16 @@ const startEditing = (cursorAtEnd = false) => {
 
 const stopEditing = () => {
     emit("blur");
-    editable.value = false;
     onChange();
+    nextTick(() => (editable.value = false));
+};
+
+const onEnter = (e?: KeyboardEvent) => {
+    if (e?.shiftKey) return;
+    if (props.multiline && !e?.ctrlKey) return;
+
+    e?.preventDefault();
+    stopEditing();
 };
 
 const onChange = () => {
@@ -50,11 +61,24 @@ const onChange = () => {
         emit("update:modelValue", el.value.innerText);
     }
 };
+
+const clear = () => {
+    stopEditing();
+    emit("update:modelValue", "");
+};
+
+watch(editable, () => {
+    if (editable.value === true) {
+        showClearOption.value = true;
+    } else {
+        setTimeout(() => (showClearOption.value = false), 200);
+    }
+});
 </script>
 <template>
     <div
         class="editable-text-wrapper"
-        :class="{ disabled, editable }"
+        :class="{ disabled, editable, multiline, clearable }"
     >
         <div
             ref="el"
@@ -63,14 +87,27 @@ const onChange = () => {
             :class="{ disabled: disabled }"
             :disabled="disabled"
             @dblclick="startEditing()"
-            @keydown.enter.prevent="stopEditing()"
+            @keydown.enter="onEnter"
             @blur="stopEditing()"
+            v-show="editable || !$slots.default"
+            :innerText="modelValue"
+        ></div>
+        <div
+            v-if="!editable && $slots.default"
+            @dblclick="startEditing()"
         >
-            {{ modelValue }}
+            <slot />
         </div>
         <ion-icon
+            v-if="!disabled && clearable && showClearOption"
+            name="trash-outline"
+            class="clear-icon icon-action"
+            @click="clear()"
+        />
+        <ion-icon
+            v-if="!disabled"
             name="pencil-outline"
-            class="edit-icon"
+            class="edit-icon icon-action"
             @click="startEditing(true)"
         />
     </div>
@@ -78,20 +115,37 @@ const onChange = () => {
 
 <style scoped>
 .editable-text-wrapper {
-    display: inline-flex;
+    display: inline-grid;
     align-items: center;
-    gap: 0.25rem;
+    gap: 0.5rem;
+    grid-template-columns: 1fr 1rem;
+
+    &.multiline {
+        display: grid;
+    }
+
+    &:has(.clear-icon) {
+        grid-template-columns: 1fr 1rem 1rem;
+    }
+
+    .edit-icon {
+        opacity: 0;
+    }
 
     &:hover:not(:disabled) .edit-icon,
     &.editable .edit-icon {
         opacity: 1;
     }
 
-    .edit-icon {
-        opacity: 0;
+    .icon-action {
         cursor: pointer;
-        transition: opacity 0.2s;
         color: var(--color-text-secondary);
+        transition: opacity 0.2s;
+        font-size: 1.2rem;
+
+        &:hover {
+            color: var(--color-primary);
+        }
     }
 }
 

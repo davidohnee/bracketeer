@@ -134,32 +134,26 @@ const groupName = (id: string | null) => {
             text-align: left;
         }
 
-        &.progress {
+        &.progress,
+        &.play-in {
             position: relative;
-
             &:before {
                 content: "";
                 position: absolute;
-                top: var(--spacing-xxs);
+                top: calc(var(--spacing-xxs) / 2);
+                bottom: calc(var(--spacing-xxs) / 2);
                 left: 0;
                 width: 2px;
-                height: calc(100% - 2 * var(--spacing-xxs));
-                background-color: var(--c-progress);
+                background-color: var(--c-highlight);
             }
         }
 
-        &.play-in {
-            position: relative;
+        &.progress {
+            --c-highlight: var(--c-progress);
+        }
 
-            &:before {
-                content: "";
-                position: absolute;
-                top: var(--spacing-xxs);
-                left: 0;
-                width: 2px;
-                height: calc(100% - 2 * var(--spacing-xxs) * 2);
-                background-color: var(--c-play-in);
-            }
+        &.play-in {
+            --c-highlight: var(--c-play-in);
         }
     }
 

@@ -55,7 +55,7 @@ const skeletonLines = computed(() =>
 .skeleton-text-loader__line {
     display: block;
     height: var(--spacing-m);
-    border-radius: var(--spacing-xxs);
+    border-radius: var(--radius-xs);
     background: linear-gradient(
         90deg,
         var(--color-surface) 0%,

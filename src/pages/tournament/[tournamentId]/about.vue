@@ -108,12 +108,12 @@ const generateDescription = (phase: TournamentPhase, nextTournamentPhase?: Tourn
         output += unorderedList(facts.facts);
 
         if (facts.progression) {
-            output += "\n### Who progresses?";
-            output += "\n" + unorderedList(facts.progression.facts);
-            output += "\n#### How are teams ranked?";
+            output += "\n### How are teams ranked?";
             output +=
                 "\nThe following criteria are applied, in this order, to determine the rankings:";
             output += "\n" + orderedList(facts.progression.tieBreakers);
+            output += "\n#### Who progresses?";
+            output += "\n" + unorderedList(facts.progression.facts);
         }
     } else if (phase.type === "knockout") {
         const facts = knockoutPhaseFacts(phase);

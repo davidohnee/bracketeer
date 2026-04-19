@@ -192,10 +192,6 @@ section {
         padding: 1em;
     }
 
-    h1 {
-        font-size: 2rem;
-    }
-
     section {
         margin: 5em 0;
     }

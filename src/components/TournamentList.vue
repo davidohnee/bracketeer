@@ -28,7 +28,7 @@ const STATUS_COLOR: Record<MatchStatus, string> = {
 };
 </script>
 <template>
-    <div class="tournament-list-container body-container">
+    <div class="tournament-list-container">
         <div class="buttons">
             <button
                 @click="tournaments.addFromUpload()"
@@ -72,7 +72,7 @@ const STATUS_COLOR: Record<MatchStatus, string> = {
                     tournament.config.startTime.toLocaleString()
                 }}</span>
                 <button
-                    class="ghost"
+                    class="ghost center"
                     @click.stop.prevent="tournaments.deleteTournament(tournament.id)"
                 >
                     <ion-icon
@@ -111,7 +111,7 @@ const STATUS_COLOR: Record<MatchStatus, string> = {
     position: relative;
     padding: 0.5em 1em;
     display: grid;
-    grid-template-columns: 1fr 12ch 18ch 54px;
+    grid-template-columns: 1fr 12ch 18ch calc(1.2em + 2 * 1.2em);
     gap: 1em;
     color: inherit;
 
@@ -139,7 +139,7 @@ const STATUS_COLOR: Record<MatchStatus, string> = {
 
 @media (max-width: 768px) {
     .tournament-item {
-        grid-template-columns: 1fr 54px;
+        grid-template-columns: 1fr calc(1.2 * 0.9em + 2 * 1.6em);
     }
 
     .desktop-only {

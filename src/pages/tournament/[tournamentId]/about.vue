@@ -108,7 +108,7 @@ const generateDescription = (phase: TournamentPhase, nextTournamentPhase?: Tourn
         output += unorderedList(facts.facts);
 
         if (facts.progression) {
-            output += "\n#### How are teams ranked?";
+            output += "\n### How are teams ranked?";
             output +=
                 "\nThe following criteria are applied, in this order, to determine the rankings:";
             output += "\n" + orderedList(facts.progression.tieBreakers);
@@ -118,7 +118,7 @@ const generateDescription = (phase: TournamentPhase, nextTournamentPhase?: Tourn
     } else if (phase.type === "knockout") {
         const facts = knockoutPhaseFacts(phase);
         output += "\n" + unorderedList(facts.facts);
-        output += "\n#### Rounds";
+        output += "\n### Rounds";
         if (facts.rounds) {
             output +=
                 "\nEach match is a direct elimination fixture. The winning team advances to the next round, while the losing team is eliminated from the tournament.";

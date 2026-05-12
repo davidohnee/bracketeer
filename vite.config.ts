@@ -25,6 +25,7 @@ export default defineConfig({
     resolve: {
         alias: {
             "@": fileURLToPath(new URL("./src", import.meta.url)),
+            "#root": fileURLToPath(new URL(".", import.meta.url)),
         },
     },
     define: {
@@ -35,4 +36,5 @@ export default defineConfig({
         globals: true,
         environment: "node",
     },
+    assetsInclude: ["*.md"],
 });

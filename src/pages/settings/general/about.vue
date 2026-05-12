@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import ReleaseNotes from "@/components/ReleaseNotes.vue";
 import { GITHUB_LINK } from "@/helpers/common";
+import { VERSIONS } from "@/helpers/releaseNotes";
 
 const isDev = import.meta.env.MODE === "development";
 const isBeta = import.meta.env.MODE === "preview";
@@ -30,7 +31,15 @@ const buildId =
             <ion-icon name="bug-outline"></ion-icon>
             Preview ({{ buildId }}). <a :href="GITHUB_LINK + '/issues/new'">Report a bug</a>
         </div>
-        <ReleaseNotes />
+        <ReleaseNotes :version="VERSIONS[0]" />
+        <div class="row end">
+            <router-link to="/settings/general/release-notes">
+                <button class="ghost">
+                    <ion-icon name="arrow-forward"></ion-icon>
+                    All releases
+                </button>
+            </router-link>
+        </div>
     </div>
 </template>
 <style scoped>
@@ -38,5 +47,11 @@ const buildId =
     display: flex;
     flex-direction: column;
     gap: var(--spacing-m);
+}
+
+.row.end {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
 }
 </style>

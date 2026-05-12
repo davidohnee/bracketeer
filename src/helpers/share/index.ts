@@ -189,9 +189,11 @@ export const pullFromRemote = async (options: { tournament?: Tournament; remote?
     }
 
     if (tournament && newTournament) {
-        tournament.name = newTournament.tournament.name;
         tournament.config = newTournament.tournament.config;
+        tournament.content = newTournament.tournament.content;
+        tournament.name = newTournament.tournament.name;
         tournament.phases = newTournament.tournament.phases;
+        tournament.teams = newTournament.tournament.teams;
         return tournament;
     }
 };

@@ -1,10 +1,17 @@
 <script lang="ts" setup>
+import { computed } from "vue";
 import MarkdownRender from "./MarkdownRender.vue";
 import { type Version } from "@/helpers/releaseNotes";
+import { GITHUB_LINK } from "@/helpers/common";
 
-defineProps<{
+const props = defineProps<{
     version: Version;
 }>();
+
+const ISSUE_REGEX = /#(\d+)/gm;
+const markdown = computed(() =>
+    props.version.changes.replaceAll(ISSUE_REGEX, `[#$1](${GITHUB_LINK}/issues/$1)`),
+);
 </script>
 <template>
     <div class="version card">
@@ -13,7 +20,7 @@ defineProps<{
             <span class="text-muted">{{ version.date.toLocaleDateString() }}</span>
         </div>
         <div class="release-notes">
-            <MarkdownRender :source="version.changes" />
+            <MarkdownRender :source="markdown" />
         </div>
     </div>
 </template>

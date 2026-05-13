@@ -6,7 +6,7 @@ export interface Version {
     changes: string;
 }
 
-export const parseVersions = (markdown: string) => {
+export const collectVersions = (markdown: string) => {
     const lines = markdown.split("\n");
 
     const versions: Version[] = [];
@@ -42,4 +42,4 @@ export const parseVersions = (markdown: string) => {
     return versions;
 };
 
-export const VERSIONS = parseVersions(Changelog);
+export const VERSIONS = collectVersions(Changelog);

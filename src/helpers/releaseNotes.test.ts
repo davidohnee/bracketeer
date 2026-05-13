@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { parseVersions, VERSIONS } from "./releaseNotes";
+import { collectVersions, VERSIONS } from "./releaseNotes";
 
 describe("release notes helper", () => {
     it("parses version blocks from markdown", () => {
@@ -18,7 +18,7 @@ describe("release notes helper", () => {
             "",
         ].join("\n");
 
-        const versions = parseVersions(markdown);
+        const versions = collectVersions(markdown);
 
         expect(versions).toHaveLength(2);
         expect(versions[0]?.version).toBe("1.2.3");

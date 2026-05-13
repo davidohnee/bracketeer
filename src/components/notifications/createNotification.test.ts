@@ -147,6 +147,25 @@ describe("Notifications", () => {
         });
     });
 
+    describe("addRedirect", () => {
+        it("should dispatch redirect notification with action text", () => {
+            let capturedEvent: CustomEvent<IFullNotification> | null = null;
+            globalThis.addEventListener("notification.add", ((e: Event) => {
+                capturedEvent = e as CustomEvent<IFullNotification>;
+            }) as EventListener);
+
+            Notifications.addRedirect("Open release notes", {
+                actionText: "View release notes",
+                redirect: "/settings/general/about",
+            });
+
+            expect(capturedEvent!.detail.message).toBe("Open release notes");
+            expect(capturedEvent!.detail.type).toBe("redirect");
+            expect(capturedEvent!.detail.actionText).toBe("View release notes");
+            expect(capturedEvent!.detail.redirect).toBe("/settings/general/about");
+        });
+    });
+
     describe("addYesNo", () => {
         it("should dispatch yes-no notification event", () => {
             let capturedEvent: CustomEvent<IFullNotification> | null = null;
@@ -169,9 +188,9 @@ describe("Notifications", () => {
 
         it("should include all callback parameters", () => {
             let capturedEvent: CustomEvent<IFullNotification> | null = null;
-            globalThis.addEventListener("notification.add", ((e: Event) => {
+            globalThis.addEventListener("notification.add", (e: Event) => {
                 capturedEvent = e as CustomEvent<IFullNotification>;
-            }) as EventListener);
+            });
 
             const onYes = vi.fn();
             const onNo = vi.fn();

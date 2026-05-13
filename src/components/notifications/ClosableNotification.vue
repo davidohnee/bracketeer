@@ -18,12 +18,15 @@ const props = defineProps({
 const emit = defineEmits(["remove"]);
 const router = useRouter();
 
-const remove = (id: string) => {
-    emit("remove", id);
+const remove = () => {
+    emit("remove", props.notification.id);
 };
 
 const click = () => {
-    emit("remove", props.notification.id);
+    if (props.notification.type === "redirect") {
+        return;
+    }
+    remove();
     if (props.notification.onClick) {
         props.notification.onClick();
     }
@@ -37,7 +40,8 @@ const click = () => {
     <div
         :class="{
             [notification.type]: true,
-            'cursor-pointer': notification.redirect || notification.onClick,
+            'cursor-pointer':
+                (notification.type !== 'redirect' && notification.redirect) || notification.onClick,
         }"
         class="notification"
         @click.stop.prevent="click"
@@ -56,6 +60,7 @@ const click = () => {
                 v-if="notification.actionText && notification.redirect"
                 class="action"
                 :to="notification.redirect"
+                @click.prevent.stop="remove"
             >
                 <ion-icon name="arrow-forward"></ion-icon>
                 {{ notification.actionText }}
@@ -64,7 +69,7 @@ const click = () => {
         <ion-icon
             name="close-outline"
             class="close"
-            @click.stop.prevent="remove(notification.id)"
+            @click.stop.prevent="remove"
         />
     </div>
 </template>
@@ -97,6 +102,7 @@ const click = () => {
 
     &.redirect {
         background: var(--color-surface);
+        color: var(--color-text-primary);
     }
 
     h4,

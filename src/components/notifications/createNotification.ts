@@ -144,17 +144,17 @@ export const Notifications = {
         message: string,
         {
             details,
-            redirectText,
+            actionText,
             timeout,
             onClick,
             redirect,
         }: {
+            redirect: string;
+            actionText: string;
             details?: string;
-            redirectText?: string;
             timeout?: number;
             onClick?: () => void;
-            redirect?: string;
-        } = {},
+        },
     ) {
         const id = generateId();
         const notification: IFullNotification = {
@@ -165,7 +165,7 @@ export const Notifications = {
             timeout,
             onClick,
             redirect,
-            actionText: redirectText,
+            actionText,
         };
         triggerNotification(notification);
         return id;

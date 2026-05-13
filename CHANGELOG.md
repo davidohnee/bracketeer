@@ -8,9 +8,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Added
 
-- Full changelog
+- View release notes of past versions
 
-## Fixed
+### Fixed
 
 - Pulling did not update content (i.e. about texts) and teams (#107)
 

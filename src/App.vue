@@ -27,7 +27,7 @@ onMounted(() => {
     globalThis.localStorage.setItem("version", APP_VERSION);
     if (lastVersion != APP_VERSION) {
         Notifications.addRedirect(`Welcome to bracketeer v${APP_VERSION}!`, {
-            redirectText: "View release notes.",
+            actionText: "View release notes.",
             redirect: "/settings/general/about",
         });
     }

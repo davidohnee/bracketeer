@@ -5,6 +5,7 @@ import { useRouter } from "vue-router";
 import NotificationHandler from "./components/notifications/NotificationHandler.vue";
 import { useThemeStore } from "./stores/theme";
 import { useAccountsStore } from "./stores/accounts";
+import { Notifications } from "./components/notifications/createNotification";
 
 const router = useRouter();
 const theme = useThemeStore();
@@ -21,6 +22,15 @@ onMounted(() => {
 
     theme.init();
     useAccountsStore().migrate();
+
+    const lastVersion = globalThis.localStorage.getItem("version") || APP_VERSION;
+    globalThis.localStorage.setItem("version", APP_VERSION);
+    if (lastVersion != APP_VERSION) {
+        Notifications.addRedirect(`Welcome to bracketeer v${APP_VERSION}!`, {
+            redirectText: "View release notes.",
+            redirect: "/settings/general/about",
+        });
+    }
 });
 </script>
 

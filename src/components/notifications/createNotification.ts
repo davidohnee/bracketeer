@@ -4,7 +4,7 @@ export interface INotification {
     id: string;
     message: string;
     details?: string;
-    type: "success" | "error" | "info" | "warning" | "yes-no";
+    type: "success" | "error" | "info" | "warning" | "yes-no" | "redirect";
     timeout?: number;
     onClick?: () => void;
     redirect?: string;
@@ -21,6 +21,7 @@ export interface IFullNotification extends INotification {
     onYes?: () => void;
     onNo?: () => void;
     onTimeout?: () => void;
+    actionText?: string;
 }
 
 const triggerNotification = (notification: IFullNotification) => {
@@ -135,6 +136,36 @@ export const Notifications = {
             timeout,
             onClick,
             redirect,
+        };
+        triggerNotification(notification);
+        return id;
+    },
+    addRedirect(
+        message: string,
+        {
+            details,
+            redirectText,
+            timeout,
+            onClick,
+            redirect,
+        }: {
+            details?: string;
+            redirectText?: string;
+            timeout?: number;
+            onClick?: () => void;
+            redirect?: string;
+        } = {},
+    ) {
+        const id = generateId();
+        const notification: IFullNotification = {
+            id,
+            message,
+            details,
+            type: "redirect",
+            timeout,
+            onClick,
+            redirect,
+            actionText: redirectText,
         };
         triggerNotification(notification);
         return id;

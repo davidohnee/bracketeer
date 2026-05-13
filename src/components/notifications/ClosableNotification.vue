@@ -5,12 +5,12 @@
 
 <script lang="ts" setup>
 import type { PropType } from "vue";
-import type { INotification } from "./createNotification";
+import type { IFullNotification } from "./createNotification";
 import { useRouter } from "vue-router";
 
 const props = defineProps({
     notification: {
-        type: Object as PropType<INotification>,
+        type: Object as PropType<IFullNotification>,
         required: true,
     },
 });
@@ -52,6 +52,14 @@ const click = () => {
             >
                 {{ notification.details }}
             </span>
+            <router-link
+                v-if="notification.actionText && notification.redirect"
+                class="action"
+                :to="notification.redirect"
+            >
+                <ion-icon name="arrow-forward"></ion-icon>
+                {{ notification.actionText }}
+            </router-link>
         </div>
         <ion-icon
             name="close-outline"
@@ -87,9 +95,17 @@ const click = () => {
         background-color: var(--color-brand-yellow);
     }
 
+    &.redirect {
+        background: var(--color-surface);
+    }
+
     h4,
     p {
         margin: 0;
+    }
+
+    &.cursor-pointer {
+        cursor: pointer;
     }
 }
 
@@ -100,5 +116,11 @@ const click = () => {
 
 .details {
     display: block;
+}
+
+.action {
+    display: flex;
+    align-items: center;
+    gap: 0.25em;
 }
 </style>

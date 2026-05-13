@@ -9,7 +9,7 @@ import ClosableNotification from "./ClosableNotification.vue";
 import YesNoNotification from "./YesNoNotification.vue";
 import type { IFullNotification, IYesNoNotification } from "./createNotification";
 
-const closableNotifications = ["success", "error", "info", "warning"];
+const closableNotifications = ["success", "error", "info", "warning", "redirect"];
 
 const notifications = ref<IFullNotification[]>([]);
 

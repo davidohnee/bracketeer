@@ -112,6 +112,7 @@ describe("push", () => {
         {
             identifier: toShare("gist", author, `${gistId}:${fileName}`).identifier,
             pushDate: new Date(),
+            filename: tournament.name,
         },
     ];
     const remoteExpected = [
@@ -172,6 +173,107 @@ describe("push", () => {
 
         expect(fetch).toHaveBeenCalledTimes(1);
         expect(fetch).toHaveBeenCalledWith(
+            `https://api.github.com/gists/${gistId}`,
+            expect.objectContaining({ method: "PATCH" }),
+        );
+    });
+
+    it("should remove stale gist files when the tournament is renamed", async () => {
+        const oldName = "Archived Tournament";
+        const baseTournament = generateTestTournament();
+        const renamedTournament = {
+            ...baseTournament,
+            name: "Renamed Tournament",
+        };
+        const renamedTournamentPayload = {
+            ...renamedTournament,
+        };
+        delete renamedTournamentPayload.remote;
+        const renamedFileName = `${renamedTournament.name}.bra`;
+        const legacyRemote = {
+            identifier: toShare("gist", author, `${gistId}:${fileName}`).identifier,
+            pushDate: new Date(),
+        };
+
+        // @ts-expect-error - Mocking global fetch
+        globalThis.fetch = vi.fn((input: string, init?: RequestInit) => {
+            if (!init?.method || init.method === "GET") {
+                return Promise.resolve({
+                    ok: true,
+                    json: () =>
+                        Promise.resolve({
+                            id: gistId,
+                            files: {
+                                [fileName]: {
+                                    content: JSON.stringify({
+                                        ...baseTournament,
+                                        name: oldName,
+                                    }),
+                                },
+                            },
+                            owner: { login: author },
+                        }),
+                });
+            }
+
+            return Promise.resolve({
+                ok: true,
+                json: () =>
+                    Promise.resolve({
+                        id: gistId,
+                        files: {
+                            [renamedFileName]: {
+                                raw_url: `https://gist.githubusercontent.com/${author}/${gistId}/raw/${renamedFileName}`,
+                            },
+                        },
+                        owner: { login: author },
+                    }),
+            });
+        });
+
+        const result = await push(renamedTournament, {
+            remote: legacyRemote,
+            account,
+        });
+
+        expect(result.author).toBe(author);
+        expect(result.tournament).toEqual({
+            ...renamedTournament,
+            remote: [
+                {
+                    identifier: toShare("gist", author, `${gistId}:${renamedFileName}`).identifier,
+                    pushDate: expect.any(Date),
+                    filename: renamedTournament.name,
+                },
+            ],
+        });
+        expect(result.link).toBe(toShare("gist", author, `${gistId}:${renamedFileName}`).link);
+
+        expect(fetch).toHaveBeenCalledTimes(2);
+        expect(fetch).toHaveBeenNthCalledWith(
+            1,
+            `https://api.github.com/gists/${gistId}`,
+            expect.objectContaining({}),
+        );
+
+        const requestBody = JSON.parse(
+            (vi.mocked(fetch).mock.calls[1][1]?.body as string) ?? "{}",
+        ) as {
+            files?: Record<string, unknown>;
+        };
+
+        expect(requestBody.files).toMatchObject({
+            [`${oldName}.bra`]: null,
+            [`_${oldName}.md`]: null,
+            [renamedFileName]: {
+                content: JSON.stringify(renamedTournamentPayload, null, 4),
+            },
+            [`_${renamedTournament.name}.md`]: {
+                content: expect.stringContaining("This gist was created with bracketeer"),
+            },
+        });
+        expect(fetch).toHaveBeenNthCalledWith(
+            2,
             `https://api.github.com/gists/${gistId}`,
             expect.objectContaining({ method: "PATCH" }),
         );

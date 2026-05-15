@@ -119,6 +119,7 @@ export interface TournamentConfigV1 extends TournamentConfigV2 {
 export interface IRemote {
     identifier: string;
     pushDate?: Date;
+    filename?: string;
 }
 
 export type TournamentContentFormat = "markdown";

@@ -5,7 +5,7 @@ import { generateId } from "@/helpers/id";
 import type { IRemote, Tournament } from "@/types/tournament";
 import { fromShare, toShare, type Import } from "..";
 
-export type Files = Record<string, object>;
+export type Files = Record<string, object | null>;
 
 export interface GistOptions {
     files: Files;
@@ -38,36 +38,106 @@ export interface GitHubUser {
 interface GistResponse {
     id: string;
     owner: { login: string };
-    files: Record<string, { raw_url: string }>;
+    files: Record<string, { raw_url?: string; content?: string; filename?: string }>;
 }
 
 const getHeaders = (pat: string) => ({
     Authorization: "Bearer " + pat,
 });
 
+const getGistFilename = (filename: string) => `${filename}.bra`;
+
+const getGistReadmeFilename = (filename: string) => `_${filename}.md`;
+
+const parseTournamentName = (content?: string) => {
+    if (!content) {
+        return null;
+    }
+
+    try {
+        const data = JSON.parse(content) as Partial<Tournament>;
+        return typeof data.name === "string" ? data.name : null;
+    } catch {
+        return null;
+    }
+};
+
+const getGist = async (gistId: string, accessToken: string) => {
+    try {
+        const res = await fetch(`https://api.github.com/gists/${gistId}`, {
+            headers: getHeaders(accessToken),
+        });
+
+        if (!res.ok) {
+            return null;
+        }
+
+        return (await res.json()) as GistResponse;
+    } catch {
+        return null;
+    }
+};
+
 const buildBody = (options: GistOptions) => {
     const base = globalThis.location.origin;
     const payload: {
         public: boolean;
         description?: string;
-        files: Record<string, { content: string }>;
+        files: Record<string, { content: string } | null>;
     } = {
         public: options.isPublic ?? false,
         description: options.description,
         files: {
-            [`_${options.filename ?? "bracketeer"}.md`]: {
+            [getGistReadmeFilename(options.filename ?? "bracketeer")]: {
                 content: `# bracketeer\n\nThis gist was created with bracketeer\n\n${base}`,
             },
         },
     };
 
     for (const [key, value] of Object.entries(options.files)) {
-        payload.files[key] = {
-            content: JSON.stringify(value, null, 4),
-        };
+        payload.files[key] = value ? { content: JSON.stringify(value, null, 4) } : null;
     }
 
     return JSON.stringify(payload);
+};
+
+const getPreviousFilename = async ({
+    remote,
+    account,
+    currentFilename,
+}: {
+    remote: IRemote;
+    account: GistAccount;
+    currentFilename: string;
+}) => {
+    if (remote.filename) {
+        return remote.filename;
+    }
+
+    const { tag } = fromShare(remote.identifier);
+    const gistId = tag.split(":")[0];
+    const gist = await getGist(gistId, account.accessToken);
+
+    if (!gist) {
+        return null;
+    }
+
+    for (const [filename, file] of Object.entries(gist.files)) {
+        if (!filename.endsWith(".bra")) {
+            continue;
+        }
+
+        const previousName = parseTournamentName(file.content);
+        if (previousName && previousName !== currentFilename) {
+            return previousName;
+        }
+
+        if (filename !== getGistFilename(currentFilename)) {
+            return filename.slice(0, -4);
+        }
+    }
+
+    return null;
 };
 
 const setGist = async (options: GistOptions) => {
@@ -167,7 +237,7 @@ const push = async (
         account: GistAccount;
     },
 ): Promise<Import> => {
-    const name = `${tournament.name}.bra`;
+    const name = getGistFilename(tournament.name);
 
     const copy = deepCopy(tournament);
     delete copy.remote;
@@ -182,6 +252,17 @@ const push = async (
     if (remote) {
         const { tag } = fromShare(remote.identifier);
         options.gistId = tag.split(":")[0];
+
+        const previousFilename = await getPreviousFilename({
+            remote,
+            account,
+            currentFilename: tournament.name,
+        });
+
+        if (previousFilename && previousFilename !== tournament.name) {
+            options.files[getGistFilename(previousFilename)] = null;
+            options.files[getGistReadmeFilename(previousFilename)] = null;
+        }
     }
 
     const jdata = await setGist(options);
@@ -191,7 +272,11 @@ const push = async (
     }
 
     const file = jdata.files[name];
-    const rawUrl = file.raw_url;
+    const rawUrl = file?.raw_url;
+
+    if (!rawUrl) {
+        return { type: "error", error: "not-allowed" };
+    }
     // "https://gist.githubusercontent.com/{user}/{gist}/raw/{file}/{revision}"
     // gist:{user}:{gist}:{filename}
     const gistId = jdata.id;
@@ -202,11 +287,13 @@ const push = async (
 
     if (tournament.remote?.length) {
         tournament.remote[0].pushDate = new Date();
+        tournament.remote[0].filename = tournament.name;
     } else {
         tournament.remote = [
             {
                 identifier,
                 pushDate: new Date(),
+                filename: tournament.name,
             },
         ];
     }

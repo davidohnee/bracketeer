@@ -29,9 +29,9 @@ describe("Notifications", () => {
     describe("addSuccess", () => {
         it("should dispatch success notification event", () => {
             let capturedEvent: CustomEvent<IFullNotification> | null = null;
-            globalThis.addEventListener("notification.add", ((e: Event) => {
+            globalThis.addEventListener("notification.add", (e: Event) => {
                 capturedEvent = e as CustomEvent<IFullNotification>;
-            }) as EventListener);
+            });
 
             Notifications.addSuccess("Success message");
 
@@ -52,9 +52,9 @@ describe("Notifications", () => {
 
         it("should include all optional parameters", () => {
             let capturedEvent: CustomEvent<IFullNotification> | null = null;
-            globalThis.addEventListener("notification.add", ((e: Event) => {
+            globalThis.addEventListener("notification.add", (e: Event) => {
                 capturedEvent = e as CustomEvent<IFullNotification>;
-            }) as EventListener);
+            });
 
             const onClick = vi.fn();
             Notifications.addSuccess("Success", {
@@ -75,9 +75,9 @@ describe("Notifications", () => {
     describe("addError", () => {
         it("should dispatch error notification event", () => {
             let capturedEvent: CustomEvent<IFullNotification> | null = null;
-            globalThis.addEventListener("notification.add", ((e: Event) => {
+            globalThis.addEventListener("notification.add", (e: Event) => {
                 capturedEvent = e as CustomEvent<IFullNotification>;
-            }) as EventListener);
+            });
 
             Notifications.addError("Error message");
 
@@ -94,9 +94,9 @@ describe("Notifications", () => {
 
         it("should include details when provided", () => {
             let capturedEvent: CustomEvent<IFullNotification> | null = null;
-            globalThis.addEventListener("notification.add", ((e: Event) => {
+            globalThis.addEventListener("notification.add", (e: Event) => {
                 capturedEvent = e as CustomEvent<IFullNotification>;
-            }) as EventListener);
+            });
 
             Notifications.addError("Error", { details: "Error details" });
 
@@ -108,9 +108,9 @@ describe("Notifications", () => {
     describe("addInfo", () => {
         it("should dispatch info notification event", () => {
             let capturedEvent: CustomEvent<IFullNotification> | null = null;
-            globalThis.addEventListener("notification.add", ((e: Event) => {
+            globalThis.addEventListener("notification.add", (e: Event) => {
                 capturedEvent = e as CustomEvent<IFullNotification>;
-            }) as EventListener);
+            });
 
             Notifications.addInfo("Info message");
 
@@ -129,9 +129,9 @@ describe("Notifications", () => {
     describe("addWarning", () => {
         it("should dispatch warning notification event", () => {
             let capturedEvent: CustomEvent<IFullNotification> | null = null;
-            globalThis.addEventListener("notification.add", ((e: Event) => {
+            globalThis.addEventListener("notification.add", (e: Event) => {
                 capturedEvent = e as CustomEvent<IFullNotification>;
-            }) as EventListener);
+            });
 
             Notifications.addWarning("Warning message");
 
@@ -147,12 +147,31 @@ describe("Notifications", () => {
         });
     });
 
+    describe("addRedirect", () => {
+        it("should dispatch redirect notification with action text", () => {
+            let capturedEvent: CustomEvent<IFullNotification> | null = null;
+            globalThis.addEventListener("notification.add", (e: Event) => {
+                capturedEvent = e as CustomEvent<IFullNotification>;
+            });
+
+            Notifications.addRedirect("Open release notes", {
+                actionText: "View release notes",
+                redirect: "/settings/general/about",
+            });
+
+            expect(capturedEvent!.detail.message).toBe("Open release notes");
+            expect(capturedEvent!.detail.type).toBe("redirect");
+            expect(capturedEvent!.detail.actionText).toBe("View release notes");
+            expect(capturedEvent!.detail.redirect).toBe("/settings/general/about");
+        });
+    });
+
     describe("addYesNo", () => {
         it("should dispatch yes-no notification event", () => {
             let capturedEvent: CustomEvent<IFullNotification> | null = null;
-            globalThis.addEventListener("notification.add", ((e: Event) => {
+            globalThis.addEventListener("notification.add", (e: Event) => {
                 capturedEvent = e as CustomEvent<IFullNotification>;
-            }) as EventListener);
+            });
 
             Notifications.addYesNo("Confirm action?");
 
@@ -169,9 +188,9 @@ describe("Notifications", () => {
 
         it("should include all callback parameters", () => {
             let capturedEvent: CustomEvent<IFullNotification> | null = null;
-            globalThis.addEventListener("notification.add", ((e: Event) => {
+            globalThis.addEventListener("notification.add", (e: Event) => {
                 capturedEvent = e as CustomEvent<IFullNotification>;
-            }) as EventListener);
+            });
 
             const onYes = vi.fn();
             const onNo = vi.fn();
@@ -202,9 +221,9 @@ describe("Notifications", () => {
     describe("remove", () => {
         it("should dispatch remove notification event with id", () => {
             let capturedEvent: CustomEvent<string> | null = null;
-            globalThis.addEventListener("notification.remove", ((e: Event) => {
+            globalThis.addEventListener("notification.remove", (e: Event) => {
                 capturedEvent = e as CustomEvent<string>;
-            }) as EventListener);
+            });
 
             Notifications.remove("notification-id");
 
@@ -214,10 +233,10 @@ describe("Notifications", () => {
 
         it("should handle removing multiple notifications", () => {
             const removedIds: string[] = [];
-            globalThis.addEventListener("notification.remove", ((e: Event) => {
+            globalThis.addEventListener("notification.remove", (e: Event) => {
                 const customEvent = e as CustomEvent<string>;
                 removedIds.push(customEvent.detail);
-            }) as EventListener);
+            });
 
             Notifications.remove("id-1");
             Notifications.remove("id-2");
@@ -242,9 +261,9 @@ describe("Notifications", () => {
 
         it("should dispatch event without detail", () => {
             let capturedEvent: Event | null = null;
-            globalThis.addEventListener("notification.clear", ((e: Event) => {
+            globalThis.addEventListener("notification.clear", (e: Event) => {
                 capturedEvent = e;
-            }) as EventListener);
+            });
 
             Notifications.clear();
 
@@ -278,10 +297,10 @@ describe("Notifications", () => {
     describe("notification structure", () => {
         it("should create notification with correct structure", () => {
             let capturedNotification: IFullNotification | null = null;
-            globalThis.addEventListener("notification.add", ((e: Event) => {
+            globalThis.addEventListener("notification.add", (e: Event) => {
                 const customEvent = e as CustomEvent<IFullNotification>;
                 capturedNotification = customEvent.detail;
-            }) as EventListener);
+            });
 
             Notifications.addSuccess("Test", {
                 details: "Details",
@@ -299,10 +318,10 @@ describe("Notifications", () => {
 
         it("should create yes-no notification with extended structure", () => {
             let capturedNotification: IFullNotification | null = null;
-            globalThis.addEventListener("notification.add", ((e: Event) => {
+            globalThis.addEventListener("notification.add", (e: Event) => {
                 const customEvent = e as CustomEvent<IFullNotification>;
                 capturedNotification = customEvent.detail;
-            }) as EventListener);
+            });
 
             const onYes = vi.fn();
             const onNo = vi.fn();

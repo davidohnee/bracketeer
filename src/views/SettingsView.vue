@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed } from "vue";
+import type { RouteParamsGeneric } from "vue-router";
 
 type NavigationTarget = {
     title: string;
@@ -21,7 +22,7 @@ const props = defineProps<{
     params?: Record<string, unknown>;
 }>();
 
-const params = computed(() => props.params || {});
+const params = computed(() => (props.params || {}) as RouteParamsGeneric);
 const base = computed(() => props.base || "");
 const layout = computed(() => props.layout || "spacious");
 </script>

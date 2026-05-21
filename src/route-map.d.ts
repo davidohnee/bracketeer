@@ -14,11 +14,15 @@ import type {
   ParamValueZeroOrMore,
   ParamValueZeroOrOne,
 } from 'vue-router'
+import type {
+  _ExtractParamParserType,
+} from 'vue-router/experimental'
 
 declare module 'vue-router' {
   interface TypesConfig {
     ParamParsers:
       | never
+    RouteNamedMap: import('vue-router/auto-routes').RouteNamedMap
   }
 }
 
@@ -62,6 +66,7 @@ declare module 'vue-router/auto-routes' {
       Record<never, never>,
       | '/settings/general/about'
       | '/settings/general/appearance'
+      | '/settings/general/release-notes'
       | '/settings/share/accounts'
     >,
     '/settings/general/about': RouteRecordInfo<
@@ -74,6 +79,13 @@ declare module 'vue-router/auto-routes' {
     '/settings/general/appearance': RouteRecordInfo<
       '/settings/general/appearance',
       '/settings/general/appearance',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
+    '/settings/general/release-notes': RouteRecordInfo<
+      '/settings/general/release-notes',
+      '/settings/general/release-notes',
       Record<never, never>,
       Record<never, never>,
       | never
@@ -249,6 +261,7 @@ declare module 'vue-router/auto-routes' {
         | '/settings'
         | '/settings/general/about'
         | '/settings/general/appearance'
+        | '/settings/general/release-notes'
         | '/settings/share/accounts'
       views:
         | 'default'
@@ -262,6 +275,12 @@ declare module 'vue-router/auto-routes' {
     'src/pages/settings/general/appearance.vue': {
       routes:
         | '/settings/general/appearance'
+      views:
+        | never
+    }
+    'src/pages/settings/general/release-notes.vue': {
+      routes:
+        | '/settings/general/release-notes'
       views:
         | never
     }

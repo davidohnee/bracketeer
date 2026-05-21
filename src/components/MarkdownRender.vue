@@ -47,5 +47,10 @@ div.md {
     & ol {
         margin-top: var(--spacing-xxs);
     }
+
+    li > ul,
+    li > ol {
+        margin-top: 0;
+    }
 }
 </style>

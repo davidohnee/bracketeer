@@ -114,6 +114,7 @@ declare module 'vue-router/auto-routes' {
       | '/tournament/[tournamentId]/knockout'
       | '/tournament/[tournamentId]/live'
       | '/tournament/[tournamentId]/matches'
+      | '/tournament/[tournamentId]/peer-main-test'
       | '/tournament/[tournamentId]/table'
     >,
     '/tournament/[tournamentId]/': RouteRecordInfo<
@@ -201,6 +202,13 @@ declare module 'vue-router/auto-routes' {
     '/tournament/[tournamentId]/matches': RouteRecordInfo<
       '/tournament/[tournamentId]/matches',
       '/tournament/:tournamentId/matches',
+      { tournamentId: ParamValue<true> },
+      { tournamentId: ParamValue<false> },
+      | never
+    >,
+    '/tournament/[tournamentId]/peer-main-test': RouteRecordInfo<
+      '/tournament/[tournamentId]/peer-main-test',
+      '/tournament/:tournamentId/peer-main-test',
       { tournamentId: ParamValue<true> },
       { tournamentId: ParamValue<false> },
       | never
@@ -305,6 +313,7 @@ declare module 'vue-router/auto-routes' {
         | '/tournament/[tournamentId]/knockout'
         | '/tournament/[tournamentId]/live'
         | '/tournament/[tournamentId]/matches'
+        | '/tournament/[tournamentId]/peer-main-test'
         | '/tournament/[tournamentId]/table'
       views:
         | 'default'
@@ -384,6 +393,12 @@ declare module 'vue-router/auto-routes' {
     'src/pages/tournament/[tournamentId]/matches.vue': {
       routes:
         | '/tournament/[tournamentId]/matches'
+      views:
+        | never
+    }
+    'src/pages/tournament/[tournamentId]/peer-main-test.vue': {
+      routes:
+        | '/tournament/[tournamentId]/peer-main-test'
       views:
         | never
     }

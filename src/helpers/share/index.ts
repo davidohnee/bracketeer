@@ -42,7 +42,7 @@ export const getShareLink = (identifier: string) => {
     return `${base}/s/${normalisedIdentifier}`;
 };
 
-export const toShare = (mode: "gist", author: string, tag: string) => {
+export const toShare = (mode: "gist" | "p2p", author: string, tag: string) => {
     const gistUrl = `${mode}:${author}:${tag}`;
     const base64 = encodeURIComponent(btoa(gistUrl));
     const link = getShareLink(base64);

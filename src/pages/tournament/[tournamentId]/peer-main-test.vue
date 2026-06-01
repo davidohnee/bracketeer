@@ -1,10 +1,13 @@
 <script setup lang="ts">
-import { onMounted, ref, toRaw, watch } from "vue";
+import { computed, onMounted, ref, toRaw, watch } from "vue";
 import diff from "microdiff";
 import type { Tournament } from "@/types/tournament";
 import Peer, { type DataConnection } from "peerjs";
 import { useTournamentsStore } from "@/stores/tournaments";
 import { migrateTournament } from "@/helpers/migration";
+import { getShareLink, toShare } from "@/helpers/share";
+import AdvancedInput from "@/components/input/AdvancedInput.vue";
+import { copyToClipboard } from "@/helpers/common";
 
 const props = defineProps<{
     tournament: Tournament;
@@ -13,6 +16,8 @@ const props = defineProps<{
 const peer = ref<Peer | null>(null);
 const peerId = ref("");
 const connections = ref<DataConnection[]>([]);
+
+const shareId = computed(() => toShare("p2p", "", peerId.value));
 
 const onUpdate = (diff: unknown) => {
     console.log("Sending update to clients:", diff);
@@ -88,7 +93,15 @@ const save = () => {
 <template>
     <div class="peer-test">
         <h1>Peer MAIN</h1>
-        <p>Your Peer ID: {{ peerId }}</p>
+        <p>Your Share Link: {{ shareId.identifier }}</p>
+        <AdvancedInput
+            :model-value="shareId.link"
+            type="text"
+            copyable
+            readonly
+            :loading="!shareId.link"
+            @copy="copyToClipboard(shareId.link)"
+        />
         <button @click="onUpdate">Send Update to Clients</button>
         <div>
             <h2>Connected Peers:</h2>

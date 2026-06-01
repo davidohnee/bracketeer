@@ -3,80 +3,41 @@ import { computed, onMounted, onUnmounted, ref } from "vue";
 import { useRoute } from "vue-router";
 import type { Tournament } from "@/types/tournament";
 import TournamentLayout from "@/layouts/TournamentLayout.vue";
-import { pull } from "@/helpers/share";
 import { agoString } from "@/helpers/common";
-
-type Error = null | "not-found" | "not-allowed" | "not-supported";
+import { getLiveSyncFactory } from "@/helpers/share/liveSync";
 
 const route = useRoute();
 
-const who = ref("");
 const tournament = ref<Tournament | null>(null);
-const error = ref<Error>(null);
 
 const routeId = computed(() => ("id" in route.params ? (route.params.id as string) : ""));
 
-const sessionStorageItem = computed(() => sessionStorage.getItem(routeId.value));
-const updated = ref<Date | null>(
-    sessionStorageItem.value ? new Date(sessionStorageItem.value) : null,
-);
-
 const subtitle = ref<string>("");
 
-let updateTimer = 0;
 let updateSubtitleTimer = 0;
 
-const updateTask = async () => {
-    const base64 = routeId.value;
-    const importObject = await pull(base64);
-
-    if (updated.value) {
-        const now = new Date();
-        const diff = now.getTime() - updated.value.getTime();
-        if (diff >= 1000 * 60 * 5) {
-            updated.value = new Date();
-            sessionStorage.setItem(base64, updated.value.toString());
-        }
-    } else {
-        updated.value = new Date();
-        sessionStorage.setItem(base64, updated.value.toString());
-    }
-
-    if (importObject?.error) {
-        error.value = importObject.error;
-        return;
-    }
-
-    tournament.value = importObject!.tournament;
-    who.value = importObject!.author ?? "(unknown)";
-    updateSubtitle();
-};
+const liveSync = getLiveSyncFactory(routeId.value)(tournament);
 
 const updateSubtitle = () => {
     if (tournament.value) {
-        subtitle.value = "Last updated: " + agoString(updated.value!);
+        subtitle.value =
+            "Last updated: " + agoString(liveSync.status.value.lastUpdate ?? new Date());
     }
 };
 
 onMounted(() => {
-    updateTask();
-    updateTimer = setInterval(
-        () => {
-            updateTask();
-        },
-        1000 * 60 * 5,
-    ); // Update every 5 minutes
-
+    liveSync.pull(routeId.value);
+    liveSync.onChange = updateSubtitle;
     updateSubtitleTimer = setInterval(updateSubtitle, 1000 * 60); // Update every minute
 });
 onUnmounted(() => {
-    clearInterval(updateTimer);
+    liveSync.stop();
     clearInterval(updateSubtitleTimer);
 });
 </script>
 <template>
     <TournamentLayout
-        v-if="tournament && error == null"
+        v-if="tournament && liveSync.error.value == null"
         class="tournament"
         v-model="tournament"
         :tabs="['table', 'knockout', 'matches', 'live', 'about']"
@@ -84,7 +45,9 @@ onUnmounted(() => {
         readonly
     />
     <div
-        v-else-if="error && ['not-found', 'not-supported'].includes(error)"
+        v-else-if="
+            liveSync.error.value && ['not-found', 'not-supported'].includes(liveSync.error.value)
+        "
         class="error flex-col p-4"
     >
         <h1>Guess you'll have to create it yourself...</h1>
@@ -102,7 +65,7 @@ onUnmounted(() => {
         </div>
     </div>
     <div
-        v-else-if="error == 'not-allowed'"
+        v-else-if="liveSync.error.value == 'not-allowed'"
         class="error flex-col"
     >
         <h1>Not Allowed</h1>

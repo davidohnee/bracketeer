@@ -29,17 +29,6 @@ const router = createRouter({
                 component: () => import(`@/pages/tournament/[tournamentId]/${path}.vue`),
             })),
         },
-        {
-            path: "/p/:id",
-            name: "/p/[id]",
-            component: () => import("@/views/peer.vue"),
-            redirect: { name: "/p/[id]/table" },
-            children: VIEWER_TABS.map((path) => ({
-                path,
-                name: `/p/[id]/${path}`,
-                component: () => import(`@/pages/tournament/[tournamentId]/${path}.vue`),
-            })),
-        },
     ] as RouteRecordRaw[],
 });
 

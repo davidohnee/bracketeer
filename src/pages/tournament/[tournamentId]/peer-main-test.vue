@@ -5,7 +5,7 @@ import type { Tournament } from "@/types/tournament";
 import Peer, { type DataConnection } from "peerjs";
 import { useTournamentsStore } from "@/stores/tournaments";
 import { migrateTournament } from "@/helpers/migration";
-import { getShareLink, toShare } from "@/helpers/share";
+import { toShare } from "@/helpers/share";
 import AdvancedInput from "@/components/input/AdvancedInput.vue";
 import { copyToClipboard } from "@/helpers/common";
 

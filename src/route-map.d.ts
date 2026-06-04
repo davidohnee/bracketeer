@@ -111,10 +111,10 @@ declare module 'vue-router/auto-routes' {
       | '/tournament/[tournamentId]/config/edit/plan'
       | '/tournament/[tournamentId]/config/edit/teams'
       | '/tournament/[tournamentId]/config/share/gists'
+      | '/tournament/[tournamentId]/config/share/p2p'
       | '/tournament/[tournamentId]/knockout'
       | '/tournament/[tournamentId]/live'
       | '/tournament/[tournamentId]/matches'
-      | '/tournament/[tournamentId]/peer-main-test'
       | '/tournament/[tournamentId]/table'
     >,
     '/tournament/[tournamentId]/': RouteRecordInfo<
@@ -142,6 +142,7 @@ declare module 'vue-router/auto-routes' {
       | '/tournament/[tournamentId]/config/edit/plan'
       | '/tournament/[tournamentId]/config/edit/teams'
       | '/tournament/[tournamentId]/config/share/gists'
+      | '/tournament/[tournamentId]/config/share/p2p'
     >,
     '/tournament/[tournamentId]/config/advanced/debug': RouteRecordInfo<
       '/tournament/[tournamentId]/config/advanced/debug',
@@ -185,6 +186,13 @@ declare module 'vue-router/auto-routes' {
       { tournamentId: ParamValue<false> },
       | never
     >,
+    '/tournament/[tournamentId]/config/share/p2p': RouteRecordInfo<
+      '/tournament/[tournamentId]/config/share/p2p',
+      '/tournament/:tournamentId/config/share/p2p',
+      { tournamentId: ParamValue<true> },
+      { tournamentId: ParamValue<false> },
+      | never
+    >,
     '/tournament/[tournamentId]/knockout': RouteRecordInfo<
       '/tournament/[tournamentId]/knockout',
       '/tournament/:tournamentId/knockout',
@@ -202,13 +210,6 @@ declare module 'vue-router/auto-routes' {
     '/tournament/[tournamentId]/matches': RouteRecordInfo<
       '/tournament/[tournamentId]/matches',
       '/tournament/:tournamentId/matches',
-      { tournamentId: ParamValue<true> },
-      { tournamentId: ParamValue<false> },
-      | never
-    >,
-    '/tournament/[tournamentId]/peer-main-test': RouteRecordInfo<
-      '/tournament/[tournamentId]/peer-main-test',
-      '/tournament/:tournamentId/peer-main-test',
       { tournamentId: ParamValue<true> },
       { tournamentId: ParamValue<false> },
       | never
@@ -310,10 +311,10 @@ declare module 'vue-router/auto-routes' {
         | '/tournament/[tournamentId]/config/edit/plan'
         | '/tournament/[tournamentId]/config/edit/teams'
         | '/tournament/[tournamentId]/config/share/gists'
+        | '/tournament/[tournamentId]/config/share/p2p'
         | '/tournament/[tournamentId]/knockout'
         | '/tournament/[tournamentId]/live'
         | '/tournament/[tournamentId]/matches'
-        | '/tournament/[tournamentId]/peer-main-test'
         | '/tournament/[tournamentId]/table'
       views:
         | 'default'
@@ -339,6 +340,7 @@ declare module 'vue-router/auto-routes' {
         | '/tournament/[tournamentId]/config/edit/plan'
         | '/tournament/[tournamentId]/config/edit/teams'
         | '/tournament/[tournamentId]/config/share/gists'
+        | '/tournament/[tournamentId]/config/share/p2p'
       views:
         | 'default'
     }
@@ -378,6 +380,12 @@ declare module 'vue-router/auto-routes' {
       views:
         | never
     }
+    'src/pages/tournament/[tournamentId]/config/share/p2p.vue': {
+      routes:
+        | '/tournament/[tournamentId]/config/share/p2p'
+      views:
+        | never
+    }
     'src/pages/tournament/[tournamentId]/knockout.vue': {
       routes:
         | '/tournament/[tournamentId]/knockout'
@@ -393,12 +401,6 @@ declare module 'vue-router/auto-routes' {
     'src/pages/tournament/[tournamentId]/matches.vue': {
       routes:
         | '/tournament/[tournamentId]/matches'
-      views:
-        | never
-    }
-    'src/pages/tournament/[tournamentId]/peer-main-test.vue': {
-      routes:
-        | '/tournament/[tournamentId]/peer-main-test'
       views:
         | never
     }

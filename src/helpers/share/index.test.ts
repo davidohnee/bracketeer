@@ -110,6 +110,7 @@ describe("push", () => {
     };
     const remote = [
         {
+            type: "gist" as const,
             identifier: toShare("gist", author, `${gistId}:${fileName}`).identifier,
             pushDate: new Date(),
             filename: tournament.name,
@@ -191,6 +192,7 @@ describe("push", () => {
         delete renamedTournamentPayload.remote;
         const renamedFileName = `${renamedTournament.name}.bra`;
         const legacyRemote = {
+            type: "gist" as const,
             identifier: toShare("gist", author, `${gistId}:${fileName}`).identifier,
             pushDate: new Date(),
         };
@@ -241,6 +243,7 @@ describe("push", () => {
             ...renamedTournament,
             remote: [
                 {
+                    type: "gist" as const,
                     identifier: toShare("gist", author, `${gistId}:${renamedFileName}`).identifier,
                     pushDate: expect.any(Date),
                     filename: renamedTournament.name,
@@ -316,6 +319,7 @@ describe("share", () => {
         const remoteIdentifier = toShare("gist", "user", "gist-id:test.bra").identifier;
         tournament.remote = [
             {
+                type: "gist" as const,
                 identifier: remoteIdentifier,
                 pushDate: new Date(),
             },
@@ -323,6 +327,7 @@ describe("share", () => {
 
         const remoteExpected = [
             {
+                type: "gist" as const,
                 identifier: remoteIdentifier,
                 pushDate: new Date(),
             },

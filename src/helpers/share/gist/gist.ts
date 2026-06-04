@@ -286,11 +286,13 @@ const push = async (
     const { identifier, link } = toShare("gist", user, `${gistId}:${revision}`);
 
     if (tournament.remote?.length) {
+        tournament.remote[0].type = "gist";
         tournament.remote[0].pushDate = new Date();
         tournament.remote[0].filename = tournament.name;
     } else {
         tournament.remote = [
             {
+                type: "gist",
                 identifier,
                 pushDate: new Date(),
                 filename: tournament.name,

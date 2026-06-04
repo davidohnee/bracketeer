@@ -5,6 +5,7 @@ import type { Tournament } from "@/types/tournament";
 import TournamentLayout from "@/layouts/TournamentLayout.vue";
 import { agoString } from "@/helpers/common";
 import { getLiveSyncFactory } from "@/helpers/share/liveSync";
+import SpinningLoader from "@/components/SpinningLoader.vue";
 
 const route = useRoute();
 
@@ -37,13 +38,19 @@ onUnmounted(() => {
 </script>
 <template>
     <TournamentLayout
-        v-if="tournament && liveSync.error.value == null"
+        v-if="tournament && !liveSync.error.value"
         class="tournament"
         v-model="tournament"
         :tabs="['table', 'knockout', 'matches', 'live', 'about']"
         :subtitle="subtitle"
         readonly
     />
+    <div
+        v-else-if="!tournament && !liveSync.error.value"
+        class="loading"
+    >
+        <SpinningLoader />
+    </div>
     <div
         v-else-if="
             liveSync.error.value && ['not-found', 'not-supported'].includes(liveSync.error.value)
@@ -74,6 +81,19 @@ onUnmounted(() => {
             <button class="danger">Close</button>
         </router-link>
     </div>
+    <div
+        v-else-if="liveSync.error.value == 'no-connection'"
+        class="error flex-col"
+    >
+        <h1>No Connection</h1>
+        <p>
+            Unable to connect to the tournament. This could be due to a network issue or the host
+            closing the connection.
+        </p>
+        <router-link :to="{ name: '/' }">
+            <button class="danger">Close</button>
+        </router-link>
+    </div>
 </template>
 <style scoped>
 .italic {
@@ -99,6 +119,13 @@ onUnmounted(() => {
 .flex-col {
     display: flex;
     flex-direction: column;
+}
+
+.loading {
+    height: 60vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .flex {

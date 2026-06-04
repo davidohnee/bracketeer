@@ -7,11 +7,11 @@
 import { computed, onMounted, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import type { Tournament } from "@/types/tournament";
-import { pull } from "@/helpers/share";
+import { fromShare, pull } from "@/helpers/share";
 import { useTournamentsStore } from "@/stores/tournaments";
 import ViewerView from "./ViewerView.vue";
 
-type Error = null | "not-found" | "not-allowed" | "not-supported";
+type Error = null | "not-found" | "not-allowed" | "not-supported" | "no-connection";
 
 const route = useRoute();
 const router = useRouter();
@@ -39,8 +39,10 @@ onMounted(async () => {
 const confirm = async () => {
     const tournament = what.value[0];
     if (!tournament) return;
+    const { mode } = fromShare(routeId.value);
     tournament.remote ??= [];
     tournament.remote.push({
+        type: mode === "p2p" ? "p2p" : "gist",
         identifier: routeId.value,
     });
 

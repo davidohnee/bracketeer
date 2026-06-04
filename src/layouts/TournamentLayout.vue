@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, onMounted, onUnmounted } from "vue";
 import type { Tournament } from "@/types/tournament";
 import { useRoute } from "vue-router";
 import TournamentContextMenu from "@/components/TournamentContextMenu.vue";
 import EditableText from "@/components/input/EditableText.vue";
+import { useBackgroundSyncStore } from "@/stores/backgroundSync";
 
 const route = useRoute();
 
@@ -45,6 +46,16 @@ const baseRoute = computed(() => {
     }
     const name = route.name as string;
     return name.split("/").slice(0, 3).join("/");
+});
+
+const backgroundSync = useBackgroundSyncStore();
+
+onMounted(() => {
+    backgroundSync.start(tournament);
+});
+
+onUnmounted(() => {
+    backgroundSync.stop();
 });
 </script>
 

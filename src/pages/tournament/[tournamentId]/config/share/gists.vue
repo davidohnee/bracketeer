@@ -54,8 +54,8 @@ const pull = async () => {
 };
 
 const lastPushed = computed(() => {
-    if (!props.tournament.remote?.length) return null;
-    const pushed = props.tournament.remote[0]!.pushDate;
+    if (!gistRemote.value) return null;
+    const pushed = gistRemote.value.pushDate;
     if (!pushed) return null;
     return typeof pushed === "string" ? new Date(pushed) : pushed;
 });
@@ -76,6 +76,15 @@ const remoteDescription = computed(() => {
         console.error("Error parsing remote source:", error);
         return "Unknown source";
     }
+});
+
+const gistRemote = computed(() => {
+    if (!props.tournament.remote?.length) return null;
+    const remote = props.tournament.remote[0]!;
+    if (remote.type === "gist") {
+        return remote;
+    }
+    return null;
 });
 </script>
 
@@ -99,7 +108,7 @@ const remoteDescription = computed(() => {
         <div class="row start">
             <div class="field">
                 <p
-                    v-if="props.tournament.remote?.length"
+                    v-if="gistRemote"
                     class="mt-0"
                 >
                     Remote source:
@@ -142,7 +151,7 @@ const remoteDescription = computed(() => {
             </div>
             <div
                 class="field"
-                v-if="!tournament.remote?.length"
+                v-if="gistRemote"
             >
                 <button @click="shareModal?.open(props.tournament)">
                     <ion-icon name="share-outline" />

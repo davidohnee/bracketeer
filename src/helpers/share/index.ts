@@ -3,6 +3,10 @@ import { gistShare } from "./gist/gist";
 import type { Account } from "@/types/accounts";
 import { Notifications } from "@/components/notifications/createNotification";
 import { deepCopy } from "../common";
+import { ref } from "vue";
+import { createLiveSync as createP2PLiveSync } from "./p2p/liveSync";
+
+type ErrorType = "not-found" | "not-allowed" | "not-supported" | "no-connection";
 
 interface IImportResult {
     type: "success" | "error";
@@ -10,7 +14,7 @@ interface IImportResult {
     tournament?: Tournament;
     link?: string;
     identifier?: string;
-    error?: "not-found" | "not-allowed" | "not-supported";
+    error?: ErrorType;
 }
 
 interface IImportSuccess extends IImportResult {
@@ -23,7 +27,7 @@ interface IImportSuccess extends IImportResult {
 
 interface IImportError extends IImportResult {
     type: "error";
-    error: "not-found" | "not-allowed" | "not-supported";
+    error: ErrorType;
 }
 
 export type Import = IImportSuccess | IImportError;
@@ -85,6 +89,17 @@ export const pull = async (identifier: string): Promise<Import> => {
         const { mode } = fromShare(identifier);
         if (mode === "gist") {
             return await gistShare.pull(identifier);
+        }
+
+        if (mode === "p2p") {
+            const tournament = ref<Tournament | null>(null);
+            const liveSync = createP2PLiveSync(tournament);
+
+            try {
+                return await liveSync.pull(identifier);
+            } finally {
+                liveSync.stop();
+            }
         }
     } catch (error) {
         console.error(error);

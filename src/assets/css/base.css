@@ -78,6 +78,18 @@ section {
 .text-mute {
     color: var(--color-text-secondary);
 }
+.text-green {
+    color: var(--color-brand-green);
+}
+.text-blue {
+    color: var(--color-brand-blue);
+}
+.text-red {
+    color: var(--color-brand-red);
+}
+.text-yellow {
+    color: var(--color-brand-yellow);
+}
 
 .p-4 {
     padding: var(--spacing-m);

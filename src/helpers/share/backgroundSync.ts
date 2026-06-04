@@ -7,7 +7,7 @@ import { createBackgroundSync as createP2PBackgroundSync } from "./p2p/backgroun
 export interface IBackgroundSync {
     start: (identifier: string) => void;
     stop: () => void;
-    state: Ref<"connected" | "connecting" | "disconnected" | "no-lock" | "error">;
+    state: "connected" | "connecting" | "disconnected" | "no-lock" | "error";
     id: string;
 }
 

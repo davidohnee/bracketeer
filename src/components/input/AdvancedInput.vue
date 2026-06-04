@@ -94,6 +94,8 @@ input {
     align-items: center;
     gap: var(--spacing-xs);
     position: relative;
+    padding: 0;
+    padding-left: var(--spacing-s);
 
     .loader {
         position: absolute;

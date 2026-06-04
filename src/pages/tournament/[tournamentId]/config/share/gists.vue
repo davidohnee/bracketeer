@@ -30,10 +30,7 @@ watch(
     { immediate: true },
 );
 
-const canPull = computed(() => {
-    if (!props.tournament.remote?.length) return false;
-    return !!props.tournament.remote[0]!.identifier;
-});
+const canPull = computed(() => props.tournament.remote?.some((r) => r.type === "gist"));
 
 const pull = async () => {
     try {
@@ -151,7 +148,7 @@ const gistRemote = computed(() => {
             </div>
             <div
                 class="field"
-                v-if="gistRemote"
+                v-if="!gistRemote"
             >
                 <button @click="shareModal?.open(props.tournament)">
                     <ion-icon name="share-outline" />

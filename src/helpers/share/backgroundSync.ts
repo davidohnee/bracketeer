@@ -7,7 +7,7 @@ import { createBackgroundSync as createP2PBackgroundSync } from "./p2p/backgroun
 export interface IBackgroundSync {
     start: (identifier: string) => void;
     stop: () => void;
-    state: "connected" | "connecting" | "disconnected" | "no-lock" | "error";
+    state: Ref<"connected" | "connecting" | "disconnected" | "no-lock" | "error">;
     id: string;
 }
 
@@ -26,7 +26,7 @@ const getBackgroundSyncFactory = (identifier: string): BackgroundSyncFactory => 
 export type BackgroundSyncManager = {
     start: () => void;
     stop: () => void;
-    activeSyncs: Ref<IBackgroundSync[]>;
+    activeSyncs: IBackgroundSync[];
 };
 
 export const backgroundSyncManager = (
@@ -98,6 +98,8 @@ export const backgroundSyncManager = (
             syncInstances.value.forEach((instance) => instance.stop());
             syncInstances.value = [];
         },
-        activeSyncs: syncInstances,
+        get activeSyncs() {
+            return syncInstances.value;
+        },
     };
 };

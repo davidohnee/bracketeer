@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { Tournament } from "@/types/tournament";
 import { useTournamentsStore } from "@/stores/tournaments";
-import { computed, ref } from "vue";
+import { computed, ref, watch } from "vue";
 import ShareClient, { fromShare, getShareLink } from "@/helpers/share";
 import type { PeerIdType } from "@/helpers/share/p2p/backgroundSync";
 import { useBackgroundSyncStore } from "@/stores/backgroundSync";
@@ -87,6 +87,18 @@ const sync = computed(() => {
     if (!sync) return null;
     return sync;
 });
+
+watch(
+    () => sync.value?.state,
+    () => {
+        console.log("P2P sync state changed:", sync.value?.state);
+    },
+);
+
+const syncState = computed(() => {
+    if (!sync.value) return "disconnected";
+    return sync.value.state;
+});
 </script>
 
 <template>
@@ -95,32 +107,32 @@ const sync = computed(() => {
         <p
             class="text-muted sync-status"
             :class="{
-                'text-green': sync.state == 'connected',
-                'text-yellow': sync.state == 'connecting',
-                'text-red': sync.state == 'disconnected',
-                'text-gray': sync.state == 'no-lock' || sync.state == 'error',
+                'text-green': syncState == 'connected',
+                'text-yellow': syncState == 'connecting',
+                'text-red': syncState == 'disconnected',
+                'text-gray': syncState == 'no-lock' || syncState == 'error',
             }"
             v-if="sync"
         >
-            <template v-if="sync.state === 'connected'">
+            <template v-if="syncState === 'connected'">
                 <ion-icon name="checkmark-circle-outline" />
                 Sync active
             </template>
-            <template v-else-if="sync.state === 'connecting'">
+            <template v-else-if="syncState === 'connecting'">
                 <ion-icon
                     name="sync-outline"
                     class="text-yellow animate-spin"
                 />
                 Connecting...
             </template>
-            <template v-else-if="sync.state === 'disconnected'">
+            <template v-else-if="syncState === 'disconnected'">
                 <ion-icon
                     name="close-circle-outline"
                     class="text-red"
                 />
                 Disconnected
             </template>
-            <template v-else-if="sync.state === 'no-lock'">
+            <template v-else-if="syncState === 'no-lock'">
                 <ion-icon
                     name="checkmark-circle-outline"
                     class="text-gray"

@@ -4,7 +4,7 @@ import { type DataConnection, Peer } from "peerjs";
 import { ref, toRaw, watch, type Ref } from "vue";
 import { type P2PChange } from "./liveSync";
 import diff from "microdiff";
-import { fromShare, toShare } from "..";
+import { fromShare, getTypeFromIdentifier, toShare } from "..";
 import type { IBackgroundSync } from "../backgroundSync";
 
 const P2P_TAB_ID_KEY = "p2p.tab-id";
@@ -102,12 +102,13 @@ const attachHostConnection =
 
 export const applyPeerId = (tournament: Ref<Tournament | null>, identifier: string) => {
     if (!tournament.value?.remote) return;
-    const i = tournament.value.remote.findIndex((r) => r.type == "p2p");
+    const i = tournament.value.remote.findIndex(
+        (r) => getTypeFromIdentifier(r.identifier) === "p2p",
+    );
     if (i === undefined || i === -1) {
         return;
     }
     tournament.value.remote[i] = {
-        type: "p2p",
         identifier,
     };
 };

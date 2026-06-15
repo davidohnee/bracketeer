@@ -143,6 +143,8 @@ export const createLiveSync: LiveSyncFactory<IP2PLiveSync> = (tournament) => {
             applyP2PChanges(tournament, diff);
         },
         async pull(identifier) {
+            console.log("[P2P] Starting live sync pull with identifier:", identifier);
+
             if (this._connection) {
                 this._connection.close();
                 this._connection = null;

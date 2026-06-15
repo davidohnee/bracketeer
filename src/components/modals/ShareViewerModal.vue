@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import type { Tournament } from "@/types/tournament";
-import ShareClient from "@/helpers/share";
+import ShareClient, { getTypeFromIdentifier } from "@/helpers/share";
 import { QrcodeSvg } from "qrcode.vue";
 import AdvancedInput from "../input/AdvancedInput.vue";
 import { copyToClipboard } from "@/helpers/common";
@@ -13,17 +13,24 @@ const action = ref<null | "gist">(null);
 const dialog = ref<HTMLDialogElement>();
 const tournament = ref<Tournament>();
 
-const open = (newTournament: Tournament) => {
-    if (!newTournament.remote?.[0]?.identifier) {
-        return;
-    }
+const preferredRemote = computed<null | { identifier: string }>(() => {
+    if (!tournament.value?.remote) return null;
+    const preferredOrder = ["gist", "p2p"];
+    const sorted = [...tournament.value.remote].sort((a, b) => {
+        const aIndex = preferredOrder.indexOf(getTypeFromIdentifier(a.identifier) as string);
+        const bIndex = preferredOrder.indexOf(getTypeFromIdentifier(b.identifier) as string);
+        return aIndex - bIndex;
+    });
+    return sorted.at(0) ?? null;
+});
 
+const open = (newTournament: Tournament) => {
     tournament.value = newTournament;
 
     action.value = null;
     dialog.value?.showModal();
 
-    shareUrl.value = ShareClient.getShareLink(newTournament.remote[0].identifier).replace(
+    shareUrl.value = ShareClient.getShareLink(preferredRemote.value!.identifier!).replace(
         "/s/",
         "/v/",
     );

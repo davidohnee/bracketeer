@@ -117,7 +117,6 @@ export interface TournamentConfigV1 extends TournamentConfigV2 {
 }
 
 export interface IRemote {
-    type?: "gist" | "p2p";
     identifier: string;
     pushDate?: Date;
     filename?: string;

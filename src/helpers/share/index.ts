@@ -68,6 +68,14 @@ export const fromShare = (identifier: string) => {
     };
 };
 
+export const getTypeFromIdentifier = (identifier: string): "gist" | "p2p" | null => {
+    const { mode } = fromShare(identifier);
+    if (mode === "gist" || mode === "p2p") {
+        return mode;
+    }
+    return null;
+};
+
 export const push = async (
     tournament: Tournament,
     options: {
@@ -143,15 +151,19 @@ export const share = async (
     tournament: Tournament,
     { updateOnly, account, accountResolver }: ShareOptions,
 ) => {
+    const gistRemote = tournament.remote?.find(
+        (r) => getTypeFromIdentifier(r.identifier) === "gist",
+    );
+
     if (updateOnly) {
-        if (!tournament.remote?.length) {
+        if (!gistRemote) {
             return false;
         }
     }
 
     if (!account) {
-        if (tournament.remote?.length && accountResolver) {
-            account = await accountResolver(tournament.remote[0]);
+        if (gistRemote && accountResolver) {
+            account = await accountResolver(gistRemote);
         }
 
         if (!account) {
@@ -160,10 +172,9 @@ export const share = async (
     }
 
     const tournamentCopy = deepCopy(tournament);
-    delete tournamentCopy.remote;
 
     const result = await push(tournamentCopy, {
-        remote: tournament.remote?.[0],
+        remote: gistRemote,
         account,
     });
     if (result.tournament) {
@@ -187,6 +198,24 @@ export const share = async (
     });
 
     return result;
+};
+
+export const unlink = (tournament: Tournament, remote: IRemote, account: Account) => {
+    if (!tournament.remote) return;
+
+    if (getTypeFromIdentifier(remote.identifier) === "gist") {
+        gistShare.remove(remote.identifier, account).catch((error) => {
+            console.error("Error removing shared tournament:", error);
+            Notifications.addError("Error unlinking tournament", {
+                details: "There was an error unlinking the tournament. Please try again.",
+                timeout: 5000,
+            });
+        });
+    }
+    tournament.remote.splice(
+        tournament.remote.findIndex((r) => r.identifier === remote.identifier),
+        1,
+    );
 };
 
 export const pullFromRemote = async (options: { tournament?: Tournament; remote?: IRemote }) => {
@@ -216,8 +245,10 @@ export const pullFromRemote = async (options: { tournament?: Tournament; remote?
 export default {
     share,
     pull: pullFromRemote,
+    unlink,
     fromShare,
     toShare,
     getShareLink,
+    getTypeFromIdentifier,
     accessTokenToAccount,
 };

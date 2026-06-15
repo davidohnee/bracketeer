@@ -5,7 +5,7 @@ import { computed, ref, watch } from "vue";
 import ShareModal from "@/components/modals/ShareFullModal.vue";
 import { Notifications } from "@/components/notifications/createNotification";
 import { agoString } from "@/helpers/common";
-import ShareClient from "@/helpers/share";
+import ShareClient, { getTypeFromIdentifier } from "@/helpers/share";
 import { useAccountsStore } from "@/stores/accounts";
 import type { Account } from "@/types/accounts";
 
@@ -17,20 +17,23 @@ const tournaments = useTournamentsStore();
 const accounts = useAccountsStore();
 const tournament = tournaments.getTournamentById(props.tournament.id)!;
 const canPush = ref<Account | null>(null);
+const gistRemote = computed(
+    () => tournament.remote?.find((r) => getTypeFromIdentifier(r.identifier) === "gist") ?? null,
+);
 
 const shareModal = ref<typeof ShareModal>();
 
 watch(
-    [() => props.tournament.remote?.length, () => props.tournament.remote?.[0]?.identifier],
+    [gistRemote],
     async () => {
-        if (!props.tournament.remote?.length) return false;
-        const identifier = props.tournament.remote[0]!.identifier;
+        if (!gistRemote.value) return false;
+        const identifier = gistRemote.value.identifier;
         canPush.value = await accounts.findShareAccount(identifier);
     },
     { immediate: true },
 );
 
-const canPull = computed(() => props.tournament.remote?.some((r) => r.type === "gist"));
+const canPull = computed(() => !!gistRemote.value);
 
 const pull = async () => {
     try {
@@ -64,8 +67,8 @@ const lastPushedAgo = computed(() => {
 });
 
 const remoteDescription = computed(() => {
-    if (!props.tournament.remote?.length) return "Not shared";
-    const identifier = props.tournament.remote[0]!.identifier;
+    if (!gistRemote.value) return "Not shared";
+    const identifier = gistRemote.value.identifier;
     try {
         const share = ShareClient.fromShare(identifier);
         return share ? `${share.author} via ${share.mode}` : "Unknown source";
@@ -73,15 +76,6 @@ const remoteDescription = computed(() => {
         console.error("Error parsing remote source:", error);
         return "Unknown source";
     }
-});
-
-const gistRemote = computed(() => {
-    if (!props.tournament.remote?.length) return null;
-    const remote = props.tournament.remote[0]!;
-    if (remote.type === "gist") {
-        return remote;
-    }
-    return null;
 });
 </script>
 
@@ -144,6 +138,18 @@ const gistRemote = computed(() => {
                 >
                     <ion-icon name="cloud-upload-outline" />
                     Push
+                </button>
+            </div>
+            <div
+                class="field"
+                v-if="canPush"
+            >
+                <button
+                    class="danger"
+                    @click="ShareClient.unlink(tournament, gistRemote!, canPush)"
+                >
+                    <ion-icon name="trash-outline" />
+                    Unlink Remote
                 </button>
             </div>
             <div

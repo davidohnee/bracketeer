@@ -3,7 +3,7 @@ import { tournamentFromJson } from "@/helpers";
 import { deepCopy } from "@/helpers/common";
 import { generateId } from "@/helpers/id";
 import type { IRemote, Tournament } from "@/types/tournament";
-import { fromShare, toShare, type Import } from "..";
+import { fromShare, getTypeFromIdentifier, toShare, type Import } from "..";
 
 export type Files = Record<string, object | null>;
 
@@ -240,7 +240,6 @@ const push = async (
     const name = getGistFilename(tournament.name);
 
     const copy = deepCopy(tournament);
-    delete copy.remote;
 
     const options: GistOptions = {
         filename: tournament.name,
@@ -285,19 +284,21 @@ const push = async (
 
     const { identifier, link } = toShare("gist", user, `${gistId}:${revision}`);
 
-    if (tournament.remote?.length) {
-        tournament.remote[0].type = "gist";
-        tournament.remote[0].pushDate = new Date();
-        tournament.remote[0].filename = tournament.name;
+    tournament.remote ??= [];
+    const gistRemote = tournament.remote.find(
+        (r) => getTypeFromIdentifier(r.identifier) === "gist",
+    );
+
+    if (gistRemote) {
+        gistRemote.identifier = identifier;
+        gistRemote.pushDate = new Date();
+        gistRemote.filename = tournament.name;
     } else {
-        tournament.remote = [
-            {
-                type: "gist",
-                identifier,
-                pushDate: new Date(),
-                filename: tournament.name,
-            },
-        ];
+        tournament.remote.push({
+            identifier,
+            pushDate: new Date(),
+            filename: tournament.name,
+        });
     }
 
     return { type: "success", author: jdata.owner.login, tournament, link, date: new Date() };
@@ -337,9 +338,29 @@ const pull = async (identifier: string): Promise<Import> => {
     return { type: "error", error: "not-supported" };
 };
 
+const remove = async (identifier: string, account: Account) => {
+    try {
+        const { author, tag } = fromShare(identifier);
+        if (author !== account.displayName) {
+            return false;
+        }
+
+        const [gistId] = tag.split(":");
+        const res = await fetch(`https://api.github.com/gists/${gistId}`, {
+            method: "DELETE",
+            headers: getHeaders(account.accessToken),
+        });
+
+        return res.ok;
+    } catch {
+        return false;
+    }
+};
+
 export const gistShare = {
     push,
     pull,
+    remove,
     accessTokenToAccount,
     isSharedWithAccount,
     isMine,

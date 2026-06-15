@@ -2,7 +2,7 @@
 import type { Tournament } from "@/types/tournament";
 import { useTournamentsStore } from "@/stores/tournaments";
 import { computed, ref, watch } from "vue";
-import ShareClient, { fromShare, getShareLink } from "@/helpers/share";
+import ShareClient, { fromShare, getShareLink, getTypeFromIdentifier } from "@/helpers/share";
 import type { PeerIdType } from "@/helpers/share/p2p/backgroundSync";
 import { useBackgroundSyncStore } from "@/stores/backgroundSync";
 import AdvancedInput from "@/components/input/AdvancedInput.vue";
@@ -28,14 +28,12 @@ const options = [
 
 const tournaments = useTournamentsStore();
 const tournament = tournaments.getTournamentById(props.tournament.id)!;
-const p2pRemote = computed(() => tournament.remote?.find((r) => r.type === "p2p") ?? null);
-const hasP2PRemote = computed(() => {
-    if (!props.tournament.remote?.length) return false;
-    return props.tournament.remote[0]!.type === "p2p";
-});
+const p2pRemote = computed(
+    () => tournament.remote?.find((r) => getTypeFromIdentifier(r.identifier) === "p2p") ?? null,
+);
 const peerIdType = ref<PeerIdType>("session");
 
-if (hasP2PRemote.value) {
+if (p2pRemote.value) {
     const identifier = props.tournament.remote![0]!.identifier;
     const { author } = fromShare(identifier);
     if (author === "session" || author === "random" || author === "permanent") {
@@ -44,33 +42,31 @@ if (hasP2PRemote.value) {
 }
 
 const startP2P = () => {
-    if (hasP2PRemote.value) return;
+    if (p2pRemote.value) return;
     const shareId = ShareClient.toShare("p2p", peerIdType.value, crypto.randomUUID());
 
     tournament.remote ??= [];
     tournament.remote.push({
-        type: "p2p",
         identifier: shareId.identifier,
         pushDate: new Date(),
     });
 };
 
 const updateP2PRemote = () => {
-    if (!hasP2PRemote.value) return;
+    if (!p2pRemote.value) return;
     const shareId = ShareClient.toShare("p2p", peerIdType.value, crypto.randomUUID());
 
-    const i = tournament.remote!.findIndex((r) => r.type === "p2p");
+    const i = tournament.remote!.findIndex((r) => getTypeFromIdentifier(r.identifier) === "p2p");
     if (i === -1) return;
     tournament.remote![i] = {
-        type: "p2p",
         identifier: shareId.identifier,
         pushDate: new Date(),
     };
 };
 
 const removeP2PRemote = () => {
-    if (!hasP2PRemote.value) return;
-    const i = tournament.remote!.findIndex((r) => r.type === "p2p");
+    if (!p2pRemote.value) return;
+    const i = tournament.remote!.findIndex((r) => getTypeFromIdentifier(r.identifier) === "p2p");
     if (i === -1) return;
     tournament.remote!.splice(i, 1);
 };
@@ -140,7 +136,7 @@ const syncState = computed(() => {
                 Sharing in another tab or window.
             </template>
         </p>
-        <template v-if="hasP2PRemote">
+        <template v-if="p2pRemote">
             <div class="row mt-0">
                 <div class="field flex-1">
                     <select v-model="peerIdType">

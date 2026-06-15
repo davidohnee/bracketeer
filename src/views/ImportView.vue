@@ -7,7 +7,7 @@
 import { computed, onMounted, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import type { Tournament } from "@/types/tournament";
-import { fromShare, pull } from "@/helpers/share";
+import { pull } from "@/helpers/share";
 import { useTournamentsStore } from "@/stores/tournaments";
 import ViewerView from "./ViewerView.vue";
 
@@ -39,10 +39,8 @@ onMounted(async () => {
 const confirm = async () => {
     const tournament = what.value[0];
     if (!tournament) return;
-    const { mode } = fromShare(routeId.value);
     tournament.remote ??= [];
     tournament.remote.push({
-        type: mode === "p2p" ? "p2p" : "gist",
         identifier: routeId.value,
     });
 

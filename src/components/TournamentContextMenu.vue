@@ -22,7 +22,7 @@ const shareTournament = () => {
 };
 
 const shareViewerTournament = () => {
-    if (!props.tournament.remote?.[0]?.identifier) {
+    if (!props.tournament.remote?.length) {
         Notifications.addError("Cannot share viewer link", {
             details: "The tournament must be shared first before sharing the viewer link.",
             timeout: 3000,

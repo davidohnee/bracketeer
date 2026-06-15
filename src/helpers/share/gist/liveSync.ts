@@ -41,7 +41,7 @@ export const createLiveSync: LiveSyncFactory<IGistLiveSync> = (tournament) => {
             }
         },
         async pull(identifier) {
-            console.log("Starting live sync pull with identifier:", identifier);
+            console.log("[Gist] Starting live sync pull with identifier:", identifier);
 
             const cachedTime = sessionStorage.getItem(identifier);
             if (cachedTime) {

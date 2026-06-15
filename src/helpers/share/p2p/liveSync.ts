@@ -97,9 +97,14 @@ const handlePullData = (context: PullContext) => (data: unknown) => {
     }
 };
 
+const fireError = (context: PullContext, error: Import["error"]) => {
+    context.sync.error.value = error;
+    context.sync.onError?.(error);
+};
+
 const connectPullPeer = (context: PullContext) => {
     const timeout = setTimeout(() => {
-        context.sync.error.value = "no-connection";
+        fireError(context, "no-connection");
         context.sync._connection?.close();
         schedulePullReconnect(context, () => connectPullPeer(context));
     }, 10 * 1000);
@@ -113,13 +118,13 @@ const connectPullPeer = (context: PullContext) => {
 
     context.sync._connection.on("error", () => {
         clearTimeout(timeout);
-        context.sync.error.value = "no-connection";
+        fireError(context, "no-connection");
         schedulePullReconnect(context, () => connectPullPeer(context));
     });
 
     context.sync._connection.on("close", () => {
         clearTimeout(timeout);
-        context.sync.error.value = "no-connection";
+        fireError(context, "no-connection");
         schedulePullReconnect(context, () => connectPullPeer(context));
     });
 };
@@ -174,6 +179,7 @@ export const createLiveSync: LiveSyncFactory<IP2PLiveSync> = (tournament) => {
             });
         },
         async stop() {
+            console.log("[P2P] Stopping live sync");
             this._connection?.close();
             this._connection = null;
             this._peer.destroy();

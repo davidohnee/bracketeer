@@ -1,6 +1,7 @@
 import { ref } from "vue";
 import type { IntervalStatus, ILiveSync, LiveSyncFactory } from "../liveSync";
 import { gistShare } from "./gist";
+import { getTypeFromIdentifier } from "..";
 
 interface IGistLiveSync extends ILiveSync {
     _timer: ReturnType<typeof setInterval> | null;
@@ -32,6 +33,7 @@ export const createLiveSync: LiveSyncFactory<IGistLiveSync> = (tournament) => {
 
             if (importObject?.error) {
                 this.error.value = importObject.error;
+                this.onError?.(importObject.error);
                 return;
             }
 
@@ -52,6 +54,15 @@ export const createLiveSync: LiveSyncFactory<IGistLiveSync> = (tournament) => {
             if (this._timer) {
                 clearInterval(this._timer);
             }
+            if (
+                tournament.value?.remote?.some((r) => getTypeFromIdentifier(r.identifier) === "p2p")
+            ) {
+                this.onPreferOther?.(
+                    tournament.value.remote.find(
+                        (r) => getTypeFromIdentifier(r.identifier) === "p2p",
+                    )!,
+                );
+            }
             this._timer = setInterval(() => this._updateTask(identifier), 1000 * 60 * 5);
             return {
                 type: "success",
@@ -62,6 +73,7 @@ export const createLiveSync: LiveSyncFactory<IGistLiveSync> = (tournament) => {
             };
         },
         async stop() {
+            console.log("[Gist] Stopping live sync");
             if (this._timer) {
                 clearInterval(this._timer);
                 this._timer = null;

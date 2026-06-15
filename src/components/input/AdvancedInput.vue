@@ -18,6 +18,8 @@ defineProps<{
     loading?: boolean;
     disabled?: boolean;
     readonly?: boolean;
+    label?: string;
+    showLabel?: boolean;
 }>();
 
 const emit = defineEmits<(e: "copy") => void>();
@@ -33,6 +35,13 @@ const copy = () => {
 };
 </script>
 <template>
+    <label
+        v-if="label && showLabel"
+        :for="label"
+        class="input-label"
+    >
+        {{ label }}
+    </label>
     <div
         class="advanced-input"
         :aria-disabled="disabled || loading"
@@ -50,6 +59,7 @@ const copy = () => {
             :class="{ fadeout: !isScrolledToEnd }"
             @input="checkScroll"
             @scroll="checkScroll"
+            :id="label"
         />
         <button
             class="copy ghost"
@@ -82,6 +92,13 @@ input {
     &:disabled {
         background: none;
     }
+}
+
+label {
+    display: block;
+    margin-bottom: var(--spacing-xs);
+    font-size: var(--font-size-sm);
+    color: var(--color-text-secondary);
 }
 
 .advanced-input:has(.copy) {

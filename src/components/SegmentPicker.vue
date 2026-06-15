@@ -61,6 +61,8 @@ const allOptions = computed(() => {
     padding: var(--spacing-xs) var(--spacing-m);
     cursor: pointer;
     position: relative;
+    flex-grow: 1;
+    text-align: center;
 
     &:not(:last-child):after {
         content: "";

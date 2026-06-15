@@ -53,9 +53,10 @@ defineExpose({ open });
                 level="H"
             />
             <div v-if="shareUrl">
-                <p>Your share link:</p>
                 <advanced-input
                     type="text"
+                    label="Your share link:"
+                    show-label
                     copyable
                     readonly
                     @copy="copyToClipboard(shareUrl)"

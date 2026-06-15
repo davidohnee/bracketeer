@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { computed, onMounted, onUnmounted, ref } from "vue";
 import { useRoute } from "vue-router";
-import type { Tournament } from "@/types/tournament";
+import type { IRemote, Tournament } from "@/types/tournament";
 import TournamentLayout from "@/layouts/TournamentLayout.vue";
 import { agoString } from "@/helpers/common";
 import { getLiveSyncFactory } from "@/helpers/share/liveSync";
@@ -12,12 +12,13 @@ const route = useRoute();
 const tournament = ref<Tournament | null>(null);
 
 const routeId = computed(() => ("id" in route.params ? (route.params.id as string) : ""));
+const otherRemote = ref<string | null>(null);
 
 const subtitle = ref<string>("");
 
 let updateSubtitleTimer = 0;
 
-const liveSync = getLiveSyncFactory(routeId.value)(tournament);
+let liveSync = getLiveSyncFactory(routeId.value)(tournament);
 
 const updateSubtitle = () => {
     if (tournament.value) {
@@ -26,9 +27,33 @@ const updateSubtitle = () => {
     }
 };
 
-onMounted(() => {
-    liveSync.pull(routeId.value);
+const preferDefaultRemote = () => {
+    console.debug("Preferred default remote, switching back to", routeId.value);
+    liveSync.stop();
+    otherRemote.value = null;
+    liveSync = getLiveSyncFactory(routeId.value)(tournament);
     liveSync.onChange = updateSubtitle;
+    liveSync.pull(routeId.value);
+};
+
+const preferOtherRemote = (remote: IRemote) => {
+    console.debug("Preferred other remote, switching to", remote);
+    liveSync.stop();
+    otherRemote.value = remote.identifier;
+    liveSync = getLiveSyncFactory(remote.identifier)(tournament);
+    liveSync.onChange = updateSubtitle;
+    liveSync.pull(remote.identifier);
+    liveSync.onError = (error) => {
+        console.warn("Live sync error on other remote:", error);
+        console.log("Switching back to default remote:", routeId.value);
+        preferDefaultRemote();
+    };
+};
+
+onMounted(() => {
+    liveSync.onChange = updateSubtitle;
+    liveSync.pull(routeId.value);
+    liveSync.onPreferOther = preferOtherRemote;
     updateSubtitleTimer = setInterval(updateSubtitle, 1000 * 60); // Update every minute
 });
 onUnmounted(() => {

@@ -1,4 +1,4 @@
-import type { Tournament } from "@/types/tournament";
+import type { IRemote, Tournament } from "@/types/tournament";
 import type { Ref } from "vue";
 import { fromShare, type Import } from ".";
 import { createLiveSync as createGistLiveSync } from "./gist/liveSync";
@@ -24,6 +24,8 @@ export interface ILiveSync {
     pull: (identifier: string) => Promise<Import>;
     stop: () => void;
     onChange?: (tournament: Tournament) => void;
+    onPreferOther?: (remote: IRemote) => void;
+    onError?: (error: Import["error"]) => void;
     error: Ref<Import["error"] | null>;
     status: Ref<SyncStatus>;
 }

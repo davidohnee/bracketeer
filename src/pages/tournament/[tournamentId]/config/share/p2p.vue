@@ -6,6 +6,7 @@ import ShareClient, { fromShare, getShareLink, getTypeFromIdentifier } from "@/h
 import type { PeerIdType } from "@/helpers/share/p2p/backgroundSync";
 import { useBackgroundSyncStore } from "@/stores/backgroundSync";
 import AdvancedInput from "@/components/input/AdvancedInput.vue";
+import SegmentPicker from "@/components/SegmentPicker.vue";
 
 const props = defineProps<{
     tournament: Tournament;
@@ -15,14 +16,20 @@ const options = [
     {
         label: "Random each session",
         value: "random",
+        description:
+            "A new random ID will be generated each time you load the page. This is the most private option, but requires sharing the new ID each time.",
     },
     {
         label: "This browser session (default)",
         value: "session",
+        description:
+            "The same ID will be used across your browser session. If you close the browser, a new ID will be generated next time. This is a good balance between convenience and privacy.",
     },
     {
-        label: "Permanent ID (persists across sessions)",
+        label: "Permanent",
         value: "permanent",
+        description:
+            "The same ID will be used every time you start sharing, even across browser sessions. This is the most convenient option.",
     },
 ];
 
@@ -139,23 +146,6 @@ const syncState = computed(() => {
         <template v-if="p2pRemote">
             <div class="row mt-0">
                 <div class="field flex-1">
-                    <select v-model="peerIdType">
-                        <option
-                            v-for="option in options"
-                            :key="option.value"
-                            :value="option.value"
-                        >
-                            {{ option.label }}
-                        </option>
-                    </select>
-                </div>
-                <button @click="updateP2PRemote">
-                    <ion-icon name="refresh-outline" />
-                    Refresh ID
-                </button>
-            </div>
-            <div class="row mt-0">
-                <div class="field flex-1">
                     <AdvancedInput
                         v-if="p2pRemote?.identifier"
                         label="Share ID"
@@ -166,6 +156,13 @@ const syncState = computed(() => {
                     />
                 </div>
                 <button
+                    @click="updateP2PRemote"
+                    class="secondary"
+                >
+                    <ion-icon name="refresh-outline" />
+                    Refresh ID
+                </button>
+                <button
                     class="danger"
                     @click="removeP2PRemote"
                 >
@@ -173,21 +170,32 @@ const syncState = computed(() => {
                     Stop Sharing
                 </button>
             </div>
+            <div class="row mt-0">
+                <div class="field flex-1">
+                    <span class="text-muted peer-id">Peer ID type:</span>
+                    <SegmentPicker
+                        v-model="peerIdType"
+                        :options="options"
+                    />
+                    <p class="text-muted">
+                        {{ options.find((o) => o.value === peerIdType)?.description }}
+                    </p>
+                </div>
+            </div>
         </template>
         <div
-            class="row"
+            class="row items-center"
             v-else
         >
             <div class="field flex-1">
-                <select v-model="peerIdType">
-                    <option
-                        v-for="option in options"
-                        :key="option.value"
-                        :value="option.value"
-                    >
-                        {{ option.label }}
-                    </option>
-                </select>
+                <span class="text-muted peer-id">Peer ID type:</span>
+                <SegmentPicker
+                    v-model="peerIdType"
+                    :options="options"
+                />
+                <p class="text-muted">
+                    {{ options.find((o) => o.value === peerIdType)?.description }}
+                </p>
             </div>
 
             <button @click="startP2P">Start sharing</button>
@@ -199,8 +207,16 @@ const syncState = computed(() => {
     flex: 1;
 }
 
+.peer-id {
+    margin-bottom: var(--spacing-xs);
+}
+
 select {
     margin-bottom: 0 !important;
+}
+
+.row.items-center {
+    align-items: center;
 }
 
 .sync-status {

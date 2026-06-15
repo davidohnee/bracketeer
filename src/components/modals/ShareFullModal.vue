@@ -1,70 +1,29 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import type { Tournament } from "@/types/tournament";
 import { copyToClipboard } from "@/helpers/common";
 import ShareClient from "@/helpers/share";
 import AdvancedInput from "@/components/input/AdvancedInput.vue";
-import { useAccountsStore } from "@/stores/accounts";
+import GistOption from "./ShareFull/GistOption.vue";
+import P2POption from "./ShareFull/P2POption.vue";
 
-const shareUrl = ref("");
 const sharingItem = ref<Tournament>();
-const canPush = ref(false);
 
 const action = ref<null | "gist">(null);
 
-const accounts = useAccountsStore();
-
-const inputPat = ref("");
-const selectedAccount = ref(accounts.all[0]?.id);
 const dialog = ref<HTMLDialogElement>();
 
 const open = (tournament: Tournament) => {
     action.value = null;
     dialog.value?.showModal();
-    if (tournament.id !== sharingItem.value?.id) {
-        shareUrl.value = "";
-    }
     sharingItem.value = tournament;
-
-    if (!sharingItem.value?.remote?.length) return false;
-    const identifier = sharingItem.value.remote[0]!.identifier;
-    accounts.findShareAccount(identifier).then((account) => {
-        canPush.value = !!account;
-
-        if (canPush.value) {
-            action.value = "gist";
-            shareUrl.value = ShareClient.getShareLink(tournament.remote![0]!.identifier);
-        }
-    });
 };
 
-const setPat = async () => {
-    const account = await ShareClient.accessTokenToAccount(inputPat.value, "gist");
-    if (account) {
-        accounts.add(account);
-
-        if (!selectedAccount.value) {
-            selectedAccount.value = account.id;
-        }
-    }
-};
-
-const save = async () => {
-    const tournament = sharingItem.value;
-    if (!tournament) return;
-
-    const share = await ShareClient.share(tournament, {
-        account: accounts.all.find((x) => x.id === selectedAccount.value) ?? null,
-    });
-    if (share) {
-        shareUrl.value = share.link ?? "";
-    }
-};
-
-const share = () => {
-    action.value = "gist";
-    save();
-};
+const shareUrl = computed(() => {
+    const remote = sharingItem.value?.remote?.[0];
+    if (!remote) return "";
+    return ShareClient.getShareLink(remote.identifier);
+});
 
 defineExpose({ open });
 </script>
@@ -76,53 +35,18 @@ defineExpose({ open });
                 class="close"
                 name="close"
             ></ion-icon>
-            <template v-if="!accounts.all.length">
-                <h2>GitHub Gists PAT</h2>
-                <p>
-                    To use this feature, you need to provide a GitHub Gists PAT. This is used to
-                    create gists for sharing tournaments.
-                </p>
-                <input
-                    type="text"
-                    v-model="inputPat"
-                    placeholder="Enter your PAT here"
-                />
-                <button
-                    @click="setPat"
-                    :disabled="!inputPat.length"
-                >
-                    Save
-                </button>
-            </template>
-            <template v-else-if="!action && sharingItem">
-                <h2>Share "{{ sharingItem.name }}"</h2>
-                <div class="options">
-                    <div class="info">
-                        <h3>New share link</h3>
-                        <p>
-                            Share a link to this tournament. Others will be able to view the
-                            tournament or duplicate it.
-                            <br />
-                            <span class="text-muted"> This will create a new gist on GitHub. </span>
-                        </p>
-                    </div>
-                    <div class="account-and-create">
-                        <select v-model="selectedAccount">
-                            <option
-                                v-for="account in accounts.all"
-                                :key="account.id"
-                                :value="account.id"
-                            >
-                                {{ account.displayName }}
-                            </option>
-                        </select>
-                        <button @click="share">Create link</button>
-                    </div>
-                </div>
-            </template>
+            <h2 v-if="sharingItem">Share "{{ sharingItem.name }}"</h2>
 
-            <template v-else-if="action == 'gist' && sharingItem">
-                <h2>Share "{{ sharingItem.name }}"</h2>
+            <GistOption
+                v-if="sharingItem"
+                :tournament="sharingItem"
+            />
+            <P2POption
+                v-if="sharingItem"
+                :tournament="sharingItem"
+            />
+
+            <template v-if="shareUrl && sharingItem">
                 <p class="my-0">Your share link:</p>
                 <AdvancedInput
                     :model-value="shareUrl"
@@ -158,6 +82,10 @@ defineExpose({ open });
             border-bottom: 2px solid var(--color-border);
         }
     }
+}
+
+.content {
+    min-width: 40vw;
 }
 
 .account-and-create {

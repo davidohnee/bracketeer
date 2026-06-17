@@ -1,10 +1,7 @@
 import type { IRemote, Tournament } from "@/types/tournament";
-import { gistShare } from "./gist/gist";
 import type { Account } from "@/types/accounts";
-import { Notifications } from "@/components/notifications/createNotification";
-import { deepCopy } from "../common";
-import { ref } from "vue";
-import { createLiveSync as createP2PLiveSync } from "./p2p/liveSync";
+import P2PClient from "@/helpers/share/p2p";
+import GistClient from "@/helpers/share/gist";
 
 type ErrorType = "not-found" | "not-allowed" | "not-supported" | "no-connection";
 
@@ -19,7 +16,7 @@ interface IImportResult {
 
 interface IImportSuccess extends IImportResult {
     type: "success";
-    author: string;
+    author?: string;
     tournament: Tournament;
     link: string;
     date: Date;
@@ -32,6 +29,56 @@ interface IImportError extends IImportResult {
 
 export type Import = IImportSuccess | IImportError;
 
+export const SHARE_MODE = ["gist", "p2p"] as const;
+export type ShareMode = (typeof SHARE_MODE)[number];
+
+export interface IdentifierComponents {
+    mode: ShareMode;
+}
+
+export type AccountResolver = (remote: IRemote) => Promise<Account | null>;
+
+export interface ISimpleShareClient {
+    pull: (remote: IRemote) => Promise<Import | null>;
+    pullAndUpdate: (tournament: Tournament, remote: IRemote) => Promise<Import | null>;
+    accessTokenToAccount: (accessToken: string) => Promise<Account | null>;
+}
+
+export interface IShareClient<C extends IdentifierComponents, S> {
+    pull: (remote: IRemote) => Promise<Import | null>;
+    create: (tournament: Tournament, options: S) => Promise<Import | null>;
+    delete: (tournament: Tournament, remote: IRemote, options: S) => void;
+    fromShare: (identifier: string) => C;
+    toShare: (components: C) => { link: string; identifier: string };
+    accessTokenToAccount: (accessToken: string) => Promise<Account | null>;
+}
+
+const PREFIX = Object.fromEntries(
+    SHARE_MODE.map((mode) => [mode, encodeURIComponent(btoa(`${mode}:`).slice(0, -4))]),
+) as Record<ShareMode, string>;
+
+export const getIdentifierFragments = (identifier: string) => {
+    const str = atob(decodeURIComponent(identifier));
+    return str.split(":");
+};
+
+export const getModeFromIdentifier = (identifier: string): ShareMode | null => {
+    for (const mode of SHARE_MODE) {
+        if (identifier.startsWith(PREFIX[mode])) {
+            return mode;
+        }
+    }
+    return null;
+};
+
+export const findRemoteWithMode = (tournament: Tournament, mode: ShareMode): IRemote | null => {
+    return tournament.remote?.find((r) => getModeFromIdentifier(r.identifier) === mode) ?? null;
+};
+
+export const findRemoteIndexWithMode = (tournament: Tournament, mode: ShareMode): number => {
+    return tournament.remote?.findIndex((r) => getModeFromIdentifier(r.identifier) === mode) ?? -1;
+};
+
 const normaliseShareIdentifier = (identifier: string) => {
     try {
         return encodeURIComponent(decodeURIComponent(identifier));
@@ -40,215 +87,41 @@ const normaliseShareIdentifier = (identifier: string) => {
     }
 };
 
-export const getShareLink = (identifier: string) => {
+export const getShareLink = (identifier: string, target: "viewer" | "import" = "import") => {
     const base = globalThis.location.origin;
     const normalisedIdentifier = normaliseShareIdentifier(identifier);
-    return `${base}/s/${normalisedIdentifier}`;
+    const path = target === "viewer" ? "v" : "s";
+    return `${base}/${path}/${normalisedIdentifier}`;
 };
 
-export const toShare = (mode: "gist" | "p2p", author: string, tag: string) => {
-    const gistUrl = `${mode}:${author}:${tag}`;
-    const base64 = encodeURIComponent(btoa(gistUrl));
-    const link = getShareLink(base64);
-
-    return {
-        link,
-        identifier: base64,
-    };
-};
-
-export const fromShare = (identifier: string) => {
-    const str = atob(decodeURIComponent(identifier));
-    const [mode, author, ...data] = str.split(":");
-
-    return {
-        mode,
-        author,
-        tag: data.join(":"),
-    };
-};
-
-export const getTypeFromIdentifier = (identifier: string): "gist" | "p2p" | null => {
-    const { mode } = fromShare(identifier);
-    if (mode === "gist" || mode === "p2p") {
-        return mode;
-    }
-    return null;
-};
-
-export const push = async (
-    tournament: Tournament,
-    options: {
-        remote?: IRemote;
-        account: Account;
+const simpleClient: ISimpleShareClient = {
+    async pull(remote: IRemote) {
+        if (getModeFromIdentifier(remote.identifier) === "p2p") {
+            return await P2PClient.pull(remote);
+        }
+        if (getModeFromIdentifier(remote.identifier) === "gist") {
+            return await GistClient.pull(remote);
+        }
+        return null;
     },
-): Promise<Import> => {
-    if (options.account.type == "gist") {
-        return await gistShare.push(tournament, options);
-    }
-    return {
-        type: "error",
-        error: "not-supported",
-    };
-};
-
-export const pull = async (identifier: string): Promise<Import> => {
-    try {
-        const { mode } = fromShare(identifier);
+    async pullAndUpdate(tournament: Tournament, remote: IRemote) {
+        const importResult = await simpleClient.pull(remote);
+        if (importResult?.type === "success" && importResult.tournament) {
+            tournament.name = importResult.tournament.name;
+            tournament.teams = importResult.tournament.teams;
+            tournament.phases = importResult.tournament.phases;
+            tournament.config = importResult.tournament.config;
+            tournament.content = importResult.tournament.content;
+        }
+        return importResult;
+    },
+    async accessTokenToAccount(accessToken: string) {
+        const mode = getModeFromIdentifier(accessToken);
         if (mode === "gist") {
-            return await gistShare.pull(identifier);
+            return await GistClient.accessTokenToAccount(accessToken);
         }
-
-        if (mode === "p2p") {
-            const tournament = ref<Tournament | null>(null);
-            const liveSync = createP2PLiveSync(tournament);
-
-            try {
-                return await liveSync.pull(identifier);
-            } finally {
-                liveSync.stop();
-            }
-        }
-    } catch (error) {
-        console.error(error);
-    }
-    return { type: "error", error: "not-supported" };
+        return null;
+    },
 };
 
-export const accessTokenToAccount = async (
-    accessToken: string,
-    type: "gist",
-): Promise<Account | null> => {
-    if (type === "gist") {
-        return gistShare.accessTokenToAccount(accessToken);
-    }
-    throw new Error("NotSupported");
-};
-
-type AccountResolver = (remote: IRemote) => Promise<Account | null>;
-
-interface IShareOptions {
-    updateOnly?: boolean;
-    account?: Account | null;
-    accountResolver?: AccountResolver;
-}
-
-interface UpdateOptions extends IShareOptions {
-    updateOnly?: boolean;
-    account?: Account | null;
-    accountResolver: AccountResolver;
-}
-
-interface PublishOptions extends IShareOptions {
-    updateOnly?: boolean;
-    account: Account | null;
-    accountResolver?: AccountResolver;
-}
-
-type ShareOptions = UpdateOptions | PublishOptions;
-
-export const share = async (
-    tournament: Tournament,
-    { updateOnly, account, accountResolver }: ShareOptions,
-) => {
-    const gistRemote = tournament.remote?.find(
-        (r) => getTypeFromIdentifier(r.identifier) === "gist",
-    );
-
-    if (updateOnly) {
-        if (!gistRemote) {
-            return false;
-        }
-    }
-
-    if (!account) {
-        if (gistRemote && accountResolver) {
-            account = await accountResolver(gistRemote);
-        }
-
-        if (!account) {
-            return false;
-        }
-    }
-
-    const tournamentCopy = deepCopy(tournament);
-
-    const result = await push(tournamentCopy, {
-        remote: gistRemote,
-        account,
-    });
-    if (result.tournament) {
-        tournament.remote = result.tournament.remote;
-    } else if (result.error) {
-        console.error("Error sharing tournament:", result.error);
-        Notifications.addError("Sharing failed", {
-            details: "There was an error sharing the tournament. Please try again.",
-            timeout: 5000,
-        });
-        return false;
-    }
-
-    Notifications.addSuccess("Tournament shared", {
-        details: "The tournament has been shared successfully.",
-        timeout: 5000,
-        onClick: () => {
-            globalThis.open(result.link, "_blank");
-        },
-        redirect: result.link,
-    });
-
-    return result;
-};
-
-export const unlink = (tournament: Tournament, remote: IRemote, account: Account) => {
-    if (!tournament.remote) return;
-
-    if (getTypeFromIdentifier(remote.identifier) === "gist") {
-        gistShare.remove(remote.identifier, account).catch((error) => {
-            console.error("Error removing shared tournament:", error);
-            Notifications.addError("Error unlinking tournament", {
-                details: "There was an error unlinking the tournament. Please try again.",
-                timeout: 5000,
-            });
-        });
-    }
-    tournament.remote.splice(
-        tournament.remote.findIndex((r) => r.identifier === remote.identifier),
-        1,
-    );
-};
-
-export const pullFromRemote = async (options: { tournament?: Tournament; remote?: IRemote }) => {
-    const { tournament, remote } = options;
-
-    const pullSource = remote?.identifier ?? tournament?.remote?.[0]?.identifier;
-
-    if (!pullSource) {
-        throw new Error("No remote source");
-    }
-
-    const newTournament = await pull(pullSource);
-    if (newTournament?.error) {
-        throw new Error(newTournament.error);
-    }
-
-    if (tournament && newTournament) {
-        tournament.config = newTournament.tournament.config;
-        tournament.content = newTournament.tournament.content;
-        tournament.name = newTournament.tournament.name;
-        tournament.phases = newTournament.tournament.phases;
-        tournament.teams = newTournament.tournament.teams;
-        return tournament;
-    }
-};
-
-export default {
-    share,
-    pull: pullFromRemote,
-    unlink,
-    fromShare,
-    toShare,
-    getShareLink,
-    getTypeFromIdentifier,
-    accessTokenToAccount,
-};
+export default simpleClient;

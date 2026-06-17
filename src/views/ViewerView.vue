@@ -4,7 +4,7 @@ import { useRoute } from "vue-router";
 import type { IRemote, Tournament } from "@/types/tournament";
 import TournamentLayout from "@/layouts/TournamentLayout.vue";
 import { agoString } from "@/helpers/common";
-import { getLiveSyncFactory } from "@/helpers/share/liveSync";
+import { getPullSyncFactory } from "@/helpers/share/pullSync";
 import SpinningLoader from "@/components/SpinningLoader.vue";
 
 const route = useRoute();
@@ -18,7 +18,7 @@ const subtitle = ref<string>("");
 
 let updateSubtitleTimer = 0;
 
-let liveSync = getLiveSyncFactory(routeId.value)(tournament);
+let liveSync = getPullSyncFactory(routeId.value)(tournament);
 
 const updateSubtitle = () => {
     if (tournament.value) {
@@ -31,7 +31,7 @@ const preferDefaultRemote = () => {
     console.debug("Preferred default remote, switching back to", routeId.value);
     liveSync.stop();
     otherRemote.value = null;
-    liveSync = getLiveSyncFactory(routeId.value)(tournament);
+    liveSync = getPullSyncFactory(routeId.value)(tournament);
     liveSync.onChange = updateSubtitle;
     liveSync.pull(routeId.value);
 };
@@ -40,12 +40,11 @@ const preferOtherRemote = (remote: IRemote) => {
     console.debug("Preferred other remote, switching to", remote);
     liveSync.stop();
     otherRemote.value = remote.identifier;
-    liveSync = getLiveSyncFactory(remote.identifier)(tournament);
+    liveSync = getPullSyncFactory(remote.identifier)(tournament);
     liveSync.onChange = updateSubtitle;
     liveSync.pull(remote.identifier);
     liveSync.onError = (error) => {
-        console.warn("Live sync error on other remote:", error);
-        console.log("Switching back to default remote:", routeId.value);
+        console.warn("Pull sync error on other remote:", error);
         preferDefaultRemote();
     };
 };

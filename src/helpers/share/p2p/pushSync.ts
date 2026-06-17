@@ -2,10 +2,12 @@ import { deepCopy } from "@/helpers/common";
 import type { Tournament } from "@/types/tournament";
 import { type DataConnection, Peer } from "peerjs";
 import { ref, toRaw, watch, type Ref } from "vue";
-import { type P2PChange } from "./liveSync";
 import diff from "microdiff";
-import { fromShare, getTypeFromIdentifier, toShare } from "..";
-import type { IBackgroundSync } from "../backgroundSync";
+import type { IPushSync } from "../pushSync";
+import type { P2PChange } from "./common";
+import { generateSecureId } from "@/helpers/id";
+import P2PClient from ".";
+import { findRemoteIndexWithMode } from "..";
 
 const P2P_TAB_ID_KEY = "p2p.tab-id";
 const P2P_LOCK_PREFIX = "p2p.lock.";
@@ -13,8 +15,6 @@ const P2P_PEER_PREFIX = "p2p.peer.";
 const P2P_LEASE_MS = 15_000;
 const P2P_RETRY_MS = 5_000;
 const P2P_HEARTBEAT_MS = 5_000;
-
-export type PeerIdType = "session" | "random" | "permanent";
 
 const temporaryCache: Set<string> = new Set();
 
@@ -24,7 +24,7 @@ const getTabId = () => {
         return existing;
     }
 
-    const tabId = crypto.randomUUID();
+    const tabId = generateSecureId();
     sessionStorage.setItem(P2P_TAB_ID_KEY, tabId);
     return tabId;
 };
@@ -44,7 +44,7 @@ const readLock = (identifier: string) => {
     }
 };
 
-const writeSessionPeerId = (identifier: string) => {
+export const writeSessionPeerId = (identifier: string) => {
     const sessionKey = `${P2P_PEER_PREFIX}${identifier}`;
     localStorage.setItem(sessionKey, new Date().toISOString());
 };
@@ -102,9 +102,7 @@ const attachHostConnection =
 
 export const applyPeerId = (tournament: Ref<Tournament | null>, identifier: string) => {
     if (!tournament.value?.remote) return;
-    const i = tournament.value.remote.findIndex(
-        (r) => getTypeFromIdentifier(r.identifier) === "p2p",
-    );
+    const i = findRemoteIndexWithMode(tournament.value, "p2p");
     if (i === undefined || i === -1) {
         return;
     }
@@ -114,36 +112,44 @@ export const applyPeerId = (tournament: Ref<Tournament | null>, identifier: stri
 };
 
 export const getAndApplyPeerId = (tournament: Ref<Tournament | null>, identifier: string) => {
-    const { author, tag } = fromShare(identifier);
-    const type = author as PeerIdType;
+    const { type, peerId } = P2PClient.fromShare(identifier);
+
     if (type === "session") {
         // check session storage first for peer id with this identifier; if not generate a new one, store it and return it
-        let peerId = localStorage.getItem(`${P2P_PEER_PREFIX}${tag}`);
-        if (!peerId) {
-            peerId = crypto.randomUUID();
-            const newIdentifier = toShare("p2p", type, peerId).identifier;
-            const newSessionKey = `${P2P_PEER_PREFIX}${peerId}`;
+        const sessionCreated = localStorage.getItem(`${P2P_PEER_PREFIX}${peerId}`);
+        if (!sessionCreated) {
+            const newSessionId = generateSecureId();
+            const newIdentifier = P2PClient.toShare({
+                mode: "p2p",
+                type,
+                peerId: newSessionId,
+            }).identifier;
+            const newSessionKey = `${P2P_PEER_PREFIX}${newSessionId}`;
             localStorage.setItem(newSessionKey, new Date().toISOString());
             applyPeerId(tournament, newIdentifier);
             return newIdentifier;
         }
-        return tag;
+        return peerId;
     }
     if (type === "random") {
         if (temporaryCache.has(identifier)) {
-            return tag;
+            return peerId;
         }
 
-        const peerId = crypto.randomUUID();
-        const newIdentifier = toShare("p2p", type, peerId).identifier;
+        const newPeerId = generateSecureId();
+        const newIdentifier = P2PClient.toShare({
+            mode: "p2p",
+            type,
+            peerId: newPeerId,
+        }).identifier;
         applyPeerId(tournament, newIdentifier);
         temporaryCache.add(newIdentifier);
-        return peerId;
+        return newPeerId;
     }
-    return tag;
+    return peerId;
 };
 
-export const createBackgroundSync = (tournament: Ref<Tournament | null>): IBackgroundSync => {
+export const createPushSync = (tournament: Ref<Tournament | null>): IPushSync => {
     let peerId = "";
     let remoteIdentifier = "";
     let ownerTabId = getTabId();
@@ -264,7 +270,8 @@ export const createBackgroundSync = (tournament: Ref<Tournament | null>): IBackg
             return;
         }
 
-        peer.on("error", () => {
+        peer.on("error", (err) => {
+            console.error("PeerJS host error for identifier:", peerId, err);
             state.value = "error";
             stopHost();
         });
@@ -319,17 +326,19 @@ export const createBackgroundSync = (tournament: Ref<Tournament | null>): IBackg
 
     return {
         start(identifier: string) {
-            remoteIdentifier = identifier;
-            const newPeerId = getAndApplyPeerId(tournament, identifier);
+            setTimeout(() => {
+                remoteIdentifier = identifier;
+                const newPeerId = getAndApplyPeerId(tournament, identifier);
 
-            if (peerId === newPeerId) {
+                if (peerId === newPeerId) {
+                    tryBecomeHost();
+                    return;
+                }
+
+                stopHost();
+                peerId = newPeerId;
                 tryBecomeHost();
-                return;
-            }
-
-            stopHost();
-            peerId = newPeerId;
-            tryBecomeHost();
+            }, 1000);
         },
         stop() {
             stopHost();

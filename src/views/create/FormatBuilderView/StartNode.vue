@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { generateId } from "@/helpers/id";
 import type { Team, Tournament } from "@/types/tournament";
 import { computed, onMounted, ref } from "vue";
 
@@ -22,7 +23,7 @@ const teamsToGenerate = ref(tournament.value.teams.length || 16);
 const addTeamByName = (teams: Team[], name: string) => {
     if (name.trim() === "") return;
     teams.push({
-        id: crypto.randomUUID(),
+        id: generateId(),
         name,
     });
 };

@@ -1,15 +1,11 @@
 import { ref, toRaw } from "vue";
-import type { ILiveSync, LiveSyncFactory, LiveStatus } from "../liveSync";
+import type { IPullSync, PullSyncFactory, LiveStatus } from "../pullSync";
 import { type DataConnection, Peer } from "peerjs";
-import { fromShare, type Import } from "..";
+import { type Import } from "..";
+import P2PClient from ".";
 import type { Tournament } from "@/types/tournament";
 import { deepCopy } from "@/helpers/common";
-
-export type P2PChange = {
-    type: "CREATE" | "REMOVE" | "CHANGE";
-    path: string[];
-    value?: unknown;
-};
+import type { P2PChange } from "./common";
 
 export const applyP2PChanges = (tournament: { value: Tournament | null }, changes: P2PChange[]) => {
     if (!tournament.value) {
@@ -41,8 +37,8 @@ export const applyP2PChanges = (tournament: { value: Tournament | null }, change
 };
 
 type PullContext = {
-    sync: IP2PLiveSync;
-    tag: string;
+    sync: IP2PPullSync;
+    peerId: string;
     tournament: { value: Tournament | null };
     settled: { value: boolean };
     resolve: (result: Import) => void;
@@ -109,7 +105,7 @@ const connectPullPeer = (context: PullContext) => {
         schedulePullReconnect(context, () => connectPullPeer(context));
     }, 10 * 1000);
 
-    context.sync._connection = context.sync._peer.connect(context.tag);
+    context.sync._connection = context.sync._peer.connect(context.peerId);
     context.sync._connection.on("open", () => {
         clearTimeout(timeout);
         context.sync.error.value = null;
@@ -129,13 +125,13 @@ const connectPullPeer = (context: PullContext) => {
     });
 };
 
-interface IP2PLiveSync extends ILiveSync {
+interface IP2PPullSync extends IPullSync {
     _peer: Peer;
     _connection: DataConnection | null;
     _onDiff: (diff: P2PChange[]) => Promise<void>;
 }
 
-export const createLiveSync: LiveSyncFactory<IP2PLiveSync> = (tournament) => {
+export const createPullSync: PullSyncFactory<IP2PPullSync> = (tournament) => {
     return {
         _connection: null,
         _peer: new Peer(),
@@ -148,7 +144,7 @@ export const createLiveSync: LiveSyncFactory<IP2PLiveSync> = (tournament) => {
             applyP2PChanges(tournament, diff);
         },
         async pull(identifier) {
-            console.log("[P2P] Starting live sync pull with identifier:", identifier);
+            console.log("[P2P] Starting pull sync with identifier:", identifier);
 
             if (this._connection) {
                 this._connection.close();
@@ -157,13 +153,13 @@ export const createLiveSync: LiveSyncFactory<IP2PLiveSync> = (tournament) => {
             if (this._peer.destroyed) {
                 this._peer = new Peer();
             }
-            const { tag } = fromShare(identifier);
+            const { peerId } = P2PClient.fromShare(identifier);
 
             return await new Promise((resolve) => {
                 const settled = { value: false };
                 const context: PullContext = {
                     sync: this,
-                    tag,
+                    peerId,
                     tournament,
                     settled,
                     resolve,
@@ -179,7 +175,7 @@ export const createLiveSync: LiveSyncFactory<IP2PLiveSync> = (tournament) => {
             });
         },
         async stop() {
-            console.log("[P2P] Stopping live sync");
+            console.log("[P2P] Stopping pull sync");
             this._connection?.close();
             this._connection = null;
             this._peer.destroy();

@@ -1,42 +1,40 @@
 import type { Tournament } from "@/types/tournament";
 import { ref, watch, type Ref } from "vue";
-import { fromShare } from ".";
-import { createBackgroundSync as createGistBackgroundSync } from "./gist/backgroundSync";
-import { createBackgroundSync as createP2PBackgroundSync } from "./p2p/backgroundSync";
+import { getModeFromIdentifier } from ".";
+import { createPushSync as createGistPushSync } from "./gist/pushSync";
+import { createPushSync as createP2PPushSync } from "./p2p/pushSync";
 
-export interface IBackgroundSync {
+export interface IPushSync {
     start: (identifier: string) => void;
     stop: () => void;
     state: Ref<"connected" | "connecting" | "disconnected" | "no-lock" | "error">;
     id: string;
 }
 
-export type BackgroundSyncFactory = (tournament: Ref<Tournament | null>) => IBackgroundSync;
+export type PushSyncFactory = (tournament: Ref<Tournament | null>) => IPushSync;
 
-const getBackgroundSyncFactory = (identifier: string): BackgroundSyncFactory => {
-    const { mode } = fromShare(identifier);
+const getPushSyncFactory = (identifier: string): PushSyncFactory => {
+    const mode = getModeFromIdentifier(identifier);
     if (mode === "gist") {
-        return createGistBackgroundSync;
+        return createGistPushSync;
     } else if (mode === "p2p") {
-        return createP2PBackgroundSync;
+        return createP2PPushSync;
     }
     throw new Error("Not supported");
 };
 
-export type BackgroundSyncManager = {
+export type PushSyncManager = {
     start: () => void;
     stop: () => void;
-    activeSyncs: IBackgroundSync[];
+    activeSyncs: IPushSync[];
 };
 
-export const backgroundSyncManager = (
-    tournament: Ref<Tournament | null>,
-): BackgroundSyncManager => {
-    const syncInstances: Ref<IBackgroundSync[]> = ref([]);
+export const pushSyncManager = (tournament: Ref<Tournament | null>): PushSyncManager => {
+    const syncInstances: Ref<IPushSync[]> = ref([]);
     let activeIdentifiers: Set<string> = new Set();
     let stopWatching: (() => void) | null = null;
 
-    const syncInstanceById = (identifier: string): IBackgroundSync | undefined => {
+    const syncInstanceById = (identifier: string): IPushSync | undefined => {
         return syncInstances.value.find((instance) => instance.id === identifier);
     };
 
@@ -45,12 +43,12 @@ export const backgroundSyncManager = (
             return;
         }
         try {
-            const factory = getBackgroundSyncFactory(identifier);
+            const factory = getPushSyncFactory(identifier);
             const instance = factory(tournament);
             instance.start(identifier);
             syncInstances.value = [...syncInstances.value, instance];
         } catch (error) {
-            console.error("Failed to start background sync for identifier:", identifier, error);
+            console.error("Failed to start push sync for identifier:", identifier, error);
         }
     };
 

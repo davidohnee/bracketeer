@@ -7,7 +7,7 @@
 import { computed, onMounted, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import type { Tournament } from "@/types/tournament";
-import { pull } from "@/helpers/share";
+import SimpleClient from "@/helpers/share";
 import { useTournamentsStore } from "@/stores/tournaments";
 import ViewerView from "./ViewerView.vue";
 
@@ -25,7 +25,7 @@ const routeId = computed(() => ("id" in route.params ? (route.params.id as strin
 
 onMounted(async () => {
     const base64 = routeId.value;
-    const importObject = await pull(base64);
+    const importObject = await SimpleClient.pull({ identifier: base64 });
 
     if (importObject?.error) {
         error.value = importObject.error;

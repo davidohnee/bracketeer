@@ -4,7 +4,7 @@ import type { Tournament } from "@/types/tournament";
 import { useRoute } from "vue-router";
 import TournamentContextMenu from "@/components/TournamentContextMenu.vue";
 import EditableText from "@/components/input/EditableText.vue";
-import { useBackgroundSyncStore } from "@/stores/backgroundSync";
+import { usePushSyncStore } from "@/stores/pushSync";
 
 const route = useRoute();
 
@@ -48,14 +48,14 @@ const baseRoute = computed(() => {
     return name.split("/").slice(0, 3).join("/");
 });
 
-const backgroundSync = useBackgroundSyncStore();
+const pushSync = usePushSyncStore();
 
 onMounted(() => {
-    backgroundSync.start(tournament);
+    pushSync.start(tournament);
 });
 
 onUnmounted(() => {
-    backgroundSync.stop();
+    pushSync.stop();
 });
 </script>
 

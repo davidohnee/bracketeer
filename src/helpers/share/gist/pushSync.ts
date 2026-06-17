@@ -1,11 +1,11 @@
 import type { Tournament } from "@/types/tournament";
 import { throttle } from "lodash";
 import { ref, watch, type Ref } from "vue";
-import ShareClient from "@/helpers/share";
+import GistClient from "@/helpers/share/gist";
 import { useAccountsStore } from "@/stores/accounts";
-import type { IBackgroundSync } from "../backgroundSync";
+import type { IPushSync } from "../pushSync";
 
-export const createBackgroundSync = (tournament: Ref<Tournament | null>): IBackgroundSync => {
+export const createPushSync = (tournament: Ref<Tournament | null>): IPushSync => {
     const accounts = useAccountsStore();
     let remoteIdentifier = "";
     let stopWatching: (() => void) | null = null;
@@ -26,7 +26,7 @@ export const createBackgroundSync = (tournament: Ref<Tournament | null>): IBackg
             return;
         }
 
-        ShareClient.share(tournament.value, {
+        GistClient.create(tournament.value, {
             updateOnly: true,
             accountResolver: (remote) => accounts.findShareAccount(remote.identifier),
         });

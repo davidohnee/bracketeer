@@ -39,10 +39,6 @@ onMounted(async () => {
 const confirm = async () => {
     const tournament = what.value[0];
     if (!tournament) return;
-    tournament.remote ??= [];
-    tournament.remote.push({
-        identifier: routeId.value,
-    });
 
     await tournaments.add(tournament);
     router.push({

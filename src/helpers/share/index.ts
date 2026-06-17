@@ -116,11 +116,7 @@ const simpleClient: ISimpleShareClient = {
         return importResult;
     },
     async accessTokenToAccount(accessToken: string) {
-        const mode = getModeFromIdentifier(accessToken);
-        if (mode === "gist") {
-            return await GistClient.accessTokenToAccount(accessToken);
-        }
-        return null;
+        return await GistClient.accessTokenToAccount(accessToken);
     },
 };
 

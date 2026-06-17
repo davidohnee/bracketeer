@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
 import type { Tournament } from "@/types/tournament";
-import ShareClient, { getTypeFromIdentifier } from "@/helpers/share";
+import { getModeFromIdentifier, getShareLink } from "@/helpers/share";
 import { QrcodeSvg } from "qrcode.vue";
 import AdvancedInput from "../input/AdvancedInput.vue";
 import { copyToClipboard } from "@/helpers/common";
@@ -17,8 +17,8 @@ const preferredRemote = computed<null | { identifier: string }>(() => {
     if (!tournament.value?.remote) return null;
     const preferredOrder = ["gist", "p2p"];
     const sorted = [...tournament.value.remote].sort((a, b) => {
-        const aIndex = preferredOrder.indexOf(getTypeFromIdentifier(a.identifier) as string);
-        const bIndex = preferredOrder.indexOf(getTypeFromIdentifier(b.identifier) as string);
+        const aIndex = preferredOrder.indexOf(getModeFromIdentifier(a.identifier) as string);
+        const bIndex = preferredOrder.indexOf(getModeFromIdentifier(b.identifier) as string);
         return aIndex - bIndex;
     });
     return sorted.at(0) ?? null;
@@ -30,10 +30,7 @@ const open = (newTournament: Tournament) => {
     action.value = null;
     dialog.value?.showModal();
 
-    shareUrl.value = ShareClient.getShareLink(preferredRemote.value!.identifier!).replace(
-        "/s/",
-        "/v/",
-    );
+    shareUrl.value = getShareLink(preferredRemote.value!.identifier!, "viewer");
 };
 
 defineExpose({ open });

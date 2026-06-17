@@ -2,7 +2,7 @@
 import { computed, ref } from "vue";
 import type { Tournament } from "@/types/tournament";
 import { copyToClipboard } from "@/helpers/common";
-import ShareClient from "@/helpers/share";
+import { getShareLink } from "@/helpers/share";
 import AdvancedInput from "@/components/input/AdvancedInput.vue";
 import GistOption from "./ShareFull/GistOption.vue";
 import P2POption from "./ShareFull/P2POption.vue";
@@ -22,7 +22,7 @@ const open = (tournament: Tournament) => {
 const shareUrl = computed(() => {
     const remote = sharingItem.value?.remote?.[0];
     if (!remote) return "";
-    return ShareClient.getShareLink(remote.identifier);
+    return getShareLink(remote.identifier);
 });
 
 defineExpose({ open });

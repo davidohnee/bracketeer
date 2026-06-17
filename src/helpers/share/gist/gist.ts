@@ -3,7 +3,8 @@ import { tournamentFromJson } from "@/helpers";
 import { deepCopy } from "@/helpers/common";
 import { generateId } from "@/helpers/id";
 import type { IRemote, Tournament } from "@/types/tournament";
-import { fromShare, getTypeFromIdentifier, toShare, type Import } from "..";
+import { findRemoteWithMode, type Import } from "..";
+import GistClient from ".";
 
 export type Files = Record<string, object | null>;
 
@@ -114,7 +115,7 @@ const getPreviousFilename = async ({
         return remote.filename;
     }
 
-    const { tag } = fromShare(remote.identifier);
+    const { tag } = GistClient.fromShare(remote.identifier);
     const gistId = tag.split(":")[0];
     const gist = await getGist(gistId, account.accessToken);
 
@@ -189,7 +190,7 @@ const accessTokenToAccount = async (accessToken: string) => {
 
 const isMine = async (identifier: string, accounts: Account[]) => {
     try {
-        const { author } = fromShare(identifier);
+        const { author } = GistClient.fromShare(identifier);
         return accounts.find((x) => x.displayName === author) ?? null;
     } catch {
         return null;
@@ -198,7 +199,7 @@ const isMine = async (identifier: string, accounts: Account[]) => {
 
 const isSharedWithAccount = (remoteIdentifier: string, account: Account) => {
     try {
-        const { author } = fromShare(remoteIdentifier);
+        const { author } = GistClient.fromShare(remoteIdentifier);
         return author === account.displayName;
     } catch {
         return false;
@@ -230,16 +231,15 @@ const migrate = (): Account | null => {
 const push = async (
     tournament: Tournament,
     {
-        remote,
         account,
     }: {
-        remote?: IRemote;
         account: GistAccount;
     },
 ): Promise<Import> => {
     const name = getGistFilename(tournament.name);
 
     const copy = deepCopy(tournament);
+    const gistRemote = findRemoteWithMode(tournament, "gist");
 
     const options: GistOptions = {
         filename: tournament.name,
@@ -248,17 +248,21 @@ const push = async (
         account,
     };
 
-    if (remote) {
-        const { tag } = fromShare(remote.identifier);
+    if (gistRemote) {
+        const { tag } = GistClient.fromShare(gistRemote.identifier);
         options.gistId = tag.split(":")[0];
 
         const previousFilename = await getPreviousFilename({
-            remote,
+            remote: gistRemote,
             account,
             currentFilename: tournament.name,
         });
 
+        console.log("Previous filename:", previousFilename, "Current filename:", tournament.name);
+
         if (previousFilename && previousFilename !== tournament.name) {
+            console.log("Renaming file in gist from", previousFilename, "to", tournament.name);
+
             options.files[getGistFilename(previousFilename)] = null;
             options.files[getGistReadmeFilename(previousFilename)] = null;
         }
@@ -280,14 +284,14 @@ const push = async (
     // gist:{user}:{gist}:{filename}
     const gistId = jdata.id;
     const user = jdata.owner.login;
-    const revision = rawUrl.split("/raw/")[1].split("/")[0];
 
-    const { identifier, link } = toShare("gist", user, `${gistId}:${revision}`);
+    const { identifier, link } = GistClient.toShare({
+        mode: "gist",
+        author: user,
+        tag: gistId,
+    });
 
     tournament.remote ??= [];
-    const gistRemote = tournament.remote.find(
-        (r) => getTypeFromIdentifier(r.identifier) === "gist",
-    );
 
     if (gistRemote) {
         gistRemote.identifier = identifier;
@@ -305,15 +309,15 @@ const push = async (
 };
 
 const pull = async (identifier: string): Promise<Import> => {
-    const { mode, author, tag } = fromShare(identifier);
-    if (!author || !tag) {
-        return {
-            type: "error",
-            error: "not-supported",
-        };
-    }
+    try {
+        const { mode, author, tag } = GistClient.fromShare(identifier);
+        if (!author || !tag) {
+            return {
+                type: "error",
+                error: "not-supported",
+            };
+        }
 
-    if (mode === "gist") {
         const [gist] = tag.split(":");
         const url = `https://gist.githubusercontent.com/${author}/${gist}/raw/`;
 
@@ -331,16 +335,20 @@ const pull = async (identifier: string): Promise<Import> => {
             type: "success",
             author,
             tournament: tournamentFromJson(jdata),
-            link: toShare(mode, author, tag).link,
+            link: GistClient.toShare({ mode, author, tag }).link,
             date: new Date(),
         };
+    } catch {
+        return {
+            type: "error",
+            error: "not-supported",
+        };
     }
-    return { type: "error", error: "not-supported" };
 };
 
 const remove = async (identifier: string, account: Account) => {
     try {
-        const { author, tag } = fromShare(identifier);
+        const { author, tag } = GistClient.fromShare(identifier);
         if (author !== account.displayName) {
             return false;
         }

@@ -1,14 +1,14 @@
 import { ref } from "vue";
-import type { IntervalStatus, ILiveSync, LiveSyncFactory } from "../liveSync";
+import type { IntervalStatus, IPullSync, PullSyncFactory } from "../pullSync";
 import { gistShare } from "./gist";
-import { getTypeFromIdentifier } from "..";
+import { findRemoteWithMode } from "..";
 
-interface IGistLiveSync extends ILiveSync {
+interface IGistPullSync extends IPullSync {
     _timer: ReturnType<typeof setInterval> | null;
     _updateTask: (identifier: string) => Promise<void>;
 }
 
-export const createLiveSync: LiveSyncFactory<IGistLiveSync> = (tournament) => {
+export const createPullSync: PullSyncFactory<IGistPullSync> = (tournament) => {
     return {
         _timer: null,
         error: ref(null),
@@ -43,7 +43,7 @@ export const createLiveSync: LiveSyncFactory<IGistLiveSync> = (tournament) => {
             }
         },
         async pull(identifier) {
-            console.log("[Gist] Starting live sync pull with identifier:", identifier);
+            console.log("[Gist] Starting pull sync with identifier:", identifier);
 
             const cachedTime = sessionStorage.getItem(identifier);
             if (cachedTime) {
@@ -54,14 +54,8 @@ export const createLiveSync: LiveSyncFactory<IGistLiveSync> = (tournament) => {
             if (this._timer) {
                 clearInterval(this._timer);
             }
-            if (
-                tournament.value?.remote?.some((r) => getTypeFromIdentifier(r.identifier) === "p2p")
-            ) {
-                this.onPreferOther?.(
-                    tournament.value.remote.find(
-                        (r) => getTypeFromIdentifier(r.identifier) === "p2p",
-                    )!,
-                );
+            if (findRemoteWithMode(tournament.value!, "p2p")) {
+                this.onPreferOther?.(findRemoteWithMode(tournament.value!, "p2p")!);
             }
             this._timer = setInterval(() => this._updateTask(identifier), 1000 * 60 * 5);
             return {
@@ -73,7 +67,7 @@ export const createLiveSync: LiveSyncFactory<IGistLiveSync> = (tournament) => {
             };
         },
         async stop() {
-            console.log("[Gist] Stopping live sync");
+            console.log("[Gist] Stopping pull sync");
             if (this._timer) {
                 clearInterval(this._timer);
                 this._timer = null;

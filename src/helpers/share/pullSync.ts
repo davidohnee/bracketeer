@@ -1,8 +1,8 @@
 import type { IRemote, Tournament } from "@/types/tournament";
 import type { Ref } from "vue";
-import { fromShare, type Import } from ".";
-import { createLiveSync as createGistLiveSync } from "./gist/liveSync";
-import { createLiveSync as createP2PLiveSync } from "./p2p/liveSync";
+import { getModeFromIdentifier, type Import } from ".";
+import { createPullSync as createGistPullSync } from "./gist/pullSync";
+import { createPullSync as createP2PPullSync } from "./p2p/pullSync";
 
 interface ISyncStatus {
     type: "live" | "interval";
@@ -20,7 +20,7 @@ export interface LiveStatus extends ISyncStatus {
 
 type SyncStatus = IntervalStatus | LiveStatus;
 
-export interface ILiveSync {
+export interface IPullSync {
     pull: (identifier: string) => Promise<Import>;
     stop: () => void;
     onChange?: (tournament: Tournament) => void;
@@ -30,14 +30,14 @@ export interface ILiveSync {
     status: Ref<SyncStatus>;
 }
 
-export type LiveSyncFactory<T extends ILiveSync> = (tournament: Ref<Tournament | null>) => T;
+export type PullSyncFactory<T extends IPullSync> = (tournament: Ref<Tournament | null>) => T;
 
-export const getLiveSyncFactory = (identifier: string): LiveSyncFactory<ILiveSync> => {
-    const { mode } = fromShare(identifier);
+export const getPullSyncFactory = (identifier: string): PullSyncFactory<IPullSync> => {
+    const mode = getModeFromIdentifier(identifier);
     if (mode === "gist") {
-        return createGistLiveSync;
+        return createGistPullSync;
     } else if (mode === "p2p") {
-        return createP2PLiveSync;
+        return createP2PPullSync;
     }
     throw new Error("Not supported");
 };

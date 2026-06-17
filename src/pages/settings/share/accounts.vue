@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { accessTokenToAccount } from "@/helpers/share";
+import SimpleShareClient from "@/helpers/share";
 import { useAccountsStore } from "@/stores/accounts";
 import { ref } from "vue";
 
@@ -9,7 +9,7 @@ const addType = ref<"gist">("gist");
 const accessToken = ref<string>("");
 
 const add = async () => {
-    const account = await accessTokenToAccount(accessToken.value, addType.value);
+    const account = await SimpleShareClient.accessTokenToAccount(accessToken.value);
     if (account) {
         accounts.add(account);
     }

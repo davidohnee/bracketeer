@@ -1,19 +1,11 @@
 import { test, vi, expect, afterEach, describe, it, beforeEach } from "vitest";
-import {
-    accessTokenToAccount,
-    fromShare,
-    getShareLink,
-    pull,
-    pullFromRemote,
-    push,
-    share,
-    toShare,
-} from ".";
 import { generateTestTournament } from "@/helpers/test";
 import type { GistAccount } from "@/types/accounts";
 import { gistShare } from "./gist/gist";
 import { Notifications } from "@/components/notifications/createNotification";
 import * as accountsStoreModule from "@/stores/accounts";
+import SimpleClient, { getShareLink } from ".";
+import GistClient from "./gist";
 
 afterEach(() => {
     vi.restoreAllMocks();
@@ -30,8 +22,8 @@ describe("share utils", () => {
         const author = "user";
         const tag = "gist-id:MyCup.bra";
 
-        const encoded = toShare("gist", author, tag).identifier;
-        const result = fromShare(encoded);
+        const encoded = GistClient.toShare({ mode: "gist", author, tag }).identifier;
+        const result = GistClient.fromShare(encoded);
 
         expect(result).toEqual({
             mode: "gist",
@@ -49,7 +41,7 @@ describe("share utils", () => {
         };
         const resolver = vi.spyOn(gistShare, "accessTokenToAccount").mockResolvedValue(account);
 
-        const result = await accessTokenToAccount("pat-123", "gist");
+        const result = await GistClient.accessTokenToAccount("pat-123");
 
         expect(result).toEqual(account);
         expect(resolver).toHaveBeenCalledWith("pat-123");
@@ -70,9 +62,9 @@ test("pull", async () => {
     const author = "user";
     const gistId = "gistId";
 
-    const { link, identifier } = toShare("gist", author, gistId);
+    const { link, identifier } = GistClient.toShare({ mode: "gist", author, tag: gistId });
 
-    const data = await pull(identifier);
+    const data = await GistClient.pull({ identifier });
 
     expect(data).toEqual({
         type: "success",
@@ -89,7 +81,7 @@ test("pull", async () => {
 });
 
 test("pull should return not-supported for malformed identifier", async () => {
-    const data = await pull("not-valid-base64");
+    const data = await GistClient.pull({ identifier: "not-valid-base64" });
 
     expect(data).toEqual({
         type: "error",
@@ -110,7 +102,7 @@ describe("push", () => {
     };
     const remote = [
         {
-            identifier: toShare("gist", author, `${gistId}:${fileName}`).identifier,
+            identifier: GistClient.toShare({ mode: "gist", author, tag: gistId }).identifier,
             pushDate: new Date(),
             filename: tournament.name,
         },
@@ -142,13 +134,14 @@ describe("push", () => {
     });
 
     it("should push new tournament", async () => {
-        const result = await push(tournament, { account });
-        expect(result.author).toBe(author);
-        expect(result.tournament).toEqual({
+        const result = await GistClient.create(tournament, { account });
+        expect(result).not.toBeNull();
+        expect(result!.author).toBe(author);
+        expect(result!.tournament).toEqual({
             ...tournament,
             remote: remoteExpected,
         });
-        expect(result.link).toBe(toShare("gist", author, `${gistId}:${fileName}`).link);
+        expect(result!.link).toBe(GistClient.toShare({ mode: "gist", author, tag: gistId }).link);
 
         expect(fetch).toHaveBeenCalledTimes(1);
         expect(fetch).toHaveBeenCalledWith(
@@ -163,13 +156,19 @@ describe("push", () => {
             remote,
         };
 
-        const result = await push(tournamentWithRemote, { remote: remote[0], account });
-        expect(result.author).toBe(author);
-        expect(result.tournament).toEqual({
+        const result = await GistClient.create(tournamentWithRemote, {
+            account,
+            updateOnly: true,
+        });
+        expect(result).not.toBeNull();
+        expect(result!.author).toBe(author);
+        expect(result!.tournament).toEqual({
             ...tournamentWithRemote,
             remote: remoteExpected,
         });
-        expect(result.link).toBe(toShare("gist", author, `${gistId}:${fileName}`).link);
+        expect(result!.link).toBe(
+            GistClient.toShare({ mode: "gist", author, tag: `${gistId}` }).link,
+        );
 
         expect(fetch).toHaveBeenCalledTimes(1);
         expect(fetch).toHaveBeenCalledWith(
@@ -181,6 +180,13 @@ describe("push", () => {
     it("should remove stale gist files when the tournament is renamed", async () => {
         const oldName = "Archived Tournament";
         const baseTournament = generateTestTournament();
+        baseTournament.remote = [
+            {
+                identifier: GistClient.toShare({ mode: "gist", author, tag: gistId }).identifier,
+                pushDate: new Date(),
+                filename: oldName,
+            },
+        ];
         const renamedTournament = {
             ...baseTournament,
             name: "Renamed Tournament",
@@ -188,13 +194,7 @@ describe("push", () => {
         const renamedTournamentPayload = {
             ...renamedTournament,
         };
-        delete renamedTournamentPayload.remote;
         const renamedFileName = `${renamedTournament.name}.bra`;
-        const legacyRemote = {
-            type: "gist" as const,
-            identifier: toShare("gist", author, `${gistId}:${fileName}`).identifier,
-            pushDate: new Date(),
-        };
 
         // @ts-expect-error - Mocking global fetch
         globalThis.fetch = vi.fn((input: string, init?: RequestInit) => {
@@ -232,33 +232,34 @@ describe("push", () => {
             });
         });
 
-        const result = await push(renamedTournament, {
-            remote: legacyRemote,
+        const result = await GistClient.create(renamedTournament, {
             account,
         });
 
-        expect(result.author).toBe(author);
-        expect(result.tournament).toEqual({
+        expect(result).not.toBeNull();
+        expect(result!.author).toBe(author);
+        expect(result!.tournament).toEqual({
             ...renamedTournament,
             remote: [
                 {
-                    identifier: toShare("gist", author, `${gistId}:${renamedFileName}`).identifier,
+                    identifier: GistClient.toShare({ mode: "gist", author, tag: gistId })
+                        .identifier,
                     pushDate: expect.any(Date),
                     filename: renamedTournament.name,
                 },
             ],
         });
-        expect(result.link).toBe(toShare("gist", author, `${gistId}:${renamedFileName}`).link);
+        expect(result!.link).toBe(GistClient.toShare({ mode: "gist", author, tag: gistId }).link);
 
-        expect(fetch).toHaveBeenCalledTimes(2);
+        expect(fetch).toHaveBeenCalledTimes(1);
         expect(fetch).toHaveBeenNthCalledWith(
             1,
             `https://api.github.com/gists/${gistId}`,
-            expect.objectContaining({}),
+            expect.objectContaining({ method: "PATCH" }),
         );
 
         const requestBody = JSON.parse(
-            (vi.mocked(fetch).mock.calls[1][1]?.body as string) ?? "{}",
+            (vi.mocked(fetch).mock.calls[0][1]?.body as string) ?? "{}",
         ) as {
             files?: Record<string, unknown>;
         };
@@ -273,11 +274,6 @@ describe("push", () => {
                 content: expect.stringContaining("This gist was created with bracketeer"),
             },
         });
-        expect(fetch).toHaveBeenNthCalledWith(
-            2,
-            `https://api.github.com/gists/${gistId}`,
-            expect.objectContaining({ method: "PATCH" }),
-        );
     });
 });
 
@@ -289,32 +285,36 @@ describe("share", () => {
         displayName: "user",
     };
 
-    it("should return false when updateOnly is true and no remote exists", async () => {
+    it("should return null when updateOnly is true and no remote exists", async () => {
         const tournament = generateTestTournament();
 
-        const result = await share(tournament, { updateOnly: true, account });
+        const result = await GistClient.create(tournament, { updateOnly: true, account });
 
-        expect(result).toBe(false);
+        expect(result).toBe(null);
     });
 
-    it("should return false when no account can be resolved", async () => {
+    it("should return null when no account can be resolved", async () => {
         const tournament = generateTestTournament();
         const store = { findShareAccount: vi.fn().mockResolvedValue(null) };
         vi.spyOn(accountsStoreModule, "useAccountsStore").mockReturnValue(store as never);
 
-        const result = await share(tournament, {
+        const result = await GistClient.create(tournament, {
             accountResolver(remote) {
                 return store.findShareAccount(remote.identifier);
             },
         });
 
         expect(store.findShareAccount).not.toHaveBeenCalled();
-        expect(result).toBe(false);
+        expect(result).toBe(null);
     });
 
     it("should resolve account from remote and share successfully", async () => {
         const tournament = generateTestTournament();
-        const remoteIdentifier = toShare("gist", "user", "gist-id:test.bra").identifier;
+        const remoteIdentifier = GistClient.toShare({
+            mode: "gist",
+            author: "user",
+            tag: "gist-id:test.bra",
+        }).identifier;
         tournament.remote = [
             {
                 identifier: remoteIdentifier,
@@ -345,7 +345,7 @@ describe("share", () => {
         const pushSpy = vi.spyOn(gistShare, "push").mockResolvedValue(resultPayload);
         vi.spyOn(accountsStoreModule, "useAccountsStore").mockReturnValue(store as never);
 
-        const result = await share(tournament, {
+        const result = await GistClient.create(tournament, {
             accountResolver(remote) {
                 return store.findShareAccount(remote.identifier);
             },
@@ -358,7 +358,7 @@ describe("share", () => {
         expect(result).toEqual(resultPayload);
     });
 
-    it("should return false and show error notification when push fails", async () => {
+    it("should return null and show error notification when push fails", async () => {
         const tournament = generateTestTournament();
 
         const errorSpy = vi.spyOn(Notifications, "addError").mockImplementation(() => "");
@@ -367,9 +367,9 @@ describe("share", () => {
             error: "not-allowed",
         });
 
-        const result = await share(tournament, { account });
+        const result = await GistClient.create(tournament, { account });
 
-        expect(result).toBe(false);
+        expect(result).toBe(null);
         expect(errorSpy).toHaveBeenCalledWith(
             "Sharing failed",
             expect.objectContaining({
@@ -380,25 +380,31 @@ describe("share", () => {
 });
 
 describe("pullFromRemote", () => {
-    it("should throw when no source can be resolved", async () => {
-        await expect(pullFromRemote({})).rejects.toThrow("No remote source");
-    });
-
     it("should throw when remote pull returns an error", async () => {
-        const identifier = toShare("gist", "user", "gist-id").identifier;
+        const identifier = GistClient.toShare({
+            mode: "gist",
+            author: "user",
+            tag: "gist-id",
+        }).identifier;
+
         vi.spyOn(gistShare, "pull").mockResolvedValue({
             type: "error",
             error: "not-found",
         });
 
-        await expect(
-            pullFromRemote({ remote: { identifier, pushDate: new Date() } }),
-        ).rejects.toThrow("not-found");
+        expect(await GistClient.pull({ identifier })).toEqual({
+            type: "error",
+            error: "not-found",
+        });
     });
 
     it("should update tournament fields from remote data", async () => {
         const tournament = generateTestTournament();
-        const identifier = toShare("gist", "user", "gist-id").identifier;
+        const identifier = GistClient.toShare({
+            mode: "gist",
+            author: "user",
+            tag: "gist-id",
+        }).identifier;
         tournament.remote = [{ identifier, pushDate: new Date() }];
 
         const pulledTournament = generateTestTournament();
@@ -412,9 +418,9 @@ describe("pullFromRemote", () => {
             date: new Date(),
         });
 
-        const result = await pullFromRemote({ tournament });
+        const result = await SimpleClient.pullAndUpdate(tournament, { identifier });
 
-        expect(result).toBe(tournament);
+        expect(result).not.toBeNull();
         expect(tournament.name).toBe("Updated Tournament");
         expect(tournament.config).toEqual(pulledTournament.config);
         expect(tournament.phases).toEqual(pulledTournament.phases);

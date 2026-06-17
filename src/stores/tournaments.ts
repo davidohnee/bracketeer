@@ -6,6 +6,7 @@ import { generateKnockoutBrackets } from "@/helpers/matchplan/knockoutPhase";
 import { generateGroupPhases } from "@/helpers/matchplan/groupPhase";
 import { generateNTeams } from "@/helpers/teamGenerator";
 import { throttle } from "lodash";
+import { generateId } from "@/helpers/id";
 
 const LOCAL_STORAGE_KEY = "tournaments";
 
@@ -56,19 +57,19 @@ export const useTournamentsStore = defineStore(LOCAL_STORAGE_KEY, () => {
         const teams = generateNTeams(teamCount);
         const tournament: Tournament = {
             version: 3,
-            id: crypto.randomUUID(),
+            id: generateId(),
             name: `Tournament ${tournaments.value.length + 1}`,
             teams: teams,
             phases: [
                 {
-                    id: crypto.randomUUID(),
+                    id: generateId(),
                     type: "group",
                     name: "Group Stage",
                     matches: [],
                     rounds: 3,
                 },
                 {
-                    id: crypto.randomUUID(),
+                    id: generateId(),
                     type: "knockout",
                     name: "Knockout Stage",
                     rounds: [],

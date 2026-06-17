@@ -31,7 +31,7 @@ watch(
     { immediate: true },
 );
 
-// const canPull = computed(() => !!gistRemote.value);
+const canPull = computed(() => !!gistRemote.value);
 
 const pull = async () => {
     try {
@@ -162,7 +162,33 @@ onMounted(() => {
                     @click="GistClient.delete(tournament, gistRemote!, { account: canPush })"
                 >
                     <ion-icon name="trash-outline" />
-                    Unlink Remote
+                    Delete Remote
+                </button>
+            </div>
+        </div>
+    </template>
+    <template v-else-if="canPull">
+        <div class="row start">
+            <div class="field">
+                <p
+                    v-if="gistRemote"
+                    class="mt-0"
+                >
+                    Remote source:
+                    <strong>
+                        {{ remoteDescription }}
+                    </strong>
+                </p>
+            </div>
+        </div>
+        <div class="row start">
+            <div class="field">
+                <button
+                    class="secondary"
+                    @click="pull"
+                >
+                    <ion-icon name="cloud-download-outline" />
+                    Pull
                 </button>
             </div>
         </div>
@@ -192,6 +218,7 @@ onMounted(() => {
             Save
         </button>
     </template>
+
     <template v-else>
         <div class="options">
             <div class="info">

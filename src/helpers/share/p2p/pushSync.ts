@@ -88,6 +88,7 @@ const attachHostConnection =
         });
 
         const removeConnection = () => {
+            console.warn("Connection closed or errored, removing from active connections");
             const index = connections.findIndex(
                 (item) => item.connectionId === connection.connectionId,
             );

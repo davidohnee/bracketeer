@@ -308,4 +308,36 @@ describe("gist share functions", () => {
             expect(localStorage.getItem("github.pat")).toBe(accessToken);
         });
     });
+
+    describe("remove", () => {
+        it("should delete the tournament from gist via DELETE request", async () => {
+            const identifier = GistClient.toShare({
+                mode: "gist",
+                author: "testuser",
+                tag: "test-gist-id",
+            }).identifier;
+
+            // @ts-expect-error - Mocking global fetch
+            globalThis.fetch = vi.fn(() =>
+                Promise.resolve({
+                    ok: true,
+                }),
+            );
+
+            gistShare.remove(identifier, {
+                accessToken: "ghp_123456",
+                displayName: "testuser",
+                id: "account-id",
+                type: "gist",
+            });
+
+            expect(fetch).toHaveBeenCalledTimes(1);
+            expect(fetch).toHaveBeenCalledWith(`https://api.github.com/gists/test-gist-id`, {
+                method: "DELETE",
+                headers: {
+                    Authorization: "Bearer ghp_123456",
+                },
+            });
+        });
+    });
 });

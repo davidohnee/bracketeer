@@ -86,6 +86,25 @@ describe("pull sync", () => {
             const { onDataCallback } = setupAndVerifyPull();
 
             // Simulate receiving a diff update
+            const teamUpdate = {
+                type: "diff",
+                data: [
+                    {
+                        oldValue: "Team 1",
+                        path: ["teams", 0, "name"],
+                        type: "CHANGE",
+                        value: "Updated Team Name",
+                    },
+                ],
+            };
+            onDataCallback(teamUpdate);
+
+            await new Promise((resolve) => setTimeout(resolve, 50));
+
+            // Expect the tournament name to be updated
+            expect(tournament.value!.teams[0].name).toBe("Updated Team Name");
+
+            // Simulate receiving a diff update
             const diffMessage = {
                 type: "diff",
                 data: [
@@ -99,7 +118,7 @@ describe("pull sync", () => {
             };
             onDataCallback(diffMessage);
 
-            await new Promise((resolve) => setTimeout(resolve, 100));
+            await new Promise((resolve) => setTimeout(resolve, 50));
 
             // Expect the tournament name to be updated
             expect(tournament.value!.name).toBe("Updated Tournament Name");
@@ -109,7 +128,7 @@ describe("pull sync", () => {
             const { onDataCallback } = setupAndVerifyPull();
 
             // Simulate receiving a diff update
-            const diffMessage = {
+            const teamUpdate = {
                 type: "diff",
                 data: [
                     {
@@ -118,12 +137,29 @@ describe("pull sync", () => {
                     },
                 ],
             };
-            onDataCallback(diffMessage);
+            onDataCallback(teamUpdate);
 
-            await new Promise((resolve) => setTimeout(resolve, 100));
+            await new Promise((resolve) => setTimeout(resolve, 50));
 
             // Expect the tournament name to be updated
             expect(tournament.value!.teams).toHaveLength(8 - 1);
+
+            // Simulate receiving a diff update
+            const nameUpdate = {
+                type: "diff",
+                data: [
+                    {
+                        path: ["name"],
+                        type: "REMOVE",
+                    },
+                ],
+            };
+            onDataCallback(nameUpdate);
+
+            await new Promise((resolve) => setTimeout(resolve, 50));
+
+            // Expect the tournament name to be updated
+            expect(tournament.value!.name).toBeUndefined();
         });
 
         it("should be closable", async () => {

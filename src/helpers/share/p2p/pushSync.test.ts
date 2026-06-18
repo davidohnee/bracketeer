@@ -208,4 +208,20 @@ describe("push sync", () => {
             expect(secondPushSync.state.value).toBe("no-lock");
         });
     });
+
+    describe("cleanup", () => {
+        it("should clean up localStorage on start", async () => {
+            const P2P_LOCK_PREFIX = "p2p.lock.";
+            const P2P_PEER_PREFIX = "p2p.peer.";
+
+            // create some mock localStorage entries
+            localStorage.setItem(`${P2P_LOCK_PREFIX}mock-peer-id`, "mock-lock");
+            localStorage.setItem(`${P2P_PEER_PREFIX}mock-peer-id`, "mock-peer-data");
+
+            createPushSync(tournament);
+
+            expect(localStorage.getItem(`${P2P_LOCK_PREFIX}mock-peer-id`)).toBeNull();
+            expect(localStorage.getItem(`${P2P_PEER_PREFIX}mock-peer-id`)).toBeNull();
+        });
+    });
 });

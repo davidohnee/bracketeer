@@ -67,7 +67,7 @@ const createPullResult = (tournament: Tournament): Import => ({
 });
 
 const schedulePullReconnect = (context: PullContext, connect: () => void) => {
-    if (context.settled.value) {
+    if (context.sync._connection?.open) {
         return;
     }
 

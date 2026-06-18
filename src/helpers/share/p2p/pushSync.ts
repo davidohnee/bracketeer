@@ -175,7 +175,9 @@ export const createPushSync = (tournament: Ref<Tournament | null>): IPushSync =>
             peer = null;
         }
 
-        state.value = "disconnected";
+        if (state.value !== "error") {
+            state.value = "disconnected";
+        }
     };
 
     const stopHost = () => {

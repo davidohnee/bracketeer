@@ -133,5 +133,21 @@ describe("pull sync", () => {
 
             expect(connection.close).toHaveBeenCalledOnce();
         });
+
+        it("should try to recnonect", async () => {
+            const { connection } = setupAndVerifyPull();
+
+            // Simulate connection close
+            connection.open = false;
+
+            const callCount = getPeerInstance().connect.mock.calls.length;
+
+            const closeCallback = connection.on.mock.calls.find((call) => call[0] === "close")![1];
+            closeCallback();
+
+            // Expect it to try reconnecting after a delay
+            await new Promise((resolve) => setTimeout(resolve, 1100));
+            expect(getPeerInstance().connect).toHaveBeenCalledTimes(callCount + 1);
+        });
     });
 });

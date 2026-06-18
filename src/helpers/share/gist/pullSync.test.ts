@@ -4,7 +4,7 @@ import { createPullSync } from "./pullSync.ts";
 import { ref } from "vue";
 import { generateTestTournament } from "@/helpers/test";
 import { createPinia, setActivePinia } from "pinia";
-import { Tournament } from "@/types/tournament.ts";
+import type { Tournament } from "@/types/tournament.ts";
 
 afterEach(() => {
     vi.restoreAllMocks();
@@ -21,7 +21,7 @@ vi.mock("./gist.ts", async (importOriginal) => {
         gistShare: {
             // @ts-expect-error - mocking
             ...actual.gistShare,
-            pull: vi.fn().mockImplementation(async (identifier: string) => {
+            pull: vi.fn().mockImplementation(async () => {
                 return {
                     type: "success",
                     author: "author",

@@ -127,5 +127,53 @@ describe("pull sync", () => {
             // Expect the tournament name to be updated
             expect(tournament.value!.name).toBe("Updated Tournament Name");
         });
+
+        it("should apply diff (remove)", async () => {
+            const identifier = P2PClient.toShare({
+                mode: "p2p",
+                type: "permanent",
+                peerId: MOCK_PEER_ID,
+            });
+
+            const mockConnection = createMockConnection();
+            getPeerInstance().connect.mockReturnValue(mockConnection);
+
+            pullSync.pull(identifier.identifier);
+            expect(getPeerInstance().connect).toHaveBeenCalledWith(MOCK_PEER_ID);
+
+            const receiveTournament = generateTestTournament();
+            // Simulate receiving the tournament data from the peer
+            // i.e. expect on("message") with full tournmante data
+            const fullDataMessage = {
+                type: "full",
+                data: receiveTournament,
+            };
+            const onDataCallback = mockConnection.on.mock.calls.find(
+                (call) => call[0] === "data",
+            )![1];
+            onDataCallback(fullDataMessage);
+
+            // Expect the tournament to be set in the ref
+            expect(tournament.value).not.toBeNull();
+            expect(tournament.value!.id).toBe(receiveTournament.id);
+            expect(tournament.value!.name).toBe(receiveTournament.name);
+
+            // Simulate receiving a diff update
+            const diffMessage = {
+                type: "diff",
+                data: [
+                    {
+                        path: ["teams", 0],
+                        type: "REMOVE",
+                    },
+                ],
+            };
+            onDataCallback(diffMessage);
+
+            await new Promise((resolve) => setTimeout(resolve, 100));
+
+            // Expect the tournament name to be updated
+            expect(tournament.value!.teams).toHaveLength(8 - 1);
+        });
     });
 });

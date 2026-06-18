@@ -7,6 +7,31 @@ import type { Tournament } from "@/types/tournament";
 import { deepCopy } from "@/helpers/common";
 import type { P2PChange } from "./common";
 
+const applyRemoveChange = (target: Record<string, unknown>, path: (string | number)[]) => {
+    for (let i = 0; i < path.length - 1; i++) {
+        target = target[path[i]] as Record<string, unknown>;
+    }
+    if (Array.isArray(target)) {
+        target.splice(path.at(-1) as unknown as number, 1);
+    } else {
+        delete target[path.at(-1)!];
+    }
+};
+
+const applyCreateOrChange = (
+    target: Record<string, unknown>,
+    path: (string | number)[],
+    value: unknown,
+) => {
+    for (let i = 0; i < path.length - 1; i++) {
+        if (!target[path[i]]) {
+            target[path[i]] = {};
+        }
+        target = target[path[i]] as Record<string, unknown>;
+    }
+    target[path.at(-1)!] = value;
+};
+
 export const applyP2PChanges = (tournament: { value: Tournament | null }, changes: P2PChange[]) => {
     if (!tournament.value) {
         return;
@@ -16,20 +41,9 @@ export const applyP2PChanges = (tournament: { value: Tournament | null }, change
 
     for (const change of changes) {
         if (change.type === "REMOVE") {
-            let target = rawTournament;
-            for (let i = 0; i < change.path.length - 1; i++) {
-                target = target[change.path[i]] as Record<string, unknown>;
-            }
-            delete target[change.path.at(-1)!];
+            applyRemoveChange(rawTournament, change.path);
         } else if (change.type === "CREATE" || change.type === "CHANGE") {
-            let target = rawTournament;
-            for (let i = 0; i < change.path.length - 1; i++) {
-                if (!target[change.path[i]]) {
-                    target[change.path[i]] = {};
-                }
-                target = target[change.path[i]] as Record<string, unknown>;
-            }
-            target[change.path.at(-1)!] = change.value;
+            applyCreateOrChange(rawTournament, change.path, change.value);
         }
     }
 

@@ -258,11 +258,7 @@ const push = async (
             currentFilename: tournament.name,
         });
 
-        console.log("Previous filename:", previousFilename, "Current filename:", tournament.name);
-
         if (previousFilename && previousFilename !== tournament.name) {
-            console.log("Renaming file in gist from", previousFilename, "to", tournament.name);
-
             options.files[getGistFilename(previousFilename)] = null;
             options.files[getGistReadmeFilename(previousFilename)] = null;
         }

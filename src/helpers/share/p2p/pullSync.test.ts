@@ -77,13 +77,13 @@ describe("pull sync", () => {
             expect(tournament.value!.id).toBe(receiveTournament.id);
             expect(tournament.value!.name).toBe(receiveTournament.name);
 
-            return onDataCallback;
+            return { connection: mockConnection, onDataCallback };
         };
 
         it("should pull initial tournament", setupAndVerifyPull);
 
         it("should apply diff", async () => {
-            const onDataCallback = setupAndVerifyPull();
+            const { onDataCallback } = setupAndVerifyPull();
 
             // Simulate receiving a diff update
             const diffMessage = {
@@ -106,7 +106,7 @@ describe("pull sync", () => {
         });
 
         it("should apply diff (remove)", async () => {
-            const onDataCallback = setupAndVerifyPull();
+            const { onDataCallback } = setupAndVerifyPull();
 
             // Simulate receiving a diff update
             const diffMessage = {
@@ -124,6 +124,14 @@ describe("pull sync", () => {
 
             // Expect the tournament name to be updated
             expect(tournament.value!.teams).toHaveLength(8 - 1);
+        });
+
+        it("should be closable", async () => {
+            const { connection } = setupAndVerifyPull();
+
+            pullSync.stop();
+
+            expect(connection.close).toHaveBeenCalledOnce();
         });
     });
 });

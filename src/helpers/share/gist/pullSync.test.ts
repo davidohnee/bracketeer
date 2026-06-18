@@ -51,5 +51,7 @@ describe("pull sync", () => {
         const gistShare = (await import("./gist.ts")).gistShare;
         expect(gistShare.pull).toHaveBeenCalled();
         expect(tournament.value).toEqual(mockTournament);
+
+        pullSync.stop();
     });
 });

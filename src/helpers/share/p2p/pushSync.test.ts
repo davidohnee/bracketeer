@@ -160,14 +160,36 @@ describe("push sync", () => {
             expect(tournament.value?.remote?.[0]?.identifier).not.toBe(identifier);
             const firstIdentifier = tournament.value?.remote?.[0]?.identifier;
 
-            console.log("firstIdentifier", firstIdentifier);
-
             const peerId = P2PClient.fromShare(firstIdentifier!).peerId;
 
             // since we have a temporary cache, it's hard to test if the peer id is regenerated on reload; just check localStorage
 
             const sessionCache = localStorage.getItem(`p2p.peer.${peerId}`);
             expect(sessionCache).toBeNull();
+        });
+    });
+
+    describe("error handling", () => {
+        it("should handle connection error", async () => {
+            const identifier = P2PClient.toShare({
+                mode: "p2p",
+                type: "permanent",
+                peerId: MOCK_PEER_ID,
+            });
+            tournament.value!.remote = [
+                {
+                    identifier: identifier.identifier,
+                },
+            ];
+
+            // mock the peer to throw an error on connection
+            const peer = getPeerInstance();
+            // get callee of peer.on("error")
+            const errorCallback = peer.on.mock.calls.find(
+                (call: unknown) => (call as [string])[0] === "error",
+            )[1];
+            errorCallback("Mock connection error");
+            expect(pushSync.state.value).toBe("error");
         });
     });
 

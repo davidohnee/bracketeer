@@ -170,6 +170,18 @@ describe("push sync", () => {
     });
 
     describe("error handling", () => {
+        it("survives client disconnect", async () => {
+            const { connection } = await setupAndVerifyPushSync("permanent");
+
+            // simulate client disconnect
+            const closeCallback = connection.on.mock.calls.find(
+                (call: unknown) => (call as [string])[0] === "close",
+            )![1];
+            closeCallback();
+
+            expect(pushSync.state.value).toBe("connected");
+        });
+
         it("should handle connection error", async () => {
             const identifier = P2PClient.toShare({
                 mode: "p2p",

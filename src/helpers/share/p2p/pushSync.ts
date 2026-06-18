@@ -307,12 +307,14 @@ export const createPushSync = (tournament: Ref<Tournament | null>): IPushSync =>
     retry = setInterval(tryBecomeHost, P2P_RETRY_MS);
 
     const cleanUpSession = () => {
+        const toDelete: string[] = [];
+
         for (let i = 0; i < localStorage.length; i++) {
             const key = localStorage.key(i);
             if (key?.startsWith(P2P_LOCK_PREFIX)) {
                 const lock = readLock(key.substring(P2P_LOCK_PREFIX.length));
                 if (isLockExpired(lock)) {
-                    localStorage.removeItem(key);
+                    toDelete.push(key);
                 }
             }
             if (key?.startsWith(P2P_PEER_PREFIX)) {
@@ -320,10 +322,13 @@ export const createPushSync = (tournament: Ref<Tournament | null>): IPushSync =>
                 if (timestamp) {
                     const time = Date.parse(timestamp);
                     if (Number.isNaN(time) || Date.now() - time > P2P_LEASE_MS) {
-                        localStorage.removeItem(key);
+                        toDelete.push(key);
                     }
                 }
             }
+        }
+        for (const key of toDelete) {
+            localStorage.removeItem(key);
         }
     };
     cleanUpSession();

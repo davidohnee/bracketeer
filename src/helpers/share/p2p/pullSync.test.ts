@@ -47,7 +47,7 @@ describe("pull sync", () => {
     });
 
     describe("pull", () => {
-        it("should pull initial tournament", async () => {
+        const setupAndVerifyPull = () => {
             const identifier = P2PClient.toShare({
                 mode: "p2p",
                 type: "permanent",
@@ -76,37 +76,14 @@ describe("pull sync", () => {
             expect(tournament.value).not.toBeNull();
             expect(tournament.value!.id).toBe(receiveTournament.id);
             expect(tournament.value!.name).toBe(receiveTournament.name);
-        });
+
+            return onDataCallback;
+        };
+
+        it("should pull initial tournament", setupAndVerifyPull);
 
         it("should apply diff", async () => {
-            const identifier = P2PClient.toShare({
-                mode: "p2p",
-                type: "permanent",
-                peerId: MOCK_PEER_ID,
-            });
-
-            const mockConnection = createMockConnection();
-            getPeerInstance().connect.mockReturnValue(mockConnection);
-
-            pullSync.pull(identifier.identifier);
-            expect(getPeerInstance().connect).toHaveBeenCalledWith(MOCK_PEER_ID);
-
-            const receiveTournament = generateTestTournament();
-            // Simulate receiving the tournament data from the peer
-            // i.e. expect on("message") with full tournmante data
-            const fullDataMessage = {
-                type: "full",
-                data: receiveTournament,
-            };
-            const onDataCallback = mockConnection.on.mock.calls.find(
-                (call) => call[0] === "data",
-            )![1];
-            onDataCallback(fullDataMessage);
-
-            // Expect the tournament to be set in the ref
-            expect(tournament.value).not.toBeNull();
-            expect(tournament.value!.id).toBe(receiveTournament.id);
-            expect(tournament.value!.name).toBe(receiveTournament.name);
+            const onDataCallback = setupAndVerifyPull();
 
             // Simulate receiving a diff update
             const diffMessage = {
@@ -129,34 +106,7 @@ describe("pull sync", () => {
         });
 
         it("should apply diff (remove)", async () => {
-            const identifier = P2PClient.toShare({
-                mode: "p2p",
-                type: "permanent",
-                peerId: MOCK_PEER_ID,
-            });
-
-            const mockConnection = createMockConnection();
-            getPeerInstance().connect.mockReturnValue(mockConnection);
-
-            pullSync.pull(identifier.identifier);
-            expect(getPeerInstance().connect).toHaveBeenCalledWith(MOCK_PEER_ID);
-
-            const receiveTournament = generateTestTournament();
-            // Simulate receiving the tournament data from the peer
-            // i.e. expect on("message") with full tournmante data
-            const fullDataMessage = {
-                type: "full",
-                data: receiveTournament,
-            };
-            const onDataCallback = mockConnection.on.mock.calls.find(
-                (call) => call[0] === "data",
-            )![1];
-            onDataCallback(fullDataMessage);
-
-            // Expect the tournament to be set in the ref
-            expect(tournament.value).not.toBeNull();
-            expect(tournament.value!.id).toBe(receiveTournament.id);
-            expect(tournament.value!.name).toBe(receiveTournament.name);
+            const onDataCallback = setupAndVerifyPull();
 
             // Simulate receiving a diff update
             const diffMessage = {

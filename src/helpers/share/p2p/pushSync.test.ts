@@ -5,6 +5,7 @@ import { createPushSync } from "./pushSync";
 import P2PClient from ".";
 import { generateTestTournament } from "@/helpers/test";
 import { Peer } from "peerjs";
+import type { PeerIdType } from "./common";
 
 const MOCK_PEER_ID = "mock-peer-id";
 
@@ -50,48 +51,47 @@ describe("push sync", () => {
         sessionStorage.clear();
     });
 
-    describe("push", () => {
-        it("should push initial tournament", async () => {
-            const identifier = P2PClient.toShare({
-                mode: "p2p",
-                type: "permanent",
-                peerId: MOCK_PEER_ID,
-            });
-            pushSync.start(identifier.identifier);
-
-            expect(pushSync.state.value).toBe("connected");
-            const connection = createMockConnection();
-
-            getConnectionCallback()(connection);
-
-            expect(connection.send).toHaveBeenCalledWith(
-                expect.objectContaining({
-                    type: "full",
-                    data: tournament.value,
-                }),
-            );
+    const setupAndVerifyPushSync = async (type: PeerIdType) => {
+        const identifier = P2PClient.toShare({
+            mode: "p2p",
+            type,
+            peerId: MOCK_PEER_ID,
         });
+        tournament.value!.remote = [
+            {
+                identifier: identifier.identifier,
+            },
+        ];
+        pushSync.start(identifier.identifier);
+
+        expect(pushSync.state.value).toBe("connected");
+
+        await new Promise((resolve) => setTimeout(resolve, 50));
+
+        const peer = getPeerInstance();
+        const mockConnection = createMockConnection();
+        getConnectionCallback()(mockConnection);
+
+        expect(mockConnection.send).toHaveBeenCalledWith(
+            expect.objectContaining({
+                type: "full",
+                data: tournament.value,
+            }),
+        );
+
+        return {
+            pushSync,
+            connection: mockConnection,
+            peer,
+            identifier: identifier.identifier,
+        };
+    };
+
+    describe("push", () => {
+        it("should push initial tournament", async () => await setupAndVerifyPushSync("permanent"));
 
         it("should switch to diff", async () => {
-            const identifier = P2PClient.toShare({
-                mode: "p2p",
-                type: "permanent",
-                peerId: MOCK_PEER_ID,
-            });
-            pushSync.start(identifier.identifier);
-
-            // check if the tournament was pushed
-            expect(pushSync.state.value).toBe("connected");
-
-            const mockConnection = createMockConnection();
-            getConnectionCallback()(mockConnection);
-
-            expect(mockConnection.send).toHaveBeenCalledWith(
-                expect.objectContaining({
-                    type: "full",
-                    data: tournament.value,
-                }),
-            );
+            const { connection } = await setupAndVerifyPushSync("permanent");
 
             // change
             tournament.value!.name = "Updated Tournament Name";
@@ -99,9 +99,9 @@ describe("push sync", () => {
             // wait for the diff to be sent
             await new Promise((resolve) => setTimeout(resolve, 100));
 
-            expect(mockConnection.send).toHaveBeenCalledTimes(2);
+            expect(connection.send).toHaveBeenCalledTimes(2);
 
-            expect(mockConnection.send).toHaveBeenCalledWith(
+            expect(connection.send).toHaveBeenCalledWith(
                 expect.objectContaining({
                     type: "diff",
                     data: [
@@ -117,18 +117,7 @@ describe("push sync", () => {
         });
 
         it("should be closable", async () => {
-            const identifier = P2PClient.toShare({
-                mode: "p2p",
-                type: "random",
-                peerId: MOCK_PEER_ID,
-            });
-            pushSync.start(identifier.identifier);
-
-            expect(pushSync.state.value).toBe("connected");
-            const peer = getPeerInstance();
-            const connection = createMockConnection();
-
-            getConnectionCallback()(connection);
+            const { pushSync, connection, peer } = await setupAndVerifyPushSync("random");
 
             expect(connection.send).toHaveBeenCalledOnce();
 
@@ -145,20 +134,10 @@ describe("push sync", () => {
         });
 
         it("should regenerate peer id if session", async () => {
-            const identifier = P2PClient.toShare({
-                mode: "p2p",
-                type: "session",
-                peerId: MOCK_PEER_ID,
-            });
-            tournament.value!.remote = [
-                {
-                    identifier: identifier.identifier,
-                },
-            ];
-            pushSync.start(identifier.identifier);
+            const { identifier } = await setupAndVerifyPushSync("session");
 
             expect(pushSync.state.value).toBe("connected");
-            expect(tournament.value?.remote?.[0]?.identifier).not.toBe(identifier.identifier);
+            expect(tournament.value?.remote?.[0]?.identifier).not.toBe(identifier);
             const newIdentifier = tournament.value?.remote?.[0]?.identifier;
 
             pushSync.stop();
@@ -170,26 +149,18 @@ describe("push sync", () => {
 
             expect(pushSync.state.value).toBe("connected");
 
-            expect(tournament.value?.remote?.[0]?.identifier).not.toBe(identifier.identifier);
+            expect(tournament.value?.remote?.[0]?.identifier).not.toBe(identifier);
             expect(tournament.value?.remote?.[0]?.identifier).toBe(newIdentifier);
         });
 
         it("should always regenerate peer id if random", async () => {
-            const identifier = P2PClient.toShare({
-                mode: "p2p",
-                type: "random",
-                peerId: MOCK_PEER_ID,
-            });
-            tournament.value!.remote = [
-                {
-                    identifier: identifier.identifier,
-                },
-            ];
-            pushSync.start(identifier.identifier);
+            const { identifier } = await setupAndVerifyPushSync("random");
 
             expect(pushSync.state.value).toBe("connected");
-            expect(tournament.value?.remote?.[0]?.identifier).not.toBe(identifier.identifier);
+            expect(tournament.value?.remote?.[0]?.identifier).not.toBe(identifier);
             const firstIdentifier = tournament.value?.remote?.[0]?.identifier;
+
+            console.log("firstIdentifier", firstIdentifier);
 
             const peerId = P2PClient.fromShare(firstIdentifier!).peerId;
 
@@ -202,21 +173,14 @@ describe("push sync", () => {
 
     describe("lock", () => {
         it("should lock the tournament", async () => {
-            const identifier = P2PClient.toShare({
-                mode: "p2p",
-                type: "permanent",
-                peerId: MOCK_PEER_ID,
-            });
-            pushSync.start(identifier.identifier);
-
-            expect(pushSync.state.value).toBe("connected");
+            const { identifier } = await setupAndVerifyPushSync("permanent");
 
             // act like another tab
             sessionStorage.removeItem("p2p.tab-id");
 
             // second pushSync
             const secondPushSync = createPushSync(tournament);
-            secondPushSync.start(identifier.identifier);
+            secondPushSync.start(identifier);
 
             expect(pushSync.state.value).toBe("connected");
             expect(secondPushSync.state.value).toBe("no-lock");

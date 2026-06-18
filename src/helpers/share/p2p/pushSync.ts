@@ -174,6 +174,8 @@ export const createPushSync = (tournament: Ref<Tournament | null>): IPushSync =>
             peer.destroy();
             peer = null;
         }
+
+        state.value = "disconnected";
     };
 
     const stopHost = () => {
@@ -326,19 +328,17 @@ export const createPushSync = (tournament: Ref<Tournament | null>): IPushSync =>
 
     return {
         start(identifier: string) {
-            setTimeout(() => {
-                remoteIdentifier = identifier;
-                const newPeerId = getAndApplyPeerId(tournament, identifier);
+            remoteIdentifier = identifier;
+            const newPeerId = getAndApplyPeerId(tournament, identifier);
 
-                if (peerId === newPeerId) {
-                    tryBecomeHost();
-                    return;
-                }
-
-                stopHost();
-                peerId = newPeerId;
+            if (peerId === newPeerId) {
                 tryBecomeHost();
-            }, 1000);
+                return;
+            }
+
+            stopHost();
+            peerId = newPeerId;
+            tryBecomeHost();
         },
         stop() {
             stopHost();

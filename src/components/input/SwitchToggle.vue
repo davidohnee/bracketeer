@@ -1,17 +1,31 @@
 <script setup lang="ts">
-defineProps<{
+import { computed } from "vue";
+
+const props = defineProps<{
     modelValue: boolean;
     label: string;
     disabled?: boolean;
 }>();
+
+const emit = defineEmits<(e: "update:modelValue", value: boolean) => void>();
+
+const selectedValue = computed({
+    get() {
+        return props.modelValue;
+    },
+    set(value) {
+        if (value !== props.modelValue) {
+            emit("update:modelValue", value);
+        }
+    },
+});
 </script>
 <template>
     <label class="switch-toggle">
         <input
             type="checkbox"
-            :checked="modelValue"
+            :checked="selectedValue"
             :disabled="disabled"
-            @change="$emit('update:modelValue', ($event!.target! as HTMLInputElement).checked)"
         />
         <span class="slider"></span>
         <span class="label">{{ label }}</span>
@@ -24,9 +38,10 @@ defineProps<{
     align-items: center;
     gap: var(--spacing-s);
     cursor: pointer;
+    position: relative;
 }
 .switch-toggle input {
-    display: none;
+    visibility: hidden;
 }
 .slider {
     position: relative;

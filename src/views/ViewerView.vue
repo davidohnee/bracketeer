@@ -12,7 +12,6 @@ const route = useRoute();
 const tournament = ref<Tournament | null>(null);
 
 const routeId = computed(() => ("id" in route.params ? (route.params.id as string) : ""));
-const otherRemote = ref<string | null>(null);
 
 const subtitle = ref<string>("");
 
@@ -30,7 +29,6 @@ const updateSubtitle = () => {
 const preferDefaultRemote = () => {
     console.debug("Preferred default remote, switching back to", routeId.value);
     liveSync.stop();
-    otherRemote.value = null;
     liveSync = getPullSyncFactory(routeId.value)(tournament);
     liveSync.onChange = updateSubtitle;
     liveSync.pull(routeId.value);
@@ -39,20 +37,19 @@ const preferDefaultRemote = () => {
 const preferOtherRemote = (remote: IRemote) => {
     console.debug("Preferred other remote, switching to", remote);
     liveSync.stop();
-    otherRemote.value = remote.identifier;
     liveSync = getPullSyncFactory(remote.identifier)(tournament);
     liveSync.onChange = updateSubtitle;
-    liveSync.pull(remote.identifier);
     liveSync.onError = (error) => {
         console.warn("Pull sync error on other remote:", error);
         preferDefaultRemote();
     };
+    liveSync.pull(remote.identifier);
 };
 
 onMounted(() => {
     liveSync.onChange = updateSubtitle;
-    liveSync.pull(routeId.value);
     liveSync.onPreferOther = preferOtherRemote;
+    liveSync.pull(routeId.value);
     updateSubtitleTimer = setInterval(updateSubtitle, 1000 * 60); // Update every minute
 });
 onUnmounted(() => {

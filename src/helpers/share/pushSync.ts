@@ -95,6 +95,7 @@ export const pushSyncManager = (tournament: Ref<Tournament | null>): PushSyncMan
             stopWatching?.();
             syncInstances.value.forEach((instance) => instance.stop());
             syncInstances.value = [];
+            activeIdentifiers = new Set();
         },
         get activeSyncs() {
             return syncInstances.value;

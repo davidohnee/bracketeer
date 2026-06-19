@@ -20,6 +20,7 @@ defineProps<{
     readonly?: boolean;
     label?: string;
     showLabel?: boolean;
+    id?: string;
 }>();
 
 const emit = defineEmits<(e: "copy") => void>();
@@ -37,7 +38,7 @@ const copy = () => {
 <template>
     <label
         v-if="label && showLabel"
-        :for="label"
+        :for="id"
         class="input-label"
     >
         {{ label }}
@@ -59,7 +60,7 @@ const copy = () => {
             :class="{ fadeout: !isScrolledToEnd }"
             @input="checkScroll"
             @scroll="checkScroll"
-            :id="label"
+            :id="id"
         />
         <button
             class="copy ghost"

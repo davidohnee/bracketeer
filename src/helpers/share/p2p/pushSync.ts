@@ -128,7 +128,7 @@ export const getAndApplyPeerId = (tournament: Ref<Tournament | null>, identifier
             const newSessionKey = `${P2P_PEER_PREFIX}${newSessionId}`;
             localStorage.setItem(newSessionKey, new Date().toISOString());
             applyPeerId(tournament, newIdentifier);
-            return newIdentifier;
+            return newSessionId;
         }
         return peerId;
     }

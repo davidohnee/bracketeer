@@ -16,12 +16,15 @@ const tournament = ref<Tournament>();
 const preferredRemote = computed<null | { identifier: string }>(() => {
     if (!tournament.value?.remote) return null;
     const preferredOrder = ["gist", "p2p"];
-    const sorted = [...tournament.value.remote].sort((a, b) => {
-        const aIndex = preferredOrder.indexOf(getModeFromIdentifier(a.identifier) as string);
-        const bIndex = preferredOrder.indexOf(getModeFromIdentifier(b.identifier) as string);
-        return aIndex - bIndex;
-    });
-    return sorted.at(0) ?? null;
+    const sorted = [...tournament.value.remote]
+        .map((x) => ({ mode: getModeFromIdentifier(x.identifier), remote: x }))
+        .filter((x) => !!x.mode && preferredOrder.includes(x.mode))
+        .sort((a, b) => {
+            const aIndex = preferredOrder.indexOf(a.mode!);
+            const bIndex = preferredOrder.indexOf(b.mode!);
+            return aIndex - bIndex;
+        });
+    return sorted.at(0)?.remote ?? null;
 });
 
 const open = (newTournament: Tournament) => {
@@ -30,7 +33,12 @@ const open = (newTournament: Tournament) => {
     action.value = null;
     dialog.value?.showModal();
 
-    shareUrl.value = getShareLink(preferredRemote.value!.identifier!, "viewer");
+    if (!preferredRemote.value?.identifier) {
+        shareUrl.value = "";
+        return;
+    }
+
+    shareUrl.value = getShareLink(preferredRemote.value.identifier, "viewer");
 };
 
 defineExpose({ open });

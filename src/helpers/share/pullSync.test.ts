@@ -4,6 +4,7 @@ import { createPullSync as createP2PPullSync } from "./p2p/pullSync";
 import { createPullSync as createGistPullSync } from "./gist/pullSync";
 import P2PClient from "./p2p";
 import GistClient from "./gist";
+import { ref } from "vue";
 
 describe("pull sync manager", () => {
     it("should return p2p for p2p identifier", () => {
@@ -26,5 +27,11 @@ describe("pull sync manager", () => {
 
         const factory = getPullSyncFactory(identifier.identifier);
         expect(factory).toBe(createGistPullSync);
+    });
+
+    it("should return unsupported for random string", () => {
+        const factory = getPullSyncFactory("random");
+        const pullSync = factory(ref(null));
+        expect(pullSync.error.value).toBe("not-supported");
     });
 });

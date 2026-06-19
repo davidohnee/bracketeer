@@ -12,7 +12,7 @@ const applyRemoveChange = (target: Record<string, unknown>, path: (string | numb
         target = target[path[i]] as Record<string, unknown>;
     }
     if (Array.isArray(target)) {
-        target.splice(path.at(-1) as unknown as number, 1);
+        target.splice(path.at(-1) as number, 1);
     } else {
         delete target[path.at(-1)!];
     }

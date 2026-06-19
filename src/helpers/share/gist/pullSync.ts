@@ -54,13 +54,19 @@ export const createPullSync: PullSyncFactory<IGistPullSync> = (tournament) => {
             if (this._timer) {
                 clearInterval(this._timer);
             }
-            if (findRemoteWithMode(tournament.value!, "p2p")) {
+            if (this.error.value || !tournament.value) {
+                return {
+                    type: "error",
+                    error: this.error.value || "not-supported",
+                };
+            }
+            if (findRemoteWithMode(tournament.value, "p2p")) {
                 this.onPreferOther?.(findRemoteWithMode(tournament.value!, "p2p")!);
             }
             this._timer = setInterval(() => this._updateTask(identifier), 1000 * 60 * 5);
             return {
                 type: "success",
-                tournament: tournament.value!,
+                tournament: tournament.value,
                 author: "unknown",
                 link: "",
                 date: new Date(),

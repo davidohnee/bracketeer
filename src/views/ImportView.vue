@@ -40,6 +40,14 @@ const confirm = async () => {
     const tournament = what.value[0];
     if (!tournament) return;
 
+    if (!tournament.remote) {
+        tournament.remote = [
+            {
+                identifier: routeId.value,
+            },
+        ];
+    }
+
     await tournaments.add(tournament);
     router.push({
         name: "/tournament/[tournamentId]",

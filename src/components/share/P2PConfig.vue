@@ -41,7 +41,7 @@ const p2pRemote = computed(() => findRemoteWithMode(tournament, "p2p"));
 const peerIdType = ref<PeerIdType>("session");
 
 if (p2pRemote.value) {
-    const identifier = props.tournament.remote![0]!.identifier;
+    const identifier = p2pRemote.value.identifier;
     const { type } = P2PClient.fromShare(identifier);
     if (type === "session" || type === "random" || type === "permanent") {
         peerIdType.value = type;
@@ -142,7 +142,7 @@ const syncState = computed(() => {
                     <AdvancedInput
                         v-if="p2pRemote?.identifier"
                         label="Share ID"
-                        v-model="shareLink"
+                        :modelValue="shareLink"
                         type="text"
                         readonly
                         copyable

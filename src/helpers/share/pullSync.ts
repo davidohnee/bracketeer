@@ -1,5 +1,5 @@
 import type { IRemote, Tournament } from "@/types/tournament";
-import type { Ref } from "vue";
+import { ref, type Ref } from "vue";
 import { getModeFromIdentifier, type Import } from ".";
 import { createPullSync as createGistPullSync } from "./gist/pullSync";
 import { createPullSync as createP2PPullSync } from "./p2p/pullSync";
@@ -32,6 +32,16 @@ export interface IPullSync {
 
 export type PullSyncFactory<T extends IPullSync> = (tournament: Ref<Tournament | null>) => T;
 
+const createUnsupportedPullSync: PullSyncFactory<IPullSync> = () => ({
+    pull: async () => ({
+        type: "error",
+        error: "not-supported",
+    }),
+    status: ref({ type: "live", lastUpdate: new Date() }),
+    stop: () => {},
+    error: ref("not-supported"),
+});
+
 export const getPullSyncFactory = (identifier: string): PullSyncFactory<IPullSync> => {
     const mode = getModeFromIdentifier(identifier);
     if (mode === "gist") {
@@ -39,5 +49,5 @@ export const getPullSyncFactory = (identifier: string): PullSyncFactory<IPullSyn
     } else if (mode === "p2p") {
         return createP2PPullSync;
     }
-    throw new Error("Not supported");
+    return createUnsupportedPullSync;
 };

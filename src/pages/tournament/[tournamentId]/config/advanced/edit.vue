@@ -39,10 +39,17 @@ const save = () => {
 
 <template>
     <div class="form">
+        <label
+            for="tournament-config"
+            class="text-muted"
+        >
+            Tournament Configuration
+        </label>
         <textarea
             rows="25"
             v-model="editableTournament"
             @change="changed = true"
+            id="tournament-config"
         ></textarea>
         <button
             :disabled="!changed"

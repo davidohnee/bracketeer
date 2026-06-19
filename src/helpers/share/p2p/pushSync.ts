@@ -310,22 +310,30 @@ export const createPushSync = (tournament: Ref<Tournament | null>): IPushSync =>
     const cleanUpSession = () => {
         const toDelete: string[] = [];
 
+        const removeLockKey = (key: string) => {
+            if (!key?.startsWith(P2P_LOCK_PREFIX)) return false;
+
+            const lock = readLock(key.substring(P2P_LOCK_PREFIX.length));
+            return isLockExpired(lock);
+        };
+
+        const removePeerKey = (key: string) => {
+            if (!key?.startsWith(P2P_PEER_PREFIX)) return false;
+
+            const timestamp = localStorage.getItem(key);
+            if (!timestamp) return false;
+            const time = Date.parse(timestamp);
+            return Number.isNaN(time) || Date.now() - time > P2P_LEASE_MS;
+        };
+
         for (let i = 0; i < localStorage.length; i++) {
             const key = localStorage.key(i);
-            if (key?.startsWith(P2P_LOCK_PREFIX)) {
-                const lock = readLock(key.substring(P2P_LOCK_PREFIX.length));
-                if (isLockExpired(lock)) {
-                    toDelete.push(key);
-                }
+            if (!key) continue;
+            if (removeLockKey(key)) {
+                toDelete.push(key);
             }
-            if (key?.startsWith(P2P_PEER_PREFIX)) {
-                const timestamp = localStorage.getItem(key);
-                if (timestamp) {
-                    const time = Date.parse(timestamp);
-                    if (Number.isNaN(time) || Date.now() - time > P2P_LEASE_MS) {
-                        toDelete.push(key);
-                    }
-                }
+            if (removePeerKey(key)) {
+                toDelete.push(key);
             }
         }
         for (const key of toDelete) {

@@ -34,14 +34,34 @@ const add = async () => {
             </div>
             <div class="account">
                 <div class="inputs">
-                    <select v-model="addType">
-                        <option value="gist">GitHub Gists</option>
-                    </select>
-                    <input
-                        type="password"
-                        placeholder="Enter your access token..."
-                        v-model="accessToken"
-                    />
+                    <div class="field">
+                        <label
+                            for="add-type"
+                            class="text-muted"
+                        >
+                            Account Type
+                        </label>
+                        <select
+                            v-model="addType"
+                            id="add-type"
+                        >
+                            <option value="gist">GitHub Gists</option>
+                        </select>
+                    </div>
+                    <div class="field">
+                        <label
+                            for="add-access-token"
+                            class="text-muted"
+                        >
+                            Access Token
+                        </label>
+                        <input
+                            id="add-access-token"
+                            type="password"
+                            placeholder="Enter your access token..."
+                            v-model="accessToken"
+                        />
+                    </div>
                 </div>
                 <button
                     @click="add"

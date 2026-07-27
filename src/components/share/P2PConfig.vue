@@ -155,6 +155,7 @@ const syncState = computed(() => {
                 <button
                     @click="updateP2PRemote"
                     class="secondary"
+                    type="button"
                 >
                     <ion-icon name="refresh-outline" />
                     Refresh ID
@@ -162,6 +163,7 @@ const syncState = computed(() => {
                 <button
                     class="danger"
                     @click="removeP2PRemote"
+                    type="button"
                 >
                     <ion-icon name="close-outline" />
                     Stop Sharing
@@ -195,7 +197,12 @@ const syncState = computed(() => {
                 </p>
             </div>
 
-            <button @click="startP2P">Start sharing</button>
+            <button
+                @click="startP2P"
+                type="button"
+            >
+                Start sharing
+            </button>
         </div>
     </div>
 </template>

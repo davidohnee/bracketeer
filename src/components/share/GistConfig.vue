@@ -137,6 +137,7 @@ onMounted(() => {
                 <button
                     class="secondary"
                     @click="pull"
+                    type="button"
                 >
                     <ion-icon name="cloud-download-outline" />
                     Pull
@@ -151,6 +152,7 @@ onMounted(() => {
                             account: canPush,
                         })
                     "
+                    type="button"
                 >
                     <ion-icon name="cloud-upload-outline" />
                     Push
@@ -160,6 +162,7 @@ onMounted(() => {
                 <button
                     class="danger"
                     @click="GistClient.delete(tournament, gistRemote!, { account: canPush })"
+                    type="button"
                 >
                     <ion-icon name="trash-outline" />
                     Delete Remote
@@ -186,6 +189,7 @@ onMounted(() => {
                 <button
                     class="secondary"
                     @click="pull"
+                    type="button"
                 >
                     <ion-icon name="cloud-download-outline" />
                     Pull
@@ -194,7 +198,7 @@ onMounted(() => {
         </div>
     </template>
     <template v-else-if="!accounts.all.length">
-        <h3>GitHub Gists PAT</h3>
+        <h4>GitHub Gists PAT</h4>
         <p>
             To use this feature, you need to provide a GitHub Gists PAT. This is used to create
             gists for sharing tournaments.
@@ -214,6 +218,7 @@ onMounted(() => {
         <button
             @click="setPat"
             :disabled="!inputPat.length"
+            type="button"
         >
             Save
         </button>
@@ -249,7 +254,12 @@ onMounted(() => {
                         {{ account.displayName }}
                     </option>
                 </select>
-                <button @click="share">Create link</button>
+                <button
+                    @click="share"
+                    type="button"
+                >
+                    Create link
+                </button>
             </div>
         </div>
     </template>

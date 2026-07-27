@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { Tournament } from "@/types/tournament";
+import type { IRemote, Tournament } from "@/types/tournament";
 import { useTournamentsStore } from "@/stores/tournaments";
 import { computed, ref } from "vue";
 import { findRemoteIndexWithMode, findRemoteWithMode, getShareLink } from "@/helpers/share";
@@ -66,10 +66,14 @@ const updateP2PRemote = () => {
 
     const i = findRemoteIndexWithMode(tournament, "p2p");
     if (i === -1) return;
-    tournament.remote![i] = {
+    const remote: IRemote = {
         identifier: shareId.identifier,
         pushDate: new Date(),
     };
+    if (tournament!.remote![i]!.disabled) {
+        remote.disabled = true;
+    }
+    tournament.remote![i] = remote;
 };
 
 const removeP2PRemote = () => {
@@ -151,6 +155,7 @@ const syncState = computed(() => {
                 <button
                     @click="updateP2PRemote"
                     class="secondary"
+                    type="button"
                 >
                     <ion-icon name="refresh-outline" />
                     Refresh ID
@@ -158,6 +163,7 @@ const syncState = computed(() => {
                 <button
                     class="danger"
                     @click="removeP2PRemote"
+                    type="button"
                 >
                     <ion-icon name="close-outline" />
                     Stop Sharing
@@ -191,7 +197,12 @@ const syncState = computed(() => {
                 </p>
             </div>
 
-            <button @click="startP2P">Start sharing</button>
+            <button
+                @click="startP2P"
+                type="button"
+            >
+                Start sharing
+            </button>
         </div>
     </div>
 </template>

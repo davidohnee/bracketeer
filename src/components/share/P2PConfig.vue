@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { Tournament } from "@/types/tournament";
+import type { IRemote, Tournament } from "@/types/tournament";
 import { useTournamentsStore } from "@/stores/tournaments";
 import { computed, ref } from "vue";
 import { findRemoteIndexWithMode, findRemoteWithMode, getShareLink } from "@/helpers/share";
@@ -66,10 +66,14 @@ const updateP2PRemote = () => {
 
     const i = findRemoteIndexWithMode(tournament, "p2p");
     if (i === -1) return;
-    tournament.remote![i] = {
+    const remote: IRemote = {
         identifier: shareId.identifier,
         pushDate: new Date(),
     };
+    if (tournament!.remote![i]!.disabled) {
+        remote.disabled = true;
+    }
+    tournament.remote![i] = remote;
 };
 
 const removeP2PRemote = () => {

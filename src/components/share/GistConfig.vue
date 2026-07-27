@@ -194,7 +194,7 @@ onMounted(() => {
         </div>
     </template>
     <template v-else-if="!accounts.all.length">
-        <h3>GitHub Gists PAT</h3>
+        <h4>GitHub Gists PAT</h4>
         <p>
             To use this feature, you need to provide a GitHub Gists PAT. This is used to create
             gists for sharing tournaments.

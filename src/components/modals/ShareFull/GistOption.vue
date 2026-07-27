@@ -16,11 +16,22 @@ const tournament = tournaments.getTournamentById(props.tournament.id)!;
 const gistRemote = computed(() => {
     return findRemoteWithMode(tournament, "gist");
 });
+
+const setEnabled = (enabled: boolean) => {
+    if (!gistRemote.value) return;
+    if (enabled) {
+        delete gistRemote.value.disabled;
+    } else {
+        gistRemote.value.disabled = true;
+    }
+};
 </script>
 <template>
     <FoldableShareOption
         title="Share via GitHub Gist"
-        :enabled="!!gistRemote"
+        :enabled="!!gistRemote && !gistRemote.disabled"
+        :configured="!!gistRemote"
+        @update:enabled="setEnabled"
     >
         <GistConfig :tournament="tournament" />
     </FoldableShareOption>

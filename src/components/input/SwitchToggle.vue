@@ -3,7 +3,7 @@ import { computed } from "vue";
 
 const props = defineProps<{
     modelValue: boolean;
-    label: string;
+    label?: string;
     disabled?: boolean;
 }>();
 
@@ -14,7 +14,9 @@ const selectedValue = computed({
         return props.modelValue;
     },
     set(value) {
+        console.log("SwitchToggle set", value, props.modelValue);
         if (value !== props.modelValue) {
+            console.log("SwitchToggle emit", value);
             emit("update:modelValue", value);
         }
     },
@@ -25,10 +27,15 @@ const selectedValue = computed({
         <input
             type="checkbox"
             :checked="selectedValue"
+            @change="selectedValue = ($event.target as HTMLInputElement).checked"
             :disabled="disabled"
         />
         <span class="slider"></span>
-        <span class="label">{{ label }}</span>
+        <span
+            v-if="label"
+            class="label"
+            >{{ label }}</span
+        >
     </label>
 </template>
 
@@ -43,6 +50,7 @@ const selectedValue = computed({
 .switch-toggle input {
     visibility: hidden;
 }
+/* track */
 .slider {
     position: relative;
     width: 40px;
@@ -51,6 +59,7 @@ const selectedValue = computed({
     border-radius: 10px;
     transition: background-color 0.2s;
 }
+/* thumb */
 .slider::before {
     content: "";
     position: absolute;
@@ -58,12 +67,12 @@ const selectedValue = computed({
     left: 2px;
     width: 16px;
     height: 16px;
-    background-color: var(--color-background);
+    background-color: var(--color-surface);
     border-radius: 50%;
     transition: transform 0.2s;
 }
 input:checked + .slider {
-    background-color: var(--color-primary);
+    background-color: var(--color-primary-hover);
 }
 input:checked + .slider::before {
     transform: translateX(20px);
@@ -71,5 +80,16 @@ input:checked + .slider::before {
 .label {
     font-size: var(--font-size);
     color: var(--color-text);
+}
+
+input:disabled {
+    & + .slider {
+        background-color: var(--color-background);
+        cursor: not-allowed;
+
+        &::before {
+            background-color: var(--color-surface);
+        }
+    }
 }
 </style>

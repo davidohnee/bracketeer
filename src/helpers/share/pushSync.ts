@@ -30,8 +30,8 @@ export type PushSyncManager = {
 };
 
 export const pushSyncManager = (tournament: Ref<Tournament | null>): PushSyncManager => {
-    const syncInstances: Ref<IPushSync[]> = ref([]);
-    let activeIdentifiers: Set<string> = new Set();
+    const syncInstances: Ref<IPushSync[]> = ref([]); // sync managers
+    let activeIdentifiers: Set<string> = new Set(); // actively being synced
     let stopWatching: (() => void) | null = null;
 
     const syncInstanceById = (identifier: string): IPushSync | undefined => {
@@ -65,10 +65,12 @@ export const pushSyncManager = (tournament: Ref<Tournament | null>): PushSyncMan
         stopWatching = watch(
             tournament,
             (next) => {
-                const currentIdentifiers = new Set(next?.remote?.map((r) => r.identifier) || []);
+                const nextIdentifiers = new Set(
+                    next?.remote?.filter((r) => !r.disabled)?.map((r) => r.identifier) || [],
+                );
 
                 // Start sync for new identifiers
-                currentIdentifiers.forEach((identifier) => {
+                nextIdentifiers.forEach((identifier) => {
                     if (!activeIdentifiers.has(identifier)) {
                         startSync(identifier);
                     }
@@ -76,12 +78,12 @@ export const pushSyncManager = (tournament: Ref<Tournament | null>): PushSyncMan
 
                 // Stop sync for removed identifiers
                 activeIdentifiers.forEach((identifier) => {
-                    if (!currentIdentifiers.has(identifier)) {
+                    if (!nextIdentifiers.has(identifier)) {
                         stopSync(identifier);
                     }
                 });
 
-                activeIdentifiers = currentIdentifiers;
+                activeIdentifiers = nextIdentifiers;
             },
             { deep: true, immediate: true },
         );

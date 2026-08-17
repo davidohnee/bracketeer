@@ -142,13 +142,6 @@ onUnmounted(() => {
     flex-direction: column;
 }
 
-.loading {
-    height: 60vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
 .flex {
     display: flex;
 }

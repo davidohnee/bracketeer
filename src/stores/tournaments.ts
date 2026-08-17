@@ -14,7 +14,10 @@ import { createIndexedDbStorage } from "./persistence/indexedDb";
 
 const LOCAL_STORAGE_KEY = "tournaments";
 
+const PERSISTOR_FACTORY = createIndexedDbStorage();
+
 export const useTournamentsStore = defineStore(LOCAL_STORAGE_KEY, () => {
+    const loading = ref(true);
     const tournaments = ref<Tournament[]>([]);
     let oldTournaments: Tournament[] = [];
 
@@ -54,10 +57,11 @@ export const useTournamentsStore = defineStore(LOCAL_STORAGE_KEY, () => {
     });
     watch(tournaments, () => fireChange.value(), { deep: true });
 
-    const persistor = createIndexedDbStorage();
+    const persistor = PERSISTOR_FACTORY;
     persistor.load().then((x) => {
         tournaments.value = x;
         oldTournaments = deepCopy(x);
+        loading.value = false;
     });
     watchers.push(persistor);
 
@@ -169,6 +173,7 @@ export const useTournamentsStore = defineStore(LOCAL_STORAGE_KEY, () => {
 
     return {
         all: tournaments,
+        loading,
         create,
         add,
         remove,

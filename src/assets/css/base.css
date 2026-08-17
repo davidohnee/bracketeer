@@ -161,3 +161,10 @@ section {
         margin: var(--spacing-m);
     }
 }
+
+.loading {
+    height: 60vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

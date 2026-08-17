@@ -7,31 +7,59 @@ import { generateGroupPhases } from "@/helpers/matchplan/groupPhase";
 import { generateNTeams } from "@/helpers/teamGenerator";
 import { throttle } from "lodash";
 import { generateId } from "@/helpers/id";
+import type { ITournamentWatcher } from "./persistence/tournamentWatcher";
+import diff from "microdiff";
+import { deepCopy } from "@/helpers/common";
+import { createIndexedDbStorage } from "./persistence/indexedDb";
 
 const LOCAL_STORAGE_KEY = "tournaments";
 
 export const useTournamentsStore = defineStore(LOCAL_STORAGE_KEY, () => {
     const tournaments = ref<Tournament[]>([]);
+    let oldTournaments: Tournament[] = [];
+
+    const watchers: ITournamentWatcher[] = [];
 
     const throttlingEnabled = ref(true);
-    const _syncToLocalStorage = () =>
-        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(tournaments.value));
-    const _throttledSyncToLocalStorage = throttle(() => {
-        _syncToLocalStorage();
-    }, 300);
-    const syncToLocalStorage = computed(() => {
-        if (!throttlingEnabled.value) {
-            return _syncToLocalStorage;
-        }
-        return _throttledSyncToLocalStorage;
-    });
+    const _fireChange = () => {
+        const changes = diff(oldTournaments, tournaments.value);
+        oldTournaments = deepCopy(tournaments.value);
 
-    watch(tournaments, () => syncToLocalStorage.value(), { deep: true });
-    // Load tournaments from local storage on initial load
-    const storedTournaments = localStorage.getItem(LOCAL_STORAGE_KEY);
-    if (storedTournaments) {
-        tournaments.value = JSON.parse(storedTournaments).map(tournamentFromJson);
-    }
+        const pendingTournamentChangeIndices = [
+            ...new Set(changes.map((x) => x.path[0]).filter(Boolean) as number[]),
+        ];
+
+        if (!changes.length) return;
+
+        for (const watcher of watchers) {
+            if (watcher.onTournamentChange) {
+                for (const i of pendingTournamentChangeIndices) {
+                    watcher.onTournamentChange(tournaments.value[i]);
+                }
+                pendingTournamentChangeIndices.splice(0);
+            }
+            if (watcher.onTournamentsChange) {
+                watcher.onTournamentsChange(tournaments.value);
+            }
+        }
+    };
+    const _throttledFireChange = throttle(() => {
+        _fireChange();
+    }, 300);
+    const fireChange = computed(() => {
+        if (!throttlingEnabled.value) {
+            return _fireChange;
+        }
+        return _throttledFireChange;
+    });
+    watch(tournaments, () => fireChange.value(), { deep: true });
+
+    const persistor = createIndexedDbStorage();
+    persistor.load().then((x) => {
+        tournaments.value = x;
+        oldTournaments = deepCopy(x);
+    });
+    watchers.push(persistor);
 
     function add(tournament: Tournament) {
         tournaments.value.push(tournament);

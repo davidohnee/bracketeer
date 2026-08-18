@@ -85,10 +85,10 @@ onUnmounted(() => {
         </p>
         <div class="flex gap-2">
             <router-link :to="{ name: '/create' }">
-                <button>Create new tournament</button>
+                <button type="button">Create new tournament</button>
             </router-link>
             <router-link :to="{ name: '/' }">
-                <button>Home</button>
+                <button type="button">Home</button>
             </router-link>
         </div>
     </div>
@@ -99,7 +99,12 @@ onUnmounted(() => {
         <h1>Not Allowed</h1>
         <p>You don't have permission to view this tournament.</p>
         <router-link :to="{ name: '/' }">
-            <button class="danger">Close</button>
+            <button
+                type="button"
+                class="danger"
+            >
+                Close
+            </button>
         </router-link>
     </div>
     <div
@@ -112,7 +117,12 @@ onUnmounted(() => {
             closing the connection.
         </p>
         <router-link :to="{ name: '/' }">
-            <button class="danger">Close</button>
+            <button
+                type="button"
+                class="danger"
+            >
+                Close
+            </button>
         </router-link>
     </div>
 </template>

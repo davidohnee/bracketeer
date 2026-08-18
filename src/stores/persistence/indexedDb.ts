@@ -1,27 +1,36 @@
 import localforage from "localforage";
 import type { ITournamentPeristor } from "./tournamentWatcher";
 import { tournamentFromJson } from "@/helpers";
-import type { AnyTournament } from "@/types/tournament";
+import type { AnyTournament, Tournament } from "@/types/tournament";
 import { toRaw } from "vue";
 
-const LOCAL_STORAGE_KEY = "tournaments";
+const KEY_PREFIX = "tournament";
+
+const store = localforage.createInstance({
+    name: "bracketeer.tournaments",
+});
 
 export const createIndexedDbStorage = (): ITournamentPeristor => {
+    const key = (tournamentId: string) => `${KEY_PREFIX}.${tournamentId}`;
+
     return {
         load: async () => {
-            const storedTournaments: AnyTournament[] | null =
-                await localforage.getItem(LOCAL_STORAGE_KEY);
-            if (!storedTournaments) {
-                return [];
+            const storedTournaments: Tournament[] = [];
+            for (const key of await store.keys()) {
+                if (!key.startsWith(KEY_PREFIX)) continue;
+
+                const tournament = await store.getItem(key);
+                if (tournament) {
+                    storedTournaments.push(tournamentFromJson(tournament as AnyTournament));
+                }
             }
-            return storedTournaments.map((x) => tournamentFromJson(x));
+            return storedTournaments;
         },
         onTournamentChange: (tournament) => {
-            console.log("on tournament change", tournament);
+            store.setItem(key(tournament.id), toRaw(tournament));
         },
-        onTournamentsChange: (tournaments) => {
-            console.log("on tournaments change");
-            localforage.setItem(LOCAL_STORAGE_KEY, toRaw(tournaments));
+        onTournamentDeleted: (tournament) => {
+            store.removeItem(key(tournament.id));
         },
     };
 };

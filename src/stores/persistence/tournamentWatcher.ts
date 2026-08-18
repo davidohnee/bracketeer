@@ -5,6 +5,7 @@ export type TournamentsChangedHandler = (tournaments: Tournament[]) => void;
 
 export interface ITournamentWatcher {
     onTournamentChange?: TournamentChangedHandler;
+    onTournamentDeleted?: TournamentChangedHandler;
     onTournamentsChange?: TournamentsChangedHandler;
 }
 

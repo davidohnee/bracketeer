@@ -26,13 +26,17 @@ export const useTournamentsStore = defineStore(LOCAL_STORAGE_KEY, () => {
     const throttlingEnabled = ref(true);
     const _fireChange = () => {
         const changes = diff(oldTournaments, tournaments.value);
-        oldTournaments = deepCopy(tournaments.value);
-
-        const pendingTournamentChangeIndices = [
-            ...new Set(changes.map((x) => x.path[0]).filter(Boolean) as number[]),
-        ];
-
         if (!changes.length) return;
+
+        const pendingTournamentChangeIndices = changes
+            .filter((x) => x.type !== "REMOVE")
+            .map((x) => x.path[0])
+            .filter((x) => x != null) as number[];
+
+        const pendingTournamentDeleteIndices = changes
+            .filter((x) => x.type === "REMOVE")
+            .map((x) => x.path[0])
+            .filter((x) => x != null) as number[];
 
         for (const watcher of watchers) {
             if (watcher.onTournamentChange) {
@@ -41,10 +45,18 @@ export const useTournamentsStore = defineStore(LOCAL_STORAGE_KEY, () => {
                 }
                 pendingTournamentChangeIndices.splice(0);
             }
+            if (watcher.onTournamentDeleted) {
+                for (const i of pendingTournamentDeleteIndices) {
+                    watcher.onTournamentDeleted(oldTournaments[i]);
+                }
+                pendingTournamentDeleteIndices.splice(0);
+            }
             if (watcher.onTournamentsChange) {
                 watcher.onTournamentsChange(tournaments.value);
             }
         }
+
+        oldTournaments = deepCopy(tournaments.value);
     };
     const _throttledFireChange = throttle(() => {
         _fireChange();

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import EmptyTournamentListView from "@/components/EmptyTournamentListView.vue";
+import SpinningLoader from "@/components/SpinningLoader.vue";
 import TournamentList from "@/components/TournamentList.vue";
 import { useTournamentsStore } from "@/stores/tournaments";
 

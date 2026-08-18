@@ -72,10 +72,8 @@ export const useTournamentsStore = defineStore(LOCAL_STORAGE_KEY, () => {
 
     async function init(persistor: ITournamentPersistor | null = null) {
         _persistor = persistor ?? DEFAULT_PERSISTOR_FACTORY();
-        console.log("Initializing tournaments store with persistor:", _persistor);
         watchers.push(_persistor);
         const newTournaments = await _persistor.load();
-        console.log("Loaded tournaments from persistor:", newTournaments, _persistor);
         tournaments.value = newTournaments;
         oldTournaments = deepCopy(newTournaments);
         loading.value = false;

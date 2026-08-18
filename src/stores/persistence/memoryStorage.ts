@@ -9,11 +9,9 @@ export const createMemoryStorage = (): IMemoryTournamentPersistor => {
     const persistor: IMemoryTournamentPersistor = {
         memory: [],
         load: () => {
-            console.log("Loading tournaments from memory:", persistor.memory);
             return Promise.resolve(persistor.memory);
         },
         onTournamentsChange: (tournaments) => {
-            console.log("Persisting tournaments to memory:", tournaments);
             persistor.memory = tournaments;
         },
     };

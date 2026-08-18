@@ -1,5 +1,4 @@
 <script setup lang="ts">
-// remove hash from url
 import { onMounted } from "vue";
 import { useRouter } from "vue-router";
 import NotificationHandler from "./components/notifications/NotificationHandler.vue";
@@ -7,6 +6,7 @@ import { useThemeStore } from "./stores/theme";
 import { useAccountsStore } from "./stores/accounts";
 import { Notifications } from "./components/notifications/createNotification";
 import { useTournamentsStore } from "./stores/tournaments.ts";
+import { createLocalStorageSync } from "./stores/persistence/localStorage.ts";
 
 const router = useRouter();
 const theme = useThemeStore();
@@ -23,7 +23,16 @@ onMounted(() => {
 
     theme.init();
     useAccountsStore().migrate();
-    useTournamentsStore().init();
+    const tournaments = useTournamentsStore();
+    tournaments.init().then(async () => {
+        const lsMigrate = createLocalStorageSync();
+        const allLS = await lsMigrate.load();
+        const notYetInStore = allLS.filter((t) => !tournaments.all.some((st) => st.id === t.id));
+        for (const t of notYetInStore) {
+            tournaments.add(t);
+        }
+        lsMigrate.onTournamentsChange!([]);
+    });
 
     const lastVersion = globalThis.localStorage.getItem("version") || APP_VERSION;
     globalThis.localStorage.setItem("version", APP_VERSION);

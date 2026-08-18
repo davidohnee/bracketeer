@@ -305,7 +305,7 @@ describe("share", () => {
         });
 
         expect(store.findShareAccount).not.toHaveBeenCalled();
-        expect(result).toBe(null);
+        expect(result).toBeNull();
     });
 
     it("should resolve account from remote and share successfully", async () => {

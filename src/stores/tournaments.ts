@@ -7,16 +7,17 @@ import { generateGroupPhases } from "@/helpers/matchplan/groupPhase";
 import { generateNTeams } from "@/helpers/teamGenerator";
 import { throttle } from "lodash";
 import { generateId } from "@/helpers/id";
-import type { ITournamentWatcher } from "./persistence/tournamentWatcher";
+import type { ITournamentPersistor, ITournamentWatcher } from "./persistence/tournamentWatcher";
 import diff from "microdiff";
 import { deepCopy } from "@/helpers/common";
 import { createIndexedDbStorage } from "./persistence/indexedDb";
 
 const LOCAL_STORAGE_KEY = "tournaments";
 
-const PERSISTOR_FACTORY = createIndexedDbStorage();
+const DEFAULT_PERSISTOR_FACTORY = createIndexedDbStorage;
 
 export const useTournamentsStore = defineStore(LOCAL_STORAGE_KEY, () => {
+    let _persistor: ITournamentPersistor | null = null;
     const loading = ref(true);
     const tournaments = ref<Tournament[]>([]);
     let oldTournaments: Tournament[] = [];
@@ -69,13 +70,16 @@ export const useTournamentsStore = defineStore(LOCAL_STORAGE_KEY, () => {
     });
     watch(tournaments, () => fireChange.value(), { deep: true });
 
-    const persistor = PERSISTOR_FACTORY;
-    persistor.load().then((x) => {
-        tournaments.value = x;
-        oldTournaments = deepCopy(x);
+    async function init(persistor: ITournamentPersistor | null = null) {
+        _persistor = persistor ?? DEFAULT_PERSISTOR_FACTORY();
+        console.log("Initializing tournaments store with persistor:", _persistor);
+        watchers.push(_persistor);
+        const newTournaments = await _persistor.load();
+        console.log("Loaded tournaments from persistor:", newTournaments, _persistor);
+        tournaments.value = newTournaments;
+        oldTournaments = deepCopy(newTournaments);
         loading.value = false;
-    });
-    watchers.push(persistor);
+    }
 
     function add(tournament: Tournament) {
         tournaments.value.push(tournament);
@@ -184,6 +188,7 @@ export const useTournamentsStore = defineStore(LOCAL_STORAGE_KEY, () => {
     };
 
     return {
+        init,
         all: tournaments,
         loading,
         create,

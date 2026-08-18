@@ -9,6 +9,6 @@ export interface ITournamentWatcher {
     onTournamentsChange?: TournamentsChangedHandler;
 }
 
-export interface ITournamentPeristor extends ITournamentWatcher {
+export interface ITournamentPersistor extends ITournamentWatcher {
     load: () => Promise<Tournament[]>;
 }

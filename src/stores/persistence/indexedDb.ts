@@ -1,5 +1,5 @@
 import localforage from "localforage";
-import type { ITournamentPeristor } from "./tournamentWatcher";
+import type { ITournamentPersistor } from "./tournamentWatcher";
 import { tournamentFromJson } from "@/helpers";
 import type { AnyTournament, Tournament } from "@/types/tournament";
 import { toRaw } from "vue";
@@ -10,7 +10,7 @@ const store = localforage.createInstance({
     name: "bracketeer.tournaments",
 });
 
-export const createIndexedDbStorage = (): ITournamentPeristor => {
+export const createIndexedDbStorage = (): ITournamentPersistor => {
     const key = (tournamentId: string) => `${KEY_PREFIX}.${tournamentId}`;
 
     return {

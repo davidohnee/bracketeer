@@ -3,6 +3,8 @@ import { setActivePinia, createPinia } from "pinia";
 import { useTournamentsStore } from "./tournaments";
 import type { Tournament, TournamentConfig } from "../types/tournament";
 import { nextTick } from "vue";
+import { createMemoryStorage } from "./persistence/memoryStorage";
+import type { ITournamentPersistor } from "./persistence/tournamentWatcher";
 
 vi.mock("@/helpers/matchplan/knockoutPhase", () => ({
     generateKnockoutBrackets: vi.fn((tournament) => tournament.phases),
@@ -25,15 +27,18 @@ vi.mock("@/helpers", () => ({
     tournamentFromJson: vi.fn((json) => json),
 }));
 
+const newTournamentStore = async (persistor: ITournamentPersistor | null = null) => {
+    const store = useTournamentsStore();
+    await store.init(persistor);
+    return store;
+};
+
 describe("Tournaments Store", () => {
     let mockConfig: TournamentConfig;
 
     beforeEach(() => {
         // Create a new pinia instance for each test
         setActivePinia(createPinia());
-
-        // Clear localStorage before each test
-        localStorage.clear();
 
         // Clear all mocks before each test
         vi.clearAllMocks();
@@ -60,13 +65,15 @@ describe("Tournaments Store", () => {
     });
 
     describe("Initial State", () => {
-        it("should initialize with empty tournaments array when localStorage is empty", () => {
-            const store = useTournamentsStore();
+        it("should initialize with empty tournaments array when persistor is empty", async () => {
+            const persistor = createMemoryStorage();
+            const store = await newTournamentStore(persistor);
             expect(store.all).toEqual([]);
         });
 
-        it("should load tournaments from localStorage on initialization", () => {
-            const mockTournaments = [
+        it("should load tournaments from persistor on initialization", async () => {
+            const persistor = createMemoryStorage();
+            persistor.memory = [
                 {
                     id: "tournament-1",
                     version: 3,
@@ -76,17 +83,15 @@ describe("Tournaments Store", () => {
                     config: mockConfig,
                 },
             ];
-            localStorage.setItem("tournaments", JSON.stringify(mockTournaments));
-
-            const store = useTournamentsStore();
+            const store = await newTournamentStore(persistor);
             expect(store.all).toHaveLength(1);
             expect(store.all[0]?.id).toBe("tournament-1");
         });
     });
 
     describe("add method", () => {
-        it("should add a tournament to the store", () => {
-            const store = useTournamentsStore();
+        it("should add a tournament to the store", async () => {
+            const store = await newTournamentStore();
             const tournament: Tournament = {
                 id: "new-tournament",
                 version: 3,
@@ -101,8 +106,8 @@ describe("Tournaments Store", () => {
             expect(store.all[0]?.id).toBe("new-tournament");
         });
 
-        it("should add multiple tournaments", () => {
-            const store = useTournamentsStore();
+        it("should add multiple tournaments", async () => {
+            const store = await newTournamentStore();
             const tournament1: Tournament = {
                 id: "tournament-1",
                 version: 3,
@@ -127,8 +132,8 @@ describe("Tournaments Store", () => {
     });
 
     describe("remove method", () => {
-        it("should remove a tournament by id", () => {
-            const store = useTournamentsStore();
+        it("should remove a tournament by id", async () => {
+            const store = await newTournamentStore();
             const tournament: Tournament = {
                 id: "to-remove",
                 version: 3,
@@ -145,8 +150,8 @@ describe("Tournaments Store", () => {
             expect(store.all).toHaveLength(0);
         });
 
-        it("should not affect other tournaments when removing one", () => {
-            const store = useTournamentsStore();
+        it("should not affect other tournaments when removing one", async () => {
+            const store = await newTournamentStore();
             const tournament1: Tournament = {
                 id: "keep-1",
                 version: 3,
@@ -185,8 +190,8 @@ describe("Tournaments Store", () => {
     });
 
     describe("update method", () => {
-        it("should update an existing tournament", () => {
-            const store = useTournamentsStore();
+        it("should update an existing tournament", async () => {
+            const store = await newTournamentStore();
             const tournament: Tournament = {
                 id: "update-me",
                 version: 3,
@@ -207,8 +212,8 @@ describe("Tournaments Store", () => {
             expect(store.all[0]?.name).toBe("Updated Name");
         });
 
-        it("should not add a new tournament if id does not exist", () => {
-            const store = useTournamentsStore();
+        it("should not add a new tournament if id does not exist", async () => {
+            const store = await newTournamentStore();
             const tournament: Tournament = {
                 id: "non-existent",
                 version: 3,
@@ -224,16 +229,16 @@ describe("Tournaments Store", () => {
     });
 
     describe("create method", () => {
-        it("should create a new tournament with specified team count", () => {
-            const store = useTournamentsStore();
+        it("should create a new tournament with specified team count", async () => {
+            const store = await newTournamentStore();
             store.create(8, mockConfig);
 
             expect(store.all).toHaveLength(1);
             expect(store.all[0]?.teams).toHaveLength(8);
         });
 
-        it("should create tournament with correct phases", () => {
-            const store = useTournamentsStore();
+        it("should create tournament with correct phases", async () => {
+            const store = await newTournamentStore();
             store.create(8, mockConfig);
 
             const tournament = store.all[0];
@@ -242,8 +247,8 @@ describe("Tournaments Store", () => {
             expect(tournament?.phases[1]?.type).toBe("knockout");
         });
 
-        it("should assign incremental names to tournaments", () => {
-            const store = useTournamentsStore();
+        it("should assign incremental names to tournaments", async () => {
+            const store = await newTournamentStore();
             store.create(4, mockConfig);
             store.create(4, mockConfig);
             store.create(4, mockConfig);
@@ -253,8 +258,8 @@ describe("Tournaments Store", () => {
             expect(store.all[2]?.name).toBe("Tournament 3");
         });
 
-        it("should create tournament with provided config", () => {
-            const store = useTournamentsStore();
+        it("should create tournament with provided config", async () => {
+            const store = await newTournamentStore();
             const customConfig: TournamentConfig = {
                 ...mockConfig,
                 courts: 4,
@@ -270,8 +275,8 @@ describe("Tournaments Store", () => {
     });
 
     describe("deleteTournament method", () => {
-        it("should delete a tournament by id", () => {
-            const store = useTournamentsStore();
+        it("should delete a tournament by id", async () => {
+            const store = await newTournamentStore();
             const tournament: Tournament = {
                 id: "delete-me",
                 version: 3,
@@ -290,8 +295,8 @@ describe("Tournaments Store", () => {
     });
 
     describe("getTournamentById method", () => {
-        it("should return tournament by id", () => {
-            const store = useTournamentsStore();
+        it("should return tournament by id", async () => {
+            const store = await newTournamentStore();
             const tournament: Tournament = {
                 id: "find-me",
                 version: 3,
@@ -309,16 +314,16 @@ describe("Tournaments Store", () => {
             expect(found?.name).toBe("Find Me");
         });
 
-        it("should return undefined for non-existent id", () => {
-            const store = useTournamentsStore();
+        it("should return undefined for non-existent id", async () => {
+            const store = await newTournamentStore();
             const found = store.getTournamentById("non-existent");
             expect(found).toBeUndefined();
         });
     });
 
     describe("download method", () => {
-        it("should create a download link with tournament JSON", () => {
-            const store = useTournamentsStore();
+        it("should create a download link with tournament JSON", async () => {
+            const store = await newTournamentStore();
             const tournament: Tournament = {
                 id: "download-me",
                 version: 3,
@@ -347,7 +352,7 @@ describe("Tournaments Store", () => {
 
     describe("addFromUpload method", () => {
         it("should add uploaded tournaments to the store", async () => {
-            const store = useTournamentsStore();
+            const store = await newTournamentStore();
             const tournamentOne: Tournament = {
                 id: "upload-1",
                 version: 3,
@@ -406,9 +411,10 @@ describe("Tournaments Store", () => {
         });
     });
 
-    describe("localStorage synchronization", () => {
-        it("should sync tournaments to localStorage when adding", async () => {
-            const store = useTournamentsStore();
+    describe("persistence", () => {
+        it("should persist when adding", async () => {
+            const persistor = createMemoryStorage();
+            const store = await newTournamentStore(persistor);
             const tournament: Tournament = {
                 id: "sync-test",
                 version: 3,
@@ -423,15 +429,14 @@ describe("Tournaments Store", () => {
 
             await nextTick();
 
-            const stored = localStorage.getItem("tournaments");
-            expect(stored).not.toBeNull();
-            const parsed = JSON.parse(stored!);
+            const parsed = persistor.memory;
             expect(parsed).toHaveLength(1);
             expect(parsed[0].id).toBe("sync-test");
         });
 
-        it("should sync tournaments to localStorage when updating", async () => {
-            const store = useTournamentsStore();
+        it("should persist when updating", async () => {
+            const persistor = createMemoryStorage();
+            const store = await newTournamentStore(persistor);
             const tournament: Tournament = {
                 id: "sync-update",
                 version: 3,
@@ -449,9 +454,8 @@ describe("Tournaments Store", () => {
             store.update({ ...tournament, name: "Updated" });
             await nextTick();
 
-            const stored = localStorage.getItem("tournaments");
-            expect(stored).not.toBeNull();
-            const parsed = JSON.parse(stored!);
+            const parsed = persistor.memory;
+            expect(parsed).toHaveLength(1);
             expect(parsed[0].name).toBe("Updated");
         });
     });

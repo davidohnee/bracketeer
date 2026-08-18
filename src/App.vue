@@ -6,6 +6,7 @@ import NotificationHandler from "./components/notifications/NotificationHandler.
 import { useThemeStore } from "./stores/theme";
 import { useAccountsStore } from "./stores/accounts";
 import { Notifications } from "./components/notifications/createNotification";
+import { useTournamentsStore } from "./stores/tournaments.ts";
 
 const router = useRouter();
 const theme = useThemeStore();
@@ -22,6 +23,7 @@ onMounted(() => {
 
     theme.init();
     useAccountsStore().migrate();
+    useTournamentsStore().init();
 
     const lastVersion = globalThis.localStorage.getItem("version") || APP_VERSION;
     globalThis.localStorage.setItem("version", APP_VERSION);

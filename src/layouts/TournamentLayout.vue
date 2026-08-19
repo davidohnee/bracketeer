@@ -5,6 +5,7 @@ import { useRoute } from "vue-router";
 import TournamentContextMenu from "@/components/TournamentContextMenu.vue";
 import EditableText from "@/components/input/EditableText.vue";
 import { usePushSyncStore } from "@/stores/pushSync";
+import RemoteStatus from "@/components/RemoteStatus.vue";
 
 const route = useRoute();
 
@@ -78,12 +79,24 @@ onUnmounted(() => {
                     @deleted="$router.push({ name: '/' })"
                 />
             </div>
-            <span
-                v-if="subtitle"
-                class="source text-muted"
-            >
-                {{ subtitle }}</span
-            >
+            <div class="subheader source text-muted">
+                <div
+                    v-if="!props.readonly"
+                    class="info"
+                >
+                    <RemoteStatus
+                        :tournament="tournament"
+                        mode="gist"
+                    />
+                    <RemoteStatus
+                        :tournament="tournament"
+                        mode="p2p"
+                    />
+                </div>
+                <span v-if="subtitle">
+                    {{ subtitle }}
+                </span>
+            </div>
             <div class="tabs">
                 <router-link
                     v-for="key in tabs"
@@ -114,7 +127,7 @@ section {
     flex-direction: column;
     align-items: flex-start;
 
-    &:has(span.source) {
+    &:has(.source) {
         .title-component {
             padding-bottom: 0;
         }
@@ -123,9 +136,16 @@ section {
         }
     }
 
-    & span.source {
+    & .source {
         margin-bottom: var(--spacing-m);
         margin-left: var(--spacing-m);
+
+        .info {
+            margin-top: var(--spacing-m);
+            display: flex;
+            flex-direction: row;
+            gap: var(--spacing-m);
+        }
     }
 
     .tabs {

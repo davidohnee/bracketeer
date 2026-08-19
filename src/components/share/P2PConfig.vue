@@ -22,7 +22,7 @@ const options = [
             "A new random ID will be generated each time you load the page. This is the most private option, but requires sharing the new ID each time.",
     },
     {
-        label: "This browser session (default)",
+        label: "This browser session",
         value: "session",
         description:
             "The same ID will be used across your browser session. If you close the browser, a new ID will be generated next time. This is a good balance between convenience and privacy.",

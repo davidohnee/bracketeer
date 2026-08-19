@@ -47,13 +47,14 @@ defineExpose({ open });
             />
 
             <template v-if="shareUrl && sharingItem">
-                <p class="my-0">Your share link:</p>
                 <AdvancedInput
                     :model-value="shareUrl"
                     type="text"
                     copyable
                     readonly
                     :loading="!shareUrl"
+                    label="Your share link:"
+                    show-label
                     @copy="copyToClipboard(shareUrl)"
                 />
             </template>

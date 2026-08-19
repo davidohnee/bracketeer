@@ -36,41 +36,43 @@ const copy = () => {
 };
 </script>
 <template>
-    <label
-        v-if="label && showLabel"
-        :for="id"
-        class="input-label"
-    >
-        {{ label }}
-    </label>
-    <div
-        class="advanced-input"
-        :aria-disabled="disabled || loading"
-    >
-        <div
-            class="loader"
-            v-if="loading"
-        ></div>
-        <input
-            ref="inputRef"
-            :type="type"
-            :disabled="disabled || loading"
-            :value="modelValue"
-            :readonly="readonly"
-            :class="{ fadeout: !isScrolledToEnd }"
-            @input="checkScroll"
-            @scroll="checkScroll"
-            :id="id"
-        />
-        <button
-            class="copy ghost"
-            v-if="copyable && !loading"
-            title="Copy to clipboard"
-            :disabled="disabled || loading"
-            @click="copy"
+    <div class="wrapper">
+        <label
+            v-if="label && showLabel"
+            :for="id"
+            class="input-label"
         >
-            <ion-icon :name="justCopied ? 'checkmark' : 'copy-outline'"></ion-icon>
-        </button>
+            {{ label }}
+        </label>
+        <div
+            class="advanced-input"
+            :aria-disabled="disabled || loading"
+        >
+            <div
+                class="loader"
+                v-if="loading"
+            ></div>
+            <input
+                ref="inputRef"
+                :type="type"
+                :disabled="disabled || loading"
+                :value="modelValue"
+                :readonly="readonly"
+                :class="{ fadeout: !isScrolledToEnd }"
+                @input="checkScroll"
+                @scroll="checkScroll"
+                :id="id"
+            />
+            <button
+                class="copy ghost"
+                v-if="copyable && !loading"
+                title="Copy to clipboard"
+                :disabled="disabled || loading"
+                @click="copy"
+            >
+                <ion-icon :name="justCopied ? 'checkmark' : 'copy-outline'"></ion-icon>
+            </button>
+        </div>
     </div>
 </template>
 

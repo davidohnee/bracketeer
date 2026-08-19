@@ -5,12 +5,22 @@ import TournamentLayout from "@/layouts/TournamentLayout.vue";
 import NotFoundView from "@/pages/[...path].vue";
 import SpinningLoader from "@/components/SpinningLoader.vue";
 import { ref, watch } from "vue";
+import { useHistoryStore } from "@/stores/history";
+import { applyChanges } from "@/helpers/history/common";
 
 const route = useRoute();
 const tournaments = useTournamentsStore();
 const tournamentId = "tournamentId" in route.params ? (route.params.tournamentId as string) : "";
 
 const tournament = ref(tournaments.getTournamentById(tournamentId));
+
+const history = useHistoryStore();
+history.setOnChange(tournamentId, (changes) => {
+    if (!tournament.value) {
+        return;
+    }
+    applyChanges(tournament.value, changes);
+});
 
 watch(
     () => tournaments.loading,

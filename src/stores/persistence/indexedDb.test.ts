@@ -52,7 +52,7 @@ describe("Indexed DB  Sync", () => {
         expect(persistor.onTournamentChange).toBeDefined();
         expect(persistor.onTournamentDeleted).toBeDefined();
 
-        await persistor.onTournamentChange!(tournament);
+        await persistor.onTournamentChange!(tournament, []);
         expect(setItemMock).toHaveBeenCalledWith("tournament.1", tournament);
 
         await persistor.onTournamentDeleted!(tournament);

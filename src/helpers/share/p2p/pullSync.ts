@@ -4,51 +4,8 @@ import { type DataConnection, Peer } from "peerjs";
 import { type Import } from "..";
 import P2PClient from ".";
 import type { Tournament } from "@/types/tournament";
+import { applyChanges, type Change } from "@/helpers/history/common";
 import { deepCopy } from "@/helpers/common";
-import type { P2PChange } from "./common";
-
-const applyRemoveChange = (target: Record<string, unknown>, path: (string | number)[]) => {
-    for (let i = 0; i < path.length - 1; i++) {
-        target = target[path[i]] as Record<string, unknown>;
-    }
-    if (Array.isArray(target)) {
-        target.splice(path.at(-1) as number, 1);
-    } else {
-        delete target[path.at(-1)!];
-    }
-};
-
-const applyCreateOrChange = (
-    target: Record<string, unknown>,
-    path: (string | number)[],
-    value: unknown,
-) => {
-    for (let i = 0; i < path.length - 1; i++) {
-        if (!target[path[i]]) {
-            target[path[i]] = {};
-        }
-        target = target[path[i]] as Record<string, unknown>;
-    }
-    target[path.at(-1)!] = value;
-};
-
-export const applyP2PChanges = (tournament: { value: Tournament | null }, changes: P2PChange[]) => {
-    if (!tournament.value) {
-        return;
-    }
-
-    const rawTournament = toRaw(tournament.value) as unknown as Record<string, unknown>;
-
-    for (const change of changes) {
-        if (change.type === "REMOVE") {
-            applyRemoveChange(rawTournament, change.path);
-        } else if (change.type === "CREATE" || change.type === "CHANGE") {
-            applyCreateOrChange(rawTournament, change.path, change.value);
-        }
-    }
-
-    tournament.value = deepCopy(rawTournament) as unknown as Tournament;
-};
 
 type PullContext = {
     sync: IP2PPullSync;
@@ -99,7 +56,7 @@ const handlePullData = (context: PullContext) => (data: unknown) => {
     }
 
     if (message.type === "diff") {
-        context.sync._onDiff(message.data as P2PChange[]);
+        context.sync._onDiff(message.data as Change[]);
         context.sync.status.value.lastUpdate = new Date();
         if (context.sync.onChange && context.tournament.value) {
             context.sync.onChange(context.tournament.value);
@@ -142,7 +99,7 @@ const connectPullPeer = (context: PullContext) => {
 interface IP2PPullSync extends IPullSync {
     _peer: Peer;
     _connection: DataConnection | null;
-    _onDiff: (diff: P2PChange[]) => Promise<void>;
+    _onDiff: (diff: Change[]) => Promise<void>;
 }
 
 export const createPullSync: PullSyncFactory<IP2PPullSync> = (tournament) => {
@@ -154,8 +111,16 @@ export const createPullSync: PullSyncFactory<IP2PPullSync> = (tournament) => {
             type: "live",
             lastUpdate: new Date(),
         }),
-        async _onDiff(diff: P2PChange[]) {
-            applyP2PChanges(tournament, diff);
+        async _onDiff(diff: Change[]) {
+            if (!tournament.value) {
+                return;
+            }
+
+            const rawTournament = toRaw(tournament.value) as unknown as Record<string, unknown>;
+
+            applyChanges(rawTournament, diff);
+
+            tournament.value = deepCopy(rawTournament) as unknown as Tournament;
         },
         async pull(identifier) {
             console.log("[P2P] Starting pull sync with identifier:", identifier);

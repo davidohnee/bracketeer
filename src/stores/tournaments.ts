@@ -11,6 +11,7 @@ import type { ITournamentPersistor, ITournamentWatcher } from "./persistence/tou
 import diff from "microdiff";
 import { deepCopy } from "@/helpers/common";
 import { createIndexedDbStorage } from "./persistence/indexedDb";
+import type { Change } from "@/helpers/history/common";
 
 const LOCAL_STORAGE_KEY = "tournaments";
 
@@ -29,10 +30,24 @@ export const useTournamentsStore = defineStore(LOCAL_STORAGE_KEY, () => {
         const changes = diff(oldTournaments, tournaments.value);
         if (!changes.length) return;
 
-        const pendingTournamentChangeIndices = changes
-            .filter((x) => x.type !== "REMOVE")
-            .map((x) => x.path[0])
-            .filter((x) => x != null) as number[];
+        const pendingTournamentChanges = changes.filter((x) => x.type !== "REMOVE");
+        const pendingTournamentChangeMap = pendingTournamentChanges.reduce(
+            (acc, change) => {
+                const tournamentIndex = change.path[0] as number | undefined;
+                if (tournamentIndex != null) {
+                    if (!acc[tournamentIndex]) {
+                        acc[tournamentIndex] = [];
+                    }
+                    acc[tournamentIndex].push({
+                        ...change,
+                        path: change.path.slice(1),
+                    });
+                }
+                return acc;
+            },
+            {} as Record<number, Change[]>,
+        );
+        const pendingTournamentChangeIndices = Object.keys(pendingTournamentChangeMap).map(Number);
 
         const pendingTournamentDeleteIndices = changes
             .filter((x) => x.type === "REMOVE")
@@ -40,17 +55,21 @@ export const useTournamentsStore = defineStore(LOCAL_STORAGE_KEY, () => {
             .filter((x) => x != null) as number[];
 
         for (const watcher of watchers) {
+            console.log(watcher, pendingTournamentChangeIndices);
             if (watcher.onTournamentChange) {
                 for (const i of pendingTournamentChangeIndices) {
-                    watcher.onTournamentChange(tournaments.value[i]);
+                    console.log(
+                        `Firing onTournamentChange for tournament index ${i}`,
+                        tournaments.value[i],
+                        pendingTournamentChangeMap[i],
+                    );
+                    watcher.onTournamentChange(tournaments.value[i], pendingTournamentChangeMap[i]);
                 }
-                pendingTournamentChangeIndices.splice(0);
             }
             if (watcher.onTournamentDeleted) {
                 for (const i of pendingTournamentDeleteIndices) {
                     watcher.onTournamentDeleted(oldTournaments[i]);
                 }
-                pendingTournamentDeleteIndices.splice(0);
             }
             if (watcher.onTournamentsChange) {
                 watcher.onTournamentsChange(tournaments.value);
@@ -197,6 +216,9 @@ export const useTournamentsStore = defineStore(LOCAL_STORAGE_KEY, () => {
         getTournamentById,
         download,
         addFromUpload,
+        addWatcher: (watcher: ITournamentWatcher) => {
+            watchers.push(watcher);
+        },
         disableThrottling: () => {
             console.warn("Disabling throttling for tournaments store");
             throttlingEnabled.value = false;

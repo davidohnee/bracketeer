@@ -4,10 +4,10 @@ import { type DataConnection, Peer } from "peerjs";
 import { ref, toRaw, watch, type Ref } from "vue";
 import diff from "microdiff";
 import type { IPushSync } from "../pushSync";
-import type { P2PChange } from "./common";
 import { generateSecureId } from "@/helpers/id";
 import P2PClient from ".";
 import { findRemoteIndexWithMode } from "..";
+import type { Change } from "@/helpers/history/common";
 
 const P2P_TAB_ID_KEY = "p2p.tab-id";
 const P2P_LOCK_PREFIX = "p2p.lock.";
@@ -202,7 +202,7 @@ export const createPushSync = (tournament: Ref<Tournament | null>): IPushSync =>
             return;
         }
 
-        const changes = diff(previousTournament, nextTournament) as P2PChange[];
+        const changes = diff(previousTournament, nextTournament) as Change[];
         previousTournament = deepCopy(nextTournament);
 
         if (!changes.length) {

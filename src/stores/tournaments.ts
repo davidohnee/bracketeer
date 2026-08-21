@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import type { Tournament, TournamentConfig } from "../types/tournament";
-import { computed, ref, watch } from "vue";
+import { computed, ref, toRaw, watch } from "vue";
 import { tournamentFromJson } from "@/helpers";
 import { generateKnockoutBrackets } from "@/helpers/matchplan/knockoutPhase";
 import { generateGroupPhases } from "@/helpers/matchplan/groupPhase";
@@ -27,7 +27,7 @@ export const useTournamentsStore = defineStore(LOCAL_STORAGE_KEY, () => {
 
     const throttlingEnabled = ref(true);
     const _fireChange = () => {
-        const changes = diff(oldTournaments, tournaments.value);
+        const changes = diff(oldTournaments, toRaw(tournaments.value));
         if (!changes.length) return;
 
         const pendingTournamentChanges = changes.filter((x) => x.type !== "REMOVE");
@@ -55,14 +55,8 @@ export const useTournamentsStore = defineStore(LOCAL_STORAGE_KEY, () => {
             .filter((x) => x != null) as number[];
 
         for (const watcher of watchers) {
-            console.log(watcher, pendingTournamentChangeIndices);
             if (watcher.onTournamentChange) {
                 for (const i of pendingTournamentChangeIndices) {
-                    console.log(
-                        `Firing onTournamentChange for tournament index ${i}`,
-                        tournaments.value[i],
-                        pendingTournamentChangeMap[i],
-                    );
                     watcher.onTournamentChange(tournaments.value[i], pendingTournamentChangeMap[i]);
                 }
             }

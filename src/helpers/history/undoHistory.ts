@@ -26,7 +26,6 @@ export const createHistory = (): History => {
         if (index.value >= 0) {
             const change = stack[index.value];
             index.value--;
-            console.log("Undoing change:", change);
             return change;
         }
         return null;
@@ -35,7 +34,6 @@ export const createHistory = (): History => {
     const redo = () => {
         if (index.value < stack.length - 1) {
             index.value++;
-            console.log("Redoing change:", stack[index.value]);
             return stack[index.value];
         }
         return null;
@@ -46,7 +44,6 @@ export const createHistory = (): History => {
             return;
         }
 
-        console.log("Adding change to history:", change);
         // If we are not at the end of the stack, remove all changes after the current index
         if (index.value < stack.length - 1) {
             stack.splice(index.value + 1);
@@ -85,10 +82,11 @@ export const createHistoryManager = () => {
 export const createHistoryWatcher = (historyManager: HistoryManager): ITournamentWatcher => {
     return {
         onTournamentChange: (tournament, changes) => {
-            console.log(`Tournament ${tournament.id} changed:`, changes);
             const history = historyManager.getHistory(tournament.id);
             for (const change of changes) {
-                history.addChange(change);
+                if (change.path.length) {
+                    history.addChange(change);
+                }
             }
         },
     };

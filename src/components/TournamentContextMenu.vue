@@ -1,11 +1,13 @@
 <script setup lang="ts">
-import type { Tournament } from "@/types/tournament";
+import type { IRemote, Tournament } from "@/types/tournament";
 import IconComboContextMenu from "./IconComboContextMenu.vue";
 import { Notifications } from "./notifications/createNotification";
 import { useTournamentsStore } from "@/stores/tournaments";
 import ShareModal from "@/components/modals/ShareFullModal.vue";
 import TrackModal from "@/components/modals/ShareViewerModal.vue";
-import { ref } from "vue";
+import { computed, ref } from "vue";
+import BadgeIcon from "./BadgeIcon.vue";
+import { usePushSyncStore } from "@/stores/pushSync.ts";
 
 const props = defineProps<{
     tournament: Tournament;
@@ -14,6 +16,7 @@ const props = defineProps<{
 const emit = defineEmits<(e: "deleted") => void>();
 
 const tournaments = useTournamentsStore();
+const pushSync = usePushSyncStore();
 const shareModal = ref<typeof ShareModal>();
 const trackModal = ref<typeof TrackModal>();
 
@@ -49,38 +52,97 @@ const deleteTournament = () => {
         },
     });
 };
+
+const remoteStatus = (remote: IRemote) => {
+    const sync = pushSync.active.find((s) => s.id === remote.identifier);
+    if (!sync) return null;
+    if (sync.state === "connected") return "connected";
+    if (sync.state === "connecting") return "connecting";
+    return "error";
+};
+
+type Status = {
+    icon: string;
+    color: string;
+};
+
+const status = computed((): Status | null => {
+    const remotes = props.tournament.remote;
+    if (!remotes) return null;
+    console.log("remotes", remotes);
+    const statuses = remotes.map((r) => remoteStatus(r)).filter((s) => s !== null);
+    console.log("remotes", statuses);
+    if (statuses.length === 0) return null;
+    if (statuses.includes("error"))
+        return {
+            icon: "close-outline",
+            color: "color-brand-red",
+        };
+    if (statuses.includes("connecting"))
+        return {
+            icon: "hourglass-outline",
+            color: "color-brand-yellow",
+        };
+    if (statuses.includes("connected"))
+        return {
+            icon: "checkmark-outline",
+            color: "color-brand-green",
+        };
+
+    return null;
+});
 </script>
 <template>
     <ShareModal ref="shareModal" />
     <TrackModal ref="trackModal" />
-    <IconComboContextMenu
-        align="right"
-        :options="[
-            {
-                id: 'share',
-                label: 'Share',
-                icon: 'share-social-outline',
-                action: shareTournament,
-            },
-            {
-                id: 'share-viewer',
-                label: 'Viewer Link',
-                icon: 'share-outline',
-                action: shareViewerTournament,
-            },
-            {
-                id: 'download',
-                label: 'Download',
-                icon: 'download-outline',
-                action: downloadTournament,
-            },
-            {
-                id: 'delete',
-                label: 'Delete',
-                icon: 'trash-outline',
-                type: 'danger',
-                action: deleteTournament,
-            },
-        ]"
-    />
+    <div class="options">
+        <button
+            class="ghost small"
+            type="button"
+            @click="shareTournament"
+        >
+            <BadgeIcon
+                icon="share-outline"
+                :badge-icon="status?.icon"
+                :badge-color="status?.color"
+            />
+        </button>
+        <IconComboContextMenu
+            align="right"
+            :options="[
+                {
+                    id: 'share',
+                    label: 'Share',
+                    icon: 'share-outline',
+                    action: shareTournament,
+                },
+                {
+                    id: 'share-viewer',
+                    label: 'Viewer Link',
+                    icon: 'scan-outline',
+                    action: shareViewerTournament,
+                },
+                {
+                    id: 'download',
+                    label: 'Download',
+                    icon: 'download-outline',
+                    action: downloadTournament,
+                },
+                {
+                    id: 'delete',
+                    label: 'Delete',
+                    icon: 'trash-outline',
+                    type: 'danger',
+                    action: deleteTournament,
+                },
+            ]"
+        />
+    </div>
 </template>
+
+<style scoped>
+.options {
+    display: flex;
+    align-items: center;
+}
+</style>

@@ -142,10 +142,6 @@ const STATUS_COLOR: Record<MatchStatus, string> = {
         grid-template-columns: 1fr calc(1.2 * 0.9em + 2 * 1.6em);
     }
 
-    .desktop-only {
-        display: none;
-    }
-
     .buttons {
         width: 100%;
 

@@ -168,3 +168,9 @@ section {
     justify-content: center;
     align-items: center;
 }
+
+@media (max-width: 768px) {
+    .desktop-only {
+        display: none;
+    }
+}

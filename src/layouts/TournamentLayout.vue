@@ -5,7 +5,6 @@ import { useRoute } from "vue-router";
 import TournamentContextMenu from "@/components/TournamentContextMenu.vue";
 import EditableText from "@/components/input/EditableText.vue";
 import { usePushSyncStore } from "@/stores/pushSync";
-import RemoteStatus from "@/components/RemoteStatus.vue";
 
 const route = useRoute();
 
@@ -80,19 +79,6 @@ onUnmounted(() => {
                 />
             </div>
             <div class="subheader source text-muted">
-                <div
-                    v-if="!props.readonly"
-                    class="info"
-                >
-                    <RemoteStatus
-                        :tournament="tournament"
-                        mode="gist"
-                    />
-                    <RemoteStatus
-                        :tournament="tournament"
-                        mode="p2p"
-                    />
-                </div>
                 <span v-if="subtitle">
                     {{ subtitle }}
                 </span>

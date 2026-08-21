@@ -78,7 +78,6 @@ dialog[open] > div {
     display: flex;
     flex-direction: column;
     width: 100%;
-    max-width: 40vw;
     overflow: hidden;
 
     & input {
@@ -90,8 +89,10 @@ dialog[open] > div {
     width: 20vw;
     height: 20vw;
     aspect-ratio: 1;
-    margin: 0 auto;
-    margin-bottom: var(--spacing-m);
+    margin: var(--spacing-m) auto;
+    padding: var(--spacing-m);
+    background-color: white;
+    border-radius: var(--radius-m);
 }
 
 .options {

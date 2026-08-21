@@ -1,43 +1,36 @@
 <script setup lang="ts">
-import { findRemoteWithMode, type ShareMode } from "@/helpers/share";
 import { usePushSyncStore } from "@/stores/pushSync";
-import type { Tournament } from "@/types/tournament";
+import type { IRemote, Tournament } from "@/types/tournament";
 import { computed } from "vue";
 
 const props = defineProps<{
     tournament: Tournament;
-    mode: ShareMode;
 }>();
-
-const remote = computed(() => findRemoteWithMode(props.tournament, props.mode));
 
 const pushSync = usePushSyncStore();
 
-const sync = computed(() => {
-    const sync = pushSync.active.find((s) => s.id === remote.value?.identifier);
-    if (!sync) return null;
-    return sync;
-});
-
 type Status = "connected" | "connecting" | "error" | "disabled";
 
-const status = computed((): Status | null => {
-    if (!remote.value) return null;
-    if (!sync.value) return null;
-    if (sync.value.state === "connected") return "connected";
-    if (sync.value.state === "connecting") return "connecting";
+const remoteStatus = (remote: IRemote): Status | null => {
+    const sync = pushSync.active.find((s) => s.id === remote.identifier);
+    if (!sync) return null;
+    if (sync.state === "connected") return "connected";
+    if (sync.state === "connecting") return "connecting";
     return "error";
-});
+};
 
-const prettyMode = computed(() => {
-    switch (props.mode) {
-        case "gist":
-            return "Gist";
-        case "p2p":
-            return "Peer-to-peer";
-        default:
-            return props.mode;
-    }
+const status = computed((): Status | null => {
+    const remotes = props.tournament.remote;
+    if (!remotes) return null;
+    console.log("remotes", remotes);
+    const statuses = remotes.map((r) => remoteStatus(r)).filter((s) => s !== null);
+    console.log("remotes", statuses);
+    if (statuses.length === 0) return null;
+    if (statuses.includes("error")) return "error";
+    if (statuses.includes("connecting")) return "connecting";
+    if (statuses.includes("connected")) return "connected";
+
+    return "disabled";
 });
 </script>
 <template>
@@ -51,6 +44,6 @@ const prettyMode = computed(() => {
             red: status == 'error',
         }"
     >
-        {{ prettyMode }}: {{ status }}
+        {{ status }}
     </div>
 </template>

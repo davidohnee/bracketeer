@@ -28,15 +28,15 @@ const groups = computed(() => {
                 v-if="$slots.activator"
                 name="activator"
             />
-            <div
+            <button
                 v-else
-                class="dropdown__selected"
+                class="dropdown__selected ghost small"
             >
                 <ion-icon
                     :name="icon || 'ellipsis-vertical'"
                     class="dropdown__icon"
                 ></ion-icon>
-            </div>
+            </button>
         </template>
         <template v-slot:context-menu="{ close }">
             <div

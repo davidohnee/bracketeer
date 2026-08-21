@@ -111,9 +111,5 @@ h2 {
     .form {
         margin: var(--spacing-m);
     }
-
-    .desktop-only {
-        display: none;
-    }
 }
 </style>

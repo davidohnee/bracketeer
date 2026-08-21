@@ -14,9 +14,7 @@ const selectedValue = computed({
         return props.modelValue;
     },
     set(value) {
-        console.log("SwitchToggle set", value, props.modelValue);
         if (value !== props.modelValue) {
-            console.log("SwitchToggle emit", value);
             emit("update:modelValue", value);
         }
     },

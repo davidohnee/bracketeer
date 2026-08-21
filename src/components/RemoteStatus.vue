@@ -22,9 +22,7 @@ const remoteStatus = (remote: IRemote): Status | null => {
 const status = computed((): Status | null => {
     const remotes = props.tournament.remote;
     if (!remotes) return null;
-    console.log("remotes", remotes);
     const statuses = remotes.map((r) => remoteStatus(r)).filter((s) => s !== null);
-    console.log("remotes", statuses);
     if (statuses.length === 0) return null;
     if (statuses.includes("error")) return "error";
     if (statuses.includes("connecting")) return "connecting";

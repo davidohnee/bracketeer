@@ -18,16 +18,12 @@ const p2pRemote = computed(() => {
 });
 
 const setEnabled = (enabled: boolean) => {
-    console.log("setEnabled", enabled, p2pRemote.value);
-
     if (!p2pRemote.value) return;
     if (enabled) {
         delete p2pRemote.value.disabled;
     } else {
         p2pRemote.value.disabled = true;
     }
-
-    console.log("setEnabled", enabled, p2pRemote.value);
 };
 </script>
 

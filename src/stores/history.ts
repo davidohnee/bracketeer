@@ -10,23 +10,30 @@ export const useHistoryStore = defineStore("history", () => {
 
     const onChange = ref<((change: Change[]) => void) | null>(null);
 
-    document.addEventListener("keydown", (event) => {
+    const undo = () => {
         if (activeTournamentId.value === null) return;
         const thisHistory = history.getHistory(activeTournamentId.value);
-
-        let change: Change | null = null;
-
-        if (event.ctrlKey && event.key === "z") {
-            change = thisHistory.undo();
-            if (change) {
-                change = reverseChange(change);
-            }
-        } else if (event.ctrlKey && event.key === "y") {
-            change = thisHistory.redo();
+        let change = thisHistory.undo();
+        if (change) {
+            change = reverseChange(change);
+            onChange.value?.([change]);
         }
+    };
 
-        if (change && onChange.value) {
-            onChange.value([change]);
+    const redo = () => {
+        if (activeTournamentId.value === null) return;
+        const thisHistory = history.getHistory(activeTournamentId.value);
+        const change = thisHistory.redo();
+        if (change) {
+            onChange.value?.([change]);
+        }
+    };
+
+    document.addEventListener("keydown", (event) => {
+        if (event.ctrlKey && event.key === "z") {
+            undo();
+        } else if (event.ctrlKey && event.key === "y") {
+            redo();
         }
     });
 
@@ -37,5 +44,17 @@ export const useHistoryStore = defineStore("history", () => {
         },
         watcher: computed(() => historyWatcher),
         history: computed(() => history),
+        undo,
+        redo,
+        canUndo: computed(() => {
+            if (activeTournamentId.value === null) return false;
+            const thisHistory = history.getHistory(activeTournamentId.value);
+            return thisHistory.canUndo.value;
+        }),
+        canRedo: computed(() => {
+            if (activeTournamentId.value === null) return false;
+            const thisHistory = history.getHistory(activeTournamentId.value);
+            return thisHistory.canRedo.value;
+        }),
     };
 });

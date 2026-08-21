@@ -115,6 +115,10 @@ section {
     letter-spacing: 0.05em;
 }
 
+.capitalise {
+    text-transform: capitalize;
+}
+
 .status {
     padding: var(--spacing-xxs);
     border-radius: var(--radius-m);

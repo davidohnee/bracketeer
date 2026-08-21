@@ -30,6 +30,7 @@ const groups = computed(() => {
             />
             <button
                 v-else
+                type="button"
                 class="dropdown__selected ghost small"
             >
                 <ion-icon

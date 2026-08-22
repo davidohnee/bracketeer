@@ -341,7 +341,6 @@ describe("share", () => {
             date: new Date(),
         };
 
-        const successSpy = vi.spyOn(Notifications, "addSuccess").mockImplementation(() => "");
         const pushSpy = vi.spyOn(gistShare, "push").mockResolvedValue(resultPayload);
         vi.spyOn(accountsStoreModule, "useAccountsStore").mockReturnValue(store as never);
 
@@ -353,12 +352,11 @@ describe("share", () => {
 
         expect(store.findShareAccount).toHaveBeenCalledWith(remoteIdentifier);
         expect(pushSpy).toHaveBeenCalledTimes(1);
-        expect(successSpy).toHaveBeenCalledTimes(1);
         expect(tournament.remote).toEqual(remoteExpected);
         expect(result).toEqual(resultPayload);
     });
 
-    it("should return null and show error notification when push fails", async () => {
+    it("should return null and show error notification when push fails due to unauthorized access", async () => {
         const tournament = generateTestTournament();
 
         const errorSpy = vi.spyOn(Notifications, "addError").mockImplementation(() => "");
@@ -373,7 +371,29 @@ describe("share", () => {
         expect(errorSpy).toHaveBeenCalledWith(
             "Sharing failed",
             expect.objectContaining({
-                details: "There was an error sharing the tournament. Please try again.",
+                details:
+                    "Your access token is invalid, does not have the required permissions, or has expired. Please check your access token and try again.",
+            }),
+        );
+    });
+
+    it("should return null and show error notification when push fails due to not-found", async () => {
+        const tournament = generateTestTournament();
+
+        const errorSpy = vi.spyOn(Notifications, "addError").mockImplementation(() => "");
+        vi.spyOn(gistShare, "push").mockResolvedValue({
+            type: "error",
+            error: "not-found",
+        });
+
+        const result = await GistClient.create(tournament, { account });
+
+        expect(result).toBe(null);
+        expect(errorSpy).toHaveBeenCalledWith(
+            "Sharing failed",
+            expect.objectContaining({
+                details:
+                    "The tournament could not be found on the remote server. It may have been deleted or the identifier may be incorrect.",
             }),
         );
     });

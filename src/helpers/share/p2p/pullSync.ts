@@ -3,9 +3,10 @@ import type { IPullSync, PullSyncFactory, LiveStatus } from "../pullSync";
 import { type DataConnection, Peer } from "peerjs";
 import { type Import } from "..";
 import P2PClient from ".";
-import type { Tournament } from "@/types/tournament";
+import type { AnyTournament, Tournament } from "@/types/tournament";
 import { applyChanges, type Change } from "@/helpers/history/common";
 import { deepCopy } from "@/helpers/common";
+import { tournamentFromJson } from "@/helpers";
 
 type PullContext = {
     sync: IP2PPullSync;
@@ -42,7 +43,7 @@ const handlePullData = (context: PullContext) => (data: unknown) => {
     const message = data as { type: "full" | "diff"; data: unknown };
 
     if (message.type === "full") {
-        context.tournament.value = message.data as Tournament;
+        context.tournament.value = tournamentFromJson(message.data as AnyTournament);
         context.sync.status.value.lastUpdate = new Date();
         if (context.sync.onChange && context.tournament.value) {
             context.sync.onChange(context.tournament.value);
@@ -106,7 +107,7 @@ export const createPullSync: PullSyncFactory<IP2PPullSync> = (tournament) => {
     return {
         _connection: null,
         _peer: new Peer(),
-        error: ref(null),
+        error: ref<Import["error"] | null>(null),
         status: ref<LiveStatus>({
             type: "live",
             lastUpdate: new Date(),
@@ -120,7 +121,9 @@ export const createPullSync: PullSyncFactory<IP2PPullSync> = (tournament) => {
 
             applyChanges(rawTournament, diff);
 
-            tournament.value = deepCopy(rawTournament) as unknown as Tournament;
+            tournament.value = tournamentFromJson(
+                deepCopy(rawTournament) as unknown as AnyTournament,
+            );
         },
         async pull(identifier) {
             console.log("[P2P] Starting pull sync with identifier:", identifier);

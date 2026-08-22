@@ -9,6 +9,7 @@ import { usePushSyncStore } from "@/stores/pushSync";
 import AdvancedInput from "@/components/input/AdvancedInput.vue";
 import SegmentPicker from "@/components/SegmentPicker.vue";
 import { generateSecureId } from "@/helpers/id";
+import { copyToClipboard } from "@/helpers/common";
 
 const props = defineProps<{
     tournament: Tournament;
@@ -38,7 +39,7 @@ const options = [
 const tournaments = useTournamentsStore();
 const tournament = tournaments.getTournamentById(props.tournament.id)!;
 const p2pRemote = computed(() => findRemoteWithMode(tournament, "p2p"));
-const peerIdType = ref<PeerIdType>("session");
+const peerIdType = ref<PeerIdType>("permanent");
 
 if (p2pRemote.value) {
     const identifier = p2pRemote.value.identifier;
@@ -150,6 +151,7 @@ const syncState = computed(() => {
                         type="text"
                         readonly
                         copyable
+                        @copy="copyToClipboard(shareLink)"
                     />
                 </div>
                 <button

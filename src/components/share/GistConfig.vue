@@ -108,7 +108,10 @@ onMounted(() => {
 </script>
 
 <template>
-    <template v-if="lastPushed">
+    <div
+        v-if="lastPushed"
+        class="form"
+    >
         <div class="row start">
             <div class="field">
                 <p class="my-0">
@@ -169,7 +172,7 @@ onMounted(() => {
                 </button>
             </div>
         </div>
-    </template>
+    </div>
     <template v-else-if="canPull">
         <div class="row start">
             <div class="field">

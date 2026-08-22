@@ -104,6 +104,23 @@ const share = async (tournament: Tournament, { account, accountResolver }: GistS
     if (result.tournament) {
         tournament.remote = result.tournament.remote;
     } else if (result.error) {
+        if (result.error == "not-allowed") {
+            Notifications.addError("Sharing failed", {
+                details:
+                    "Your access token is invalid, does not have the required permissions, or has expired. Please check your access token and try again.",
+                timeout: 10000,
+                redirect: "/settings/share/accounts",
+            });
+            return null;
+        } else if (result.error == "not-found") {
+            Notifications.addError("Sharing failed", {
+                details:
+                    "The tournament could not be found on the remote server. It may have been deleted or the identifier may be incorrect.",
+                timeout: 10000,
+            });
+            return null;
+        }
+
         console.error("Error sharing tournament:", result.error);
         Notifications.addError("Sharing failed", {
             details: "There was an error sharing the tournament. Please try again.",
@@ -111,15 +128,6 @@ const share = async (tournament: Tournament, { account, accountResolver }: GistS
         });
         return null;
     }
-
-    Notifications.addSuccess("Tournament shared", {
-        details: "The tournament has been shared successfully.",
-        timeout: 5000,
-        onClick: () => {
-            globalThis.open(result.link, "_blank");
-        },
-        redirect: result.link,
-    });
 
     return result;
 };

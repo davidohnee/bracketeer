@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, onMounted, onUnmounted, ref } from "vue";
+import { computed, onMounted, onUnmounted, ref, watch } from "vue";
 import { useRoute } from "vue-router";
 import type { IRemote, Tournament } from "@/types/tournament";
 import TournamentLayout from "@/layouts/TournamentLayout.vue";
@@ -56,6 +56,18 @@ onUnmounted(() => {
     liveSync.stop();
     clearInterval(updateSubtitleTimer);
 });
+
+const lastChanged = ref(new Date());
+
+watch(
+    () => tournament.value,
+    (newTournament) => {
+        if (newTournament) {
+            lastChanged.value = new Date();
+        }
+    },
+    { deep: true },
+);
 </script>
 <template>
     <TournamentLayout
@@ -64,6 +76,7 @@ onUnmounted(() => {
         v-model="tournament"
         :tabs="['table', 'knockout', 'matches', 'live', 'about']"
         :subtitle="subtitle"
+        :key="lastChanged.toISOString()"
         readonly
     />
     <div

@@ -75,10 +75,16 @@ const viewOnly = () => {
                 <button
                     class="danger secondary"
                     @click="viewOnly"
+                    type="button"
                 >
                     No
                 </button>
-                <button @click="confirm">Yes</button>
+                <button
+                    @click="confirm"
+                    type="button"
+                >
+                    Yes
+                </button>
             </div>
         </div>
         <ViewerView />

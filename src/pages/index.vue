@@ -13,13 +13,16 @@ const website = "https://davidohnee.com";
             </p>
             <div class="row mobile-stack">
                 <router-link :to="{ name: '/tournaments' }">
-                    <button class="secondary">
+                    <button
+                        class="secondary"
+                        type="button"
+                    >
                         <ion-icon name="search-outline"></ion-icon>
                         Browse My Tournaments
                     </button>
                 </router-link>
                 <router-link :to="{ name: '/create' }">
-                    <button>
+                    <button type="button">
                         <ion-icon name="add-outline"></ion-icon>
                         Create Tournament
                     </button>

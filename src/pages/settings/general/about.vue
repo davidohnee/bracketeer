@@ -34,7 +34,10 @@ const buildId =
         <ReleaseNotes :version="VERSIONS[0]" />
         <div class="row end">
             <router-link to="/settings/general/release-notes">
-                <button class="ghost">
+                <button
+                    class="ghost"
+                    type="button"
+                >
                     <ion-icon name="arrow-forward"></ion-icon>
                     All releases
                 </button>

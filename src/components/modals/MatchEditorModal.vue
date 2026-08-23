@@ -169,6 +169,7 @@ defineExpose({
                             v-if="scoresOutOfSync"
                             class="ghost text-sm"
                             @click="syncScoresWithSets"
+                            type="button"
                         >
                             Sync Scores
                         </button>
@@ -201,6 +202,7 @@ defineExpose({
                                 class="ghost"
                                 @click="removeSet(index)"
                                 title="Remove set"
+                                type="button"
                             >
                                 <ion-icon name="trash-outline"></ion-icon>
                             </button>
@@ -210,6 +212,7 @@ defineExpose({
                         <button
                             class="ghost"
                             @click="addSet"
+                            type="button"
                         >
                             <ion-icon name="add-outline"></ion-icon>
                             Add Set

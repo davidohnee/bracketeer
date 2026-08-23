@@ -388,7 +388,7 @@ describe("share", () => {
 
         const result = await GistClient.create(tournament, { account });
 
-        expect(result).toBe(null);
+        expect(result).toBeNull();
         expect(errorSpy).toHaveBeenCalledWith(
             "Sharing failed",
             expect.objectContaining({

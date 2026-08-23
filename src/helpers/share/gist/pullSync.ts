@@ -1,7 +1,7 @@
 import { ref } from "vue";
 import type { IntervalStatus, IPullSync, PullSyncFactory } from "../pullSync";
 import { gistShare } from "./gist";
-import { findRemoteWithMode } from "..";
+import { findRemoteWithMode, type Import } from "..";
 
 interface IGistPullSync extends IPullSync {
     _timer: ReturnType<typeof setInterval> | null;
@@ -11,7 +11,7 @@ interface IGistPullSync extends IPullSync {
 export const createPullSync: PullSyncFactory<IGistPullSync> = (tournament) => {
     return {
         _timer: null,
-        error: ref(null),
+        error: ref<Import["error"] | null>(null),
         status: ref<IntervalStatus>({
             type: "interval",
             lastUpdate: new Date(),

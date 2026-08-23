@@ -24,7 +24,7 @@ describe("Group Phase Generation", () => {
             const matches = generateGroupPhase(phase, tournament);
 
             // With 8 teams and 2 rounds, we should have 4 matches per round
-            expect(matches.length).toBeGreaterThan(0);
+            expect(matches).toHaveLength(8);
 
             // All matches should be scheduled
             matches.forEach((match) => {
@@ -80,7 +80,7 @@ describe("Group Phase Generation", () => {
             matchesByTime.forEach((matchesAtTime) => {
                 const courts = matchesAtTime.map((m) => m.court);
                 const uniqueCourts = new Set(courts);
-                expect(courts.length).toBe(uniqueCourts.size);
+                expect(courts).toHaveLength(uniqueCourts.size);
 
                 // No court should exceed configured limit
                 courts.forEach((court) => {
@@ -123,7 +123,7 @@ describe("Group Phase Generation", () => {
                 });
 
                 const uniqueTeams = new Set(teamsAtTime);
-                expect(teamsAtTime.length).toBe(uniqueTeams.size);
+                expect(teamsAtTime).toHaveLength(uniqueTeams.size);
             });
         });
 
@@ -153,11 +153,11 @@ describe("Group Phase Generation", () => {
             tournament.phases = [phase];
             const matches = generateGroupPhase(phase, tournament);
 
-            expect(matches.length).toBeGreaterThan(0);
+            expect(matches).toHaveLength(8);
 
             // Each match should have valid teams
             matches.forEach((match) => {
-                expect(match.teams.length).toBe(2);
+                expect(match.teams).toHaveLength(2);
                 expect(match.teams[0].ref).toBeDefined();
                 expect(match.teams[1].ref).toBeDefined();
             });
@@ -233,10 +233,10 @@ describe("Group Phase Generation", () => {
             tournament.phases = [groupPhase];
             const phases = generateGroupPhases(tournament);
 
-            expect(phases.length).toBe(1);
+            expect(phases).toHaveLength(1);
             expect(phases[0].type).toBe("group");
             if (phases[0].type === "group") {
-                expect(phases[0].matches.length).toBeGreaterThan(0);
+                expect(phases[0].matches).toHaveLength(8);
             }
         });
 
@@ -251,7 +251,7 @@ describe("Group Phase Generation", () => {
             tournament.phases = [knockoutPhase];
             const phases = generateGroupPhases(tournament);
 
-            expect(phases.length).toBe(1);
+            expect(phases).toHaveLength(1);
             expect(phases[0]).toEqual(knockoutPhase);
         });
 
@@ -274,7 +274,7 @@ describe("Group Phase Generation", () => {
             tournament.phases = [groupPhase, knockoutPhase];
             const phases = generateGroupPhases(tournament);
 
-            expect(phases.length).toBe(2);
+            expect(phases).toHaveLength(2);
             expect(phases[0].type).toBe("group");
             expect(phases[1].type).toBe("knockout");
         });

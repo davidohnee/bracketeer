@@ -290,7 +290,7 @@ describe("share", () => {
 
         const result = await GistClient.create(tournament, { updateOnly: true, account });
 
-        expect(result).toBe(null);
+        expect(result).toBeNull();
     });
 
     it("should return null when no account can be resolved", async () => {
@@ -367,7 +367,7 @@ describe("share", () => {
 
         const result = await GistClient.create(tournament, { account });
 
-        expect(result).toBe(null);
+        expect(result).toBeNull();
         expect(errorSpy).toHaveBeenCalledWith(
             "Sharing failed",
             expect.objectContaining({

@@ -50,6 +50,7 @@ const index = computed({
                 class="ghost"
                 @click="index--"
                 :disabled="index <= 0"
+                type="button"
             >
                 <ion-icon name="chevron-back" />
             </button>
@@ -69,6 +70,7 @@ const index = computed({
                 class="ghost"
                 @click="index++"
                 :disabled="index === props.options.length - 1"
+                type="button"
             >
                 <ion-icon name="chevron-forward" />
             </button>

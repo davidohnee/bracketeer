@@ -51,18 +51,21 @@ const hasStarted = ref(getTournamentStatus(tournament) !== "scheduled");
             <button
                 class="secondary"
                 @click="randomGroupPhase"
+                type="button"
             >
                 Randomise Group Phase
             </button>
             <button
                 class="secondary"
                 @click="update"
+                type="button"
             >
                 Update Knockout Matches
             </button>
             <button
                 class="secondary"
                 @click="duplicateTournament"
+                type="button"
             >
                 Duplicate Tournament
             </button>

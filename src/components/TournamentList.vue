@@ -33,6 +33,7 @@ const STATUS_COLOR: Record<MatchStatus, string> = {
             <button
                 @click="tournaments.addFromUpload()"
                 class="upload secondary"
+                type="button"
             >
                 <ion-icon name="cloud-upload-outline"></ion-icon>
                 Upload
@@ -40,6 +41,7 @@ const STATUS_COLOR: Record<MatchStatus, string> = {
             <button
                 @click="router.push('/create')"
                 class="create"
+                type="button"
             >
                 <ion-icon name="add-outline"></ion-icon>
                 Create
@@ -74,6 +76,7 @@ const STATUS_COLOR: Record<MatchStatus, string> = {
                 <button
                     class="ghost center"
                     @click.stop.prevent="tournaments.deleteTournament(tournament.id)"
+                    type="button"
                 >
                     <ion-icon
                         name="trash"

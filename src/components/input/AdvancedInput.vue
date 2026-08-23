@@ -64,11 +64,12 @@ const copy = () => {
                 :id="id"
             />
             <button
-                class="copy ghost"
                 v-if="copyable && !loading"
+                class="copy ghost"
                 title="Copy to clipboard"
                 :disabled="disabled || loading"
                 @click="copy"
+                type="button"
             >
                 <ion-icon :name="justCopied ? 'checkmark' : 'copy-outline'"></ion-icon>
             </button>

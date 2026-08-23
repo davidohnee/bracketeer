@@ -28,6 +28,7 @@ const add = async () => {
                 <button
                     @click="accounts.remove(account.id)"
                     class="danger secondary"
+                    type="button"
                 >
                     Unlink
                 </button>
@@ -66,6 +67,7 @@ const add = async () => {
                 <button
                     @click="add"
                     class="secondary"
+                    type="button"
                 >
                     Add
                 </button>

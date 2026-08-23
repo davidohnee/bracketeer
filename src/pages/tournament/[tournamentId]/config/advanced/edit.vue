@@ -54,6 +54,7 @@ const save = () => {
         <button
             :disabled="!changed"
             @click="save"
+            type="button"
         >
             Save
         </button>

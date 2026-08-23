@@ -4,13 +4,13 @@
         <p>The page you are looking for does not exist.</p>
         <div class="row">
             <router-link :to="{ name: '/' }">
-                <button>
+                <button type="button">
                     <ion-icon name="home-outline"></ion-icon>
                     Return Home
                 </button>
             </router-link>
             <router-link :to="{ name: '/create' }">
-                <button>
+                <button type="button">
                     <ion-icon name="add-outline"></ion-icon>
                     Create Tournament
                 </button>

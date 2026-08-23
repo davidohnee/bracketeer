@@ -76,11 +76,17 @@ const save = () => {
                     params: { tournamentId: tournament.id },
                 }"
             >
-                <button class="secondary danger">Cancel</button>
+                <button
+                    class="secondary danger"
+                    type="button"
+                >
+                    Cancel
+                </button>
             </router-link>
             <button
                 class="secondary"
                 @click="save"
+                type="button"
             >
                 Save
             </button>

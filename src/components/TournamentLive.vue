@@ -303,9 +303,10 @@ const currentPhase = computed(() => {
                     v-if="(nextRoundCountdown || currentStartTime) && !readonly"
                 >
                     <button
+                        v-if="currentStartTime"
                         class="secondary"
                         @click="proceed"
-                        v-if="currentStartTime"
+                        type="button"
                     >
                         <ion-icon name="arrow-forward" />
                         Proceed
@@ -313,6 +314,7 @@ const currentPhase = computed(() => {
                     <button
                         v-else
                         @click="adjustAndSkip"
+                        type="button"
                     >
                         {{ adjustAndSkipText }}
                     </button>

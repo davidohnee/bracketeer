@@ -196,6 +196,7 @@ watch(
             <button
                 class="ghost text-sm mr-0"
                 @click="openAdvancedSettings"
+                type="button"
             >
                 <ion-icon
                     name="settings-outline"

@@ -82,12 +82,14 @@ const hasStarted = ref(getTournamentStatus(tournament) !== "scheduled");
                 @click="resetTournament"
                 :disabled="!hasStarted"
                 :title="!hasStarted ? 'You cannot reset the tournament before it has started.' : ''"
+                type="button"
             >
                 Reset Tournament
             </button>
             <button
                 class="danger"
                 @click="deleteTournament"
+                type="button"
             >
                 Delete Tournament
             </button>

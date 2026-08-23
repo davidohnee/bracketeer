@@ -4,6 +4,23 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- Live P2P tournament sharing (#116)
+    - No log in required. Sync directly with other devices, as long as the host remains online.
+- Improved share flow (#115)
+    - Shares can now be temporarily disabled (#124)
+    - UI improvements
+- Minor performance improvements
+    - Tournaments now stored in IndexedDB instead of localStorage (#117)
+- Undo/Redo changes (#118)
+
+### Security
+
+- Update dependencies
+
 ## [1.5.2] - 2026-05-21
 
 ### Added

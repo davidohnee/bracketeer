@@ -2,7 +2,7 @@
 
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=davidohnee_bracketeer&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=davidohnee_bracketeer)
 
-bracketeer is a versatile and user-friendly tool designed to generate and manage tournaments for your social evenings. Whether you're organising beer pong, foosball, or other games, bracketeer ensures your tournaments are structured and fun.
+bracketeer is your sidekick for generating and managing tournaments for your social evenings. Whether you're organising a beer pong or foosball tournament, bracketeer ensures that it is well-structured and enjoyable.
 
 ![bracketeer Screenshot](docs/screenshot.png)
 
@@ -15,21 +15,21 @@ bracketeer is a versatile and user-friendly tool designed to generate and manage
 
 ### Sharing
 
-Tournaments by default are persisted locally in your browser. Please note that on WebKit-based browsers (Safari, iOS), the local storage may be [cleared after 7 days of inactivity](https://webkit.org/blog/10218/full-third-party-cookie-blocking-and-more/).
+Tournaments are stored locally in your browser. Please note that on WebKit-based browsers (e.g. Safari or iOS in general), [local storage is cleared after seven days of inactivity](https://webkit.org/blog/10218/full-third-party-cookie-blocking-and-more/), meaning your tournament will be lost if you don't access it within that time frame.
 
-You can also share your tournament (specifically the match plan and scores) with others, such as participants:
+You can also share your tournament with others, specifically the match plan and scores.
 
 ### GitHub Gists
 
-Through GitHub Gists, your tournament state can be shared with others. The host device does not need to be online for others to access the tournament, as the tournament state is stored in the Gist. However, Gists are cached for 5 minutes by clients, which means that changes made to the tournament may not be immediately visible to others. To share a tournament via Gist, you need to enter a GitHub personal access token.
+You can share your tournament state with others through GitHub Gists. The host device does not need to be online for others to access the tournament, since the tournament state is stored in the Gist. However, please note that Gists are cached by clients for 5 minutes, meaning that changes made to the tournament may not be immediately visible to others. In order to share a tournament via a Gist, you will need to enter a GitHub personal access token.
 
 ### Peer-to-Peer
 
-Peer-to-peer sharing (powered by [PeerJS](https://peerjs.com/)) allows you to share your tournament state with others in real-time. This means that changes made to the tournament are immediately visible to all participants. This requires that the host device is online and connected to the internet. No login is required. P2P sharing is offered in three modes:
+Peer-to-peer sharing (powered by [PeerJS](https://peerjs.com/)) allows you to share your tournament state with others in real time. This means that changes made to the tournament are immediately visible to all participants. The host device must be online and connected to the internet for this to work. No login is required. P2P sharing is offered in three modes:
 
-- **Permanent**: The link is valid whenever the host device is online. (That way you can safely share the link beforehand)
-- **Session**: The link changes whenever the host device is re-opens the browser.
-- **Random**: The link changes whenever the host device reloads or re-opens the browser.
+- **Permanent**: The link is valid whenever the host device is online. This means you can safely share the link in advance.
+- **Session**: The link changes whenever the host device reopens the browser.
+- **Random**: The link changes whenever the host device reloads or reopens the browser.
 
 ### Using Gists and P2P sharing together
 
@@ -47,13 +47,11 @@ You can also self-host bracketeer using a reverse proxy such as Caddy or Nginx. 
 
 ## Contributing
 
-Contributions are welcome! Please follow these steps:
+Contributions are always welcome. If you are planning to use AI, please bear the following guidelines in mind:
 
-1. Fork the repository.
-2. Create a new branch: `git checkout -b feature-name`.
-3. Commit your changes: `git commit -m 'Add feature'`.
-4. Push to the branch: `git push origin feature-name`.
-5. Open a pull request.
+- Vibe-coding is strongly discouraged.
+- AI-assisted coding is allowed, but manual human review is required for all contributions (see #43).
+- Tests can be generated with AI (as was done for the initial coverage, see 188c3af, df7e37f, 095cf67), but they must also be manually reviewed.
 
 ### Development
 

@@ -36,7 +36,7 @@ describe("Knockout Phase Generation", () => {
 
             // 16 teams: Round of 16, Quarter-finals, Semi-finals, 3rd Place, Final
             // That's 5 rounds total
-            expect(rounds.length).toBe(5);
+            expect(rounds).toHaveLength(5);
         });
 
         it("should generate correct number of rounds for 8 teams", () => {
@@ -54,7 +54,7 @@ describe("Knockout Phase Generation", () => {
 
             // 8 teams: Quarter-finals, Semi-finals, 3rd Place, Final
             // That's 4 rounds total
-            expect(rounds.length).toBe(4);
+            expect(rounds).toHaveLength(4);
         });
 
         it("should have correct round names", () => {
@@ -88,11 +88,11 @@ describe("Knockout Phase Generation", () => {
             tournament.phases = [phase];
             const rounds = generateKnockoutBracket(phase, tournament);
 
-            expect(rounds[0].matches.length).toBe(8); // Round of 16
-            expect(rounds[1].matches.length).toBe(4); // Quarter-finals
-            expect(rounds[2].matches.length).toBe(2); // Semi-finals
-            expect(rounds[3].matches.length).toBe(1); // 3rd Place
-            expect(rounds[4].matches.length).toBe(1); // Final
+            expect(rounds[0].matches).toHaveLength(8); // Round of 16
+            expect(rounds[1].matches).toHaveLength(4); // Quarter-finals
+            expect(rounds[2].matches).toHaveLength(2); // Semi-finals
+            expect(rounds[3].matches).toHaveLength(1); // 3rd Place
+            expect(rounds[4].matches).toHaveLength(1); // Final
         });
 
         it("should ensure final cannot occur before semi-finals", () => {
@@ -221,7 +221,7 @@ describe("Knockout Phase Generation", () => {
             matchesByTime.forEach((matches) => {
                 const courts = matches.map((m) => m.court);
                 const uniqueCourts = new Set(courts);
-                expect(courts.length).toBe(uniqueCourts.size);
+                expect(courts).toHaveLength(uniqueCourts.size);
             });
         });
 
@@ -328,8 +328,8 @@ describe("Knockout Phase Generation", () => {
 
             expect(rounds[0].name).toBe("Play-in");
             expect(rounds[1].name).toBe("Round of 16");
-            expect(rounds.length).toBe(6);
-            expect(rounds[0].matches.length).toBe(8);
+            expect(rounds).toHaveLength(6);
+            expect(rounds[0].matches).toHaveLength(8);
         });
 
         it("should mix league and winner links in the post-bye round", () => {
@@ -368,10 +368,10 @@ describe("Knockout Phase Generation", () => {
             tournament.phases = [knockoutPhase];
             const phases = generateKnockoutBrackets(tournament);
 
-            expect(phases.length).toBe(1);
+            expect(phases).toHaveLength(1);
             expect(phases[0].type).toBe("knockout");
             if (phases[0].type === "knockout") {
-                expect(phases[0].rounds.length).toBeGreaterThan(0);
+                expect(phases[0].rounds).toHaveLength(4);
             }
         });
 
@@ -387,7 +387,7 @@ describe("Knockout Phase Generation", () => {
             tournament.phases = [groupPhase];
             const phases = generateKnockoutBrackets(tournament);
 
-            expect(phases.length).toBe(1);
+            expect(phases).toHaveLength(1);
             expect(phases[0]).toEqual(groupPhase);
         });
 
@@ -411,7 +411,7 @@ describe("Knockout Phase Generation", () => {
             tournament.phases = [groupPhase, knockoutPhase];
             const phases = generateKnockoutBrackets(tournament);
 
-            expect(phases.length).toBe(2);
+            expect(phases).toHaveLength(2);
             expect(phases[0].type).toBe("group");
             expect(phases[1].type).toBe("knockout");
         });
@@ -450,7 +450,7 @@ describe("Knockout Phase Generation", () => {
             tournament.phases = [groupPhase, knockoutPhase];
             const phases = generateKnockoutBrackets(tournament);
 
-            expect(phases.length).toBe(2);
+            expect(phases).toHaveLength(2);
             expect(phases[0].type).toBe("group");
             expect(phases[1].type).toBe("knockout");
         });

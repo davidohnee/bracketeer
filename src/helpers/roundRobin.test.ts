@@ -7,16 +7,16 @@ describe("roundRobin", () => {
         const schedule = roundRobin(teams);
 
         // With 4 teams, we should have 3 rounds
-        expect(schedule.length).toBe(3);
+        expect(schedule).toHaveLength(3);
 
         // Each round should have 2 matches (n/2)
         schedule.forEach((round) => {
-            expect(round.length).toBe(2);
+            expect(round).toHaveLength(2);
         });
 
         // Collect all matches to verify each team plays every other team exactly once
         const allPairs = schedule.flat();
-        expect(allPairs.length).toBe(6); // C(4,2) = 6 combinations
+        expect(allPairs).toHaveLength(6); // C(4,2) = 6 combinations
 
         // Verify no team plays itself
         allPairs.forEach(([team1, team2]) => {
@@ -29,16 +29,16 @@ describe("roundRobin", () => {
         const schedule = roundRobin(teams);
 
         // With 5 teams, we should have 5 rounds (odd teams need n rounds)
-        expect(schedule.length).toBe(5);
+        expect(schedule).toHaveLength(5);
 
         // Each round should have 2 matches (floor(n/2))
         schedule.forEach((round) => {
-            expect(round.length).toBe(2);
+            expect(round).toHaveLength(2);
         });
 
         // Total matches should be C(5,2) = 10
         const allPairs = schedule.flat();
-        expect(allPairs.length).toBe(10);
+        expect(allPairs).toHaveLength(10);
     });
 
     it("should ensure each team plays every other team exactly once", () => {
@@ -75,8 +75,8 @@ describe("roundRobin", () => {
         const schedule = roundRobin(teams);
 
         // Single team gets 1 round with no matches (after filtering out BYE)
-        expect(schedule.length).toBe(1);
-        expect(schedule[0]?.length).toBe(0);
+        expect(schedule).toHaveLength(1);
+        expect(schedule[0]).toHaveLength(0);
     });
 
     it("should work with two teams", () => {
@@ -84,8 +84,8 @@ describe("roundRobin", () => {
         const schedule = roundRobin(teams);
 
         // Two teams should have 1 round with 1 match
-        expect(schedule.length).toBe(1);
-        expect(schedule[0]?.length).toBe(1);
+        expect(schedule).toHaveLength(1);
+        expect(schedule[0]).toHaveLength(1);
 
         const match = schedule[0]?.[0];
         expect(match).toEqual(["A", "B"]);
@@ -113,7 +113,7 @@ describe("roundRobin", () => {
         ];
         const schedule = roundRobin(teams);
 
-        expect(schedule.length).toBe(3);
+        expect(schedule).toHaveLength(3);
 
         // Verify objects are preserved correctly
         const allPairs = schedule.flat();

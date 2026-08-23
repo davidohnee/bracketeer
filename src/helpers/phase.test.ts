@@ -47,7 +47,7 @@ describe("Phase Helper Functions", () => {
             };
 
             const matches = allMatches(phase);
-            expect(matches.length).toBe(2);
+            expect(matches).toHaveLength(2);
             expect(matches[0].id).toBe("match-1");
             expect(matches[1].id).toBe("match-2");
         });
@@ -104,7 +104,7 @@ describe("Phase Helper Functions", () => {
             };
 
             const matches = allMatches(phase);
-            expect(matches.length).toBe(3);
+            expect(matches).toHaveLength(3);
             expect(matches[0].id).toBe("match-1");
             expect(matches[1].id).toBe("match-2");
             expect(matches[2].id).toBe("match-3");
@@ -148,7 +148,7 @@ describe("Phase Helper Functions", () => {
             };
 
             const matches = allMatches(phase);
-            expect(matches.length).toBe(6); // 4 QF + 2 SF
+            expect(matches).toHaveLength(6); // 4 QF + 2 SF
         });
     });
 
@@ -219,7 +219,7 @@ describe("Phase Helper Functions", () => {
 
             const ranked = rankedTeams(phase);
 
-            expect(ranked.length).toBe(2);
+            expect(ranked).toHaveLength(2);
             // Winner should be first
             expect(ranked[0].id).toBe("team-1");
             // Loser should be second

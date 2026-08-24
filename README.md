@@ -19,11 +19,11 @@ Tournaments are stored locally in your browser. Please note that on WebKit-based
 
 You can also share your tournament with others, specifically the match plan and scores.
 
-### GitHub Gists
+#### GitHub Gists
 
 You can share your tournament state with others through GitHub Gists. The host device does not need to be online for others to access the tournament, since the tournament state is stored in the Gist. However, please note that Gists are cached by clients for 5 minutes, meaning that changes made to the tournament may not be immediately visible to others. In order to share a tournament via a Gist, you will need to enter a GitHub personal access token.
 
-### Peer-to-Peer
+#### Peer-to-Peer
 
 Peer-to-peer sharing (powered by [PeerJS](https://peerjs.com/)) allows you to share your tournament state with others in real time. This means that changes made to the tournament are immediately visible to all participants. The host device must be online and connected to the internet for this to work. No login is required. P2P sharing is offered in three modes:
 
@@ -31,7 +31,7 @@ Peer-to-peer sharing (powered by [PeerJS](https://peerjs.com/)) allows you to sh
 - **Session**: The link changes whenever the host device reopens the browser.
 - **Random**: The link changes whenever the host device reloads or reopens the browser.
 
-### Using Gists and P2P sharing together
+#### Using Gists and P2P sharing together
 
 It is recommended to use Gists and P2P sharing together. Use the Gist share link to share the tournament with participants. bracketeer automatically switches to P2P sharing when available.
 

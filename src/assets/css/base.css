@@ -182,4 +182,8 @@ section {
 article {
     max-width: 100ch;
     margin: 0 auto;
+
+    @media (max-width: 768px) {
+        padding: var(--spacing-m);
+    }
 }

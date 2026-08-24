@@ -28,7 +28,7 @@ const setEnabled = (enabled: boolean) => {
 </script>
 <template>
     <FoldableShareOption
-        title="Share via GitHub Gist"
+        title="GitHub Gists"
         :enabled="!!gistRemote && !gistRemote.disabled"
         :configured="!!gistRemote"
         @update:enabled="setEnabled"

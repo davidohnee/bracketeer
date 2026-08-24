@@ -35,19 +35,22 @@ defineExpose({ open });
                 class="close"
                 name="close"
             ></ion-icon>
-            <h2 v-if="sharingItem">Share "{{ sharingItem.name }}"</h2>
+            <template v-if="sharingItem">
+                <h2 v-if="sharingItem">Share "{{ sharingItem.name }}"</h2>
 
-            <GistOption
-                v-if="sharingItem"
-                :tournament="sharingItem"
-            />
-            <P2POption
-                v-if="sharingItem"
-                :tournament="sharingItem"
-            />
+                <RouterLink
+                    class="help text-sm text-mute ghost"
+                    :to="{ name: '/about/sharing' }"
+                >
+                    <ion-icon name="help-circle-outline"></ion-icon>
+                    What are the different sharing methods?
+                </RouterLink>
 
-            <template v-if="shareUrl && sharingItem">
+                <GistOption :tournament="sharingItem" />
+                <P2POption :tournament="sharingItem" />
+
                 <AdvancedInput
+                    v-if="shareUrl"
                     :model-value="shareUrl"
                     type="text"
                     copyable
@@ -62,6 +65,13 @@ defineExpose({ open });
     </dialog>
 </template>
 <style scoped>
+.help {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    text-decoration: underline;
+}
+
 .options {
     display: flex;
     flex-direction: column;

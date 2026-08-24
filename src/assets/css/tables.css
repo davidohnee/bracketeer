@@ -34,3 +34,29 @@
         }
     }
 }
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    border-spacing: 0;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-m);
+    overflow: hidden;
+
+    th,
+    td {
+        padding: var(--spacing-xs) var(--spacing-s);
+        text-align: left;
+        border-bottom: 1px solid var(--color-border);
+        font-size: var(--font-size-s);
+    }
+
+    th {
+        background-color: var(--color-background-secondary);
+        font-weight: bold;
+    }
+
+    tr:last-child td {
+        border-bottom: none;
+    }
+}

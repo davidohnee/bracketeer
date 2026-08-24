@@ -45,6 +45,13 @@ declare module 'vue-router/auto-routes' {
       { path: ParamValue<false> },
       | never
     >,
+    '/about/sharing': RouteRecordInfo<
+      '/about/sharing',
+      '/about/sharing',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
     '/create': RouteRecordInfo<
       '/create',
       '/create',
@@ -256,6 +263,14 @@ declare module 'vue-router/auto-routes' {
         | never
       pathParamNames:
         | 'path'
+    }
+    'src/pages/about/sharing.vue': {
+      routes:
+        | '/about/sharing'
+      views:
+        | never
+      pathParamNames:
+        | never
     }
     'src/pages/create.vue': {
       routes:

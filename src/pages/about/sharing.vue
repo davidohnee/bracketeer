@@ -56,9 +56,50 @@
                     <th>P2P</th>
                 </tr>
                 <tr>
-                    <th>Host device must be online</th>
-                    <td>Only to update</td>
-                    <td>Always</td>
+                    <th>Free</th>
+                    <td>
+                        <ion-icon
+                            name="checkmark-circle"
+                            class="text-green"
+                        />
+                    </td>
+                    <td>
+                        <ion-icon
+                            name="checkmark-circle"
+                            class="text-green"
+                        />
+                    </td>
+                </tr>
+                <tr>
+                    <th>No login required</th>
+                    <td>
+                        <ion-icon
+                            name="close-circle"
+                            class="text-red"
+                        />
+                        (GitHub)
+                    </td>
+                    <td>
+                        <ion-icon
+                            name="checkmark-circle"
+                            class="text-green"
+                        />
+                    </td>
+                </tr>
+                <tr>
+                    <th>Host device can be offline</th>
+                    <td>
+                        <ion-icon
+                            name="checkmark-circle"
+                            class="text-green"
+                        />
+                    </td>
+                    <td>
+                        <ion-icon
+                            name="close-circle"
+                            class="text-red"
+                        />
+                    </td>
                 </tr>
                 <tr>
                     <th>Changes visible to others</th>
@@ -69,16 +110,6 @@
                     <th>Link validity</th>
                     <td>Permanent / until gist deleted</td>
                     <td>Depends on mode</td>
-                </tr>
-                <tr>
-                    <th>Requires login</th>
-                    <td>Yes (GitHub)</td>
-                    <td>No</td>
-                </tr>
-                <tr>
-                    <th>Free</th>
-                    <td>Yes</td>
-                    <td>Yes</td>
                 </tr>
             </tbody>
         </table>

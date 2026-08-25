@@ -43,15 +43,20 @@ You can use bracketeer online [here](https://bracketeer.davidohnee.com/). This v
 
 ### Self-Hosted
 
-You can also self-host bracketeer using a reverse proxy such as Caddy or Nginx. The application works client-side and offline.
+You can also self-host bracketeer using a reverse proxy such as [Caddy](https://caddyserver.com/) or [Nginx](https://nginx.org/). The application works client-side and offline.
 
 ## Contributing
 
 Contributions are always welcome. If you are planning to use AI, please bear the following guidelines in mind:
 
 - Vibe-coding is strongly discouraged.
-- AI-assisted coding is allowed, but manual human review is required for all contributions (see #43).
-- Tests can be generated with AI (as was done for the initial coverage, see 188c3af, df7e37f, 095cf67), but they must also be manually reviewed.
+- AI-assisted coding is allowed, but manual human review is required for all contributions (see [#43]).
+- Tests can be generated with AI (as was done for the initial coverage, see [188c3af], [df7e37f], [095cf67]), but they must also be manually reviewed.
+
+[#43]: https://github.com/davidohnee/bracketeer/pull/43
+[188c3af]: https://github.com/davidohnee/bracketeer/commit/188c3af
+[df7e37f]: https://github.com/davidohnee/bracketeer/commit/df7e37f
+[095cf67]: https://github.com/davidohnee/bracketeer/commit/095cf67
 
 ### Development
 

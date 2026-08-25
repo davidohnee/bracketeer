@@ -48,7 +48,10 @@ table {
         padding: var(--spacing-xs) var(--spacing-s);
         text-align: left;
         border-bottom: 1px solid var(--color-border);
-        font-size: var(--font-size-s);
+
+        & ion-icon {
+            vertical-align: center;
+        }
     }
 
     th {

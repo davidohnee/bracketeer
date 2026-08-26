@@ -41,6 +41,10 @@ It is recommended to use Gists and P2P sharing together. Use the Gist share link
 
 You can use bracketeer online [here](https://bracketeer.davidohnee.com/). This version is hosted via Cloudflare Pages.
 
+### Offline
+
+bracketeer is available as a Progressive Web App (PWA) and can be used offline.
+
 ### Self-Hosted
 
 You can also self-host bracketeer using a reverse proxy such as [Caddy](https://caddyserver.com/) or [Nginx](https://nginx.org/). The application works client-side and offline.

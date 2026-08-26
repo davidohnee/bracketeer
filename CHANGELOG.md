@@ -13,6 +13,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - Improved share flow (#115)
     - Shares can now be temporarily disabled (#124)
     - UI improvements
+- PWA support (#150)
+    - Offline support for tournament creation and editing
 - Minor performance improvements
     - Tournaments now stored in IndexedDB instead of localStorage (#117)
 - Undo/Redo changes (#118)

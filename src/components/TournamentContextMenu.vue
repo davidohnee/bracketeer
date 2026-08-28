@@ -43,7 +43,7 @@ const deleteTournament = () => {
     Notifications.addYesNo("Delete Tournament", {
         details: "Are you sure you want to delete the tournament? This action cannot be undone.",
         onYes: () => {
-            tournaments.deleteTournament(props.tournament.id);
+            tournaments.remove(props.tournament.id);
             emit("deleted");
             Notifications.addSuccess("Tournament deleted", {
                 details: "The tournament has been deleted successfully.",

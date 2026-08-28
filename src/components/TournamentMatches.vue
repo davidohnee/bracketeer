@@ -8,6 +8,7 @@ import { GROUP_OPTIONS, groupMatches, tournamentRichMatches } from "@/helpers/ma
 import TabSelector from "./TabSelector.vue";
 import MatchFilter from "./filter/MatchFilter.vue";
 import type { Option } from "@/types/common";
+import { getCourtType } from "@/helpers/defaults.ts";
 
 const props = defineProps<{
     modelValue: Tournament;
@@ -196,6 +197,13 @@ const resetFilters = () => {
     });
 };
 
+const getFriendlyOptionName = (option: (typeof GROUP_OPTIONS)[number]) => {
+    if (option == "court") {
+        return getCourtType(tournament.value.config.sport, false, false);
+    }
+    return option;
+};
+
 onMounted(() => {
     autoSelectGroup();
 });
@@ -213,7 +221,7 @@ onMounted(() => {
                     :class="{ selected: selectedGroupOption === option }"
                     @click="selectedGroupOption = option"
                 >
-                    by {{ option }}
+                    by {{ getFriendlyOptionName(option) }}
                 </div>
             </div>
             <div class="filters">

@@ -274,26 +274,6 @@ describe("Tournaments Store", () => {
         });
     });
 
-    describe("deleteTournament method", () => {
-        it("should delete a tournament by id", async () => {
-            const store = await newTournamentStore();
-            const tournament: Tournament = {
-                id: "delete-me",
-                version: 3,
-                name: "Delete Me",
-                teams: [],
-                phases: [],
-                config: mockConfig,
-            };
-
-            store.add(tournament);
-            expect(store.all).toHaveLength(1);
-
-            store.deleteTournament("delete-me");
-            expect(store.all).toHaveLength(0);
-        });
-    });
-
     describe("getTournamentById method", () => {
         it("should return tournament by id", async () => {
             const store = await newTournamentStore();

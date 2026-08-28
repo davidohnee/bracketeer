@@ -75,7 +75,7 @@ const STATUS_COLOR: Record<MatchStatus, string> = {
                 }}</span>
                 <button
                     class="ghost center"
-                    @click.stop.prevent="tournaments.deleteTournament(tournament.id)"
+                    @click.stop.prevent="tournaments.remove(tournament.id)"
                     type="button"
                 >
                     <ion-icon

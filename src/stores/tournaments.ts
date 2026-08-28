@@ -97,7 +97,7 @@ export const useTournamentsStore = defineStore(LOCAL_STORAGE_KEY, () => {
     }
 
     function remove(tournamentId: string) {
-        tournaments.value = tournaments.value.filter((t) => t.id !== tournamentId);
+        tournaments.value = tournaments.value.filter((t) => t.id !== tournamentId).map(toRaw);
     }
 
     function update(updatedTournament: Tournament) {
@@ -140,10 +140,6 @@ export const useTournamentsStore = defineStore(LOCAL_STORAGE_KEY, () => {
         tournament.phases = generateKnockoutBrackets(tournament);
 
         add(tournament);
-    }
-
-    function deleteTournament(tournamentId: string) {
-        tournaments.value = tournaments.value.filter((t) => t.id !== tournamentId);
     }
 
     const getTournamentById = (id: string) => {
@@ -206,7 +202,6 @@ export const useTournamentsStore = defineStore(LOCAL_STORAGE_KEY, () => {
         add,
         remove,
         update,
-        deleteTournament,
         getTournamentById,
         download,
         addFromUpload,

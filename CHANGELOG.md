@@ -4,19 +4,19 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [1.6.0] - 2026-08-29
 
 ### Added
 
 - Live P2P tournament sharing (#116)
-    - No log in required. Sync directly with other devices, as long as the host remains online.
+  - No log in required. Sync directly with other devices, as long as the host remains online.
 - Improved share flow (#115)
-    - Shares can now be temporarily disabled (#124)
-    - UI improvements
+  - Shares can now be temporarily disabled (#124)
+  - UI improvements
 - PWA support (#150)
-    - Offline support for tournament creation and editing
+  - Offline support for tournament creation and editing
 - Minor performance improvements
-    - Tournaments now stored in IndexedDB instead of localStorage (#117)
+  - Tournaments now stored in IndexedDB instead of localStorage (#117)
 - Undo/Redo changes (#118)
 
 ### Security
@@ -48,13 +48,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - Show release notes (#90)
 - Support JSON editing (#74)
 - New about section that shows the tournament format (#56)
-    - Editable rules section (#102)
+  - Editable rules section (#102)
 
 ### Changed
 
 - Split configuration into multiple tabs (#95)
 - Support multiple share accounts (#99)
-    - Add setup instructions
+  - Add setup instructions
 - Updated dependencies
 
 ### Fixed
@@ -70,7 +70,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 ### Fixed
 
 - teams of scheduled matches in the first knockout round will be unassigned or updated, if the previous phase is modified
-    - previously, the knockout view would show the previously assigned teams, even if the table changed
+  - previously, the knockout view would show the previously assigned teams, even if the table changed
 - knockout matches were not always updated automatically (#88)
 - fix context menu positions on scrolled content (#87)
 
@@ -97,7 +97,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 - Fix share link in created gists (#82)
 - Hide push option if connected remote is a different user (#83)
-    - Will be further improved in a future version (#84)
+  - Will be further improved in a future version (#84)
 - Hide tournament context menu in read-only mode
 
 ## [1.3.0] - 2026-03-02
@@ -106,17 +106,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 - The title of tournaments can now be changed (#75)
 - Greatly improved share flow
-    - You can now share, download or delete a tournament from all the tournament views
-    - The instructions to share have been simplified
-    - Share now provides a loading indicator, while the link is loading
-    - The settings page shows the currently linked remote and either a share or push/pull options
+  - You can now share, download or delete a tournament from all the tournament views
+  - The instructions to share have been simplified
+  - Share now provides a loading indicator, while the link is loading
+  - The settings page shows the currently linked remote and either a share or push/pull options
 
 ### Changed
 
 - Knockout phase now automatically adds a play-in round, if needed (#49)
-    - For example, if 32 teams participate in the group stage and 24 progress to the knockout stage, the top eight teams will receive a bye, while teams ranked ninth to 24th will compete in a play-in to determine the first-round participants.
-    - This is done automatically and can currently not be influenced
-    - Further improvements to the knockout phase configuration are planned in #79
+  - For example, if 32 teams participate in the group stage and 24 progress to the knockout stage, the top eight teams will receive a bye, while teams ranked ninth to 24th will compete in a play-in to determine the first-round participants.
+  - This is done automatically and can currently not be influenced
+  - Further improvements to the knockout phase configuration are planned in #79
 
 ### Fixed
 

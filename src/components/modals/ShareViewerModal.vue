@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import type { Tournament } from "@/types/tournament";
-import ShareClient from "@/helpers/share";
+import { getModeFromIdentifier, getShareLink } from "@/helpers/share";
 import { QrcodeSvg } from "qrcode.vue";
 import AdvancedInput from "../input/AdvancedInput.vue";
 import { copyToClipboard } from "@/helpers/common";
@@ -13,20 +13,32 @@ const action = ref<null | "gist">(null);
 const dialog = ref<HTMLDialogElement>();
 const tournament = ref<Tournament>();
 
-const open = (newTournament: Tournament) => {
-    if (!newTournament.remote?.[0]?.identifier) {
-        return;
-    }
+const preferredRemote = computed<null | { identifier: string }>(() => {
+    if (!tournament.value?.remote) return null;
+    const preferredOrder = ["gist", "p2p"];
+    const sorted = [...tournament.value.remote]
+        .map((x) => ({ mode: getModeFromIdentifier(x.identifier), remote: x }))
+        .filter((x) => !!x.mode && preferredOrder.includes(x.mode))
+        .sort((a, b) => {
+            const aIndex = preferredOrder.indexOf(a.mode!);
+            const bIndex = preferredOrder.indexOf(b.mode!);
+            return aIndex - bIndex;
+        });
+    return sorted.at(0)?.remote ?? null;
+});
 
+const open = (newTournament: Tournament) => {
     tournament.value = newTournament;
 
     action.value = null;
     dialog.value?.showModal();
 
-    shareUrl.value = ShareClient.getShareLink(newTournament.remote[0].identifier).replace(
-        "/s/",
-        "/v/",
-    );
+    if (!preferredRemote.value?.identifier) {
+        shareUrl.value = "";
+        return;
+    }
+
+    shareUrl.value = getShareLink(preferredRemote.value.identifier, "viewer");
 };
 
 defineExpose({ open });
@@ -46,9 +58,10 @@ defineExpose({ open });
                 level="H"
             />
             <div v-if="shareUrl">
-                <p>Your share link:</p>
                 <advanced-input
                     type="text"
+                    label="Your share link:"
+                    show-label
                     copyable
                     readonly
                     @copy="copyToClipboard(shareUrl)"
@@ -65,7 +78,6 @@ dialog[open] > div {
     display: flex;
     flex-direction: column;
     width: 100%;
-    max-width: 40vw;
     overflow: hidden;
 
     & input {
@@ -77,8 +89,10 @@ dialog[open] > div {
     width: 20vw;
     height: 20vw;
     aspect-ratio: 1;
-    margin: 0 auto;
-    margin-bottom: var(--spacing-m);
+    margin: var(--spacing-m) auto;
+    padding: var(--spacing-m);
+    background-color: white;
+    border-radius: var(--radius-m);
 }
 
 .options {

@@ -35,6 +35,10 @@ const structure = [
         title: "Share",
         children: [
             {
+                title: "Peer-to-peer",
+                route: "/share/p2p",
+            },
+            {
                 title: "GitHub Gists",
                 route: "/share/gists",
             },

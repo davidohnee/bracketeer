@@ -1,9 +1,12 @@
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, onMounted, onUnmounted } from "vue";
 import type { Tournament } from "@/types/tournament";
 import { useRoute } from "vue-router";
 import TournamentContextMenu from "@/components/TournamentContextMenu.vue";
 import EditableText from "@/components/input/EditableText.vue";
+import { usePushSyncStore } from "@/stores/pushSync";
+import { localeDateTimeString } from "@/helpers/common";
+import { useHistoryStore } from "@/stores/history";
 
 const route = useRoute();
 
@@ -46,6 +49,17 @@ const baseRoute = computed(() => {
     const name = route.name as string;
     return name.split("/").slice(0, 3).join("/");
 });
+
+const pushSync = usePushSyncStore();
+const historyManager = useHistoryStore();
+
+onMounted(() => {
+    pushSync.start(tournament);
+});
+
+onUnmounted(() => {
+    pushSync.stop();
+});
 </script>
 
 <template>
@@ -67,12 +81,39 @@ const baseRoute = computed(() => {
                     @deleted="$router.push({ name: '/' })"
                 />
             </div>
-            <span
-                v-if="subtitle"
-                class="source text-muted"
-            >
-                {{ subtitle }}</span
-            >
+            <div class="subheader source text-muted">
+                <div
+                    class="info"
+                    v-if="!readonly"
+                >
+                    <span class="capitalise">
+                        Start: {{ localeDateTimeString(tournament.config.startTime) }}
+                    </span>
+                    <button
+                        type="button"
+                        class="ghost small"
+                        title="Undo"
+                        aria-label="Undo"
+                        @click="historyManager.undo()"
+                        :disabled="!historyManager.canUndo"
+                    >
+                        <ion-icon name="return-up-back-outline"></ion-icon>
+                    </button>
+                    <button
+                        type="button"
+                        class="ghost small"
+                        title="Redo"
+                        aria-label="Redo"
+                        @click="historyManager.redo()"
+                        :disabled="!historyManager.canRedo"
+                    >
+                        <ion-icon name="return-up-forward-outline"></ion-icon>
+                    </button>
+                </div>
+                <span v-if="subtitle">
+                    {{ subtitle }}
+                </span>
+            </div>
             <div class="tabs">
                 <router-link
                     v-for="key in tabs"
@@ -103,7 +144,7 @@ section {
     flex-direction: column;
     align-items: flex-start;
 
-    &:has(span.source) {
+    &:has(.source) {
         .title-component {
             padding-bottom: 0;
         }
@@ -112,9 +153,24 @@ section {
         }
     }
 
-    & span.source {
+    & .source {
         margin-bottom: var(--spacing-m);
         margin-left: var(--spacing-m);
+
+        .info {
+            margin-top: var(--spacing-m);
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+
+            & > :not(button) {
+                margin-right: var(--spacing-m);
+            }
+
+            & > button:has(+ :not(button)) {
+                margin-right: var(--spacing-xs);
+            }
+        }
     }
 
     .tabs {

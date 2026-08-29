@@ -89,7 +89,7 @@ describe("Common Helper Functions", () => {
     describe("ALPHABET constant", () => {
         it("should contain all uppercase letters", () => {
             expect(ALPHABET).toBe("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
-            expect(ALPHABET.length).toBe(26);
+            expect(ALPHABET).toHaveLength(26);
         });
     });
 
@@ -185,7 +185,7 @@ describe("Common Helper Functions", () => {
         it("should return an array of the same length", () => {
             const items = [1, 2, 3, 4, 5];
             const shuffled = shuffle([...items]);
-            expect(shuffled.length).toBe(items.length);
+            expect(shuffled).toHaveLength(items.length);
         });
 
         it("should contain all original elements", () => {

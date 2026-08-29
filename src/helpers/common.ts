@@ -85,7 +85,7 @@ export const localeDateTimeString = (
         hour: "2-digit",
         minute: "2-digit",
         month: "short",
-        day: "2-digit",
+        day: "numeric",
         year: "numeric",
     };
     const now = new Date();

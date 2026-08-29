@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import EmptyTournamentListView from "@/components/EmptyTournamentListView.vue";
+import SpinningLoader from "@/components/SpinningLoader.vue";
 import TournamentList from "@/components/TournamentList.vue";
 import { useTournamentsStore } from "@/stores/tournaments";
 
@@ -8,7 +9,13 @@ const tournaments = useTournamentsStore();
 <template>
     <div class="body-container">
         <h1>Tournaments</h1>
-        <TournamentList v-if="tournaments.all.length" />
+        <div
+            class="loading"
+            v-if="tournaments.loading"
+        >
+            <SpinningLoader />
+        </div>
+        <TournamentList v-else-if="tournaments.all.length" />
         <EmptyTournamentListView v-else />
     </div>
 </template>

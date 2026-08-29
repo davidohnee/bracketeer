@@ -1,8 +1,9 @@
 import type { IRemote, Tournament } from "@/types/tournament";
-import { gistShare } from "./gist/gist";
 import type { Account } from "@/types/accounts";
-import { Notifications } from "@/components/notifications/createNotification";
-import { deepCopy } from "../common";
+import P2PClient from "@/helpers/share/p2p";
+import GistClient from "@/helpers/share/gist";
+
+type ErrorType = "not-found" | "not-allowed" | "not-supported" | "no-connection";
 
 interface IImportResult {
     type: "success" | "error";
@@ -10,12 +11,12 @@ interface IImportResult {
     tournament?: Tournament;
     link?: string;
     identifier?: string;
-    error?: "not-found" | "not-allowed" | "not-supported";
+    error?: ErrorType;
 }
 
 interface IImportSuccess extends IImportResult {
     type: "success";
-    author: string;
+    author?: string;
     tournament: Tournament;
     link: string;
     date: Date;
@@ -23,10 +24,60 @@ interface IImportSuccess extends IImportResult {
 
 interface IImportError extends IImportResult {
     type: "error";
-    error: "not-found" | "not-allowed" | "not-supported";
+    error: ErrorType;
 }
 
 export type Import = IImportSuccess | IImportError;
+
+export const SHARE_MODE = ["gist", "p2p"] as const;
+export type ShareMode = (typeof SHARE_MODE)[number];
+
+export interface IdentifierComponents {
+    mode: ShareMode;
+}
+
+export type AccountResolver = (remote: IRemote) => Promise<Account | null>;
+
+export interface ISimpleShareClient {
+    pull: (remote: IRemote) => Promise<Import | null>;
+    pullAndUpdate: (tournament: Tournament, remote: IRemote) => Promise<Import | null>;
+    accessTokenToAccount: (accessToken: string) => Promise<Account | null>;
+}
+
+export interface IShareClient<C extends IdentifierComponents, S> {
+    pull: (remote: IRemote) => Promise<Import | null>;
+    create: (tournament: Tournament, options: S) => Promise<Import | null>;
+    delete: (tournament: Tournament, remote: IRemote, options: S) => void;
+    fromShare: (identifier: string) => C;
+    toShare: (components: C) => { link: string; identifier: string };
+    accessTokenToAccount: (accessToken: string) => Promise<Account | null>;
+}
+
+const PREFIX = Object.fromEntries(
+    SHARE_MODE.map((mode) => [mode, encodeURIComponent(btoa(`${mode}:`).slice(0, -4))]),
+) as Record<ShareMode, string>;
+
+export const getIdentifierFragments = (identifier: string) => {
+    const str = atob(decodeURIComponent(identifier));
+    return str.split(":");
+};
+
+export const getModeFromIdentifier = (identifier: string): ShareMode | null => {
+    for (const mode of SHARE_MODE) {
+        if (identifier.startsWith(PREFIX[mode])) {
+            return mode;
+        }
+    }
+    return null;
+};
+
+export const findRemoteWithMode = (tournament: Tournament, mode: ShareMode): IRemote | null => {
+    return tournament.remote?.find((r) => getModeFromIdentifier(r.identifier) === mode) ?? null;
+};
+
+export const findRemoteIndexWithMode = (tournament: Tournament, mode: ShareMode): number => {
+    return tournament.remote?.findIndex((r) => getModeFromIdentifier(r.identifier) === mode) ?? -1;
+};
 
 const normaliseShareIdentifier = (identifier: string) => {
     try {
@@ -36,173 +87,37 @@ const normaliseShareIdentifier = (identifier: string) => {
     }
 };
 
-export const getShareLink = (identifier: string) => {
+export const getShareLink = (identifier: string, target: "viewer" | "import" = "import") => {
     const base = globalThis.location.origin;
     const normalisedIdentifier = normaliseShareIdentifier(identifier);
-    return `${base}/s/${normalisedIdentifier}`;
+    const path = target === "viewer" ? "v" : "s";
+    return `${base}/${path}/${normalisedIdentifier}`;
 };
 
-export const toShare = (mode: "gist", author: string, tag: string) => {
-    const gistUrl = `${mode}:${author}:${tag}`;
-    const base64 = encodeURIComponent(btoa(gistUrl));
-    const link = getShareLink(base64);
-
-    return {
-        link,
-        identifier: base64,
-    };
-};
-
-export const fromShare = (identifier: string) => {
-    const str = atob(decodeURIComponent(identifier));
-    const [mode, author, ...data] = str.split(":");
-
-    return {
-        mode,
-        author,
-        tag: data.join(":"),
-    };
-};
-
-export const push = async (
-    tournament: Tournament,
-    options: {
-        remote?: IRemote;
-        account: Account;
+const simpleClient: ISimpleShareClient = {
+    async pull(remote: IRemote) {
+        if (getModeFromIdentifier(remote.identifier) === "p2p") {
+            return await P2PClient.pull(remote);
+        }
+        if (getModeFromIdentifier(remote.identifier) === "gist") {
+            return await GistClient.pull(remote);
+        }
+        return null;
     },
-): Promise<Import> => {
-    if (options.account.type == "gist") {
-        return await gistShare.push(tournament, options);
-    }
-    return {
-        type: "error",
-        error: "not-supported",
-    };
-};
-
-export const pull = async (identifier: string): Promise<Import> => {
-    try {
-        const { mode } = fromShare(identifier);
-        if (mode === "gist") {
-            return await gistShare.pull(identifier);
+    async pullAndUpdate(tournament: Tournament, remote: IRemote) {
+        const importResult = await simpleClient.pull(remote);
+        if (importResult?.type === "success" && importResult.tournament) {
+            tournament.name = importResult.tournament.name;
+            tournament.teams = importResult.tournament.teams;
+            tournament.phases = importResult.tournament.phases;
+            tournament.config = importResult.tournament.config;
+            tournament.content = importResult.tournament.content;
         }
-    } catch (error) {
-        console.error(error);
-    }
-    return { type: "error", error: "not-supported" };
+        return importResult;
+    },
+    async accessTokenToAccount(accessToken: string) {
+        return await GistClient.accessTokenToAccount(accessToken);
+    },
 };
 
-export const accessTokenToAccount = async (
-    accessToken: string,
-    type: "gist",
-): Promise<Account | null> => {
-    if (type === "gist") {
-        return gistShare.accessTokenToAccount(accessToken);
-    }
-    throw new Error("NotSupported");
-};
-
-type AccountResolver = (remote: IRemote) => Promise<Account | null>;
-
-interface IShareOptions {
-    updateOnly?: boolean;
-    account?: Account | null;
-    accountResolver?: AccountResolver;
-}
-
-interface UpdateOptions extends IShareOptions {
-    updateOnly?: boolean;
-    account?: Account | null;
-    accountResolver: AccountResolver;
-}
-
-interface PublishOptions extends IShareOptions {
-    updateOnly?: boolean;
-    account: Account | null;
-    accountResolver?: AccountResolver;
-}
-
-type ShareOptions = UpdateOptions | PublishOptions;
-
-export const share = async (
-    tournament: Tournament,
-    { updateOnly, account, accountResolver }: ShareOptions,
-) => {
-    if (updateOnly) {
-        if (!tournament.remote?.length) {
-            return false;
-        }
-    }
-
-    if (!account) {
-        if (tournament.remote?.length && accountResolver) {
-            account = await accountResolver(tournament.remote[0]);
-        }
-
-        if (!account) {
-            return false;
-        }
-    }
-
-    const tournamentCopy = deepCopy(tournament);
-    delete tournamentCopy.remote;
-
-    const result = await push(tournamentCopy, {
-        remote: tournament.remote?.[0],
-        account,
-    });
-    if (result.tournament) {
-        tournament.remote = result.tournament.remote;
-    } else if (result.error) {
-        console.error("Error sharing tournament:", result.error);
-        Notifications.addError("Sharing failed", {
-            details: "There was an error sharing the tournament. Please try again.",
-            timeout: 5000,
-        });
-        return false;
-    }
-
-    Notifications.addSuccess("Tournament shared", {
-        details: "The tournament has been shared successfully.",
-        timeout: 5000,
-        onClick: () => {
-            globalThis.open(result.link, "_blank");
-        },
-        redirect: result.link,
-    });
-
-    return result;
-};
-
-export const pullFromRemote = async (options: { tournament?: Tournament; remote?: IRemote }) => {
-    const { tournament, remote } = options;
-
-    const pullSource = remote?.identifier ?? tournament?.remote?.[0]?.identifier;
-
-    if (!pullSource) {
-        throw new Error("No remote source");
-    }
-
-    const newTournament = await pull(pullSource);
-    if (newTournament?.error) {
-        throw new Error(newTournament.error);
-    }
-
-    if (tournament && newTournament) {
-        tournament.config = newTournament.tournament.config;
-        tournament.content = newTournament.tournament.content;
-        tournament.name = newTournament.tournament.name;
-        tournament.phases = newTournament.tournament.phases;
-        tournament.teams = newTournament.tournament.teams;
-        return tournament;
-    }
-};
-
-export default {
-    share,
-    pull: pullFromRemote,
-    fromShare,
-    toShare,
-    getShareLink,
-    accessTokenToAccount,
-};
+export default simpleClient;

@@ -53,7 +53,10 @@ const groupName = (id: string | null) => {
                 :teamMatchesRouteName="teamMatchesRouteName"
                 :phaseId="phase.id"
             />
-            <legend v-if="i === tables.length - 1">
+            <div
+                class="legend"
+                v-if="i === tables.length - 1"
+            >
                 <div class="text-muted"><strong>#:</strong> Rank</div>
                 <div class="text-muted"><strong>MP:</strong> Matches Played</div>
                 <div class="text-muted"><strong>W:</strong> Wins</div>
@@ -76,7 +79,7 @@ const groupName = (id: string | null) => {
                     ></span>
                     Direct Progress
                 </div>
-            </legend>
+            </div>
         </div>
     </div>
 </template>
@@ -100,7 +103,7 @@ const groupName = (id: string | null) => {
         vertical-align: middle;
     }
 
-    & legend {
+    & .legend {
         margin-top: var(--spacing-m);
         border-top: 1px solid var(--color-border);
         padding: var(--spacing-m);

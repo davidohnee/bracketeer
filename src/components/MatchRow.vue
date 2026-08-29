@@ -124,9 +124,13 @@ watch(
                 class="score"
                 v-else
             >
-                <div class="for">{{ match.teams[0].score }}</div>
+                <div class="for">
+                    {{ match.teams[0].score }}
+                </div>
                 <span>-</span>
-                <div class="against">{{ match.teams[1].score }}</div>
+                <div class="against">
+                    {{ match.teams[1].score }}
+                </div>
             </div>
         </div>
 

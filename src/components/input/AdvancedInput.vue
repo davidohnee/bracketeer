@@ -18,6 +18,9 @@ defineProps<{
     loading?: boolean;
     disabled?: boolean;
     readonly?: boolean;
+    label?: string;
+    showLabel?: boolean;
+    id?: string;
 }>();
 
 const emit = defineEmits<(e: "copy") => void>();
@@ -33,33 +36,44 @@ const copy = () => {
 };
 </script>
 <template>
-    <div
-        class="advanced-input"
-        :aria-disabled="disabled || loading"
-    >
-        <div
-            class="loader"
-            v-if="loading"
-        ></div>
-        <input
-            ref="inputRef"
-            :type="type"
-            :disabled="disabled || loading"
-            :value="modelValue"
-            :readonly="readonly"
-            :class="{ fadeout: !isScrolledToEnd }"
-            @input="checkScroll"
-            @scroll="checkScroll"
-        />
-        <button
-            class="copy ghost"
-            v-if="copyable && !loading"
-            title="Copy to clipboard"
-            :disabled="disabled || loading"
-            @click="copy"
+    <div class="wrapper">
+        <label
+            v-if="label && showLabel"
+            :for="id"
+            class="input-label"
         >
-            <ion-icon :name="justCopied ? 'checkmark' : 'copy-outline'"></ion-icon>
-        </button>
+            {{ label }}
+        </label>
+        <div
+            class="advanced-input"
+            :aria-disabled="disabled || loading"
+        >
+            <div
+                class="loader"
+                v-if="loading"
+            ></div>
+            <input
+                ref="inputRef"
+                :type="type"
+                :disabled="disabled || loading"
+                :value="modelValue"
+                :readonly="readonly"
+                :class="{ fadeout: !isScrolledToEnd }"
+                @input="checkScroll"
+                @scroll="checkScroll"
+                :id="id"
+            />
+            <button
+                v-if="copyable && !loading"
+                class="copy ghost"
+                title="Copy to clipboard"
+                :disabled="disabled || loading"
+                @click="copy"
+                type="button"
+            >
+                <ion-icon :name="justCopied ? 'checkmark' : 'copy-outline'"></ion-icon>
+            </button>
+        </div>
     </div>
 </template>
 
@@ -84,6 +98,13 @@ input {
     }
 }
 
+label {
+    display: block;
+    margin-bottom: var(--spacing-xs);
+    font-size: var(--font-size-sm);
+    color: var(--color-text-secondary);
+}
+
 .advanced-input:has(.copy) {
     padding-right: 0;
     min-width: 40ch;
@@ -94,6 +115,8 @@ input {
     align-items: center;
     gap: var(--spacing-xs);
     position: relative;
+    padding: 0;
+    padding-left: var(--spacing-s);
 
     .loader {
         position: absolute;

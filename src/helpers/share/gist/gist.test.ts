@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
 import { gistShare, type GitHubUser } from "./gist";
-import { toShare } from "..";
+import GistClient from ".";
 import type { Account, GistAccount } from "@/types/accounts";
 import { generateId } from "@/helpers/id";
 
@@ -88,7 +88,11 @@ describe("gist share functions", () => {
     describe("isMine", () => {
         it("should return the matching account when identifier author matches an account", async () => {
             const author = "johndoe";
-            const identifier = toShare("gist", author, "gist-id").identifier;
+            const identifier = GistClient.toShare({
+                mode: "gist",
+                author,
+                tag: "gist-id",
+            }).identifier;
 
             const accounts: GistAccount[] = [
                 {
@@ -113,7 +117,11 @@ describe("gist share functions", () => {
         });
 
         it("should return null when no account matches the identifier author", async () => {
-            const identifier = toShare("gist", "unknownuser", "gist-id").identifier;
+            const identifier = GistClient.toShare({
+                mode: "gist",
+                author: "unknownuser",
+                tag: "gist-id",
+            }).identifier;
 
             const accounts: GistAccount[] = [
                 {
@@ -136,7 +144,11 @@ describe("gist share functions", () => {
         });
 
         it("should return null when accounts list is empty", async () => {
-            const identifier = toShare("gist", "johndoe", "gist-id").identifier;
+            const identifier = GistClient.toShare({
+                mode: "gist",
+                author: "johndoe",
+                tag: "gist-id",
+            }).identifier;
             const accounts: Account[] = [];
 
             const result = await gistShare.isMine(identifier, accounts);
@@ -148,7 +160,11 @@ describe("gist share functions", () => {
     describe("isSharedWithAccount", () => {
         it("should return true when remote identifier author matches account displayName", () => {
             const author = "johndoe";
-            const remoteIdentifier = toShare("gist", author, "gist-id:file.bra").identifier;
+            const remoteIdentifier = GistClient.toShare({
+                mode: "gist",
+                author,
+                tag: "gist-id",
+            }).identifier;
 
             const account: GistAccount = {
                 type: "gist",
@@ -163,7 +179,11 @@ describe("gist share functions", () => {
         });
 
         it("should return false when remote identifier author does not match account displayName", () => {
-            const remoteIdentifier = toShare("gist", "johndoe", "gist-id:file.bra").identifier;
+            const remoteIdentifier = GistClient.toShare({
+                mode: "gist",
+                author: "johndoe",
+                tag: "gist-id",
+            }).identifier;
 
             const account: GistAccount = {
                 type: "gist",
@@ -179,11 +199,11 @@ describe("gist share functions", () => {
 
         it("should handle identifiers with complex tags", () => {
             const author = "user123";
-            const remoteIdentifier = toShare(
-                "gist",
+            const remoteIdentifier = GistClient.toShare({
+                mode: "gist",
                 author,
-                "abc123:tournament-2024.bra",
-            ).identifier;
+                tag: "abc123",
+            }).identifier;
 
             const account: GistAccount = {
                 type: "gist",
@@ -286,6 +306,38 @@ describe("gist share functions", () => {
             gistShare.migrate();
 
             expect(localStorage.getItem("github.pat")).toBe(accessToken);
+        });
+    });
+
+    describe("remove", () => {
+        it("should delete the tournament from gist via DELETE request", async () => {
+            const identifier = GistClient.toShare({
+                mode: "gist",
+                author: "testuser",
+                tag: "test-gist-id",
+            }).identifier;
+
+            // @ts-expect-error - Mocking global fetch
+            globalThis.fetch = vi.fn(() =>
+                Promise.resolve({
+                    ok: true,
+                }),
+            );
+
+            gistShare.remove(identifier, {
+                accessToken: "ghp_123456",
+                displayName: "testuser",
+                id: "account-id",
+                type: "gist",
+            });
+
+            expect(fetch).toHaveBeenCalledTimes(1);
+            expect(fetch).toHaveBeenCalledWith(`https://api.github.com/gists/test-gist-id`, {
+                method: "DELETE",
+                headers: {
+                    Authorization: "Bearer ghp_123456",
+                },
+            });
         });
     });
 });

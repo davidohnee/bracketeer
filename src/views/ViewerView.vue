@@ -1,90 +1,82 @@
 <script lang="ts" setup>
 import { computed, onMounted, onUnmounted, ref } from "vue";
 import { useRoute } from "vue-router";
-import type { Tournament } from "@/types/tournament";
+import type { IRemote, Tournament } from "@/types/tournament";
 import TournamentLayout from "@/layouts/TournamentLayout.vue";
-import { pull } from "@/helpers/share";
 import { agoString } from "@/helpers/common";
-
-type Error = null | "not-found" | "not-allowed" | "not-supported";
+import { getPullSyncFactory } from "@/helpers/share/pullSync";
+import SpinningLoader from "@/components/SpinningLoader.vue";
 
 const route = useRoute();
 
-const who = ref("");
 const tournament = ref<Tournament | null>(null);
-const error = ref<Error>(null);
 
 const routeId = computed(() => ("id" in route.params ? (route.params.id as string) : ""));
 
-const sessionStorageItem = computed(() => sessionStorage.getItem(routeId.value));
-const updated = ref<Date | null>(
-    sessionStorageItem.value ? new Date(sessionStorageItem.value) : null,
-);
-
 const subtitle = ref<string>("");
 
-let updateTimer = 0;
 let updateSubtitleTimer = 0;
 
-const updateTask = async () => {
-    const base64 = routeId.value;
-    const importObject = await pull(base64);
-
-    if (updated.value) {
-        const now = new Date();
-        const diff = now.getTime() - updated.value.getTime();
-        if (diff >= 1000 * 60 * 5) {
-            updated.value = new Date();
-            sessionStorage.setItem(base64, updated.value.toString());
-        }
-    } else {
-        updated.value = new Date();
-        sessionStorage.setItem(base64, updated.value.toString());
-    }
-
-    if (importObject?.error) {
-        error.value = importObject.error;
-        return;
-    }
-
-    tournament.value = importObject!.tournament;
-    who.value = importObject!.author ?? "(unknown)";
-    updateSubtitle();
-};
+let liveSync = getPullSyncFactory(routeId.value)(tournament);
 
 const updateSubtitle = () => {
     if (tournament.value) {
-        subtitle.value = "Last updated: " + agoString(updated.value!);
+        subtitle.value =
+            "Last updated: " + agoString(liveSync.status.value.lastUpdate ?? new Date());
     }
 };
 
-onMounted(() => {
-    updateTask();
-    updateTimer = setInterval(
-        () => {
-            updateTask();
-        },
-        1000 * 60 * 5,
-    ); // Update every 5 minutes
+const preferDefaultRemote = () => {
+    console.debug("Preferred default remote, switching back to", routeId.value);
+    liveSync.stop();
+    liveSync = getPullSyncFactory(routeId.value)(tournament);
+    liveSync.onChange = updateSubtitle;
+    liveSync.pull(routeId.value);
+};
 
+const preferOtherRemote = (remote: IRemote) => {
+    console.debug("Preferred other remote, switching to", remote);
+    liveSync.stop();
+    liveSync = getPullSyncFactory(remote.identifier)(tournament);
+    liveSync.onChange = updateSubtitle;
+    liveSync.onError = (error) => {
+        console.warn("Pull sync error on other remote:", error);
+        preferDefaultRemote();
+    };
+    liveSync.pull(remote.identifier);
+};
+
+onMounted(() => {
+    liveSync.onChange = updateSubtitle;
+    liveSync.onPreferOther = preferOtherRemote;
+    liveSync.pull(routeId.value);
     updateSubtitleTimer = setInterval(updateSubtitle, 1000 * 60); // Update every minute
 });
 onUnmounted(() => {
-    clearInterval(updateTimer);
+    liveSync.stop();
     clearInterval(updateSubtitleTimer);
 });
 </script>
 <template>
     <TournamentLayout
-        v-if="tournament && error == null"
+        v-if="tournament && !liveSync.error.value"
         class="tournament"
         v-model="tournament"
         :tabs="['table', 'knockout', 'matches', 'live', 'about']"
         :subtitle="subtitle"
+        :key="liveSync.status.value.lastUpdate.toISOString()"
         readonly
     />
     <div
-        v-else-if="error && ['not-found', 'not-supported'].includes(error)"
+        v-else-if="!tournament && !liveSync.error.value"
+        class="loading"
+    >
+        <SpinningLoader />
+    </div>
+    <div
+        v-else-if="
+            liveSync.error.value && ['not-found', 'not-supported'].includes(liveSync.error.value)
+        "
         class="error flex-col p-4"
     >
         <h1>Guess you'll have to create it yourself...</h1>
@@ -94,21 +86,44 @@ onUnmounted(() => {
         </p>
         <div class="flex gap-2">
             <router-link :to="{ name: '/create' }">
-                <button>Create new tournament</button>
+                <button type="button">Create new tournament</button>
             </router-link>
             <router-link :to="{ name: '/' }">
-                <button>Home</button>
+                <button type="button">Home</button>
             </router-link>
         </div>
     </div>
     <div
-        v-else-if="error == 'not-allowed'"
+        v-else-if="liveSync.error.value == 'not-allowed'"
         class="error flex-col"
     >
         <h1>Not Allowed</h1>
         <p>You don't have permission to view this tournament.</p>
         <router-link :to="{ name: '/' }">
-            <button class="danger">Close</button>
+            <button
+                type="button"
+                class="danger"
+            >
+                Close
+            </button>
+        </router-link>
+    </div>
+    <div
+        v-else-if="liveSync.error.value == 'no-connection'"
+        class="error flex-col"
+    >
+        <h1>No Connection</h1>
+        <p>
+            Unable to connect to the tournament. This could be due to a network issue or the host
+            closing the connection.
+        </p>
+        <router-link :to="{ name: '/' }">
+            <button
+                type="button"
+                class="danger"
+            >
+                Close
+            </button>
         </router-link>
     </div>
 </template>

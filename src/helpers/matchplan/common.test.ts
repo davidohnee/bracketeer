@@ -210,7 +210,7 @@ describe("Matchplan Common Functions", () => {
             const result = adjustStartTimes(tournament);
 
             const phase = result.phases[0] as GroupTournamentPhase;
-            expect(phase.matches.length).toBe(3);
+            expect(phase.matches).toHaveLength(3);
 
             // All matches should have dates adjusted to current time or later
             const now = new Date();

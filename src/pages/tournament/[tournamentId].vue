@@ -3,12 +3,31 @@ import { useTournamentsStore } from "@/stores/tournaments";
 import { useRoute } from "vue-router";
 import TournamentLayout from "@/layouts/TournamentLayout.vue";
 import NotFoundView from "@/pages/[...path].vue";
+import SpinningLoader from "@/components/SpinningLoader.vue";
+import { ref, watch } from "vue";
+import { useHistoryStore } from "@/stores/history";
+import { applyChanges } from "@/helpers/history/common";
 
 const route = useRoute();
 const tournaments = useTournamentsStore();
 const tournamentId = "tournamentId" in route.params ? (route.params.tournamentId as string) : "";
 
-const tournament = tournaments.getTournamentById(tournamentId);
+const tournament = ref(tournaments.getTournamentById(tournamentId));
+
+const history = useHistoryStore();
+history.setOnChange(tournamentId, (changes) => {
+    if (!tournament.value) {
+        return;
+    }
+    applyChanges(tournament.value, changes);
+});
+
+watch(
+    () => tournaments.loading,
+    () => {
+        tournament.value = tournaments.getTournamentById(tournamentId);
+    },
+);
 
 definePage({
     redirect: (from) => ({
@@ -26,5 +45,11 @@ definePage({
         v-if="tournament"
         v-model="tournament"
     />
+    <div
+        v-else-if="!tournament && tournaments.loading"
+        class="loading"
+    >
+        <SpinningLoader />
+    </div>
     <NotFoundView v-else />
 </template>

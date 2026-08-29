@@ -2,6 +2,8 @@ dialog[open] {
     border-radius: var(--radius-l);
     border: 1px solid var(--color-border);
     max-height: 80vh;
+    min-width: max(40vw, 100ch);
+    max-width: min(80vw, 100ch);
 
     &::backdrop {
         background-color: rgba(0, 0, 0, 0.5);
@@ -31,9 +33,8 @@ dialog[open] {
 }
 
 @media (max-width: 600px) {
-    dialog[open],
     dialog[open] > div {
-        max-width: 80vw !important;
+        max-width: min(80vw, 100ch) !important;
     }
 
     .options .option:not(:has(input[type="checkbox"])) {

@@ -120,6 +120,7 @@ export interface IRemote {
     identifier: string;
     pushDate?: Date;
     filename?: string;
+    disabled?: boolean;
 }
 
 export type TournamentContentFormat = "markdown";

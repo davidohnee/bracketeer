@@ -2,15 +2,38 @@
 
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=davidohnee_bracketeer&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=davidohnee_bracketeer)
 
-bracketeer is a versatile and user-friendly tool designed to generate and manage tournaments for your social evenings. Whether you're organising beer pong, foosball, or other games, bracketeer ensures your tournaments are structured and fun.
+bracketeer is your sidekick for generating and managing tournaments for your social evenings. Whether you're organising a beer pong or foosball tournament, bracketeer ensures that it is well-structured and enjoyable.
+
+![bracketeer Screenshot](docs/screenshot.png)
 
 ## Features
 
 - **Tournament Generation**: Quickly create brackets for any type of game.
-- **Player Management**: Easily add, remove, and organize participants.
-- **Game Tracking**: Keep track of scores and progress in real-time.
-- **Multi-Game Support**: Works with various games and activities.
-- **Sets and Phases**: Supports multiple sets per game and flexible tournament structures.
+- **Team Management**: Easily add, remove, and organise teams.
+- **Sharing & Tracking**: Keep track of scores and progress in real-time.
+- **Sets and Phases**: Easily test different tournament formats with support for sets and multiple phases.
+
+### Sharing
+
+Tournaments are stored locally in your browser. Please note that on WebKit-based browsers (e.g. Safari or iOS in general), [local storage is cleared after seven days of inactivity](https://webkit.org/blog/10218/full-third-party-cookie-blocking-and-more/), meaning your tournament will be lost if you don't access it within that time frame.
+
+You can also share your tournament with others, specifically the match plan and scores.
+
+#### GitHub Gists
+
+You can share your tournament state with others through GitHub Gists. The host device does not need to be online for others to access the tournament, since the tournament state is stored in the Gist. However, please note that Gists are cached by clients for 5 minutes, meaning that changes made to the tournament may not be immediately visible to others. In order to share a tournament via a Gist, you will need to enter a GitHub personal access token.
+
+#### Peer-to-Peer
+
+Peer-to-peer sharing (powered by [PeerJS](https://peerjs.com/)) allows you to share your tournament state with others in real time. This means that changes made to the tournament are immediately visible to all participants. The host device must be online and connected to the internet for this to work. No login is required. P2P sharing is offered in three modes:
+
+- **Permanent**: The link is valid whenever the host device is online. This means you can safely share the link in advance.
+- **Session**: The link changes whenever the host device reopens the browser.
+- **Random**: The link changes whenever the host device reloads or reopens the browser.
+
+#### Using Gists and P2P sharing together
+
+It is recommended to use Gists and P2P sharing together. Use the Gist share link to share the tournament with participants. bracketeer automatically switches to P2P sharing when available.
 
 ## Use
 
@@ -18,7 +41,28 @@ bracketeer is a versatile and user-friendly tool designed to generate and manage
 
 You can use bracketeer online [here](https://bracketeer.davidohnee.com/). This version is hosted via Cloudflare Pages.
 
+### Offline
+
+bracketeer is available as a Progressive Web App (PWA) and can be used offline.
+
 ### Self-Hosted
+
+You can also self-host bracketeer using a reverse proxy such as [Caddy](https://caddyserver.com/) or [Nginx](https://nginx.org/). The application works client-side and offline.
+
+## Contributing
+
+Contributions are always welcome. If you are planning to use AI, please bear the following guidelines in mind:
+
+- Vibe-coding is strongly discouraged.
+- AI-assisted coding is allowed, but manual human review is required for all contributions (see [#43]).
+- Tests can be generated with AI (as was done for the initial coverage, see [188c3af], [df7e37f], [095cf67]), but they must also be manually reviewed.
+
+[#43]: https://github.com/davidohnee/bracketeer/pull/43
+[188c3af]: https://github.com/davidohnee/bracketeer/commit/188c3af
+[df7e37f]: https://github.com/davidohnee/bracketeer/commit/df7e37f
+[095cf67]: https://github.com/davidohnee/bracketeer/commit/095cf67
+
+### Development
 
 #### Installation
 
@@ -45,18 +89,6 @@ npm run dev
 
 Open your browser and navigate to `http://localhost:5173` to access the application.
 
-## Contributing
-
-Contributions are welcome! Please follow these steps:
-
-1. Fork the repository.
-2. Create a new branch: `git checkout -b feature-name`.
-3. Commit your changes: `git commit -m 'Add feature'`.
-4. Push to the branch: `git push origin feature-name`.
-5. Open a pull request.
-
-### Development
-
 #### Testing
 
 This project uses [Vitest](https://vitest.dev/) for unit testing. To run tests:
@@ -75,14 +107,11 @@ npm run test:ui
 npm run test:coverage
 ```
 
-#### Type Checking, Building, and Linting
+#### Type Checking, Linting
 
 ```bash
 # Type check
 npm run type-check
-
-# Build for production
-npm run build
 
 # Lint code
 npm run lint
@@ -94,4 +123,4 @@ This project is licensed under the GPL-3.0 License. See the [LICENSE](LICENSE) f
 
 ## Contact
 
-For questions or feedback, please create an issue.
+For questions or feedback, please [create an issue](https://github.com/davidohnee/bracketeer/issues/new).

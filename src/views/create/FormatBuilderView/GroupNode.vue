@@ -12,6 +12,7 @@ import {
     type Tournament,
 } from "@/types/tournament";
 import { computed, ref, watch } from "vue";
+import { generateId } from "@/helpers/id";
 
 const props = defineProps<{
     modelValue: Tournament;
@@ -52,7 +53,7 @@ const generateGroups = () => {
     }
 
     const groups: Group[] = Array.from({ length: groupCount }, (_, i) => ({
-        id: crypto.randomUUID(),
+        id: generateId(),
         name: `Group ${String.fromCodePoint(65 + i)}`,
         teams: [],
     }));
@@ -195,6 +196,7 @@ watch(
             <button
                 class="ghost text-sm mr-0"
                 @click="openAdvancedSettings"
+                type="button"
             >
                 <ion-icon
                     name="settings-outline"

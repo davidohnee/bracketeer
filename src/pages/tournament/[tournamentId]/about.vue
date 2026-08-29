@@ -174,6 +174,7 @@ const rules = computed({
             v-else-if="!props.readonly"
             class="secondary"
             @click="rules = '**Double click** to edit in Markdown'"
+            type="button"
         >
             <ion-icon name="add-outline"></ion-icon>
             Add rules

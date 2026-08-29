@@ -65,17 +65,19 @@ const create = () => {
         <div class="row between baseline">
             <h2>{{ TITLES[currentStep] }}</h2>
             <button
+                v-if="currentStep < STEPS.length - 1"
                 class="button"
                 @click="currentStep++"
-                v-if="currentStep < STEPS.length - 1"
+                type="button"
             >
                 <ion-icon name="arrow-forward"></ion-icon>
                 Continue
             </button>
             <button
+                v-else
                 class="button"
                 @click="create"
-                v-else
+                type="button"
             >
                 <ion-icon name="checkmark"></ion-icon>
                 Create
@@ -110,10 +112,6 @@ h2 {
 @media (max-width: 768px) {
     .form {
         margin: var(--spacing-m);
-    }
-
-    .desktop-only {
-        display: none;
     }
 }
 </style>

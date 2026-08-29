@@ -18,7 +18,7 @@ button {
 
         &:hover {
             color: var(--c);
-            background: color-mix(in srgb, transparent 95%, black);
+            background: color-mix(in srgb, transparent 95%, var(--color-text-primary));
         }
     }
 
@@ -80,6 +80,10 @@ button {
             font-size: 1.2em;
             color: inherit;
         }
+    }
+
+    &.small {
+        padding: var(--spacing-xs);
     }
 }
 

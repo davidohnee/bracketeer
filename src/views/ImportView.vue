@@ -7,11 +7,11 @@
 import { computed, onMounted, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import type { Tournament } from "@/types/tournament";
-import { pull } from "@/helpers/share";
+import SimpleClient from "@/helpers/share";
 import { useTournamentsStore } from "@/stores/tournaments";
 import ViewerView from "./ViewerView.vue";
 
-type Error = null | "not-found" | "not-allowed" | "not-supported";
+type Error = null | "not-found" | "not-allowed" | "not-supported" | "no-connection";
 
 const route = useRoute();
 const router = useRouter();
@@ -25,7 +25,7 @@ const routeId = computed(() => ("id" in route.params ? (route.params.id as strin
 
 onMounted(async () => {
     const base64 = routeId.value;
-    const importObject = await pull(base64);
+    const importObject = await SimpleClient.pull({ identifier: base64 });
 
     if (importObject?.error) {
         error.value = importObject.error;
@@ -39,10 +39,14 @@ onMounted(async () => {
 const confirm = async () => {
     const tournament = what.value[0];
     if (!tournament) return;
-    tournament.remote ??= [];
-    tournament.remote.push({
-        identifier: routeId.value,
-    });
+
+    if (!tournament.remote) {
+        tournament.remote = [
+            {
+                identifier: routeId.value,
+            },
+        ];
+    }
 
     await tournaments.add(tournament);
     router.push({
@@ -71,10 +75,16 @@ const viewOnly = () => {
                 <button
                     class="danger secondary"
                     @click="viewOnly"
+                    type="button"
                 >
                     No
                 </button>
-                <button @click="confirm">Yes</button>
+                <button
+                    @click="confirm"
+                    type="button"
+                >
+                    Yes
+                </button>
             </div>
         </div>
         <ViewerView />

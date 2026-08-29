@@ -62,6 +62,7 @@ defineExpose({
             <button
                 class="ghost text-sm self-end"
                 @click="resetTieBreakers"
+                type="button"
             >
                 Reset to default
             </button>

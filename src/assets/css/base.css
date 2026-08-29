@@ -78,6 +78,18 @@ section {
 .text-mute {
     color: var(--color-text-secondary);
 }
+.text-green {
+    color: var(--color-brand-green);
+}
+.text-blue {
+    color: var(--color-brand-blue);
+}
+.text-red {
+    color: var(--color-brand-red);
+}
+.text-yellow {
+    color: var(--color-brand-yellow);
+}
 
 .p-4 {
     padding: var(--spacing-m);
@@ -101,6 +113,10 @@ section {
 .uppercase {
     text-transform: uppercase;
     letter-spacing: 0.05em;
+}
+
+.capitalise {
+    text-transform: capitalize;
 }
 
 .status {
@@ -147,5 +163,27 @@ section {
 
     @media (max-width: 768px) {
         margin: var(--spacing-m);
+    }
+}
+
+.loading {
+    height: 60vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+@media (max-width: 768px) {
+    .desktop-only {
+        display: none;
+    }
+}
+
+article {
+    max-width: 100ch;
+    margin: 0 auto;
+
+    @media (max-width: 768px) {
+        padding: var(--spacing-m);
     }
 }

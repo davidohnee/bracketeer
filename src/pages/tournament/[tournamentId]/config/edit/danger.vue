@@ -25,7 +25,7 @@ const deleteTournament = () => {
     Notifications.addYesNo("Delete Tournament", {
         details: "Are you sure you want to delete the tournament? This action cannot be undone.",
         onYes: () => {
-            tournaments.deleteTournament(props.tournament.id);
+            tournaments.remove(props.tournament.id);
             router.push({ name: "/" });
             Notifications.addSuccess("Tournament deleted", {
                 details: "The tournament has been deleted successfully.",
@@ -82,12 +82,14 @@ const hasStarted = ref(getTournamentStatus(tournament) !== "scheduled");
                 @click="resetTournament"
                 :disabled="!hasStarted"
                 :title="!hasStarted ? 'You cannot reset the tournament before it has started.' : ''"
+                type="button"
             >
                 Reset Tournament
             </button>
             <button
                 class="danger"
                 @click="deleteTournament"
+                type="button"
             >
                 Delete Tournament
             </button>

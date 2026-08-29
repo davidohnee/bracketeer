@@ -13,13 +13,16 @@ const website = "https://davidohnee.com";
             </p>
             <div class="row mobile-stack">
                 <router-link :to="{ name: '/tournaments' }">
-                    <button class="secondary">
+                    <button
+                        class="secondary"
+                        type="button"
+                    >
                         <ion-icon name="search-outline"></ion-icon>
                         Browse My Tournaments
                     </button>
                 </router-link>
                 <router-link :to="{ name: '/create' }">
-                    <button>
+                    <button type="button">
                         <ion-icon name="add-outline"></ion-icon>
                         Create Tournament
                     </button>
@@ -28,12 +31,11 @@ const website = "https://davidohnee.com";
         </section>
         <section>
             <div class="col">
-                <h1>Run tournaments like a pro &mdash; in seconds.</h1>
+                <h1>Run tournaments like a pro.</h1>
                 <p>
                     Instantly generate match plans, update scores live, and keep your tournament
-                    running smooth with a clean, modern interface built for speed. bracketeer
-                    doesn't just look good &mdash; it works everywhere, from mobile to desktop, with
-                    a premium, responsive design that feels as good as it looks.
+                    running smooth with a clean, modern interface built for speed. bracketeer works
+                    anywhere, directly in your browser.
                 </p>
             </div>
             <div class="col">
@@ -45,20 +47,21 @@ const website = "https://davidohnee.com";
                 <ion-icon name="share-outline"></ion-icon>
             </div>
             <div class="col">
-                <h1>Score, share, and celebrate</h1>
+                <h1>Score, share, and celebrate.</h1>
                 <p>
-                    Share the tournament via link or QR code & track the tournament on any device!
+                    Share your tournament via link or QR code & track the tournament on any device!
+                    <a href="/about/sharing"> Learn more. </a>
                 </p>
             </div>
         </section>
 
         <section>
             <div class="col">
-                <h1>Built for you and your friends</h1>
+                <h1>Built for you and your friends.</h1>
                 <p>
                     bracketeer is designed for you and your friends. Whether you're a casual gamer
-                    or a competitive player, bracketeer offers you the platform to create and manage
-                    tournaments with ease.
+                    or a professional event organiser, bracketeer offers you the platform to create
+                    and manage tournaments with ease.
                 </p>
             </div>
             <div class="col">
@@ -72,8 +75,8 @@ const website = "https://davidohnee.com";
             <div class="col">
                 <h1>No fees.<br />No sign-ups. <br />No nonsense.</h1>
                 <p>
-                    bracketeer is 100% free, fully open-source, and respects your privacy &mdash;
-                    your data stays on your device unless you decide to share it.
+                    bracketeer is 100% free, fully open-source, and respects your privacy. Your data
+                    stays on your device unless you decide to share it.
                 </p>
             </div>
         </section>

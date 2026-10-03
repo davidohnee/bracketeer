@@ -76,12 +76,12 @@ const attachHostConnection =
     (connection: DataConnection) => {
         connections.push(connection);
 
-        connection.on("open", () => {
+        connection.on("open", async () => {
             if (!tournament.value) {
                 return;
             }
 
-            connection.send({
+            await connection.send({
                 type: "full",
                 data: deepCopy(toRaw(tournament.value)),
             });
@@ -209,9 +209,9 @@ export const createPushSync = (tournament: Ref<Tournament | null>): IPushSync =>
             return;
         }
 
-        connections.forEach((connection) => {
+        connections.forEach(async (connection) => {
             if (connection.open) {
-                connection.send({
+                await connection.send({
                     type: "diff",
                     data: changes,
                 });

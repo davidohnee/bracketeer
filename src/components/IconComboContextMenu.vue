@@ -60,6 +60,12 @@ const groups = computed(() => {
                         option.action();
                         close();
                     "
+                    @keydown.enter="
+                        option.action();
+                        close();
+                    "
+                    tabindex="0"
+                    role="button"
                 >
                     <slot
                         v-if="$slots.item"

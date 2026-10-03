@@ -100,7 +100,7 @@ const connectPullPeer = (context: PullContext) => {
 interface IP2PPullSync extends IPullSync {
     _peer: Peer;
     _connection: DataConnection | null;
-    _onDiff: (diff: Change[]) => Promise<void>;
+    _onDiff: (diff: Change[]) => void;
 }
 
 export const createPullSync: PullSyncFactory<IP2PPullSync> = (tournament) => {
@@ -112,7 +112,7 @@ export const createPullSync: PullSyncFactory<IP2PPullSync> = (tournament) => {
             type: "live",
             lastUpdate: new Date(),
         }),
-        async _onDiff(diff: Change[]) {
+        _onDiff(diff: Change[]) {
             if (!tournament.value) {
                 return;
             }
@@ -156,7 +156,7 @@ export const createPullSync: PullSyncFactory<IP2PPullSync> = (tournament) => {
                 }
             });
         },
-        async stop() {
+        stop() {
             console.log("[P2P] Stopping pull sync");
             this._connection?.close();
             this._connection = null;

@@ -135,7 +135,7 @@ export const formatCurrentMatchTime = (match: Match, tournament: Tournament): st
 };
 
 export const copyToClipboard = (text: string) => {
-    navigator.clipboard.writeText(text);
+    void navigator.clipboard.writeText(text);
 };
 
 export const nextPowerOfTwo = (n: number): number => {

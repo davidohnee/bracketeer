@@ -99,8 +99,11 @@ const teamLost = (team: MatchTeam) => {
     />
     <div
         class="match card"
+        role="button"
+        tabindex="0"
         :class="{ readonly }"
         @click="openMatchEditor"
+        @keydown.enter="openMatchEditor"
     >
         <div
             class="team"

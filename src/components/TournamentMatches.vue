@@ -218,8 +218,11 @@ onMounted(() => {
                     :key="option"
                     :value="option"
                     class="chip-option"
+                    role="button"
+                    tabindex="0"
                     :class="{ selected: selectedGroupOption === option }"
                     @click="selectedGroupOption = option"
+                    @keydown.enter="selectedGroupOption = option"
                 >
                     by {{ getFriendlyOptionName(option) }}
                 </div>
@@ -239,8 +242,11 @@ onMounted(() => {
                 </div>
                 <div
                     class="filter"
+                    role="button"
+                    tabindex="0"
                     :class="{ open: matchFilter?.contextMenu?.isOpen }"
                     @click.stop.prevent="matchFilter?.contextMenu?.toggle()"
+                    @keydown.enter.prevent="matchFilter?.contextMenu?.toggle()"
                 >
                     <MatchFilter
                         ref="matchFilter"

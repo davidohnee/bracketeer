@@ -28,6 +28,8 @@ const jumpTo = (index: number) => {
                 <div class="step">
                     <div
                         class="circle"
+                        role="button"
+                        tabindex="0"
                         :class="{
                             done: index < modelValue,
                             active: index === modelValue,
@@ -37,6 +39,7 @@ const jumpTo = (index: number) => {
                                 (canGoBack && index < modelValue),
                         }"
                         @click="jumpTo(index)"
+                        @keydown.enter="jumpTo(index)"
                     ></div>
                     <span>{{ name }}</span>
                 </div>

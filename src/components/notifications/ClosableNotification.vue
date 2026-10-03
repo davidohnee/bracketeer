@@ -43,8 +43,11 @@ const click = () => {
             'cursor-pointer':
                 (notification.type !== 'redirect' && notification.redirect) || notification.onClick,
         }"
+        role="button"
+        tabindex="0"
         class="notification"
         @click.stop.prevent="click"
+        @keydown.enter="click"
     >
         <div class="message">
             <h4>

@@ -26,7 +26,7 @@ watch(
     async () => {
         if (!gistRemote.value) return false;
         const identifier = gistRemote.value.identifier;
-        canPush.value = await accounts.findShareAccount(identifier);
+        canPush.value = accounts.findShareAccount(identifier);
     },
     { immediate: true },
 );
@@ -101,9 +101,7 @@ const share = () => {
 onMounted(() => {
     const identifier = gistRemote.value?.identifier;
     if (!identifier) return false;
-    accounts.findShareAccount(identifier).then((account) => {
-        canPush.value = account;
-    });
+    canPush.value = accounts.findShareAccount(identifier);
 });
 </script>
 

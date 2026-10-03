@@ -36,7 +36,7 @@ export interface IdentifierComponents {
     mode: ShareMode;
 }
 
-export type AccountResolver = (remote: IRemote) => Promise<Account | null>;
+export type AccountResolver = (remote: IRemote) => Account | null;
 
 export interface ISimpleShareClient {
     pull: (remote: IRemote) => Promise<Import | null>;

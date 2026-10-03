@@ -72,8 +72,11 @@ const setSport = (sportKey: string) => {
                 v-for="(v, k) in DEFAULTS"
                 :key="k"
                 class="chip-option"
+                role="button"
+                tabindex="0"
                 :class="{ selected: tournament.config.sport === k }"
                 @click="setSport(k)"
+                @keydown.enter="setSport(k)"
                 :title="v.description"
             >
                 <ion-icon

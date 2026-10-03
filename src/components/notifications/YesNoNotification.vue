@@ -46,6 +46,9 @@ const click = () => {
 <template>
     <div
         class="notification"
+        role="button"
+        tabindex="0"
+        @keydown.enter="click"
         @click.stop.prevent="click"
     >
         <div class="message">
@@ -62,13 +65,19 @@ const click = () => {
         <div class="yes-no">
             <div
                 class="yes option"
+                role="button"
+                tabindex="0"
                 @click.stop.prevent="yes"
+                @keydown.enter.stop.prevent="yes"
             >
                 <ion-icon name="checkmark-outline"></ion-icon>
             </div>
             <div
                 class="no option"
+                role="button"
+                tabindex="0"
                 @click.stop.prevent="no"
+                @keydown.enter.stop.prevent="no"
             >
                 <ion-icon name="close-outline"></ion-icon>
             </div>

@@ -40,7 +40,7 @@ export const createPushSync = (tournament: Ref<Tournament | null>): IPushSync =>
             return;
         }
 
-        GistClient.create(tournament.value, {
+        void GistClient.create(tournament.value, {
             updateOnly: true,
             accountResolver: (remote) => accounts.findShareAccount(remote.identifier),
         });

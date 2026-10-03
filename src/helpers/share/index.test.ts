@@ -329,7 +329,7 @@ describe("share", () => {
             },
         ];
 
-        const store = { findShareAccount: vi.fn().mockResolvedValue(account) };
+        const store = { findShareAccount: vi.fn().mockReturnValue(account) };
         const resultPayload = {
             type: "success" as const,
             author: "user",
@@ -346,6 +346,7 @@ describe("share", () => {
 
         const result = await GistClient.create(tournament, {
             accountResolver(remote) {
+                console.log(store.findShareAccount(remote.identifier), remote.identifier);
                 return store.findShareAccount(remote.identifier);
             },
         });

@@ -87,7 +87,7 @@ const share = async (tournament: Tournament, { account, accountResolver }: GistS
 
     if (!account) {
         if (gistRemote && accountResolver) {
-            account = await accountResolver(gistRemote);
+            account = accountResolver(gistRemote);
         }
 
         if (!account) {

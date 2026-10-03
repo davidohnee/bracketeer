@@ -18,7 +18,10 @@ const expanded = ref(false);
     <div class="option">
         <div
             class="header"
+            role="button"
+            tabindex="0"
             @click="expanded = !expanded"
+            @keydown.enter="expanded = !expanded"
         >
             <ion-icon :name="expanded ? 'chevron-down' : 'chevron-forward'"></ion-icon>
             <h3>{{ title }}</h3>

@@ -93,8 +93,11 @@ watch(
     />
     <div
         class="match row"
+        role="button"
+        tabindex="0"
         :class="{ readonly }"
         @click="openMatchEditor"
+        @keydown.enter="openMatchEditor"
     >
         <div class="time-progress">
             <span

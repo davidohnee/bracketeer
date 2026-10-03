@@ -188,7 +188,7 @@ const accessTokenToAccount = async (accessToken: string) => {
     }
 };
 
-const isMine = async (identifier: string, accounts: Account[]) => {
+const isMine = (identifier: string, accounts: Account[]) => {
     try {
         const { author } = GistClient.fromShare(identifier);
         return accounts.find((x) => x.displayName === author) ?? null;

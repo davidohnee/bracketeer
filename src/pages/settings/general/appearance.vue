@@ -12,8 +12,11 @@ const theme = useThemeStore();
         >
             <div
                 class="theme-preview"
+                role="button"
+                tabindex="0"
                 :class="availableTheme"
                 @click="theme.set(availableTheme)"
+                @keydown.enter="theme.set(availableTheme)"
             ></div>
             <span class="theme-name">
                 {{ availableTheme }}

@@ -72,7 +72,7 @@ export const createPullSync: PullSyncFactory<IGistPullSync> = (tournament) => {
                 date: new Date(),
             };
         },
-        async stop() {
+        stop() {
             console.log("[Gist] Stopping pull sync");
             if (this._timer) {
                 clearInterval(this._timer);

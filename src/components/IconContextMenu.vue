@@ -137,7 +137,10 @@ onBeforeUnmount(() => {
     >
         <div
             class="activator"
+            role="button"
+            tabindex="0"
             @click.stop="toggle"
+            @keydown.enter="toggle"
         >
             <slot
                 name="activator"

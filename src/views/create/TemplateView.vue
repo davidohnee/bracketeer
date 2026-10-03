@@ -48,7 +48,10 @@ const useTemplate = (template: TournamentTemplate | null) => {
     <div class="template-list">
         <div
             class="template"
+            role="button"
+            tabindex="0"
             @click="useTemplate(null)"
+            @keydown.enter="useTemplate(null)"
         >
             <ion-icon
                 name="document-text-outline"
@@ -58,9 +61,12 @@ const useTemplate = (template: TournamentTemplate | null) => {
         </div>
         <div
             class="template"
+            role="button"
+            tabindex="0"
             v-for="template in templates"
             :key="template.name"
             @click="useTemplate(template)"
+            @keydown.enter="useTemplate(template)"
         >
             <img
                 :src="logoHref(template)"

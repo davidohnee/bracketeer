@@ -1,7 +1,7 @@
 import localforage from "localforage";
 import type { ITournamentPersistor } from "./tournamentWatcher";
 import { tournamentFromJson } from "@/helpers";
-import type { AnyTournament, Tournament } from "@/types/tournament";
+import type { AnyTournament } from "@/types/tournament";
 import { toRaw } from "vue";
 
 const KEY_PREFIX = "tournament";
@@ -12,25 +12,27 @@ const store = localforage.createInstance({
 
 export const createIndexedDbStorage = (): ITournamentPersistor => {
     const key = (tournamentId: string) => `${KEY_PREFIX}.${tournamentId}`;
+    const getValue = async (key: string) => {
+        if (!key.startsWith(KEY_PREFIX)) return null;
+
+        const item = await store.getItem(key);
+        if (item) {
+            return tournamentFromJson(item as AnyTournament);
+        }
+        return null;
+    };
 
     return {
         load: async () => {
-            const storedTournaments: Tournament[] = [];
-            for (const key of await store.keys()) {
-                if (!key.startsWith(KEY_PREFIX)) continue;
-
-                const tournament = await store.getItem(key);
-                if (tournament) {
-                    storedTournaments.push(tournamentFromJson(tournament as AnyTournament));
-                }
-            }
-            return storedTournaments;
+            const keys = await store.keys();
+            const storedValues = await Promise.all(keys.map((k) => getValue(k)));
+            return storedValues.filter((v) => v != null);
         },
         onTournamentChange: (tournament) => {
-            store.setItem(key(tournament.id), toRaw(tournament));
+            void store.setItem(key(tournament.id), toRaw(tournament));
         },
         onTournamentDeleted: (tournament) => {
-            store.removeItem(key(tournament.id));
+            void store.removeItem(key(tournament.id));
         },
     };
 };

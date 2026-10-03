@@ -34,7 +34,7 @@ vi.mock("./gist", () => ({
     },
 }));
 
-const accountResolver = vi.fn().mockImplementation(async (ident) => {
+const accountResolver = vi.fn().mockImplementation((ident) => {
     console.log("Resolving account for identifier:", ident);
     return ACCOUNT;
 });
